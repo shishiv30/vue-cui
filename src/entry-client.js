@@ -1,10 +1,14 @@
-import createApp from '@/app';
+import {createApp} from './app'
 
-class AppController {
-  constructor () {
-    const {app} = createApp(window.context);
-    app.$mount('#app');
-  }
+const data = {
+    context: {
+        urls: {
+            currentUrl: location.href
+        }
+    }
 }
-
-new AppController();
+const {app, router, stores} = createApp(data.context)
+debugger;
+router.onReady(() => {
+    app.$mount('#app')
+})

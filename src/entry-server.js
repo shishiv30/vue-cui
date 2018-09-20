@@ -1,14 +1,14 @@
-import createApp from '@/app';
-export default context => {
-    return new Promise((resolve, reject) => {
-        const {app, router,store} = createApp(context);
-        router.push(context.context.requestUrlRaw);
-        router.onReady(() => {
-            const matchedComponents = router.getMatchedComponents()
-            if (!matchedComponents.length) {
-                return reject({code: 404})
-            }
-            resolve(app);
-        }, reject)
-    });
+import { createApp } from './app'
+export default function(data) {
+  return new Promise((resolve, reject) => {
+    const { app, router, stores } = createApp(data.context)
+    router.push(stores.urls.currentUrl)
+    router.onReady(() => {
+      const matchedComponents = router.getMatchedComponents()
+      if (!matchedComponents.length) {
+        return reject({ code: 404 })
+      }
+      resolve(app)
+    }, reject)
+  })
 }

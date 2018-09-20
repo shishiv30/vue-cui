@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export default () => {
+export function createStores() {
     return new Vuex.Store({
         modules:{
             context

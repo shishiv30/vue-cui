@@ -1,6 +1,7 @@
 export default {
     isMobile: undefined,
     isPhone: undefined,
+    urls:{},
     viewport: {
         width : 375,
         height: 667,
