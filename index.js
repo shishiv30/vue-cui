@@ -17,35 +17,30 @@
 //
 // app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
-const ssrApp = require('/ssr.server.bundle.js')
-
 const Vue = require('vue')
 const server = require('express')()
-const renderer = require('vue-server-renderer').createBundleRenderer('/path/to/vue-ssr-server-bundle.json',{
-    template: require('fs').readFileSync('./src/app.template.html', 'utf-8')
+const fs = require('fs');
+const {createBundleRenderer} = require('vue-server-renderer')
+const serverBundle = require('./dist/vue-ssr-server-bundle.json');
+const template = fs.readFileSync('./src/app.template.html', 'utf-8');
+const renderer = createBundleRenderer(serverBundle, {
+    template: template
 });
 
 server.get('*', (req, res) => {
-    const data = {
-        context: {
-            urls: {
-                currentUrl: location.href
-            }
-        }
-    }
-    ssrApp(data).then(app => {
-        renderer.renderToString(app, (err, html) => {
-            if (err) {
-                if (err.code === 404) {
-                    res.status(404).end('Page not found')
-                } else {
-                    res.status(500).end('Internal Server Error')
-                }
+
+    renderer.renderToString(req, (err, html) => {
+        if (err) {
+            if (err.code === 404) {
+                res.status(404).end('Page not found')
             } else {
-                res.end(html)
+                console.log(err)
+                res.status(500).end('Internal Server Error')
             }
-        })
-    })
+        } else {
+            res.end(html)
+        }
+    });
 })
 
 server.listen(8088, () => console.log(`Example app listening on port ${ 8088}!`));

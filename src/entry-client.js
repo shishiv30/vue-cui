@@ -1,14 +1,8 @@
 import {createApp} from './app'
-
-const data = {
-    context: {
-        urls: {
-            currentUrl: location.href
-        }
-    }
+const {app, router, store} = createApp()
+if (window.__INITIAL_STATE__) {
+  store.replaceState(window.__INITIAL_STATE__)
 }
-const {app, router, stores} = createApp(data.context)
-debugger;
 router.onReady(() => {
     app.$mount('#app')
 })
