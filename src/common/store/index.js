@@ -4,10 +4,11 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export function createStores() {
+export function createStores(ctx) {
+    Object.assign(context.state, ctx);
     return new Vuex.Store({
-        modules:{
-            context
+        modules: {
+            context: context
         }
     });
 }

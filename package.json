@@ -42,6 +42,7 @@
         "mini-css-extract-plugin": "^0.4.2",
         "mobile-detect": "^1.4.2",
         "moment": "^2.22.2",
+        "negotiator": "^0.6.1",
         "style-loader": "^0.21.0",
         "url-loader": "^0.5.9",
         "vue": "^2.5.17",

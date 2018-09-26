@@ -1,7 +1,8 @@
 import {createApp} from './app'
-export default function(req) {
+
+export default context => {
     return new Promise((resolve, reject) => {
-        const {app, router, store} = createApp()
+        const {app, router, store} = createApp(context)
         router.push('/')
         router.onReady(() => {
             const matchedComponents = router.getMatchedComponents()
@@ -9,9 +10,9 @@ export default function(req) {
                 return reject({code: 404})
             }
             Promise.all(matchedComponents.map(Component => {
-                if (Component.asyncData) {
-                    return Component.asyncData({store, route: router.currentRoute})
-                }
+                // if (Component.asyncData) {
+                //     return Component.asyncData({store, route: router.currentRoute})
+                // }
             })).then(() => {
                 resolve(app)
             }).catch(reject)

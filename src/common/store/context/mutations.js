@@ -1,14 +1,13 @@
 function updateViewport(state, viewport) {
     Object.assign(state.viewport, viewport);
 }
-function updateUrls(state, urls){
+function updateUrls(state, urls) {
     Object.assign(state.urls, urls);
 }
-function inital(state, data){
-    state = data;
+function updateUserAgent(state, userAgent) {
+    Object.assign(state.userAgent, userAgent);
 }
-export default {
-    updateViewport,
-    updateUrls,
-    inital
+function updateLocation(state, location) {
+    Object.assign(state.location, location);
 }
+export default {updateViewport, updateUrls, updateUserAgent, updateLocation}

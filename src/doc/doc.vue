@@ -12,13 +12,11 @@ export default {
         route
     }) {
         return {
-            content: 'hehe'
+
         }
     },
     computed: {
-        item() {
-            return this.$store.state.items[this.$route.params.id]
-        }
+
     },
     beforeMount() {
         const {

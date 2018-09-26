@@ -23,13 +23,13 @@ const fs = require('fs');
 const {createBundleRenderer} = require('vue-server-renderer')
 const serverBundle = require('./dist/vue-ssr-server-bundle.json');
 const template = fs.readFileSync('./src/app.template.html', 'utf-8');
-const renderer = createBundleRenderer(serverBundle, {
-    template: template
-});
-
+var MobileDetect = require('mobile-detect');
+var Negotiator = require('negotiator');
+const contextServer = require('./src/common/model/contextServer');
+const renderer = createBundleRenderer(serverBundle, {template: template});
 server.get('*', (req, res) => {
-
-    renderer.renderToString(req, (err, html) => {
+    const context = contextServer(req);
+    renderer.renderToString(context, (err, html) => {
         if (err) {
             if (err.code === 404) {
                 res.status(404).end('Page not found')
