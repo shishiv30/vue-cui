@@ -9,6 +9,7 @@ module.exports = merge(baseConfig, {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist')
     },
+    devtool: 'inline-source-map',
     optimization: {
         splitChunks: {
             chunks: 'all'

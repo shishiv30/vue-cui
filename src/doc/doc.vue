@@ -1,12 +1,16 @@
 <template>
 <div class="search">
-    API Page
+    <cuiMap></cuiMap>
 </div>
 </template>
 
 <script>
+import cuiMap from '../common/components/map.vue';
 export default {
     name: 'doc',
+    components: {
+        cuiMap
+    },
     asyncData({
         store,
         route
