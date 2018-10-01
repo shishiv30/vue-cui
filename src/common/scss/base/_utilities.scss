@@ -1,0 +1,87 @@
+//hide
+#body .hide {
+    display: none;
+}
+
+//help
+.help {
+    border-bottom: dashed 1px $color-6;
+    cursor: help;
+}
+
+//blank space
+.blank-s {
+    height: $space-s;
+}
+
+.blank-m {
+    height: $space-m;
+}
+
+.blank-l {
+    height: $space-l;
+}
+
+.block-center {
+    @extend %block-center;
+}
+
+
+
+.block-center-x {
+    @extend %block-center-x;
+}
+
+
+.block-center-y {
+    @extend %block-center-y;
+}
+
+.img-center {
+    @extend %img-center;
+}
+
+.img-center-cover-x {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 999px !important;
+    max-height: 999px !important;
+}
+
+.img-center-cover-y {
+    width: auto !important;
+    height: 100% !important;
+    max-width: 999px !important;
+    max-height: 999px !important;
+}
+
+.clearfix {
+    @extend %clearfix;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.singleline {
+    @extend %singleline;
+}
+
+//list disc
+.list-disc {
+    list-style: disc inside;
+}
+
+
+[class^="icon-"],
+[class*=" icon-"] {
+    @include fonticon();
+}
+
+[disabled], .disabled {
+    pointer-events: none!important;
+}

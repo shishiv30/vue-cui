@@ -7,8 +7,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src/'),
-        }
+            '@src': path.resolve(__dirname, '../src'),
+        },
+        extensions: ['.js', '.vue', '.scss']
     },
     module: {
         rules: [

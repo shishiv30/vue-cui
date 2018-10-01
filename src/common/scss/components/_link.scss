@@ -1,0 +1,31 @@
+a {
+    text-decoration: none!important;
+    cursor: pointer;
+    outline: none;
+    color: inherit;
+
+    &:active {
+        opacity: 0.9;
+        color: inherit;
+    }
+    @include hover-supported() {
+        opacity: 0.9;
+        color: inherit;
+    }
+    &:visited {
+        color: inherit;
+    }
+    &.link {
+        color: $color-blue;
+        &:active {
+            color: $color-warning;
+        }
+        @include hover-supported() {
+            color: $color-warning;
+        }
+    }
+    &[disable] {
+        color: $color-disable;
+        pointer-events: none;
+    }
+}

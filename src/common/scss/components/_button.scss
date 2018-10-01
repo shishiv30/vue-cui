@@ -1,0 +1,71 @@
+%btn-color{
+    &.default {
+        background-color: $color-f;
+        color: $color-3;
+    }
+    &.orange {
+        &.active {
+            background-color: $color-warning;
+            color: $color-f;
+            border-color: $color-warning;
+        }
+        border-color: $color-border;
+        color: $color-warning;
+    }
+    &.link {
+        &.active {
+            background-color: $color-blue;
+            color: $color-f;
+        }
+        border-color: $color-border;
+        color: $color-blue;
+    }
+}
+%btn {
+    @include singleline();
+    height: $form-size-normal;
+    line-height: calc(#{$form-size-normal} - 2px);
+    padding: 0 $gap-0;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    transition: opacity .1s ease-in-out;
+    opacity: 1;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 5px;
+    @include hover-supported() {
+        opacity: .9;
+    }
+    @extend %btn-color;
+    &.small {
+        height: $form-size-small;
+        line-height: calc(#{$form-size-small} - 2px);
+        font-size: $font-size-5;
+        > * {
+            line-height: inherit;
+        }
+    }
+
+    &.circle {@click="toggle()"
+        display: inline-block;
+        height: $form-size-normal;
+        width: $form-size-normal;
+        line-height: calc(#{$form-size-normal} - 2px);
+        border-radius: 100%;
+        font-size: $font-size-4;
+    }
+    &[disabled] {
+        background-color: $color-c !important;
+        border-color: $color-7 !important;
+        color: $color-7 !important;
+    }
+    &.loading {
+        opacity: .5 !important;
+        cursor: wait !important;
+    }
+}
+.btn {
+    @extend %btn;
+}

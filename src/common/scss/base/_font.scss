@@ -1,0 +1,29 @@
+//font icon base
+@font-face {
+  font-family: $font-icon;
+  font-display: swap;
+  src:
+    url('~@src/assets/fonts/fonticon.ttf?lzwd7h') format('truetype'),
+    url('~@src/assets/fonts/fonticon.woff?lzwd7h') format('woff'),
+    url('~@src/assets/fonts/fonticon.svg?lzwd7h#fonticon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: $font;
+    font-display: swap;
+    src: url('~@src/assets/fonts/roboto-light-webfont.eot');
+    src: url('~@src/assets/fonts/roboto-light-webfont.eot') format('embedded-opentype'), url('~@src/assets/fonts/roboto-light-webfont.woff') format('woff'), url('~@src/assets/fonts/roboto-light-webfont.ttf') format('truetype'), url('~@src/assets/fonts/roboto-light-webfont.svg#robotolight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: $font-thin;
+    font-display: swap;
+    src: url('~@src/assets/fonts/roboto-thin-webfont.eot');
+    src: url('~@src/assets/fonts/roboto-thin-webfont.eot') format('embedded-opentype'), url('~@src/assets/fonts/roboto-thin-webfont.woff') format('woffas'), url('~@src/assets/fonts/roboto-thin-webfont.ttf') format('truetype'), url('~@src/assets/fonts/roboto-thin-webfont.svg#robotothin') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

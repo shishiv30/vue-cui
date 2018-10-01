@@ -1,0 +1,109 @@
+
+.h0, .f0 {
+    @extend %f0;
+}
+
+.h1, .f1 {
+    @extend %f1;
+}
+
+
+.h2, .f2 {
+    @extend %f2;
+}
+
+
+.h3, .f3 {
+    @extend %f3;
+}
+
+
+.h4, .f4 {
+    @extend %f4;
+}
+
+
+.h5, .f5 {
+    @extend %f5;
+}
+
+
+.h6, .f6 {
+    @extend %f6;
+}
+.h7, .f7 {
+    @extend %f7;
+}
+
+
+.text-normal {
+    @extend %text-normal;
+}
+
+%text-bold {
+    font-weight: bold !important;
+}
+
+.text-bold {
+    @extend %text-bold;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-shadow {
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.7);
+}
+
+.text-white {
+    color: $color-f;
+}
+
+.text-darkgray {
+    color: $color-3;
+}
+
+.text-gray {
+    color: $color-7;
+}
+
+.text-lightgray {
+    color: $color-a;
+}
+
+.text-green, .text-safe {
+    color: $color-safe;
+}
+
+.text-orange, .text-warning {
+    color: $color-warning;
+}
+
+.text-red, .text-error {
+    color: $color-danger;
+}
+
+.text-blue {
+    color: $color-blue;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}

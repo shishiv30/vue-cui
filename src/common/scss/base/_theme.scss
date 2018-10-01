@@ -1,0 +1,136 @@
+// very small screen / phone
+$screen-xs: 320px;
+$screen-xs-min: 320px;
+$screen-phone: $screen-xs-min;
+// Small screen / tablet
+$screen-sm: 640px;
+$screen-sm-min: $screen-sm;
+$screen-tablet: $screen-sm-min;
+// Medium screen / desktop
+$screen-md: 992px;
+$screen-md-min: $screen-md;
+$screen-desktop: $screen-md-min;
+// Large screen / wide desktop
+$screen-lg: 1400px;
+$screen-lg-min: $screen-lg;
+$screen-lg-desktop: $screen-lg-min;
+$screen-xs-max: $screen-sm-min - 1;
+$screen-sm-max: $screen-md-min - 1;
+$screen-md-max: $screen-lg-min - 1;
+//grid
+$grid-columns: 12;
+$grid-gutter-width: 30px;
+$flex-gutter-width: 30px;
+$font: "robotolight";
+$font-thin: "robotothin";
+$font-icon: "fonticon";
+
+//legacy main
+$color-main: #4a90e2;
+$color-main-l1: lighten($color-main, 20%);
+//blue
+$color-blue: #4a90e2;
+$color-blue-l1: lighten($color-blue, 20%);
+//orange
+$color-warning: #f26122;
+$color-warning-l1: lighten($color-warning, 20%);
+// yellow
+$color-tip: #fac100;
+$color-tip-l1: lighten($color-tip, 20%);
+//green
+$color-safe: #1fcc9d;
+$color-safe-l1: lighten($color-safe, 20%);
+//color for error
+$color-danger: #e31922;
+$color-danger-l1: lighten($color-danger, 20%);
+//gray level
+$color-0: #000000;
+$color-1: #111111;
+$color-2: #222222;
+$color-3: #333333;
+$color-4: #444444;
+$color-5: #555555;
+$color-6: #666666;
+$color-7: #777777;
+$color-8: #888888;
+$color-9: #999999;
+$color-a: #aaaaaa;
+$color-b: #bbbbbb;
+$color-c: #cccccc;
+$color-d: #dddddd;
+$color-e: #eeeeee;
+$color-f: #ffffff;
+//reference color
+$color-text-default: $color-3;
+//color for disable
+$color-disable: $color-b;
+//color for background
+$color-bg: $color-e;
+//color for border
+$color-border: $color-d;
+//font line-height
+$font-size-base: 1rem;
+$increse: .618;
+//4
+$font-size-0: ($font-size-base + $increse*4);
+//2.5
+$font-size-1: ($font-size-base + $increse*2.5);
+//1.5
+$font-size-2: ($font-size-base + $increse*1.5);
+//1
+$font-size-3: ($font-size-base + $increse);
+//0.5
+$font-size-4: ($font-size-base + $increse/2);
+//0
+$font-size-5: $font-size-base;
+//-0.5
+$font-size-6: ($font-size-base - $increse/2);
+//11px
+$font-size-7: $font-size-base * $increse;
+
+
+//the basic value is 0.618
+$gap-xs: $font-size-base * .25;
+$gap-0: $font-size-base * .5;
+$gap-1: $font-size-base * 1;
+$gap-2: $font-size-base * 1.5;
+$gap-3: $font-size-base * 2.5;
+$gap-4: $font-size-base * 4;
+$gap-5: $font-size-base * 6.5;
+$gap-6: $font-size-base * 10.5;
+
+//button & input & select
+$form-size-small: $gap-3;
+$form-size-normal: 3.5rem;
+$form-size-large: $gap-5;
+$space-s: .309rem;
+$space-m: .618rem;
+$space-l: .927rem;
+$line-s: 1.309rem;
+$line-m: 1.618rem;
+$line-l: 1.927rem;
+
+//z-index
+$ui-tip-index: 1000;
+$ui-popover-index: 1050;
+$ui-buttongroup-index: 1100;
+$ui-pin-index: 1930;
+$ui-pin-hover-index: 1940;
+$ui-map-popover: 1950;
+$ui-sticky-submenu-index: 1950;
+$ui-stick-index: 1960;
+$ui-header-overlay: 1990;
+$ui-header-index: 2000;
+$ui-header-list-index: 2010;
+$ui-datepicker-index: 2100;
+$ui-gautocomplete-index: 3000;
+$ui-dropdown-index: 3100;
+$ui-header-list-index: 3110;
+$ui-menu-index: 3200;
+$ui-aside-index: 4000;
+$ui-dialog-overlay: 10000;
+$ui-dialog-index: 10010;
+
+
+//animation
+$animation-time: 0.25s;

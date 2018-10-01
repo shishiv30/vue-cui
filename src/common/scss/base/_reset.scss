@@ -1,0 +1,90 @@
+* {
+    box-sizing: border-box;
+}
+
+input, div, span, ul, li, ol, p, select, textarea, dl, dt, dd, html, body, select, form {
+    margin: 0;
+    padding: 0;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+html {
+    line-height: 1em;
+    font-family: $font, "Helvetica Neue", Arial, sans-serif;
+    font-style: normal;
+    font-size: 16px;
+}
+
+body, html {
+    min-height: 100%;
+}
+
+fieldset {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+legend {
+    color: inherit;
+}
+
+label[for] {
+    cursor: pointer;
+}
+
+input, select, textarea, button {
+    outline: none;
+    color: $color-text-default;
+    font-family: $font, "Helvetica Neue", Arial, sans-serif;
+}
+
+input::-ms-clear {
+    width: 0;
+    height: 0;
+}
+
+select {
+    border: 1px solid $color-border;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+input, select{
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+img {
+    border: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    line-height: inherit;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+i {
+    text-align: center;
+}
+
+abbr[title], acronym[title] {
+    border-bottom: 1px dotted;
+    cursor: help;
+}
+
+q:after, q:before {
+    content: '';
+}

@@ -1,5 +1,6 @@
 <template>
 <div class="search">
+    <i class="icon-plus"></i>
     <cuiMap></cuiMap>
 </div>
 </template>
@@ -50,4 +51,5 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@src/common/scss/ui.scss";
 </style>
