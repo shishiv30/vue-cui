@@ -1,16 +1,19 @@
 <template>
 <div class="search">
     <i class="icon-plus"></i>
-    <cuiMap></cuiMap>
+    <cuiMap ref="map" @loaded="initalMap" style="height:100px;width:100px;"></cuiMap>
 </div>
 </template>
 
 <script>
-import cuiMap from '../common/components/map.vue';
+import cuiMap from '../common/components/map/map.vue';
 export default {
     name: 'doc',
     components: {
         cuiMap
+    },
+    methods: {
+        initalMap() {}
     },
     asyncData({
         store,
