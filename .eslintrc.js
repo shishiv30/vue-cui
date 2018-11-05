@@ -9,20 +9,14 @@ module.exports = {
     "globals": {
         "browser": true,
         "console": true,
-        "importScripts":true,
+        "importScripts": true,
     },
     "extends": [
-        'standard',
-        'plugin:vue/recommended'
+        'standard'
     ],
     "rules": {
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "indent": ["error", 4],
     }
 };
