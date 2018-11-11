@@ -22,4 +22,4 @@ export default {
         scrollTop: 0,
         scrollLeft: 0
     }
-}
+};

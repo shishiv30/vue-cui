@@ -3,4 +3,4 @@ const urls = state => state.urls;
 export default {
     viewport,
     urls
-}
+};

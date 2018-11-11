@@ -1,34 +1,34 @@
 export default {
-    inital: function() {
-        $.localStorage = {}
+    inital: function () {
+        $.localStorage = {};
         if (window.localStorage) {
             try {
-                $.localStorage = JSON.parse(window.localStorage.getItem('movotoLocalStorage')) || {}
+                $.localStorage = JSON.parse(window.localStorage.getItem('movotoLocalStorage')) || {};
             } catch (e) {
-                return e
+                return e;
             }
         }
     },
-    setItem: function(key, value) {
+    setItem: function (key, value) {
         if (!$.localStorage) {
-            $.inital()
+            $.inital();
             if (key === 'inital') {
-                return
+                return;
             }
         }
-        $.localStorage[key] = value
+        $.localStorage[key] = value;
         if (window.localStorage) {
             try {
-                window.localStorage.setItem('movotoLocalStorage', JSON.stringify($.localStorage))
+                window.localStorage.setItem('movotoLocalStorage', JSON.stringify($.localStorage));
             } catch (e) {
-                return e
+                return e;
             }
         }
     },
-    getItem: function(key) {
+    getItem: function (key) {
         if (!$.localStorage) {
-            $.setItem('inital')
+            $.setItem('inital');
         }
-        return $.localStorage[key]
+        return $.localStorage[key];
     }
-}
+};

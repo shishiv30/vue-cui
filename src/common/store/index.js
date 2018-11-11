@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export function createStores(ctx) {
+export function createStores (ctx) {
     Object.assign(context.state, ctx);
     return new Vuex.Store({
         modules: {
