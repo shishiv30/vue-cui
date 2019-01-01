@@ -1,17 +1,19 @@
 export default {
     userAgent: {
-        isBot: undefined,
-        isMobile: undefined,
-        isPhone: undefined,
-        isDesktop: undefined
+        isBot: false,
+        isMobile: false,
+        isPhone: false,
+        isDesktop: false,
+        phone: '',
+        mobile: ''
     },
     urls: {
-        referUrl: undefined,
-        currentUrl: undefined,
-        domain: undefined
+        referUrl: '',
+        currentUrl: '',
+        domain: ''
     },
     location: {
-        language: undefined
+        language: ''
     },
     viewport: {
         width: 375,

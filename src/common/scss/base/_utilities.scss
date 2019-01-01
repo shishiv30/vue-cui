@@ -9,24 +9,9 @@
     cursor: help;
 }
 
-//blank space
-.blank-s {
-    height: $space-s;
-}
-
-.blank-m {
-    height: $space-m;
-}
-
-.blank-l {
-    height: $space-l;
-}
-
 .block-center {
     @extend %block-center;
 }
-
-
 
 .block-center-x {
     @extend %block-center-x;
@@ -79,9 +64,9 @@
 
 [class^="icon-"],
 [class*=" icon-"] {
-    @include fonticon();
+    @extend %icon;
 }
 
 [disabled], .disabled {
-    pointer-events: none!important;
+    pointer-events: none !important;
 }

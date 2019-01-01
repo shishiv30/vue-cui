@@ -13,6 +13,7 @@ function updateUserAgent (state, userAgent) {
 function updateLocation (state, location) {
     Object.assign(state.location, location);
 }
+
 export default {
     updateViewport,
     updateUrls,

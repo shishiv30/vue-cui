@@ -6,5 +6,5 @@
 <script src="./map.js"></script>
 
 <style lang="scss">
-@import './map.scss';
+    @import './map.scss';
 </style>

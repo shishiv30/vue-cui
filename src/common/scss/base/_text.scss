@@ -1,47 +1,5 @@
-
-.h0, .f0 {
-    @extend %f0;
-}
-
-.h1, .f1 {
-    @extend %f1;
-}
-
-
-.h2, .f2 {
-    @extend %f2;
-}
-
-
-.h3, .f3 {
-    @extend %f3;
-}
-
-
-.h4, .f4 {
-    @extend %f4;
-}
-
-
-.h5, .f5 {
-    @extend %f5;
-}
-
-
-.h6, .f6 {
-    @extend %f6;
-}
-.h7, .f7 {
-    @extend %f7;
-}
-
-
-.text-normal {
-    @extend %text-normal;
-}
-
-%text-bold {
-    font-weight: bold !important;
+.text-light {
+    @extend %text-light;
 }
 
 .text-bold {

@@ -12,7 +12,7 @@ module.exports = {
         "importScripts": true,
     },
     "extends": [
-        'standard'
+        'plugin:vue/essential'
     ],
     "rules": {
         "quotes": ["error", "single"],

@@ -1,7 +1,3 @@
-function initalContextByReq (commit, req) {
-    commit('updateContext', getDataByReq(req));
-}
-
 function updateContext (commit, data) {
     commit('updateUserAgent', data.userAgent);
     commit('updateUrls', data.urls);
@@ -9,6 +5,5 @@ function updateContext (commit, data) {
     commit('updateViewport', data.viewport);
 }
 export default {
-    initalContextByReq,
     updateContext
 };

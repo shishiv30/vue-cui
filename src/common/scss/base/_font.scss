@@ -1,13 +1,13 @@
 //font icon base
 @font-face {
-  font-family: $font-icon;
-  font-display: swap;
-  src:
-    url('~@src/assets/fonts/fonticon.ttf?lzwd7h') format('truetype'),
-    url('~@src/assets/fonts/fonticon.woff?lzwd7h') format('woff'),
-    url('~@src/assets/fonts/fonticon.svg?lzwd7h#fonticon') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: $font-icon;
+    font-display: swap;
+    src:
+        url('~@src/assets/fonts/fonticon.ttf?lzwd7h') format('truetype'),
+        url('~@src/assets/fonts/fonticon.woff?lzwd7h') format('woff'),
+        url('~@src/assets/fonts/fonticon.svg?lzwd7h#fonticon') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {

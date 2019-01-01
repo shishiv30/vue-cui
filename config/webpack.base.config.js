@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
+const pathsToClean = ['dist'];
 module.exports = {
     resolve: {
         alias: {
@@ -49,6 +49,7 @@ module.exports = {
         }]
     },
     plugins: [
+        new CleanWebpackPlugin(pathsToClean),
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
             filename: './index.html',
@@ -63,5 +64,6 @@ module.exports = {
             'window.jQuery': 'jquery',
             'window.$': 'jquery'
         })
-    ]
+    ],
+    devtool: 'source-map'
 };
