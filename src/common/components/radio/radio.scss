@@ -1,0 +1,89 @@
+@import "~@/common/scss/base/_defined.scss";
+.radio {
+    label {
+        height: $form-size-small;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0;
+        user-select: none;
+        > input {
+            display: none;
+        }
+        > i {
+            @extend %icon;
+            display: inline-block;
+            width: $font-size-5;
+            font-size:$font-size-5;
+            color: inherit;
+            margin-right: 6px;
+        }
+    }
+    input {
+        display: none;
+        &[disabled] {
+            &+ i, &+ i + span {
+                color: $color-disable;
+            }
+        }
+    }
+    &.disabled {
+        label > i{
+            color: $color-disable;
+        }
+    }
+    &.small{
+        label{
+            height: $form-size-small;
+            > i{
+                width: $font-size-4;
+                font-size:$font-size-4;
+            }
+        }
+    }
+}
+
+.radio {
+    input + i:before {
+        content: "\e93e";
+    }
+    input:checked + i:before {
+        content: "\e93f";
+    }
+}
+
+.radio{
+    &.group {
+        border: solid 1px $color-border;
+        display: flex;
+        border-radius: 5px;
+        label{
+            border-left:1px solid $color-border;
+            flex:1;
+            justify-content: center;
+            &:first-of-type{
+                border-left:none;
+            }
+            position: relative;
+        }
+        input + i{
+            background: transparent;
+            color: transparent;
+            position: absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            position: absolute;
+            width: 100%;
+            z-index: -1;
+        }
+        input:checked + i{
+            background: $color-blue;
+            color: $color-blue;
+        }
+        input:checked ~ span{
+            color:$color-f;
+        }
+    }
+}

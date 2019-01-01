@@ -1,0 +1,99 @@
+@import "~@/common/scss/base/_defined.scss";
+.checkbox {
+    label {
+        height: $form-size-small;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0;
+        user-select: none;
+
+        > input {
+            display: none;
+        }
+        > i {
+            @extend %icon;
+            display: inline-block;
+            width: $font-size-5;
+            font-size:$font-size-5;
+            color: inherit;
+            margin-right: 6px;
+        }
+    }
+    input {
+        display: none;
+        &[disabled] {
+            &+ i, &+ i + span {
+                color: $color-disable;
+            }
+        }
+    }
+    &.disabled {
+        label > i{
+            color: $color-disable;
+        }
+    }
+    &.small{
+        label{
+            height: $form-size-small;
+            > i{
+                width: $font-size-4;
+                font-size:$font-size-4;
+            }
+        }
+    }
+    &.button {
+        position: relative;
+        height: $form-size-small;
+        background: $color-f;
+        color: $color-blue;
+        padding: 0 $g1;
+        border-radius: 5px;
+        border: 1px solid $color-border;
+        height: $form-size-small;
+        line-height: $form-size-small;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        position: relative;
+        @include hover-supported() {
+           background-color:$color-e;
+        }
+        input, i {
+            display: none;
+        }
+        &.active {
+            background-color: $color-blue;
+            color: $color-f;
+        }
+        &.disabled {
+            background-color: $color-disable;
+            label {
+                > span {
+                    color: $color-f;
+                }
+            }
+        }
+    }
+    &.stacked {
+        label {
+            display: block;
+            padding-top: 10px;
+            padding-left: 12px;
+            border: solid 1px $color-border;
+            border-top: none;
+            &:first-child{
+                border-top: solid 1px $color-border;
+            }
+        }
+    }
+}
+
+.checkbox {
+    input + i:before {
+        content: "\e910";
+    }
+    input:checked + i:before {
+        content: "\e90f";
+    }
+}

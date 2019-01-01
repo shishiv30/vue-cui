@@ -40,6 +40,7 @@ input, select, textarea, button {
     outline: none;
     color: $color-text-default;
     font-family: $font, "Helvetica Neue", Arial, sans-serif;
+    font-size: $font-size-5;
 }
 
 input::-ms-clear {
@@ -58,7 +59,7 @@ select::-ms-expand {
     display: none;
 }
 
-input, select{
+input, select {
     -o-text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;

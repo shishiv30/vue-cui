@@ -1,0 +1,113 @@
+@import "~@/common/scss/base/_defined.scss";
+
+.dropdown {
+    position: relative;
+    height: $form-size-small;
+    flex-shrink: 0;
+
+    >a:first-of-type {
+        color: $color-blue;
+        padding: 0 $gap-2 0 $g1;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid $color-border;
+        height: $form-size-small;
+        line-height: $form-size-small;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        background: $color-f;
+        display: inline-flex;
+        align-items: center;
+
+        @include hover-supported() {
+            background: $color-e;
+        }
+
+        &:after {
+            @extend %icon;
+            content: "\e90b";
+            transition: transform $animation-time .25s;
+            height: $gap-1;
+            width: $gap-2;
+            margin-top: #{$gap-1/-2};
+            flex-shrink: 0;
+            display: inline-block;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            text-align: center;
+        }
+    }
+
+    &.hoverable {
+        &.animating {
+            pointer-events: none;
+        }
+
+        @include hover-supported() {
+            >a:first-of-type {
+                &:after {
+                    transform: rotateZ(-90deg);
+                    transition-delay: 0s !important;
+                }
+            }
+
+            >.dropdown-list {
+                transform: scaleY(1);
+                transition-delay: 0s !important;
+            }
+        }
+    }
+
+    &.active {
+        >a:first-of-type {
+            &:after {
+                transform: rotateZ(-90deg);
+                transition-delay: 0s !important;
+            }
+        }
+
+        >.dropdown-list {
+            transform: scaleY(1);
+            transition-delay: 0s !important;
+        }
+    }
+
+
+    >.dropdown-list {
+        position: absolute;
+        z-index: $ui-dropdown-index;
+        background: $color-f;
+        top: $form-size-small;
+        left: 0;
+        margin-top: 2px;
+        border: 1px solid $color-border;
+        min-width: 100%;
+        transition: transform $animation-time .25s;
+        transform-origin: top;
+        transform: scaleY(0);
+        max-height: $form-size-small * 6.5;
+        overflow-y: auto;
+
+        >a, .dropdown-anchor {
+            background: $color-f;
+            color: $color-blue;
+
+            @include hover-supported() {
+                color: $color-warning;
+                background: $color-e;
+            }
+
+            border-color: $color-e;
+            box-shadow: none;
+            border-top: 0;
+            display: block;
+            padding: 0 $g1;
+            height: $form-size-small;
+            line-height: $form-size-small;
+            white-space: nowrap;
+        }
+    }
+}

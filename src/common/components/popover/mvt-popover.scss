@@ -1,0 +1,64 @@
+@import "~@/common/scss/base/_defined.scss";
+.popover{
+    pointer-events: none;
+    &.open{
+        pointer-events: visible;
+        .popover-panel{
+            opacity: 1;
+        }
+        &.top{
+            .popover-panel{
+                transform: translateX(-50%) translateY(-100%);
+                margin-top: -20px;
+            }
+        }
+        &.bottom{
+            .popover-panel{
+                transform: translateX(-50%) translateY(0%);
+                margin-top: 20px;
+            }
+        }
+    }
+}
+.popover-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+}
+.popover-overlay{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    opacity: 0;
+    pointer-events: none;
+}
+.popover-map{
+    .popover-panel{
+        max-width: 320px;
+        width: 100%;
+        height: 200px;
+        z-index: 1;
+        display: flex;
+        align-items: flex-end;
+        >div{
+            flex:1;
+        }
+    }
+    &.bottom{
+        .popover-panel{
+            align-items: flex-start;
+        }
+    }
+}
+.mobile {
+    .popover-map .popover-panel{
+        transform: none !important;
+        max-width: initial !important;
+        left: initial !important;
+        top: initial !important;
+        bottom: 0;
+    }
+}
