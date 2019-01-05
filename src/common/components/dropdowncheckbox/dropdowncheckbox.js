@@ -1,5 +1,5 @@
-import dropdown from '@/common/components/dropdown/dropdown.vue';
-import checkbox from '@/common/components/checkbox/checkbox.vue';
+import dropdown from '../dropdown/dropdown.vue';
+import checkbox from '../checkbox/checkbox.vue';
 
 export default {
     name: 'dropdownCheckbox',

@@ -1,4 +1,4 @@
-import dropdown from '@/common/components/dropdown/dropdown.vue';
+import dropdown from '../dropdown/dropdown.vue';
 export default {
     name: 'dropdownMenu',
     props: {
@@ -47,4 +47,4 @@ export default {
             }
         },
     }
-}
+};

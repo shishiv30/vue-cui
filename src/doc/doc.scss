@@ -1,4 +1,4 @@
-@import "~@src/common/scss/ui.scss";
+@import "~@/common/scss/ui.scss";
 
 [class^="col-"],
 [class*=" col-"] {
@@ -10,5 +10,15 @@
 
     .h1, .h2, .h3, .h4, .h5, .h6 {
         border: 1px solid $color-f;
+    }
+}
+
+.icons {
+    text-align: center;
+
+    span {
+        @include singleline();
+        display: block;
+        line-height: 1.2em;
     }
 }

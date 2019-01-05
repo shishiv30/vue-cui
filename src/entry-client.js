@@ -1,9 +1,9 @@
 import {
     createApp
-} from '@src/app';
-import contextClient from '@src/common/mapping/context/client';
-import jqext from '@src/common/utilities/jqext';
-import initalDirectives from '@src/common/directives';
+} from '@/app';
+import contextClient from '@/common/mapping/context/client';
+import jqext from '@/common/utilities/jqext';
+import initalDirectives from '@/common/directives';
 initalDirectives();
 $.extend(jqext);
 const {

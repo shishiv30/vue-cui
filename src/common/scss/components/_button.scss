@@ -7,14 +7,13 @@
         &.active {
             background-color: $color-3;
             color: $color-f;
-            border-color: $color-3;
         }
     }
 
-    &.submit {
+    &.orange {
         background-color: $color-f;
-        color: $color-warning;
         border-color: $color-border;
+        color: $color-warning;
 
         &.active {
             background-color: $color-warning;
@@ -25,8 +24,8 @@
 
     &.link {
         background-color: $color-f;
+        border-color: $color-e;
         color: $color-blue;
-        border-color: $color-blue;
 
         &.active {
             background-color: $color-blue;
@@ -56,10 +55,6 @@
     }
 
     @extend %btn-color;
-
-    >i {
-        vertical-align: bottom;
-    }
 
     &.small {
         height: $form-size-small;

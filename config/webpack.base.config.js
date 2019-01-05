@@ -8,9 +8,10 @@ const pathsToClean = ['dist'];
 module.exports = {
     resolve: {
         alias: {
-            '@src': path.resolve(__dirname, '../src')
+            'vue$': 'vue/dist/vue.esm.js',
+            '@': path.resolve(__dirname, '../src/')
         },
-        extensions: ['.js', '.vue', '.scss']
+        extensions: ['*', '.js', '.vue', '.json']
     },
     module: {
         rules: [{

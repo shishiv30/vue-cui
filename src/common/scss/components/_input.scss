@@ -13,7 +13,8 @@
         width: 100%;
         height: $form-size-normal;
         line-height: calc(#{$form-size-normal} - 2px);
-        padding: 0 $g1;
+        padding-left: $g1;
+        padding-right: $g1;
         border: 1px solid $color-border;
     }
 
@@ -27,6 +28,10 @@
         color: inherit;
     }
 
+    >a {
+        border-radius: 0;
+    }
+
     >i, >a {
         top: 0;
         position: absolute;
@@ -35,7 +40,7 @@
         text-align: center;
         height: $form-size-normal;
         line-height: $form-size-normal;
-        font-size: $font-size-4;
+        font-size: inherit;
         @extend %singleline;
         width: $form-size-normal;
     }
@@ -62,6 +67,10 @@
         }
     }
 
+    >* {
+        line-height: inherit;
+    }
+
     &.small {
         font-size: $font-size-5;
 
@@ -73,7 +82,8 @@
         >i, >a {
             height: $form-size-small;
             line-height: $form-size-small;
-            font-size: $font-size-5;
+            min-width: initial;
+            font-size: inherit;
             width: $form-size-small;
         }
 
@@ -154,6 +164,5 @@
                 transform: translateY(100%);
             }
         }
-
     }
 }

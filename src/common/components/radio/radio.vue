@@ -9,5 +9,5 @@
 </template>
 <script src="./radio.js"></script>
 <style lang="scss">
-    @import "./adio.scss";
+    @import "./radio.scss";
 </style>

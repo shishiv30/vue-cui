@@ -1,8 +1,8 @@
-import dropdown from '@/common/components/dropdown/dropdown.vue';
-import textbox from '@/common/components/textbox/textbox.vue';
-import inputCurrency from '@/common/components/inputcurrency/inputcurrency.vue';
-import inputNumber from '@/common/components/inputnumber/inputnumber.vue';
-import format from '@/common/vutilities/format';
+import dropdown from '../dropdown/dropdown.vue';
+import textbox from '../textbox/textbox.vue';
+import inputCurrency from '../inputcurrency/inputcurrency.vue';
+import inputNumber from '../inputnumber/inputnumber.vue';
+import format from '../../utilities/format.js';
 export default {
     name: 'dropdownRange',
     props: {

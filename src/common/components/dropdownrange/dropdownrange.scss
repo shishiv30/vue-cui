@@ -4,17 +4,19 @@
     background-color: $color-f;
     display: flex;
     position: sticky;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     right: 0;
     align-items: center;
     z-index: 2;
-    padding:$g1;
-    span{
-        padding:$g1;
+    padding: $g1;
+
+    span {
+        padding: $g1;
         font-size: $font-size-3;
     }
-    .textbox{
+
+    .textbox {
         min-width: 5.3rem;
     }
 }

@@ -37,6 +37,8 @@
 .h1, .h2, .h3, .h4, .h5, .h6 {
     line-height: 1.618em;
     @include singleline();
+    padding-left: $g1;
+    padding-right: $g1;
 }
 
 .section {
@@ -50,8 +52,14 @@
 .panel {
     margin: $g2 0;
 
-    .paragraph {
+    >.h1, >.h2, >.h3, >.h4, >.h5, >.h6 {
+        margin: $g1 0;
+    }
+
+    >.paragraph {
         margin: $g1 0;
         line-height: 1.618em;
+        padding-left: $g1;
+        padding-right: $g1;
     }
 }

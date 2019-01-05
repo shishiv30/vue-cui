@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import format from '@/common/vutilities/format';
+    import format from '../../utilities/format';
     export default {
         name: 'inputNumber',
         props: {

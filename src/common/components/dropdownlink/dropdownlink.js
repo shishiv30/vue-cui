@@ -1,4 +1,4 @@
-import dropdown from '@/common/components/dropdown/dropdown.vue';
+import dropdown from '../dropdown/dropdown.vue';
 export default {
     name: 'dropdownLink',
     props: {
@@ -48,4 +48,4 @@ export default {
             return this.data.find(e => e.value == this._value) || this.data[0];
         }
     }
-}
+};
