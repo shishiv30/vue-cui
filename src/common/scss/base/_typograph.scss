@@ -62,4 +62,12 @@
         padding-left: $g1;
         padding-right: $g1;
     }
+
+    >.singleline-2 {
+        @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 2, $bgColor: white);
+    }
+
+    >.singleline-3 {
+        @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 3, $bgColor: white);
+    }
 }

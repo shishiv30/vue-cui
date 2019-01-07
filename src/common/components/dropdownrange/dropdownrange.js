@@ -1,6 +1,5 @@
 import dropdown from '../dropdown/dropdown.vue';
 import textbox from '../textbox/textbox.vue';
-import inputCurrency from '../inputcurrency/inputcurrency.vue';
 import inputNumber from '../inputnumber/inputnumber.vue';
 import format from '../../utilities/format.js';
 export default {
@@ -11,10 +10,6 @@ export default {
             required: true
         },
         value: {},
-        dropdown: {
-            type: Boolean,
-            default: true
-        },
         theme: {
             type: String,
             default: ''
@@ -41,7 +36,6 @@ export default {
     components: {
         textbox,
         dropdown,
-        inputCurrency,
         inputNumber
     },
     data() {
@@ -54,31 +48,22 @@ export default {
             var newItem = {};
             if (value > this.maxValue) {
                 newItem[this.options.mapping.max] = 0;
+            } else {
+                newItem[this.options.mapping.max] = this._value[this.options.mapping.max];
             }
             newItem[this.options.mapping.min] = value;
             this._value = newItem;
             this.$refs.max.$el.focus();
         },
         close() {
-            this.dropdown && this.$refs.dropdownList.close();
+            this.$refs.dropdownList.close();
         },
         changeMax(value) {
             var newItem = {};
-            if (this.options.type === 'inputCurrency') {
-                var digitalCount = value.toString().length;
-                switch (digitalCount) {
-                case 1:
-                    value = value * Math.pow(10, 6);
-                    break;
-                case 2:
-                case 3:
-                case 4:
-                    value = value * Math.pow(10, 3);
-                    break;
-                }
-            }
             if (value < this.minValue) {
                 newItem[this.options.mapping.min] = 0;
+            } else {
+                newItem[this.options.mapping.min] = this._value[this.options.mapping.min];
             }
 
             newItem[this.options.mapping.max] = value;
@@ -90,7 +75,7 @@ export default {
             target && target.$el.focus();
         },
         flipDropdownList(flag) {
-            if (this.dropdown && this.editMin != flag) {
+            if (this.editMin != flag) {
                 this.editMin = flag;
                 this.$refs.list.scrollTop = 0;
             }
@@ -147,28 +132,15 @@ export default {
             max = max ?
                 parseInt(max) :
                 max;
-            if (this.options.input === 'inputCurrency') {
-                const formatPrice = format.friendlyPrice;
-                if (!min && !max) {
-                    return name;
-                } else if (min && max === 0) {
-                    return `$${formatPrice(min)}+`;
-                } else if (min && max && min === max) {
-                    return formatPrice(min);
-                } else {
-                    return `$${formatPrice(min)|| min} - $${formatPrice(max)||max}`;
-                }
+            const formatNumber = format.formatNumberByComma;
+            if (!min && !max) {
+                return this.options.name;
+            } else if (min && max === 0) {
+                return `${formatNumber(min)}+ ${name}`;
+            } else if (min && max && min === max) {
+                return `${formatNumber(min)} ${name}`;
             } else {
-                const formatNumber = format.formatNumberByComma;
-                if (!min && !max) {
-                    return this.options.name;
-                } else if (min && max === 0) {
-                    return `${formatNumber(min)}+ ${name}`;
-                } else if (min && max && min === max) {
-                    return `${formatNumber(min)} ${name}`;
-                } else {
-                    return `${formatNumber(min)} - ${formatNumber(max)} ${name}`;
-                }
+                return `${formatNumber(min)} - ${formatNumber(max)} ${name}`;
             }
         }
     }

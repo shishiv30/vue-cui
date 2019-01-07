@@ -392,7 +392,7 @@ export default {
                         max: 'maxPrice'
                     },
                     autoFocus: 'max',
-                    input: 'inputCurrency'
+                    input: 'inputNumber'
                 }
             }
         };

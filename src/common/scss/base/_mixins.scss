@@ -278,3 +278,32 @@ $blur-size: $blur-width $card-height;
         animation: skeleton_house_loading 1.5s infinite;
     }
 }
+
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white, $offset:0) {
+    overflow: hidden;
+    position: relative;
+    line-height: $lineHeight;
+    max-height: $lineHeight * $lineCount;
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: #{$offset+1};
+
+    &:before {
+        content: '...';
+        position: absolute;
+        right: $offset;
+        bottom: 0;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        right: $offset;
+        width: 1em;
+        height: 1em;
+        margin-top: 0.2em;
+        background: $bgColor;
+    }
+}

@@ -30,7 +30,27 @@
                     </div>
                     <div class="panel">
                         <div class="h4">Typograph paragraph</div>
-                        <div class="paragraph">A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process. Type design is a closely related craft, sometimes considered part of typography; most typographers do not design typefaces, and some type designers do not consider themselves typographers.[2][3] Typography also may be used as a decorative device, unrelated to communication of information.
+                        <div class="paragraph">A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                        </div>
+                        <div class="paragraph">
+                            <div class="multiline-2">
+                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                            </div>
+                        </div>
+                        <div class="paragraph">
+                            <div class="multiline-3">
+                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                            </div>
+                        </div>
+                        <div class="paragraph">
+                            <div class="multiline-4">
+                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                            </div>
+                        </div>
+                        <div class="paragraph">
+                            <div class="multiline-5">
+                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,7 +135,7 @@
                                     <textbox>
                                         <div class="input left">
                                             <label>Mobile Number</label>
-                                            <i class="icon-phone-o"></i>
+                                            <i class="icon-phone"></i>
                                             <input type="number" name="phone" v-model="phone" />
                                         </div>
                                     </textbox>
@@ -125,7 +145,7 @@
                                         <div class="input left">
                                             <label>Password</label>
                                             <i class="icon-eye"></i>
-                                            <input type="password" name="phone" v-model="password" />
+                                            <input type="password" name="password" v-model="password" />
                                         </div>
                                     </textbox>
                                 </div>
@@ -164,7 +184,7 @@
                                     <textbox>
                                         <div class="input small left">
                                             <label>Mobile Number</label>
-                                            <i class="icon-phone-o"></i>
+                                            <i class="icon-phone"></i>
                                             <input type="number" name="phone" v-model="phone1" />
                                         </div>
                                     </textbox>
@@ -174,7 +194,7 @@
                                         <div class="input small left">
                                             <label>Password</label>
                                             <i class="icon-eye"></i>
-                                            <input type="password" name="phone" v-model="password1" />
+                                            <input type="password" name="password" v-model="password1" />
                                         </div>
                                     </textbox>
                                 </div>
