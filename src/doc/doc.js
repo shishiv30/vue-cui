@@ -7,6 +7,8 @@ import radio from '@/common/components/radio/radio.vue';
 import dropdown from '@/common/components/dropdown/dropdown.vue';
 import dropdownCheckbox from '@/common/components/dropdowncheckbox/dropdowncheckbox.vue';
 import dropdownRange from '@/common/components/dropdownrange/dropdownrange.vue';
+import navigation from '@/common/components/nav/nav.vue';
+
 export default {
     name: 'doc',
     asyncData({
@@ -24,7 +26,8 @@ export default {
         dropdown,
         dropdownCheckbox,
         dropdownRange,
-        dropdownMenu
+        dropdownMenu,
+        navigation
     },
     methods: {
         initalMap() {}

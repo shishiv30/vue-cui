@@ -1,5 +1,48 @@
 <template>
     <div class="page-dev-ui" v-inital v-fullscreen>
+        <navigation>
+            <template slot="logo">
+                <i class="icon-cui"></i>
+            </template>
+            <template slot="searchBox">
+                <textbox>
+                    <div class="input  right">
+                        <label>Search</label>
+                        <input type="text" name="search" v-model="search1" />
+                        <a href="javascript:;" class="btn"><i class="icon-search"></i></a>
+                    </div>
+                </textbox>
+            </template>
+            <template slot="fixedMenus">
+                <a href="javascript:;" class="btn small orange highlight">Demo Page</a>
+            </template>
+            <template slot="menus">
+                <li class="list">
+                    <a href="" class="btn small link">A</a>
+                    <ul>
+                        <a href="javascript:;">A1</a>
+                        <a href="javascript:;">A2</a>
+                        <a href="javascript:;">A3</a>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="" class="btn small link">B</a>
+                    <ul>
+                        <a href="javascript:;">B1</a>
+                        <a href="javascript:;">B2</a>
+                        <a href="javascript:;">B3</a>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="">Login / Signup</a>
+                    <ul>
+                        <a href="javascript:;">Account Center</a>
+                        <a href="javascript:;">Setting</a>
+                        <a href="javascript:;">Quit</a>
+                    </ul>
+                </li>
+            </template>
+        </navigation>
         <div class="flex-gs-fixed">
             <div class="flex-xs-12">
                 <div class="section">

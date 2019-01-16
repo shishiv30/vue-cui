@@ -70,8 +70,6 @@ $color-bg: $color-e;
 //color for border
 $color-border: $color-d;
 //font line-height
-$increase: .618;
-
 //~5px
 $gxs: 0.309rem;
 //~6px
@@ -85,11 +83,11 @@ $g3: 1.309rem;
 
 //f1 = f3 / 0.618 = f3 + f3 * 0.618
 $font-size-1: 2.618rem;
-//f2 = f3 + $g1 / 2
+//f2 = (f1+f3) / 2
 $font-size-2: 2.118rem;
 //f3 = f5 / 0.618 = f5 + f5 * 0.618
 $font-size-3: 1.618rem;
-//f4 = f5 + $g1 / 2
+//f4 = (f3+f5) / 2
 $font-size-4: 1.309rem;
 //f5 =  f7 / 0.618 = f7 + f7 * 0.618
 $font-size-5: 1rem;
@@ -98,18 +96,9 @@ $font-size-6: 0.809rem;
 //0.618 = 1 * 0.618
 $font-size-7: 0.618rem;
 
-
-//the basic value is 0.618
-//1rem
-$gap-1: 1rem;
-$gap-2: 1.5rem;
-$gap-3: 2.5rem;
-$gap-4: 4rem;
-
 //button & input & select
 $form-size-small: 2.618rem;
-$form-size-normal: 3.5rem;
-$form-size-large: 6.5rem;
+$form-size-normal: 3.236rem;
 
 //z-index
 $ui-tip-index: 1000;
@@ -120,13 +109,12 @@ $ui-pin-hover-index: 1940;
 $ui-map-popover: 1950;
 $ui-sticky-submenu-index: 1950;
 $ui-stick-index: 1960;
-$ui-header-overlay: 1990;
-$ui-header-index: 2000;
-$ui-header-list-index: 2010;
+$ui-nav-overlay: 1990;
+$ui-nav-index: 2000;
 $ui-datepicker-index: 2100;
 $ui-gautocomplete-index: 3000;
 $ui-dropdown-index: 3100;
-$ui-header-list-index: 3110;
+$ui-nav-list-index: 3110;
 $ui-menu-index: 3200;
 $ui-aside-index: 4000;
 $ui-dialog-overlay: 10000;

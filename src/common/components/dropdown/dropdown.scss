@@ -51,13 +51,13 @@
         margin-top: 2px;
         border: 1px solid $color-border;
         min-width: 100%;
-        max-height: $form-size-normal * 6.5;
+        max-height: $form-size-normal * 6;
         transition: transform $animation-time .25s;
         transform-origin: top;
         transform: scaleY(0);
         overflow-y: auto;
 
-        >a, .dropdown-anchor {
+        >a {
             background: $color-f;
             color: $color-blue;
 
@@ -94,9 +94,9 @@
 
         >.dropdown-list {
             top: $form-size-small;
-            max-height: $form-size-small * 6.5;
+            max-height: $form-size-small * 8;
 
-            >a, .dropdown-anchor {
+            >a {
                 height: $form-size-small;
                 line-height: $form-size-small;
             }
