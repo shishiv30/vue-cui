@@ -6,39 +6,50 @@
     flex-shrink: 0;
 
     >a:first-of-type {
-        font-size: $font-size-4;
-        color: $color-blue;
         padding: 0 $g3 0 $g1;
-        width: 100%;
         border-radius: 5px;
         border: 1px solid $color-e;
-        height: $form-size-normal;
-        line-height: $form-size-normal;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         position: relative;
-        background: $color-f;
-        display: inline-flex;
-        align-items: center;
 
-        @include hover-supported() {
-            background: $color-e;
+        >span, >i {
+            vertical-align: middle;
         }
 
         &:after {
             @extend %icon;
             content: $icon-angle-left;
-            transition: transform $animation-time .25s;
+            transition: transform $animation-time;
             width: $g3;
             height: $form-size-normal;
             margin-top: #{$form-size-normal/-2};
-            flex-shrink: 0;
             display: inline-block;
             position: absolute;
             right: 0;
             top: 50%;
             text-align: center;
+            font-size: 1rem;
+        }
+    }
+
+    >a:first-of-type, >.dropdown-list>a {
+        line-height: calc(#{$form-size-normal} - 2px);
+        height: $form-size-normal;
+        @include singleline();
+        display: block;
+        font-size: $font-size-4;
+        background: $color-f;
+        color: $color-blue;
+
+        @include hover-supported() {
+            color: $color-warning;
+        }
+
+        >span, >i {
+            vertical-align: middle;
+        }
+
+        >i {
+            font-size: $font-size-4;
         }
     }
 
@@ -48,58 +59,50 @@
         background: $color-f;
         top: $form-size-normal;
         left: 0;
-        margin-top: 2px;
-        border: 1px solid $color-border;
+        margin-top: $gxs;
+        border: 1px solid $color-e;
         min-width: 100%;
-        max-height: $form-size-normal * 6;
+        max-height: $form-size-normal * 6.5;
         transition: transform $animation-time .25s;
         transform-origin: top;
         transform: scaleY(0);
         overflow-y: auto;
 
         >a {
-            background: $color-f;
-            color: $color-blue;
-
-            @include hover-supported() {
-                color: $color-warning;
-                background: $color-e;
-            }
-
+            padding: 0 $g1;
             border-color: $color-e;
             box-shadow: none;
             border-top: 0;
-            display: block;
-            padding: 0 $g1;
-            height: $form-size-normal;
-            line-height: $form-size-normal;
-            white-space: nowrap;
         }
     }
 
     &.small {
         height: $form-size-small;
 
-        >a:first-of-type {
+        >a:first-of-type, >.dropdown-list>a {
             font-size: $font-size-5;
+            line-height: calc(#{$form-size-small} - 2px);
             height: $form-size-small;
-            line-height: $form-size-small;
+        }
 
+        >a:first-of-type {
             &:after {
                 height: $form-size-small;
                 margin-top: #{$form-size-small/-2};
-
             }
         }
 
         >.dropdown-list {
             top: $form-size-small;
-            max-height: $form-size-small * 8;
+            max-height: $form-size-small * 8.5;
+        }
+    }
 
-            >a {
-                height: $form-size-small;
-                line-height: $form-size-small;
-            }
+    &.disabled {
+        pointer-events: none;
+
+        >a:first-of-type {
+            background-color: $color-e;
         }
     }
 
@@ -136,4 +139,24 @@
             transition-delay: 0s !important;
         }
     }
+
+    &.right {
+        >.dropdown-list {
+            left: auto;
+            right: 0;
+        }
+    }
+
+    &.link {
+        display: inline-block;
+        vertical-align: middle;
+
+        >a:first-of-type {
+            border: transparent;
+        }
+    }
+}
+
+.body-dropdown-show, .body-dropdown-show body {
+    overflow: hidden;
 }

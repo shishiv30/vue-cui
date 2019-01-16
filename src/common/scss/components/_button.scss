@@ -49,6 +49,8 @@
     border-style: solid;
     border-color: transparent;
     border-radius: 5px;
+    font-size: $font-size-4;
+    cursor: pointer;
 
     @include hover-supported() {
         opacity: .9;
@@ -56,24 +58,19 @@
 
     @extend %btn-color;
 
+    >span, >i {
+        vertical-align: middle;
+    }
+
+    >i {
+        font-size: $font-size-4;
+    }
+
     &.small {
         height: $form-size-small;
         min-width: $form-size-small;
         line-height: calc(#{$form-size-small} - 2px);
         font-size: $font-size-5;
-
-        >* {
-            line-height: inherit;
-        }
-    }
-
-    &.circle {
-        display: inline-block;
-        height: $form-size-normal;
-        width: $form-size-normal;
-        line-height: calc(#{$form-size-normal} - 2px);
-        border-radius: 100%;
-        font-size: $font-size-4;
     }
 
     &[disabled] {
@@ -90,4 +87,33 @@
 
 .btn {
     @extend %btn;
+}
+
+.btn-circle {
+    display: inline-block;
+    min-width: initial !important;
+    vertical-align: middle;
+    width: $form-size-normal;
+    height: $form-size-normal;
+    line-height: calc(#{$form-size-normal} - 2px);
+    border-radius: 100%;
+    font-size: $font-size-4;
+    background-color: $color-e;
+    color: $color-blue;
+    text-align: center !important;
+
+    @include hover-supported() {
+        color: $color-warning;
+    }
+
+    &.small {
+        width: $form-size-small;
+        height: $form-size-small;
+        line-height: calc(#{$form-size-small} - 2px);
+    }
+
+    &.orange {
+        background-color: $color-warning !important;
+        color: $color-f !important;
+    }
 }

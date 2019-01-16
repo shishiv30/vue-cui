@@ -1,5 +1,5 @@
 export default {
-    name: 'nav',
+    name: 'navigation',
     methods: {},
     components: {},
     mounted: function () {
@@ -11,10 +11,10 @@ export default {
         var $swtichLink = $this.find('.nav-switch-link');
         $this.prepend($overlay);
         var _show = function () {
-            $body.addClass('expand');
+            $body.addClass('body-nav-expand');
         };
         var _hide = function () {
-            $body.removeClass('expand');
+            $body.removeClass('body-nav-expand');
         };
         $overlay.on('click', _hide);
         $dropdown.each(function () {
@@ -35,7 +35,7 @@ export default {
             $(this).append($arrow);
         });
         $swtichLink.on('click', function () {
-            if ($body.hasClass('expand')) {
+            if ($body.hasClass('body-nav-expand')) {
                 _hide();
             } else {
                 _show();

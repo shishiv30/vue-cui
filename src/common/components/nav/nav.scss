@@ -28,12 +28,11 @@ $nav-padding: $g1;
     z-index: $ui-nav-index;
 
     a {
-        padding: 0 $g0;
+        padding: 0 $gxs;
         margin: $gxs 0;
         line-height: ($nav-height - $gxs * 2);
         min-width: $nav-height;
         display: block;
-        text-align: center;
         @include singleline();
 
         @include hover-supported() {
@@ -134,13 +133,11 @@ $nav-padding: $g1;
     position: relative;
     @include clearfix();
 
-    &>li {
-        float: left;
+    >li {
         position: relative;
-        display: inline-block;
 
         &.list {
-            &>a {
+            >a {
                 position: relative;
 
                 &:after {
@@ -168,11 +165,7 @@ $nav-padding: $g1;
             }
         }
 
-        &.right {
-            float: right;
-        }
-
-        &>ul {
+        >ul {
             background-color: $color-f;
             color: $color-3;
             position: relative;
@@ -182,7 +175,7 @@ $nav-padding: $g1;
 
 //small screen
 @media(max-width:$screen-sm-max) {
-    .expand {
+    .body-nav-expand, .body-nav-expand body {
         overflow: hidden;
 
         .nav {
@@ -217,20 +210,18 @@ $nav-padding: $g1;
             transform: translateX(-100%);
             height: 100vh;
 
-            &>li {
+            >li {
                 width: 100%;
                 height: $nav-height;
                 transition: height $animation-time;
                 overflow: hidden;
-                border-bottom: 1px solid rgba(255, 255, 255, .1);
+                border-bottom: 1px solid $color-e;
                 flex-shrink: 0;
 
                 >a {
                     text-align: left;
                     padding-left: $nav-padding;
                     padding-right: $nav-padding;
-                    border-bottom: 1px solid $color-e;
-
                 }
 
                 &.list {
@@ -268,20 +259,26 @@ $nav-padding: $g1;
             }
         }
 
-        .nav-switch-link {
-            display: block;
-        }
     }
 }
 
 //larger screen
 @media(min-width:$screen-md-min) {
     .nav {
+        .nav-switch-link {
+            pointer-events: none;
+        }
+
         .nav-menu-list {
             margin-left: auto;
 
-            &>li {
+            >li {
                 height: fit-content;
+                float: left;
+
+                >a {
+                    text-align: center;
+                }
 
                 &:hover {
                     a {
@@ -290,21 +287,22 @@ $nav-padding: $g1;
                         }
                     }
 
-                    &>ul {
+                    >ul {
                         visibility: visible;
                     }
                 }
 
-                &>ul {
+                >ul {
                     visibility: hidden;
                     position: absolute;
                     border: 1px solid $border-color;
-                    margin-top: -6px;
+                    margin-top: -7px;
                     top: $nav-height;
                     left: 0;
                     right: auto;
+                    text-align: left;
 
-                    &>li {
+                    >li {
                         a {
                             text-align: left;
                         }
@@ -312,11 +310,14 @@ $nav-padding: $g1;
                 }
 
                 &.right {
-                    &>ul {
+                    float: right;
+
+                    >ul {
+                        text-align: right;
                         left: auto;
                         right: 0;
 
-                        &>li {
+                        >li {
                             a {
                                 text-align: right;
                             }

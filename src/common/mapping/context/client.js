@@ -1,6 +1,6 @@
 var MobileDetect = require('mobile-detect');
 
-function getContextByWindow (req) {
+function getContextByWindow(req) {
     var md = new MobileDetect(navigator.userAgent);
     var context = {
         userAgent: {

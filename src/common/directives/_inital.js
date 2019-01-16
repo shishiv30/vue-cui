@@ -64,9 +64,13 @@ export default () => {
         }
         return status;
     };
+    var _initalDynamicCss = function () {
+        $.createCSS('.body-nav-expand, .body-dropdown-show ', `padding-right:${$.scrollWidth()}px;`);
+    };
     Vue.directive('inital', {
         bind: function () {
             _isMobile();
+            _initalDynamicCss();
             _updateWindowStatus('inital');
             $(window).on('scroll', $.throttle(function () {
                 _updateWindowStatus('scroll');

@@ -12,6 +12,14 @@ export default {
         closestate: {
             type: Boolean,
             default: false
+        },
+        isSmall: {
+            type: Boolean,
+            default: false
+        },
+        isDisabled: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -35,6 +43,9 @@ export default {
                 var $this = $(this.$el);
                 setTimeout(function () {
                     var $root = $this.closest('.dropdown-list, body');
+                    if ($root.is('.dropdown-list')) {
+                        $('#body').addClass('body-dropdown-show');
+                    }
                     $root.one(('click.dropdown' + that._uid), function () {
                         that.close();
                     });
@@ -48,6 +59,7 @@ export default {
                 var $this = $(this.$el);
                 var $root = $this.closest('.dropdown-list, body');
                 $root.off(('click.dropdown' + this._uid));
+                $('#body').removeClass('body-dropdown-show');
                 setTimeout(function () {
                     $this.closest('[scroller]').trigger('closed');
                 }, 500);

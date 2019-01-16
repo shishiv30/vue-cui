@@ -17,28 +17,57 @@
                 <a href="javascript:;" class="btn small orange highlight">Demo Page</a>
             </template>
             <template slot="menus">
-                <li class="list">
-                    <a href="" class="btn small link">A</a>
-                    <ul>
-                        <a href="javascript:;">A1</a>
-                        <a href="javascript:;">A2</a>
-                        <a href="javascript:;">A3</a>
-                    </ul>
-                </li>
-                <li class="list">
-                    <a href="" class="btn small link">B</a>
-                    <ul>
-                        <a href="javascript:;">B1</a>
-                        <a href="javascript:;">B2</a>
-                        <a href="javascript:;">B3</a>
-                    </ul>
-                </li>
-                <li class="list">
+                <li class="list right">
                     <a href="">Login / Signup</a>
                     <ul>
                         <a href="javascript:;">Account Center</a>
                         <a href="javascript:;">Setting</a>
                         <a href="javascript:;">Quit</a>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="">Typograph</a>
+                    <ul>
+                        <a href="javascript:;">Font</a>
+                        <a href="javascript:;">paragraph</a>
+                        <a href="javascript:;">Panel</a>
+                        <a href="javascript:;">Section</a>
+                        <a href="javascript:;">Grid Layout</a>
+                        <a href="javascript:;">Flex Layout</a>
+                        <a href="javascript:;">Table Layout</a>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="">Component</a>
+                    <ul>
+                        <a href="javascript:;">Dialog</a>
+                        <a href="javascript:;">Tabs</a>
+                        <a href="javascript:;">Navigation</a>
+                        <a href="javascript:;">Tip/s</a>
+                        <a href="javascript:;">Carousel</a>
+                        <a href="javascript:;">Waterfalls</a>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="">Form</a>
+                    <ul>
+                        <a href="javascript:;">Textbox</a>
+                        <a href="javascript:;">Dropdown</a>
+                        <a href="javascript:;">Radio Button</a>
+                        <a href="javascript:;">CHeckbox Button</a>
+                        <a href="javascript:;">Radio Button</a>
+                        <a href="javascript:;">Slider</a>
+                        <a href="javascript:;">Validation</a>
+                        <a href="javascript:;">Submit BUtton</a>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="">Utilites</a>
+                    <ul>
+                        <a href="javascript:;">Google Dynamic Map</a>
+                        <a href="javascript:;">Google Static Map</a>
+                        <a href="javascript:;">Geo Autocompelte</a>
+                        <a href="javascript:;">Lazyloading Image</a>
                     </ul>
                 </li>
             </template>
@@ -75,24 +104,28 @@
                         <div class="h4">Typograph paragraph</div>
                         <div class="paragraph">A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
                         </div>
+                        <div class="h5">Paragraph two row with ellipsis</div>
                         <div class="paragraph">
                             <div class="multiline-2">
-                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                                Typography is the work of typesetters (also known as compositors), typographers, graphic designers, art directors, manga artists, comic book artists, graffiti artists.
                             </div>
                         </div>
+                        <div class="h5">Paragraph three row with ellipsis</div>
                         <div class="paragraph">
                             <div class="multiline-3">
-                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                                Anyone who arranges words, letters, numbers, and symbols for publication, display, or distribution, from clerical workers and newsletter writers to anyone self-publishing materials. Until the Digital Age, typography was a specialized occupation.
                             </div>
                         </div>
+                        <div class="h5">Paragraph four row with ellipsis</div>
                         <div class="paragraph">
                             <div class="multiline-4">
-                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                                Digitization opened up typography to new generations of previously unrelated designers and lay users. As the capability to create typography has become ubiquitous, the application of principles and best practices developed over generations of skilled workers and professionals has diminished.
                             </div>
                         </div>
+                        <div class="h5">Paragraph five row with ellipsis</div>
                         <div class="paragraph">
                             <div class="multiline-5">
-                                A specimen sheet of the Trajan typeface, which is based on the letter forms of capitalis monumentalis or Roman square capitals used for the inscription at the base of Trajan's Column, from which the typeface takes its name Movable type being assembled on a composing stick using pieces that are stored in the type case shown below it Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning[1]). The term typography is also applied to the style, arrangement, and appearance of the letters, numbers, and symbols created by the process.
+                                So at a time when scientific techniques can support the proven traditions (e.g., greater legibility with the use of serifs, upper and lower case, contrast, etc.) through understanding the limitations of human vision, typography as often encountered may fail to achieve its principal objective: effective communication.
                             </div>
                         </div>
                     </div>
