@@ -11,7 +11,7 @@
                 <slot name="fixedMenus"></slot>
             </div>
         </div>
-        <div class="nav-nav">
+        <div class="nav-menu">
             <ul class="nav-menu-list">
                 <slot name="menus"></slot>
             </ul>

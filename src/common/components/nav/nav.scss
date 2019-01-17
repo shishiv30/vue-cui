@@ -122,7 +122,7 @@ $nav-padding: $g1;
     z-index: $ui-nav-overlay;
 }
 
-.nav-nav {
+.nav-menu {
     position: relative;
     z-index: $ui-nav-list-index;
     background-color: inherit;
@@ -333,7 +333,7 @@ $nav-padding: $g1;
             }
         }
 
-        .nav-nav {
+        .nav-menu {
             width: calc(100% - 320px);
             max-width: fit-content;
         }

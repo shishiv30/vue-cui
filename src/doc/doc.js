@@ -1,5 +1,6 @@
 import cuiMap from '@/common/components/map/map.vue';
 import textbox from '@/common/components/textbox/textbox.vue';
+import textboxAutocomplete from '@/common/components/textboxautocomplete/textboxautocomplete.vue';
 import dropdownLink from '@/common/components/dropdownlink/dropdownlink.vue';
 import dropdownMenu from '@/common/components/dropdownmenu/dropdownmenu.vue';
 import checkbox from '@/common/components/checkbox/checkbox.vue';
@@ -20,6 +21,7 @@ export default {
     components: {
         cuiMap,
         textbox,
+        textboxAutocomplete,
         dropdownLink,
         checkbox,
         radio,

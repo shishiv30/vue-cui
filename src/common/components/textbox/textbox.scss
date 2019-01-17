@@ -33,16 +33,11 @@
             pointer-events: none;
         }
 
-        .tooltip.error {
-            top: 0 !important;
-            right: 0 !important;
-            left: auto !important;
-
-            .tooltip-inner {
-                text-align: right;
-            }
-
-            transform: translateY(0) !important;
+        .input-info {
+            font-size: $font-size-7;
+            position: absolute;
+            top: 0;
+            right: 0;
         }
     }
 
@@ -70,6 +65,10 @@
                     >input {
                         padding-right: $form-size-small;
                     }
+
+                    .input-info {
+                        right: $form-size-small;
+                    }
                 }
 
                 &.left {
@@ -80,6 +79,7 @@
                     >input {
                         padding-left: $form-size-small;
                     }
+
                 }
             }
         }
@@ -100,6 +100,10 @@
         &.right {
             >input {
                 padding-right: $form-size-normal;
+            }
+
+            .input-info {
+                right: $form-size-normal;
             }
         }
 
@@ -162,16 +166,6 @@
                     top: 0;
                 }
             }
-        }
-    }
-
-    .tooltip.error {
-        top: auto;
-        bottom: 0;
-
-        .tooltip-inner {
-            background: transparent !important;
-            border: none !important;
         }
     }
 }

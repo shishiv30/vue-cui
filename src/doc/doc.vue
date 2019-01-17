@@ -5,13 +5,7 @@
                 <i class="icon-cui"></i>
             </template>
             <template slot="searchBox">
-                <textbox>
-                    <div class="input  right">
-                        <label>Search</label>
-                        <input type="text" name="search" v-model="search1" />
-                        <a href="javascript:;" class="btn"><i class="icon-search"></i></a>
-                    </div>
-                </textbox>
+                <!-- <textboxAutocomplete name="search" v-model="search" validateType="required,phone" placeholder="Search for..."></textboxAutocomplete> -->
             </template>
             <template slot="fixedMenus">
                 <a href="javascript:;" class="btn small orange highlight">Demo Page</a>
@@ -200,47 +194,31 @@
                         <div class="gs">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox>
-                                        <div class="input">
-                                            <label>Email</label>
-                                            <input type="email" name="phone" v-model="email" />
-                                        </div>
+                                    <textbox type="email" name="email" v-model="email" validateType="required,email" placeholder="Email">
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox>
-                                        <div class="input left">
-                                            <label>Mobile Number</label>
-                                            <i class="icon-phone"></i>
-                                            <input type="number" name="phone" v-model="phone" />
-                                        </div>
+                                    <textbox type="number" name="phone" v-model="phone" validateType="required,phone" placeholder="Mobile Number">
+                                        <i slot="left" class="icon-phone"></i>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox>
-                                        <div class="input left">
-                                            <label>Password</label>
-                                            <i class="icon-eye"></i>
-                                            <input type="password" name="password" v-model="password" />
-                                        </div>
+                                    <textbox type="password" name="password" v-model="password" validateType="required" placeholder="Password">
+                                        <i slot="left" class="icon-eye"></i>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-12">
-                                    <textbox>
-                                        <div class="input right">
-                                            <label>Search</label>
-                                            <input type="text" name="search" v-model="search" />
-                                            <a href="javascript:;" class="btn orange active"><i class="icon-search"></i></a>
-                                        </div>
+                                    <textbox type="text" name="search" v-model="search" validateType="required,phone" placeholder="Search for...">
+                                        <a slot="right" href="javascript:;" class="btn orange active"><i class="icon-search"></i></a>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12">
-                                    <textbox>
+                                    <!-- <textbox>
                                         <div class="textarea">
                                             <label>Comment</label>
                                             <textarea name="comment" v-model="comment" maxlength="4000"></textarea>
                                         </div>
-                                    </textbox>
+                                    </textbox> -->
                                 </div>
                             </div>
                         </div>
@@ -248,50 +226,32 @@
                         <div class="gs">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox>
-                                        <div class="input small">
-                                            <label>Email</label>
-                                            <input type="email" name="phone" v-model="email1" />
-                                        </div>
-                                    </textbox>
-
-                                </div>
-                                <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox>
-                                        <div class="input small left">
-                                            <label>Mobile Number</label>
-                                            <i class="icon-phone"></i>
-                                            <input type="number" name="phone" v-model="phone1" />
-                                        </div>
+                                    <textbox class="small" type="email" name="email1" v-model="email" validateType="required,email" placeholder="Email">
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox>
-                                        <div class="input small left">
-                                            <label>Password</label>
-                                            <i class="icon-eye"></i>
-                                            <input type="password" name="password" v-model="password1" />
-                                        </div>
+                                    <textbox class="small" type="number" name="phone1" v-model="phone" validateType="required,phone" placeholder="Mobile Number">
+                                        <i slot="left" class="icon-phone"></i>
                                     </textbox>
                                 </div>
-
+                                <div class="col-xs-12 col-sm-6 col-md-4">
+                                    <textbox class="small" type="password" name="password1" v-model="password" validateType="required" placeholder="Password">
+                                        <i slot="left" class="icon-eye"></i>
+                                    </textbox>
+                                </div>
                                 <div class="col-xs-12 col-sm-6 col-md-12">
-                                    <textbox>
-                                        <div class="input small right">
-                                            <label>Search</label>
-                                            <input type="text" name="search" v-model="search1" />
-                                            <a href="javascript:;" class="btn orange active"><i class="icon-search"></i></a>
-                                        </div>
+                                    <textbox class="small" type="text" name="search1" v-model="search" validateType="required,phone" placeholder="Search for...">
+                                        <a slot="right" href="javascript:;" class="btn orange active"><i class="icon-search"></i></a>
                                     </textbox>
                                 </div>
-                                <div class="col-xs-12">
+                                <!-- <div class="col-xs-12">
                                     <textbox>
                                         <div class="textarea">
                                             <label>Comment</label>
                                             <textarea name="comment" v-model="comment1" maxlength="4000"></textarea>
                                         </div>
                                     </textbox>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
