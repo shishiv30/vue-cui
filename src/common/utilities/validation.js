@@ -56,10 +56,8 @@ var validation = {
         // Check the range of the day
         return day > 0 && day <= monthLength[month - 1];
     },
-    valide(validateType, value) {
-        var type = validateType.split(',');
-        for (let i = 0; i < type.length; i++) {
-            var key = type[i];
+    valide(type, value) {
+        for (var key in type) {
             var validate = this[key];
             if (validate && !validate(value)) {
                 return {
@@ -70,7 +68,7 @@ var validation = {
         }
         return {
             passed: true,
-            type: validateType
+            type: null
         };
     }
 };

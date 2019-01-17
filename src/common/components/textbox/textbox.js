@@ -1,5 +1,3 @@
-import validation from '../../utilities/validation';
-
 export default {
     name: 'textbox',
     props: {
@@ -21,8 +19,7 @@ export default {
         autoClean: {
             type: Boolean,
             default: false
-        },
-        validateType: {}
+        }
     },
     data() {
         return {
@@ -53,45 +50,24 @@ export default {
         },
     },
     methods: {
-        checkError() {
-            if (this.validateType) {
-                if (typeof this.validateType === 'function') {
-                    this.error = this.validateType(this._value);
-                } else {
-                    this.error = this.validateMessage(this.validateType, this._value);
-                }
-            } else {
-                this.error = '';
-            }
+        getValue() {
+            return this._value;
         },
-        validateMessage() {
-            var result = validation.valide(this.validateType, this._value);
-            if (result.passed) {
-                return '';
-            }
-            if (result.type === 'required') {
-                if (this.name) {
-                    return `The ${name} is ${result.type}`;
-                } else {
-                    return `The input is ${result.type}`;
-                }
-            }
-            if (this.name) {
-                return `The ${name} is invalide ${result.type}`;
-            } else {
-                return `The input is invalide ${result.type}`;
-            }
+        setError(msg) {
+            this.error = msg;
+        },
+        setInfo(msg) {
+            this.info = 'msg';
+        },
+        getInput() {
+            return this.$refs.input;
         }
     },
     mounted() {
         var that = this;
         var autoClean = this.autoClean;
         var $this = $(this.$el);
-        var $input = $this.find('input');
-
-        if (!$input.length) {
-            $input = $this.find('textarea');
-        }
+        var $input = $(this.$refs.input);
 
         $input.on('focusin', function () {
             $this.addClass('focus');
@@ -100,7 +76,6 @@ export default {
             if (!this._value) {
                 $this.removeClass('focus');
             }
-            that.checkError();
         });
 
         if (autoClean) {

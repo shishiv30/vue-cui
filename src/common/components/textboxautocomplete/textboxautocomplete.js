@@ -2,16 +2,13 @@ import textbox from '../textbox/textbox.vue';
 
 export default {
     name: 'textboxAutocompelte',
-    components: {
-        textbox,
-    },
+    extends: textbox,
     props: {
-        name: {},
-        value: {},
-        validateType: {},
-        placeholder: {},
         data: {},
-        url: {},
+        dataurl: {
+            type: String,
+            default: 'https://raw.githubusercontent.com/cschoi3/US-states-and-cities-json/master/data.json'
+        },
         mapping: {
             type: 'function'
         }
@@ -23,14 +20,6 @@ export default {
         };
     },
     computed: {
-        _value: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit('input', value);
-            }
-        },
         suggestion() {
             var reg = new reg(`${this.keyword}`);
             if (this.dict && this.dict.length) {
@@ -44,14 +33,13 @@ export default {
     },
     mounted() {
         var that = this;
-        this.url = 'https://raw.githubusercontent.com/cschoi3/US-states-and-cities-json/master/data.json';
         if (this.data) {
             this.dict = this.mapping ? this.mapping(data) : data;
-        } else if (this.url) {
-            $.get(url).then(function (data) {
-                this.dict = this.mapping ? this.mapping(data) : data;
-            }).error(function () {
-                this.dict = null;
+        } else if (this.dataurl) {
+            $.get(this.dataurl).then(function (data) {
+                that.dict = that.mapping ? that.mapping(data) : data;
+            }, function () {
+                that.dict = null;
             });
         } else {
             return;

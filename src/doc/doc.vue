@@ -5,7 +5,7 @@
                 <i class="icon-cui"></i>
             </template>
             <template slot="searchBox">
-                <!-- <textboxAutocomplete name="search" v-model="search" validateType="required,phone" placeholder="Search for..."></textboxAutocomplete> -->
+                <textboxAutocomplete name="search" v-model="search" v-validation.required placeholder="Search for..."></textboxAutocomplete>
             </template>
             <template slot="fixedMenus">
                 <a href="javascript:;" class="btn small orange highlight">Demo Page</a>
@@ -194,21 +194,21 @@
                         <div class="gs">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox type="email" name="email" v-model="email" validateType="required,email" placeholder="Email">
+                                    <textbox type="email" name="email" v-model="email" v-validation.required.email placeholder="Email">
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox type="number" name="phone" v-model="phone" validateType="required,phone" placeholder="Mobile Number">
+                                    <textbox type="number" name="phone" v-model="phone" v-validation.required.phone placeholder="Mobile Number">
                                         <i slot="left" class="icon-phone"></i>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox type="password" name="password" v-model="password" validateType="required" placeholder="Password">
+                                    <textbox type="password" name="password" v-model="password" v-validation.required placeholder="Password">
                                         <i slot="left" class="icon-eye"></i>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-12">
-                                    <textbox type="text" name="search" v-model="search" validateType="required,phone" placeholder="Search for...">
+                                    <textbox type="text" name="search" v-model="search" v-validation.required placeholder="Search for...">
                                         <a slot="right" href="javascript:;" class="btn orange active"><i class="icon-search"></i></a>
                                     </textbox>
                                 </div>
@@ -226,21 +226,21 @@
                         <div class="gs">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox class="small" type="email" name="email1" v-model="email" validateType="required,email" placeholder="Email">
+                                    <textbox class="small" type="email" name="email1" v-model="email" v-validation.required.email placeholder="Email">
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox class="small" type="number" name="phone1" v-model="phone" validateType="required,phone" placeholder="Mobile Number">
+                                    <textbox class="small" type="number" name="phone1" v-model="phone" v-validation.required.phone placeholder="Mobile Number">
                                         <i slot="left" class="icon-phone"></i>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <textbox class="small" type="password" name="password1" v-model="password" validateType="required" placeholder="Password">
+                                    <textbox class="small" type="password" name="password1" v-model="password" v-validation.required placeholder="Password">
                                         <i slot="left" class="icon-eye"></i>
                                     </textbox>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-12">
-                                    <textbox class="small" type="text" name="search1" v-model="search" validateType="required,phone" placeholder="Search for...">
+                                    <textbox class="small" type="text" name="search1" v-model="search" v-validation.required placeholder="Search for...">
                                         <a slot="right" href="javascript:;" class="btn orange active"><i class="icon-search"></i></a>
                                     </textbox>
                                 </div>
