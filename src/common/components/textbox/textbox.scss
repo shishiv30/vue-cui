@@ -169,3 +169,15 @@
         }
     }
 }
+
+.textbox-list {
+    position: absolute;
+    background: white;
+    padding: 0.309rem;
+    line-height: 1.5;
+    border: 1px solid #eee;
+
+    >li {
+        @include singleline();
+    }
+}

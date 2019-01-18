@@ -24,7 +24,8 @@ export default {
     data() {
         return {
             error: '',
-            info: ''
+            info: '',
+            suggestion: [],
         };
     },
     computed: {
@@ -73,7 +74,7 @@ export default {
             $this.addClass('focus');
         });
         $input.on('focusout', function () {
-            if (!this._value) {
+            if (!that._value) {
                 $this.removeClass('focus');
             }
         });
