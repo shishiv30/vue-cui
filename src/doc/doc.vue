@@ -88,7 +88,7 @@
                         <div class="header-panel">
                             <div class="h1">The global title level to level 1</div>
                             <div class="h2">The global title level to level 2</div>
-                            <div class="h4">The global title level to level 3</div>
+                            <div class="h3">The global title level to level 3</div>
                             <div class="h4">The global title level to level 4</div>
                             <div class="h5">The global title level to level 5</div>
                             <div class="h6">The global title level to level 6</div>
