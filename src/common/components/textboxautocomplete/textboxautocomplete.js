@@ -141,6 +141,6 @@ export default {
         });
         $input.on('keyup', $.throttle(function () {
             that.getSuggestion();
-        }));
+        }, 50));
     }
 };

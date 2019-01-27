@@ -176,7 +176,9 @@
     padding: 0.309rem;
     line-height: 1.5;
     border: 1px solid #eee;
-
+    &:empty{
+        display: none;
+    }
     >li {
         @include singleline();
     }
