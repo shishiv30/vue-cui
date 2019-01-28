@@ -1,4 +1,19 @@
-<script src="./textboxautocomplete.js"></script>
+
+<template>
+    <textbox ref="textbox" :placeholder="placeholder" :name="name" :id="id" v-model="_value" :type="type" :autoClean="autoClean">
+        <ul slot="extention" ref = "list" v-if="suggestions" class="textbox-list">
+            <li 
+            v-for="(item,index) in suggestions" :key="item.key + index"
+            :class="{ hover: selectedIndex === index}" 
+            @click="selected(index)">{{item.value}}</li>
+        </ul>
+    </textbox>
+</template>
+
+<script src="./textboxautocomplete.js">
+    
+</script>
+
 <style lang="scss">
     @import './textboxautocomplete.scss';
 </style>

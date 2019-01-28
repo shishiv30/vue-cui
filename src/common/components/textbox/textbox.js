@@ -24,7 +24,6 @@ export default {
     data() {
         return {
             error: '',
-            info: '',
             suggestion: [],
         };
     },
@@ -56,9 +55,6 @@ export default {
         },
         setError(msg) {
             this.error = msg;
-        },
-        setInfo(msg) {
-            this.info = 'msg';
         },
         getInput() {
             return this.$refs.input;

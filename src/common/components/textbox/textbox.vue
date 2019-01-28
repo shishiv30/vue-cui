@@ -5,11 +5,9 @@
             <slot name="left"></slot>
             <input ref="input" v-model="_value" />
             <slot name="right"></slot>
-            <div class="input-info" v-show="error||info">{{error||info}}</div>
+            <div class="input-info" v-show="error">{{error}}</div>
         </div>
-        <ul v-if="suggestion" class="textbox-list">
-            <li v-for="item in suggestion">{{item.display}}</li>
-        </ul>
+         <slot name="extention"></slot>
     </div>
 </template>
 

@@ -92,7 +92,7 @@
                     }
                 }
             }
-        }
+        };
         $this.on('keyup', $.debounce(function (e) {
             if (e.key === 'ArrowDown') {
                 return hightlight(true);
@@ -113,4 +113,4 @@
             $item.attr('data-autocomplete-load');
         });
     });
-}(jQuery))
+}(jQuery));
