@@ -1,1 +1,40 @@
 @import "~@/common/scss/base/_defined.scss";
+.textbox-list {
+    position: absolute;
+    background: white;
+    border: 1px solid #eee;
+    left: 0;
+    right: 0;
+    transition: transform .5s;
+    transform-origin: top center;
+    transform: scaleY(1);
+    &:empty{
+        transform: scaleY(0);
+    }
+    >li {
+        padding: 0 $g2 0 $gxs;
+        border-top: 1px solid #eee;
+        line-height: $form-size-normal;
+        height: $form-size-normal;
+        position: relative;
+        &:first-of-type{
+            border-top: none;
+        }
+        > a{
+            display: block;
+            text-transform: capitalize;
+            @include singleline();
+            color: $color-3;
+            &.hover, &:hover{
+                color:$color-warning;
+            }
+        }
+        > i{
+            font-size: $font-size-4;
+            position: absolute;
+            top:0;
+            right: $gxs;
+            color: $color-3;
+        }
+    }
+}

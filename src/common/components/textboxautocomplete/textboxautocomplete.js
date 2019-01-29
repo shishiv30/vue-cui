@@ -76,7 +76,7 @@ export default {
             suggestions: [],
             fuseOpt: {
                 shouldSort: true,
-                threshold: 0.3,
+                threshold: 0.6,
                 location: 0,
                 distance: 100,
                 maxPatternLength: 32,
@@ -85,7 +85,9 @@ export default {
                     'key',
                 ]
             },
-            selectedIndex: 0,
+            minLength: 3,
+            userInput: '',
+            selectedIndex: -1,
         };
     },
     methods: {
@@ -110,20 +112,35 @@ export default {
                 });
             }
         },
-        getSuggestions() {
+        updateSuggestions() {
             this.suggestions = this.dict && this.dict.search(this._value);
-            this.selectedIndex = 0;
+            this.selectedIndex = -1;
         },
-        hightlight(isNext) {
-            var index = (isNext ? this.index + 1 : this.index - 1);
-            if (index >= 0 && index < this.suggestions.length) {
-                this.selectedIndex = index;
+        nextSuggestion() {
+            if (this.selectedIndex >= this.suggestions.length) {
+                this.selected(-1);
+            } else {
+                this.selected(this.selectedIndex += 1);
+            }
+            this.selected(this.selectedIndex);
+        },
+        prevSuggestion() {
+            if (this.selectedIndex < 0) {
+                this.selected(this.suggestions && this.suggestions.length ? this.suggestions.length : -1);
+            } else {
+                this.selected(this.selectedIndex - 1);
             }
         },
         selected(index) {
-            this._value = this.suggestions[index].value;
+            if (index >= 0 && index < this.suggestions.length && this.suggestions[index]) {
+                this._value = this.suggestions[index].value;
+                this.selectedIndex = index;
+            } else {
+                this._value = this.userInput;
+                this.selectedIndex = -1;
+            }
         },
-        getSelected(){
+        getSelected() {
             return this.suggestions[this.selectedIndex];
         }
     },
@@ -135,11 +152,16 @@ export default {
         });
         $input.on('keyup', $.debounce(function (e) {
             if (e.key === 'ArrowDown') {
-                that.hightlight(true);
+                that.nextSuggestion();
             } else if (e.key === 'ArrowUp') {
-                that.hightlight(false);
+                that.prevSuggestion();
             }
-            that.getSuggestions();
-        }, 100));
+            if (this.userInput !== this._value) {
+                this.userInput = this._value;
+                if (this.userInput.length > this.minLength) {
+                    that.updateSuggestions();
+                }
+            }
+        }, 50));
     }
 };
