@@ -3,13 +3,13 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const pathsToClean = ['dist'];
+const isDev = process.env.WEBPACK_MODE === 'production';
+const sourcePath = path.resolve(__dirname, '../src/');
 module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@': path.resolve(__dirname, '../src/')
+            '@': sourcePath
         },
         extensions: ['*', '.js', '.vue', '.json']
     },
@@ -42,7 +42,11 @@ module.exports = {
             }]
         }, {
             test: /\.scss$/,
-            use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+            use: [  
+                isDev ? 'vue-style-loader'  : MiniCssExtractPlugin.loader,
+                'css-loader', 
+                'sass-loader'
+            ]
         }, {
             test: /\.js$/,
             exclude: /node_modules/,
@@ -50,7 +54,6 @@ module.exports = {
         }]
     },
     plugins: [
-        new CleanWebpackPlugin(pathsToClean),
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
             filename: './index.html',
@@ -65,6 +68,5 @@ module.exports = {
             'window.jQuery': 'jquery',
             'window.$': 'jquery'
         })
-    ],
-    devtool: 'source-map'
+    ]
 };

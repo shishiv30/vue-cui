@@ -4,9 +4,9 @@
     "description": "a UI solution base on vue and cui",
     "main": "index.js",
     "scripts": {
-        "dev": "webpack-dev-server --config config/webpack.client.config.js --mode development --open",
-        "build": "webpack --config config/webpack.client.config.js --mode production && webpack --config config/webpack.server.config.js --mode production",
-        "ssr": "webpack --config config/webpack.server.config.js --mode development && node index"
+        "dev": "webpack-dev-server --config config/webpack.client.config.js --mode=development --open",
+        "build": "webpack --config config/webpack.client.config.js --mode=production",
+        "ssr": "webpack --config config/webpack.server.config.js --mode=production && node index"
     },
     "repository": {
         "type": "git",
@@ -25,7 +25,7 @@
     "homepage": "https://github.com/shishiv30/vue-cui#readme",
     "dependencies": {
         "babel-polyfill": "^6.26.0",
-        "clean-webpack-plugin": "^0.1.19",
+        "clean-webpack-plugin": "^1.0.1",
         "eslint-config-standard": "^10.2.1",
         "eslint-plugin-import": "^2.7.0",
         "eslint-plugin-node": "^5.1.1",

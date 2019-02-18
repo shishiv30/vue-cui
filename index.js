@@ -1,16 +1,17 @@
-const server = require('express')();
+const express = require('express');
+const server = express();
 const fs = require('fs');
 const {
     createBundleRenderer
 } = require('vue-server-renderer');
-const serverBundle = require('./dist/vue-ssr-server-bundle.json');
+const serverBundle = require('./public/vue-ssr-server-bundle.json');
+const clientManifest = require('./public/vue-ssr-client-manifest.json');
 const template = fs.readFileSync('./src/app.template.html', 'utf-8');
-const clientManifest = require('./dist/vue-ssr-client-manifest.json');
-
 const renderer = createBundleRenderer(serverBundle, {
     template,
     clientManifest
 });
+server.use(express.static('public'));
 server.get('*', (req, res) => {
     renderer.renderToString(req, (err, html) => {
         if (err) {
@@ -18,10 +19,10 @@ server.get('*', (req, res) => {
                 res.status(404).end('Page not found');
             } else {
                 console.log(err);
-                res.status(500).end('Internal Server Error');
+                return  res.status(500).end('Internal Server Error');
             }
         } else {
-            res.end(html);
+            return res.end(html);
         }
     });
 });
