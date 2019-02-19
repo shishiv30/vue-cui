@@ -42,9 +42,9 @@ module.exports = {
             }]
         }, {
             test: /\.scss$/,
-            use: [  
-                isDev ? 'vue-style-loader'  : MiniCssExtractPlugin.loader,
-                'css-loader', 
+            use: [
+                isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
+                'css-loader',
                 'sass-loader'
             ]
         }, {
