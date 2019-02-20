@@ -5,6 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const isDev = process.env.WEBPACK_MODE === 'production';
 const sourcePath = path.resolve(__dirname, '../src/');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
     resolve: {
         alias: {
@@ -67,6 +69,7 @@ module.exports = {
             $: 'jquery',
             'window.jQuery': 'jquery',
             'window.$': 'jquery'
-        })
+        }),
+        new CopyWebpackPlugin([{ from: './src/assets/favicon.ico' },])
     ]
 };

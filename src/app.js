@@ -1,5 +1,7 @@
 import Vue from 'vue';
+import VueHead from 'vue-head';
 import template from './app.vue';
+
 import {
     createRouter
 } from './app.router';
@@ -9,8 +11,9 @@ import {
 import {
     sync
 } from 'vuex-router-sync';
-export function createApp (context) {
+export function createApp(context) {
     var store = createStores(context);
+    Vue.use(VueHead);
     const router = createRouter();
     sync(store, router);
     const app = new Vue({
