@@ -4,7 +4,7 @@ const fs = require('fs');
 const {
     createBundleRenderer
 } = require('vue-server-renderer');
-var detector = require('spider-detector')
+var detector = require('spider-detector');
 const serverBundle = require('./public/vue-ssr-server-bundle.json');
 const clientManifest = require('./public/vue-ssr-client-manifest.json');
 const template = fs.readFileSync('./src/app.template.html', 'utf-8');
@@ -12,7 +12,7 @@ const renderer = createBundleRenderer(serverBundle, {
     template,
     clientManifest
 });
-server.use(detector.middleware())
+server.use(detector.middleware());
 server.get('*', (req, res, next) => {
     var isResource = /\.\w+$/.test(req.url);
     //ssr only for spider
