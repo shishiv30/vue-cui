@@ -1,3 +1,7 @@
 CUI
 
-> Born in Movoto, beyond Movoto!
+> CUI base on vue
+how to use?
+#1 clone
+#2 npm run install
+#3 npm run dev
