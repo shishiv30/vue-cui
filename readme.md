@@ -1,4 +1,7 @@
-vue-cui
-================
+CUI
 
-You know what? This is ui framework you are seeking for. Don't doubt, don't hesitate, just install and coding with it.
+# CUI base on vue
+## how to use?
+### 1 clone
+### 2 npm run install
+### 3 npm run dev
