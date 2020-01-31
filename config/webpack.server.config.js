@@ -8,7 +8,7 @@ module.exports = merge(baseConfig, {
     entry: './src/entry-server.js',
     output: {
         libraryTarget: 'commonjs2',
-        filename: '[name].server.min.js',
+        filename: '[name].[chunkhash].server.min.js',
         path: path.resolve(__dirname, '../public/')
     },
     plugins: [

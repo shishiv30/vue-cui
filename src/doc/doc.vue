@@ -37,7 +37,7 @@
                         <a href="javascript:;">Dialog</a>
                         <a href="javascript:;">Tabs</a>
                         <a href="javascript:;">Navigation</a>
-                        <a href="javascript:;">Tip/s</a>
+                        <a href="javascript:;">Tips</a>
                         <a href="javascript:;">Carousel</a>
                         <a href="javascript:;">Waterfalls</a>
                     </ul>

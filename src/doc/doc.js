@@ -16,6 +16,7 @@ export default {
         store,
         route
     }) {
+        console.log(store);
         //do async api call to get more data about spetial page, and update store.state
     },
     components: {
