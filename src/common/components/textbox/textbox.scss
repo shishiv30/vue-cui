@@ -87,33 +87,33 @@
         &.left,
         &.right {
             >label {
-                width: calc(100% - #{$form-size-normal});
+                width: calc(100% - #{$form-size-default});
             }
         }
 
         &.right.left {
             >label {
-                width: calc(100% - #{$form-size-normal*2});
+                width: calc(100% - #{$form-size-default*2});
             }
         }
 
         &.right {
             >input {
-                padding-right: $form-size-normal;
+                padding-right:$form-size-default;
             }
 
             .input-info {
-                right: $form-size-normal;
+                right:$form-size-default;
             }
         }
 
         &.left {
             >label {
-                left: $form-size-normal;
+                left:$form-size-default;
             }
 
             >input {
-                padding-left: $form-size-normal;
+                padding-left:$form-size-default;
             }
         }
     }
@@ -159,7 +159,6 @@
             &.small {
                 >label {
                     top: 0;
-                    line-height: 1.2rem;
                 }
 
                 >label {

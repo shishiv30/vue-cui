@@ -1,21 +1,21 @@
 @import "~@/common/scss/base/_defined.scss";
 
 .list-checkbox {
-    .checkbox {
-        label {
-            display: flex;
-            margin: 0 0.5rem;
-            flex-direction: row-reverse;
-            justify-content: space-between;
-            color: $color-blue;
+  .checkbox {
+    label {
+      display: flex;
+      margin: 0 0.5rem;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      color: $color-main;
 
-            @include hover-supported() {
-                color: $color-warning;
-            }
+      @include hover-supported() {
+        color: $color-warning;
+      }
 
-            span {
-                margin-right: 0.5rem;
-            }
-        }
+      span {
+        margin-right: 0.5rem;
+      }
     }
+  }
 }

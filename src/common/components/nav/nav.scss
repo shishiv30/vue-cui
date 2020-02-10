@@ -3,7 +3,7 @@ $nav-background: $color-f;
 $nav-font: $color-3;
 $border-color: rgba(0, 0, 0, .1);
 $highlight-link: $color-warning;
-$nav-height: $form-size-normal;
+$nav-height:$form-size-default;
 $nav-padding: $g1;
 
 @include fullscreen() {

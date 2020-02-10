@@ -35,7 +35,6 @@
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6 {
-    line-height: 1.618em;
     @include singleline();
     padding-left: $g1;
     padding-right: $g1;
@@ -75,16 +74,15 @@
 
     >.paragraph {
         margin: $g1 0;
-        line-height: 1.618em;
         padding-left: $g1;
         padding-right: $g1;
     }
 
     >.singleline-2 {
-        @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 2, $bgColor: white);
+        @include multiLineEllipsis($lineCount: 2, $bgColor: white);
     }
 
     >.singleline-3 {
-        @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 3, $bgColor: white);
+        @include multiLineEllipsis($lineCount: 3, $bgColor: white);
     }
 }

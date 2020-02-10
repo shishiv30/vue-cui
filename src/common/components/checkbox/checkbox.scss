@@ -1,171 +1,170 @@
 @import "~@/common/scss/base/_defined.scss";
 
 .checkbox {
-    >label {
-        height: $form-size-small;
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-        padding: 0;
-        user-select: none;
+  > label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    user-select: none;
 
-        >input {
-            display: none;
-        }
-
-        >i {
-            @extend %icon;
-            display: inline-block;
-            width: $font-size-5;
-            font-size: $font-size-5;
-            color: inherit;
-            margin-right: $gxs;
-        }
-
-        +label {
-            margin-left: $g1;
-        }
+    > input {
+      display: none;
     }
 
-    input {
-        display: none;
+    > i {
+      @extend %icon;
+      display: inline-block;
+      width: $font-size-5;
+      font-size: $font-size-5;
+      color: inherit;
+      margin-right: $gxs;
+    }
 
-        &[disabled] {
-            &+i, &+i+span {
-                color: $color-disable;
-            }
-        }
+    + label {
+      margin-left: $g1;
+    }
+  }
+
+  input {
+    display: none;
+
+    &[disabled] {
+      & + i,
+      & + i + span {
+        color: $color-disable;
+      }
+    }
+  }
+
+  &.disabled {
+    label > i {
+      color: $color-disable;
+    }
+  }
+
+  &.small {
+    label {
+      height: $form-size-small;
+
+      > i {
+        width: $font-size-4;
+        font-size: $font-size-4;
+      }
+    }
+  }
+
+  &.button {
+    position: relative;
+    background: $color-f;
+    color: $color-main;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px $color-e;
+    @include form-small();
+    padding-left: $g0;
+    padding-right: $g0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    position: relative;
+
+    @include hover-supported() {
+      background-color: $color-e;
+    }
+
+    input,
+    i {
+      display: none;
+    }
+
+    &.active {
+      background-color: $color-main;
+      color: $color-f;
     }
 
     &.disabled {
-        label>i {
-            color: $color-disable;
+      background-color: $color-disable;
+
+      label {
+        > span {
+          color: $color-f;
         }
+      }
     }
+  }
 
-    &.small {
-        label {
-            height: $form-size-small;
+  &.stacked {
+    label {
+      display: block;
+      padding-top: 10px;
+      padding-left: 12px;
+      border: solid 1px $color-border;
+      border-top: none;
 
-            >i {
-                width: $font-size-4;
-                font-size: $font-size-4;
-            }
-        }
+      &:first-child {
+        border-top: solid 1px $color-border;
+      }
     }
-
-    &.button {
-        position: relative;
-        height: $form-size-small;
-        background: $color-f;
-        color: $color-blue;
-        padding: 0 $g1;
-        border-radius: 5px;
-        border: 1px solid $color-e;
-        height: $form-size-small;
-        line-height: $form-size-small;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-        position: relative;
-
-        @include hover-supported() {
-            background-color: $color-e;
-        }
-
-        input, i {
-            display: none;
-        }
-
-        &.active {
-            background-color: $color-blue;
-            color: $color-f;
-        }
-
-        &.disabled {
-            background-color: $color-disable;
-
-            label {
-                >span {
-                    color: $color-f;
-                }
-            }
-        }
-    }
-
-    &.stacked {
-        label {
-            display: block;
-            padding-top: 10px;
-            padding-left: 12px;
-            border: solid 1px $color-border;
-            border-top: none;
-
-            &:first-child {
-                border-top: solid 1px $color-border;
-            }
-        }
-    }
+  }
 }
 
 .checkbox {
-    input+i:before {
-        content: $icon-square-o;
-    }
+  input + i:before {
+    content: $icon-square-o;
+  }
 
-    input:checked+i:before {
-        content: $icon-check-square-o;
-    }
+  input:checked + i:before {
+    content: $icon-check-square-o;
+  }
 }
 
 .checkbox {
-    &.group {
-        border: solid 1px $color-blue;
-        display: flex;
-        border-radius: 5px;
-        overflow: hidden;
-        margin: -1px;
+  &.group {
+    border: solid 1px $color-main;
+    display: flex;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: -1px;
 
-        label {
-            margin-left: 0;
-            flex: 1;
-            justify-content: center;
+    label {
+      margin-left: 0;
+      flex: 1;
+      justify-content: center;
 
+      &:first-of-type {
+        border-left: none;
+      }
 
-            &:first-of-type {
-                border-left: none;
-            }
-
-            position: relative;
-        }
-
-        input+i {
-            background: transparent;
-            color: transparent;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            position: absolute;
-            width: 100%;
-            z-index: -1;
-        }
-
-        input:checked+i {
-            background: $color-blue;
-            color: $color-blue;
-            border-left: 1px solid $color-f;
-        }
-
-        label:first-of-type {
-            i {
-                border-width: 0;
-            }
-        }
-
-        input:checked~span {
-            color: $color-f;
-        }
+      position: relative;
     }
+
+    input + i {
+      background: transparent;
+      color: transparent;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      width: 100%;
+      z-index: -1;
+    }
+
+    input:checked + i {
+      background: $color-main;
+      color: $color-main;
+      border-left: 1px solid $color-f;
+    }
+
+    label:first-of-type {
+      i {
+        border-width: 0;
+      }
+    }
+
+    input:checked ~ span {
+      color: $color-f;
+    }
+  }
 }

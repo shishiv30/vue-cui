@@ -14,8 +14,8 @@
     >li {
         padding: 0 $g2 0 $gxs;
         border-top: 1px solid #eee;
-        line-height: $form-size-normal;
-        height: $form-size-normal;
+        line-height:$form-size-default;
+        height:$form-size-default;
         position: relative;
         &:first-of-type{
             border-top: none;

@@ -1,118 +1,118 @@
 @import "~@/common/scss/base/_defined.scss";
 
 .radio {
-    >label {
-        height: $form-size-small;
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-        padding: 0;
-        user-select: none;
+  > label {
+    @include form-default-1();
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
 
-        >input {
-            display: none;
-        }
-
-        >i {
-            @extend %icon;
-            display: inline-block;
-            width: $font-size-5;
-            font-size: $font-size-5;
-            color: inherit;
-            margin-right: 6px;
-        }
-
-        +label {
-            margin-left: $g1;
-        }
+    > input {
+      display: none;
     }
 
-    input {
-        display: none;
-
-        &[disabled] {
-            &+i, &+i+span {
-                color: $color-disable;
-            }
-        }
+    > i {
+      @extend %icon;
+      display: inline-block;
+      width: $font-size-5;
+      font-size: $font-size-5;
+      color: inherit;
+      margin-right: 6px;
     }
 
-    &.disabled {
-        label>i {
-            color: $color-disable;
-        }
+    + label {
+      margin-left: $g1;
     }
+  }
 
-    &.small {
-        label {
-            height: $form-size-small;
+  input {
+    display: none;
 
-            >i {
-                width: $font-size-4;
-                font-size: $font-size-4;
-            }
-        }
+    &[disabled] {
+      & + i,
+      & + i + span {
+        color: $color-disable;
+      }
     }
+  }
+
+  &.disabled {
+    label > i {
+      color: $color-disable;
+    }
+  }
+
+  &.small {
+    label {
+      @include form-small();
+      padding-left: $g0;
+      padding-right: $g0;
+      > i {
+        width: $font-size-4;
+        font-size: $font-size-4;
+      }
+    }
+  }
 }
 
 .radio {
-    input+i:before {
-        content: $icon-circle-o;
-    }
+  input + i:before {
+    content: $icon-circle-o;
+  }
 
-    input:checked+i:before {
-        content: $icon-dot-circle-o;
-    }
+  input:checked + i:before {
+    content: $icon-dot-circle-o;
+  }
 }
 
 .radio {
-    &.group {
-        border: solid 1px $color-blue;
-        display: flex;
-        border-radius: 5px;
-        overflow: hidden;
-        margin: -1px;
+  &.group {
+    border: solid 1px $color-main;
+    display: flex;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: -1px;
 
-        label {
-            margin-left: 0;
-            flex: 1;
-            justify-content: center;
+    label {
+      margin-left: 0;
+      flex: 1;
+      justify-content: center;
 
+      &:first-of-type {
+        border-left: none;
+      }
 
-            &:first-of-type {
-                border-left: none;
-            }
-
-            position: relative;
-        }
-
-        input+i {
-            background: transparent;
-            color: transparent;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            position: absolute;
-            width: 100%;
-            z-index: -1;
-        }
-
-        input:checked+i {
-            background: $color-blue;
-            color: $color-blue;
-            border-left: 1px solid $color-f;
-        }
-
-        label:first-of-type {
-            i {
-                border-width: 0;
-            }
-        }
-
-        input:checked~span {
-            color: $color-f;
-        }
+      position: relative;
     }
+
+    input + i {
+      background: transparent;
+      color: transparent;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      width: 100%;
+      z-index: -1;
+    }
+
+    input:checked + i {
+      background: $color-main;
+      color: $color-main;
+      border-left: 1px solid $color-f;
+    }
+
+    label:first-of-type {
+      i {
+        border-width: 0;
+      }
+    }
+
+    input:checked ~ span {
+      color: $color-f;
+    }
+  }
 }

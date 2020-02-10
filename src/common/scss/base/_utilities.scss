@@ -57,19 +57,19 @@
 }
 
 .multiline-2 {
-    @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 2, $bgColor: white, $offset: 1em);
+    @include multiLineEllipsis($lineCount: 2, $bgColor: white, $offset: 1em);
 }
 
 .multiline-3 {
-    @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 3, $bgColor: white, $offset: 1em);
+    @include multiLineEllipsis($lineCount: 3, $bgColor: white, $offset: 1em);
 }
 
 .multiline-4 {
-    @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 4, $bgColor: white, $offset: 1em);
+    @include multiLineEllipsis($lineCount: 4, $bgColor: white, $offset: 1em);
 }
 
 .multiline-5 {
-    @include multiLineEllipsis($lineHeight: 1.618em, $lineCount: 5, $bgColor: white, $offset: 1em);
+    @include multiLineEllipsis($lineCount: 5, $bgColor: white, $offset: 1em);
 }
 
 //list disc

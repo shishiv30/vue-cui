@@ -12,7 +12,7 @@ ol, ul {
 }
 
 html {
-    line-height: 1em;
+    line-height: 1.618;
     font-family: $font, "Helvetica Neue", Arial, sans-serif;
     font-style: normal;
     font-size: 16px;
@@ -72,7 +72,7 @@ img {
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
     padding: 0;
-    line-height: inherit;
+    line-height: 1.618;
     font-size: 1rem;
     font-weight: normal;
 }

@@ -1,67 +1,70 @@
 .text-light {
-    @extend %text-light;
+  @extend %text-light;
 }
 
 .text-bold {
-    @extend %text-bold;
+  @extend %text-bold;
 }
 
 .text-left {
-    text-align: left;
+  text-align: left;
 }
 
 .text-right {
-    text-align: right;
+  text-align: right;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .text-shadow {
-    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.7);
+  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.7);
 }
 
 .text-white {
-    color: $color-f;
+  color: $color-f;
 }
 
 .text-darkgray {
-    color: $color-3;
+  color: $color-3;
 }
 
 .text-gray {
-    color: $color-7;
+  color: $color-7;
 }
 
 .text-lightgray {
-    color: $color-a;
+  color: $color-a;
 }
 
-.text-green, .text-safe {
-    color: $color-safe;
+.text-green,
+.text-safe {
+  color: $color-safe;
 }
 
-.text-orange, .text-warning {
-    color: $color-warning;
+.text-orange,
+.text-warning {
+  color: $color-warning;
 }
 
-.text-red, .text-error {
-    color: $color-danger;
+.text-red,
+.text-error {
+  color: $color-danger;
 }
 
 .text-blue {
-    color: $color-blue;
+  color: $color-main;
 }
 
 .text-uppercase {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .text-lowercase {
-    text-transform: lowercase;
+  text-transform: lowercase;
 }
 
 .text-capitalize {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }

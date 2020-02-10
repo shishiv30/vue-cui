@@ -2,13 +2,14 @@
 
 .dropdown {
     position: relative;
-    height: $form-size-normal;
     flex-shrink: 0;
 
     >a:first-of-type {
-        padding: 0 $g3 0 $g1;
+        padding-left: $g1;
+        padding-right: $g1;
+        @include form-default-1();
+        box-shadow: 0 0 0 1px $color-border;
         border-radius: 5px;
-        border: 1px solid $color-e;
         position: relative;
 
         >span, >i {
@@ -20,25 +21,25 @@
             content: $icon-angle-left;
             transition: transform $animation-time;
             width: $g3;
-            height: $form-size-normal;
-            margin-top: #{$form-size-normal/-2};
+            height: $form-size-default;
+            line-height: $form-size-default;
             display: inline-block;
             position: absolute;
             right: 0;
-            top: 50%;
+            top:0;
             text-align: center;
             font-size: 1rem;
         }
     }
 
     >a:first-of-type, >.dropdown-list>a {
-        line-height: calc(#{$form-size-normal} - 2px);
-        height: $form-size-normal;
-        @include singleline();
         display: block;
-        font-size: $font-size-4;
+        @include singleline();
+        @include form-default-1();
+        padding-left: $g1;
+        padding-right: $g1;
         background: $color-f;
-        color: $color-blue;
+        color: $color-main;
 
         @include hover-supported() {
             color: $color-warning;
@@ -57,12 +58,12 @@
         position: absolute;
         z-index: $ui-dropdown-index;
         background: $color-f;
-        top: $form-size-normal;
+        top: $form-size-default;
         left: 0;
         margin-top: $gxs;
         border: 1px solid $color-e;
         min-width: 100%;
-        max-height: $form-size-normal * 6.5;
+        max-height: $form-size-default * 6.5;
         transition: transform $animation-time .25s;
         transform-origin: top;
         transform: scaleY(0);
@@ -80,15 +81,15 @@
         height: $form-size-small;
 
         >a:first-of-type, >.dropdown-list>a {
-            font-size: $font-size-5;
-            line-height: calc(#{$form-size-small} - 2px);
-            height: $form-size-small;
+           @include form-small();
+           padding-left: $g0;
+           padding-right: $g0;
         }
 
         >a:first-of-type {
             &:after {
                 height: $form-size-small;
-                margin-top: #{$form-size-small/-2};
+                line-height: $form-size-small;
             }
         }
 
