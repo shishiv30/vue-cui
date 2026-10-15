@@ -1,0 +1,13 @@
+node_modules
+.DS_Store
+*.log
+records.json
+report.html
+/dist
+/client/assets/video
+.env.local
+soa-fetch-agent-d552bd.ndjson
+
+# BMAD Cursor skills (local agent tooling; not application source)
+.cursor/skills/bmad-*/
+_bmad/

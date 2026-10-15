@@ -1,0 +1,99 @@
+{
+	"name": "pure",
+	"version": "1.0.0",
+	"description": "try to made light performance first ui framework",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"dev:client": "webpack-dev-server --config webpack.config.dev.js --open",
+		"dev:server": "npx cross-env NODE_ENV=development node server/app.js",
+		"dev": "npx cross-env NODE_ENV=development concurrently \"webpack-dev-server --config webpack.config.dev.js\" \"nodemon server/app.js\"",
+		"build:dev": "npx cross-env NODE_ENV=development concurrently \"webpack --config webpack.config.build.js\" \"node server/app.js\"",
+		"build:prod": "npx cross-env NODE_ENV=production webpack --config webpack.config.build.js",
+		"build:stage": "npx cross-env NODE_ENV=stage webpack --config webpack.config.build.js",
+		"build-docker:dev": "npx cross-env NODE_ENV=development ./run-docker.sh",
+		"build-docker:prod": "npx cross-env NODE_ENV=production ./run-docker.sh",
+		"docker:run": "./run-container.sh",
+		"start": "npx cross-env NODE_ENV=production node server/app.js",
+		"deploy-gh": "node deploy",
+		"test": "node test-geo-mapping.js && node test-auto-detection.js && node test-dialog-plugin.js && node --test server/controllers/__tests__/basecontroller.config.test.js server/controllers/__tests__/demo.get.test.js server/routes/__tests__/demoGeoRedirect.test.js helpers/__tests__/property.test.js helpers/__tests__/datetime.test.js helpers/__tests__/htmlPath.test.js helpers/__tests__/demoSpaRoutes.test.js helpers/__tests__/filter.test.js helpers/__tests__/geo.school.test.js helpers/__tests__/ejsRenderContext.test.js helpers/__tests__/ejsClientRender.test.js",
+		"test:basecontroller": "node --test server/controllers/__tests__/basecontroller.config.test.js",
+		"test:lighthouse": "npm run build-docker:dev && node scripts/run-lighthouse.js",
+		"lint": "eslint helpers/geo.js helpers/routes/ client/js/core/router.js client/js/index.js helpers/property.js helpers/article.js",
+		"review": "cursor-agent --force --output-format=text --print 'Review the uncommitted changes in this repository. Focus on code quality, best practices, potential bugs, and adherence to project standards defined in .cursor/rules/ and .cursor/background.json. Provide concise, actionable feedback.'",
+		"review:staged": "cursor-agent --force --output-format=text --print 'Review the staged changes in this repository. Focus on code quality, best practices, potential bugs, and adherence to project standards defined in .cursor/rules/ and .cursor/background.json. Provide concise, actionable feedback.'",
+		"clean": "rm -rf dist",
+		"clean:hot-updates": "node scripts/cleanup-hot-updates.js",
+		"soa-proxy:on": "node scripts/soa-reverse-proxy.js on",
+		"soa-proxy:off": "node scripts/soa-reverse-proxy.js off",
+		"soa-proxy:status": "node scripts/soa-reverse-proxy.js status",
+		"prebuild": "npm run clean"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shishiv30/pure.git"
+	},
+	"keywords": [
+		"pure",
+		"light",
+		"fast",
+		"uiframework"
+	],
+	"author": "conjee zou",
+	"license": "ISC",
+	"engines": {
+		"node": ">=25.6.0"
+	},
+	"bugs": {
+		"url": "https://github.com/shishiv30/pure/issues"
+	},
+	"homepage": "https://github.com/shishiv30/pure#readme",
+	"nodemonConfig": {
+		"ignore": [
+			"dist",
+			"node_modules"
+		]
+	},
+	"devDependencies": {
+		"babel-loader": "^9.1.0",
+		"concurrently": "^9.2.0",
+		"copy-webpack-plugin": "^13.0.1",
+		"cross-env": "^7.0.3",
+		"css-loader": "^6.7.3",
+		"eslint": "^8.57.1",
+		"file-loader": "^6.2.0",
+		"gh-pages": "^6.1.1",
+		"html-loader": "^4.2.0",
+		"html-webpack-plugin": "^5.5.0",
+		"http-proxy-middleware": "^3.0.5",
+		"lighthouse": "^13.0.3",
+		"mini-css-extract-plugin": "^2.7.2",
+		"sass": "^1.57.0",
+		"sass-loader": "^13.2.0",
+		"webpack": "^5.75.0",
+		"webpack-bundle-analyzer": "^4.9.0",
+		"webpack-cli": "^5.0.1",
+		"webpack-dev-server": "^4.11.1",
+		"webpack-merge": "^5.8.0",
+		"webpack-pwa-manifest": "^4.0.0",
+		"workbox-webpack-plugin": "^7.0.0"
+	},
+	"dependencies": {
+		"@aws-sdk/client-s3": "^3.1000.0",
+		"compression": "^1.7.4",
+		"cors": "^2.8.5",
+		"csvtojson": "^2.0.10",
+		"dotenv": "^16.5.0",
+		"ejs": "^3.1.10",
+		"express-session": "^1.18.0",
+		"express-useragent": "^1.0.15",
+		"fuse.js": "^7.0.0",
+		"geoip-lite": "^1.4.10",
+		"lodash": "^4.17.21",
+		"mime": "^4.0.7",
+		"nodemon": "^3.1.4",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.1",
+		"uuid": "^9.0.0"
+	}
+}

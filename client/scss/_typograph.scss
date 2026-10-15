@@ -1,0 +1,115 @@
+@use './_mixins.scss' as *;
+
+#body {
+
+	.h1,
+	.f1 {
+		font-size: var(--font-size-1);
+	}
+
+	.h2,
+	.f2 {
+		font-size: var(--font-size-2);
+	}
+
+	.h3,
+	.f3 {
+		font-size: var(--font-size-3);
+	}
+
+	.h4,
+	.f4 {
+		font-size: var(--font-size-4);
+	}
+
+	.h5,
+	.f5 {
+		font-size: var(--font-size-5);
+	}
+
+	.h6,
+	.f6 {
+		font-size: var(--font-size-6);
+	}
+
+	.h7,
+	.f7 {
+		font-size: var(--font-size-7);
+	}
+
+	.h1,
+	.h2,
+	.h3,
+	.h4,
+	.h5,
+	.h6,
+	.h7 {
+		position: relative;
+		@include singleline();
+		line-height: var(--line-height-2);
+	}
+
+	.sub {
+		vertical-align: sub;
+	}
+
+	.sup {
+		vertical-align: super;
+	}
+
+	.text-light {
+		font-weight: var(--font-weight-light);
+	}
+
+	.text-regular {
+		font-weight: var(--font-weight-regular);
+	}
+
+	.text-bold {
+		font-weight: var(--font-weight-bold);
+	}
+
+	.text-left {
+		text-align: left;
+	}
+
+	.text-right {
+		text-align: right;
+	}
+
+	.text-center {
+		text-align: center;
+	}
+
+	.text-capitalize {
+		text-transform: capitalize;
+	}
+
+	.text-through {
+		text-decoration: line-through;
+	}
+
+	.text-underline {
+		text-decoration: underline;
+	}
+
+	.text-uppercase {
+		text-transform: uppercase;
+	}
+
+	.text-lowercase {
+		text-transform: lowercase;
+	}
+
+	.text-sentence {
+		text-transform: lowercase;
+
+		&::first-letter {
+			text-transform: uppercase;
+		}
+	}
+
+	.text-shadow {
+		@include text-shadow();
+	}
+}

@@ -1,0 +1,177 @@
+---
+name: create-api
+description: Build new APIs from a Swagger/OpenAPI document. Use when the user wants to create API routes from an external API spec, proxy SOA/Geoarea endpoints, or add documented API handlers from a swagger document.
+---
+
+# Create API from Swagger Document
+
+Build new API routes from a provided Swagger/OpenAPI document. Covers config, docs, fetch layer, mappers, and router registration.
+
+## Use this skill when
+
+- User wants new API routes generated from Swagger/OpenAPI
+- User asks to proxy external API endpoints with mapping and docs
+- Task requires router + fetch layer + mapper pattern
+
+## Do not use this skill when
+
+- Only a small bugfix is needed in existing routes
+- No OpenAPI/Swagger source is available and the user did not request API scaffolding
+- Task is CMS page/comp operations (use `cms-manager`)
+
+## Workflow
+
+### 1. Fetch OpenAPI spec
+
+Get the spec from the Swagger URL. Typical paths:
+
+- `https://<domain>/v3/api-docs`
+- `https://<domain>/swagger.json`
+- `https://<domain>/api-docs`
+
+Use `curl` or web fetch tooling; if it times out (internal/VPN), use the user’s local access.
+
+Parse paths, methods, schemas, and request bodies:
+
+```bash
+curl -s -m 15 "https://<base>/v3/api-docs" | node -e "
+const d = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+console.log(JSON.stringify({ paths: Object.keys(d.paths || {}), schemas: Object.keys(d.components?.schemas || {}) }, null, 2));
+"
+```
+
+### 2. Add config
+
+In `server/config.js` add:
+
+- Base URL (e.g. `geoareaApiDomain` from `GEOAREA_API_DOMAIN`)
+- API key (e.g. `soaAPIKey` from `SOA_API_KEY`)
+
+Add env vars to `.env.local` and comment them under the API section.
+
+### 3. Create docs
+
+Add `docs/<name>-api.md` (e.g. `docs/soa-api.md`) with:
+
+- **Base**: URL, auth header, env key
+- **All APIs**: Table of Method, Path, Deprecated (from spec)
+- **Schemas**: Object shapes for mapping (from `components.schemas`)
+- **POST request bodies**: Body schemas for POST endpoints
+- **Test inputs**: Sample values (state, city, zipcode, ids)
+- **Example curl**: For a core GET endpoint
+
+### 4. Create fetch layer
+
+In `server/controllers/<name>.js` (e.g. `realestate.js`):
+
+- `getHeaders()` – build auth headers (e.g. `X-MData-Key`)
+- `fetchFromApi(method, path, options)` – generic fetch with:
+  - `options.query` → query string
+  - `options.body` → JSON for POST/PUT
+- Optional specific fetchers (e.g. `fetchStatesFromApi`) when logic differs
+
+Use `config.<baseUrl>` and `config.<apiKey>` for the upstream API.
+
+### 5. Create mapper (helpers)
+
+**Property / listing fields (SOA Pure):** normalize in `helpers/property.js` via `mapSOADataToMetadata` first. Presentation and comp shapes (`album`, `tags`, `timeline`, etc.) belong in `helpers/article.js` (`mapPropertyToArticle`, `mapPropertyDetailToArticle`, `mapXToComp`). Do not map listing display fields only in routers or EJS. See [`docs/listing-data-pipeline.md`](../../docs/listing-data-pipeline.md).
+
+In `helpers/geo.js` (SOA response mappers) or a dedicated helper when not geo-related:
+
+- **Item mappers**: `mapSoaXxxToGeo(item)` – one raw item → UI model
+- **Response mappers**: `mapSoaXxxResponse(raw)` – raw response → UI array/object
+- **ensureArray(raw)** – handle `array`, `{ data: array }`, `{ list: array }`
+
+Response mappers encapsulate `ensureArray` + item mappers. Keep all mapping logic in the mapper; the router only calls the response mappers.
+
+### 6. Add router
+
+Create `server/routes/api.<name>.js` (e.g. `api.soa.js`):
+
+- Import `fetchFromApi` (and specific fetchers) from config
+- Import response mappers from the mapper helper
+- Define exported handlers: `fetch → mapXxxResponse(raw) → res.json(result)`
+- Register routes before any catch-all
+- Optional catch-all proxy for other paths (GET/POST/DELETE)
+- Add `router.use(express.json())` only if POST body parsing is needed
+
+Do **not** put `ensureArray`, `map*ToGeo`, or other mapping logic in the router. The router focuses on registering APIs and delegating to fetch + mapper.
+
+### 7. Mount router
+
+In `server/routes/index.js`:
+
+```js
+import apiSoaRouter from './api.soa.js';
+router.use('/api/soa', apiSoaRouter);
+```
+
+Add the new routes file to `server/swaggerConfig.js` `apis` array if you use JSDoc Swagger.
+
+### 8. Add Swagger JSDoc
+
+Above each route, add `@swagger` blocks:
+
+- **Parameters**: `in: path`, `required`, `description`, `schema` with `type`, `example`, `pattern` where relevant
+- **Responses**: `content.application/json.schema` with `type`, `items`, `properties`, `required`, `description`
+- **400/500**: Error responses
+
+Use the UI model shape in response schemas, not the raw upstream shape.
+
+### 9. SOA proxy routes (semantic names + input remap)
+
+When adding explicit SOA proxy endpoints (e.g. Property, School):
+
+- **Semantic route names**: Use handler names as paths (e.g. `/getPropertyByPath`) instead of raw SOA paths (e.g. `/mlsPublicRecordAssociations/url`).
+- **Input remapping**: Map client params to SOA format in the handler (e.g. `path` → `url`, `propertyId` from query or path).
+- **Full Swagger input/output** for each endpoint:
+  - **Input**: All parameters (query, path) with `schema`, `description`, `required`; for POST, add `requestBody` with `application/json` schema.
+  - **Output**: `responses.200.content.application/json.schema` with `type: object`, `additionalProperties: true` for passthrough SOA responses.
+  - **Errors**: `400`, `404`, `503` with `schema: { type: object, properties: { error: { type: string } } }`.
+- **Path variants**: When an ID can be passed via query or path (e.g. `?propertyId=123` vs `/getXById/123`), add separate `@swagger` path entries for each variant so both appear in Swagger UI.
+- **Shared proxy helper**: Use a helper like `proxyToPropertyPath(req, res, method, path, overrides)` to avoid duplication; `overrides` can include `query` or `body` for remapped inputs.
+
+Reference: `server/routes/api.soa.property.js`.
+
+## Pattern Summary
+
+| Layer | Responsibility |
+|-------|----------------|
+| `server/config.js` | Base URL, API key from env |
+| `docs/*-api.md` | Reference: APIs table, schemas, POST bodies |
+| `server/controllers/*.js` | Fetch upstream API |
+| `helpers/*Mapper.js` | Raw → UI model (ensureArray + map*) |
+| `server/routes/api.*.js` | Route registration, handlers: fetch → map → res.json |
+
+**SOA proxy routes**: Use semantic names (`/getPropertyByPath`), remap inputs (path→url, propertyId), document full input/output in Swagger, add path variants when ID can be query or path. See §9.
+
+## Example handler
+
+```js
+export async function getCountiesByStateCode(req, res) {
+  try {
+    const { stateCode } = req.params;
+    const data = await fetchFromGeoarea('GET', `/state/${stateCode}/counties`, {
+      query: req.query,
+    });
+    sendJson(res, mapSoaCountiesResponse(data));
+  } catch (error) {
+    handleSoaError(res, error);
+  }
+}
+```
+
+## Reference
+
+- API list and schemas: `docs/soa-api.md`
+- Geo SOA mappers: `helpers/geo.js` (`mapSoaStatesResponse`, etc.)
+- Config: `server/controllers/realestate.js`
+- Routes: `server/routes/api.soa.js`
+
+## Done checklist
+
+- Upstream spec endpoints and schemas were captured
+- Config/env keys were added or verified
+- Route handlers delegate to fetch + mapper layers
+- Swagger docs represent UI-facing response shape
+- Router is mounted and reachable from `server/routes/index.js`

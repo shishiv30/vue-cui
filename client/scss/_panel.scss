@@ -1,0 +1,27 @@
+@use './_mixins.scss' as *;
+
+@include comp-color('panel');
+
+.panel {
+	@include gap-size();
+	margin-top: var(--panel-gap-y);
+	margin-bottom: var(--panel-gap-y);
+	padding-left: var(--panel-gap-x);
+	padding-right: var(--panel-gap-x);
+	padding-top: var(--panel-gap-y);
+	padding-bottom: var(--panel-gap-y);
+
+	&.inline {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: var(--panel-gap-y);
+		padding-bottom: var(--panel-gap-y);
+	}
+
+	color: var(--panel-color);
+	background-color: var(--panel-color-bg);
+
+	&.outline {
+		box-shadow: inset 0 0 0 var(--panel-border-weight) var(--panel-color-border);
+	}
+}

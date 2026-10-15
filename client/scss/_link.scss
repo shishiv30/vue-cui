@@ -1,0 +1,38 @@
+@use './_mixins.scss' as *;
+
+a {
+	text-decoration: none;
+	outline: none;
+
+	&,
+	&:link,
+	&:visited,
+	&:active,
+	&:hover {
+		text-decoration: none;
+		outline: none;
+		color: inherit;
+	}
+
+	&[disable] {
+		color: var(--color-disabled);
+	}
+}
+
+a,
+button {
+	&.link {
+
+		&,
+		&:link,
+		&:visited {
+			font-weight: var(--font-weight-medium);
+			color: var(--color-link);
+		}
+
+		@include hover() {
+			color: var(--color-link-hover);
+			text-decoration: underline;
+		}
+	}
+}

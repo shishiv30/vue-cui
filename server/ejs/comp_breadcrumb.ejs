@@ -1,0 +1,24 @@
+<%_ const showBreadcrumbNav = typeof breadcrumbWrap === 'undefined' || breadcrumbWrap; _%>
+<%_ if (showBreadcrumbNav) { _%>
+<nav class="breadcrumb" aria-label="breadcrumb">
+<%_ } _%>
+  <%_if(breadcrumb && breadcrumb.links && breadcrumb.links.length){_%>
+    <ul>
+      <%_ for(var i=0; i<breadcrumb.links.length; i++) { _%>
+        <li>
+          <%_ if(!breadcrumb.links[i].href) { _%>
+            <span>
+              <%= breadcrumb.links[i].text %>
+            </span>
+            <%_} else {_%>
+              <a href="<%= getHref(breadcrumb.links[i]) %>">
+                <%= breadcrumb.links[i].text %>
+              </a>
+              <%_}_%>
+        </li>
+        <%_}_%>
+    </ul>
+    <%_}_%>
+<%_ if (showBreadcrumbNav) { _%>
+</nav>
+<%_ } _%>

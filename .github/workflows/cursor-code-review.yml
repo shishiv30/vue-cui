@@ -1,0 +1,43 @@
+name: Code Review
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+      issues: write
+    # Skip automated code review for draft PRs
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install Cursor CLI
+        run: |
+          curl https://cursor.com/install -fsS | bash
+          echo "$HOME/.cursor/bin" >> $GITHUB_PATH
+
+      - name: Perform automated code review
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cursor-agent --force --model "$MODEL" --output-format=text --print <<PROMPT_END
+          Code review this PR. GH_TOKEN is set; use gh CLI to post comments.
+
+          Repo: ${{ github.repository }}, PR: ${{ github.event.pull_request.number }}
+
+          Rules: Read .cursor/rules/ and .cursor/background.json. Enforce them.
+
+          Flow: Read rules → gh pr diff → gh api .../files for patches → post inline comments on changed lines (max 10). Use prefixes: [Critical] [Security] [Rule Violation] [Code Reuse] etc. Reply "resolved" when issues fixed. Supersede prior "no issues" if new issues found.
+
+          Submit via: gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews -f event=COMMENT -f body="$SUMMARY" -f comments='[$COMMENTS_JSON]'
+          PROMPT_END

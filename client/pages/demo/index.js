@@ -1,0 +1,781 @@
+import { defBool, defEnum } from '../../js/core/def.js';
+import { main } from '../../js/index.js';
+import { Router } from '../../js/core/router.js';
+import { emit } from '../../js/core/event.js';
+import {
+	createDemoSpaRegExp,
+	DEMO_SPA_ROUTES,
+	matchDemoSpaRoute,
+} from '../../../helpers/routes/demoSpaRoutes.js';
+import { buildDemoSpaInnerHtml } from './detailSpa.js';
+import { getQueryStringByFilter } from '../../../helpers/filter.js';
+import { getPathByGeo } from '../../../helpers/geo.js';
+import nearbyTpl from '../../../server/ejs/comp_demo_nearby.ejs';
+import { renderEjsTemplate } from '../../js/core/renderEjs.js';
+import '../../scss/demo.scss';
+
+const boolStatus = ['lock', 'collapse', 'menu'];
+
+const enumStatus = [
+	{
+		key: 'view',
+		names: ['grid', 'detail', 'map'],
+	},
+];
+
+const demoSpaRootSel = '#detail';
+const demoSpaNearbySel = 'section.result';
+const viewFlipMs = 500;
+
+/**
+ * @param {HTMLElement} page
+ * @param {Object} opt
+ */
+function bindViewFlip(page, opt) {
+	let flipToken = 0;
+
+	function resultItems() {
+		return Array.from(document.querySelectorAll(`${demoSpaNearbySel} li.item`));
+	}
+
+	function currentView() {
+		if (page.classList.contains('view-detail')) {
+			return 'detail';
+		}
+		if (page.classList.contains('view-grid')) {
+			return 'grid';
+		}
+		return '';
+	}
+
+	function clearItemTransforms(items) {
+		items.forEach((item) => {
+			item.style.transition = '';
+			item.style.transform = '';
+		});
+	}
+
+	/**
+	 * @param {HTMLElement[]} items
+	 */
+	function measureItems(items) {
+		return items
+			.map((item) => {
+				const rect = item.getBoundingClientRect();
+				return {
+					item,
+					top: rect.top,
+					left: rect.left,
+					width: rect.width,
+					height: rect.height,
+				};
+			})
+			.filter((entry) => entry.width > 0 && entry.height > 0);
+	}
+
+	function endFlip(token, items) {
+		if (token !== flipToken) {
+			return;
+		}
+		flipToken += 1;
+		clearItemTransforms(items);
+		page.classList.remove('view-animating');
+	}
+
+	/**
+	 * @param {'detail'|'grid'} target
+	 */
+	function beginFlip(target) {
+		flipToken += 1;
+		const token = flipToken;
+		const items = resultItems();
+		const from = currentView() ? measureItems(items) : [];
+		clearItemTransforms(items);
+		if (!from.length) {
+			opt._viewFlip = null;
+			page.classList.remove('view-animating');
+			return;
+		}
+		page.classList.add('view-animating');
+		opt._viewFlip = { target, from, token };
+	}
+
+	/**
+	 * @param {'detail'|'grid'} target
+	 */
+	function playFlip(target) {
+		const pending = opt._viewFlip;
+		opt._viewFlip = null;
+		if (!pending || pending.target !== target || pending.token !== flipToken) {
+			return;
+		}
+		const { from, token } = pending;
+		const moves = [];
+		from.forEach((prev) => {
+			const next = prev.item.getBoundingClientRect();
+			const dx = prev.left - next.left;
+			const dy = prev.top - next.top;
+			if (dx === 0 && dy === 0) {
+				return;
+			}
+			prev.item.style.transition = 'none';
+			prev.item.style.transform = `translate(${dx}px, ${dy}px)`;
+			moves.push(prev.item);
+		});
+		if (!moves.length) {
+			endFlip(token, from.map((entry) => entry.item));
+			return;
+		}
+		requestAnimationFrame(() => {
+			if (token !== flipToken) {
+				return;
+			}
+			moves.forEach((item) => {
+				item.style.transition = '';
+				item.style.transform = '';
+			});
+			let remaining = moves.length;
+			let settled = false;
+			const finish = () => {
+				if (settled) {
+					return;
+				}
+				settled = true;
+				moves.forEach((item) => {
+					item.removeEventListener('transitionend', onEnd);
+				});
+				endFlip(token, from.map((entry) => entry.item));
+			};
+			const onEnd = (event) => {
+				if (event.propertyName !== 'transform') {
+					return;
+				}
+				remaining -= 1;
+				if (remaining <= 0) {
+					finish();
+				}
+			};
+			moves.forEach((item) => {
+				item.addEventListener('transitionend', onEnd);
+			});
+			setTimeout(finish, viewFlipMs + 80);
+		});
+	}
+
+	let flyToken = 0;
+
+	function detailBody() {
+		const root =
+			document.querySelector(demoSpaRootSel) || document.querySelector('section.detail');
+		return root ? root.querySelector('.detail-body') : null;
+	}
+
+	function pinDetailBody(transform) {
+		const body = detailBody();
+		if (!body) {
+			return;
+		}
+		body.style.transition = 'none';
+		body.style.transform = transform;
+	}
+
+	function releaseDetailBody() {
+		const body = detailBody();
+		if (!body) {
+			return;
+		}
+		body.style.transition = '';
+		body.style.transform = '';
+	}
+
+	/**
+	 * @param {'detail'|'grid'} target
+	 */
+	function beginFly(target) {
+		flyToken += 1;
+		const from = currentView();
+		if (!from || !detailBody()) {
+			page.classList.remove('detail-leaving');
+			return;
+		}
+		if (target === 'grid' && from === 'detail') {
+			page.classList.add('detail-leaving');
+			pinDetailBody('translateX(0)');
+			return;
+		}
+		if (target === 'detail' && from === 'grid') {
+			page.classList.remove('detail-leaving');
+			pinDetailBody('translateX(100%)');
+		}
+	}
+
+	/**
+	 * @param {'detail'|'grid'} target
+	 */
+	function playFly(target) {
+		const token = flyToken;
+		const body = detailBody();
+		if (!body || !body.style.transform) {
+			return;
+		}
+		requestAnimationFrame(() => {
+			if (token !== flyToken) {
+				return;
+			}
+			releaseDetailBody();
+			if (target !== 'grid') {
+				return;
+			}
+			let settled = false;
+			const finish = () => {
+				if (settled || token !== flyToken) {
+					return;
+				}
+				settled = true;
+				body.removeEventListener('transitionend', onEnd);
+				page.classList.remove('detail-leaving');
+			};
+			const onEnd = (event) => {
+				if (event.propertyName !== 'transform') {
+					return;
+				}
+				finish();
+			};
+			body.addEventListener('transitionend', onEnd);
+			setTimeout(finish, viewFlipMs + 80);
+		});
+	}
+
+	opt.beforeSwitchToDetail = () => {
+		beginFlip('detail');
+		beginFly('detail');
+	};
+	opt.afterSwitchToDetail = () => {
+		playFlip('detail');
+		playFly('detail');
+	};
+	opt.beforeSwitchToGrid = () => {
+		beginFlip('grid');
+		beginFly('grid');
+	};
+	opt.afterSwitchToGrid = () => {
+		playFlip('grid');
+		playFly('grid');
+	};
+}
+
+/**
+ * @param {string} html — detail + optional nearby sections from EJS
+ * @returns {boolean}
+ */
+function injectDemoSpaHtml(html) {
+	const wrap = document.createElement('div');
+	wrap.innerHTML = html.trim();
+	const detailSection = wrap.querySelector('#detail');
+	if (!detailSection) {
+		return false;
+	}
+	let root = document.querySelector(demoSpaRootSel);
+	if (!root) {
+		root = document.querySelector('section.detail');
+		if (root) {
+			root.id = 'detail';
+		}
+	}
+	if (root) {
+		root.outerHTML = detailSection.outerHTML;
+	} else {
+		// Geo SSR has no detail block — insert mount before nearby results.
+		const resultEl = document.querySelector(demoSpaNearbySel);
+		const anchor =
+			resultEl ||
+			document.querySelector('.breadcrumb') ||
+			document.querySelector('body');
+		if (!anchor) {
+			return false;
+		}
+		if (resultEl) {
+			resultEl.insertAdjacentElement('beforebegin', detailSection);
+		} else if (anchor !== document.body) {
+			anchor.insertAdjacentElement('afterend', detailSection);
+		} else {
+			anchor.appendChild(detailSection);
+		}
+	}
+	const nearbySection = wrap.querySelector(demoSpaNearbySel);
+	const resultEl = document.querySelector(demoSpaNearbySel);
+	if (nearbySection && resultEl) {
+		resultEl.outerHTML = nearbySection.outerHTML;
+	}
+	return true;
+}
+
+const detailRevealSlots = [
+	'h1',
+	'.demo-detail-tags',
+	'.demo-slider',
+	'.demo-detail-description',
+];
+
+/**
+ * Replace placeholder blocks in order: title, tags, slider, description.
+ * @param {string} html
+ * @param {() => boolean} isCurrent
+ * @returns {Promise<boolean>}
+ */
+function revealPlaceholder(html, isCurrent) {
+	const wrap = document.createElement('div');
+	wrap.innerHTML = html.trim();
+	const nextBody = wrap.querySelector('.detail-body');
+	const body = document.querySelector(`${demoSpaRootSel} .detail-body`);
+	if (!nextBody || !body) {
+		return Promise.resolve(false);
+	}
+	const nearbySection = wrap.querySelector(demoSpaNearbySel);
+	const resultEl = document.querySelector(demoSpaNearbySel);
+	if (nearbySection && resultEl) {
+		resultEl.outerHTML = nearbySection.outerHTML;
+	}
+	const wait = (ms) => new Promise((resolve) => {
+		setTimeout(resolve, ms);
+	});
+	return detailRevealSlots.reduce((chain, sel) => {
+		return chain.then(() => {
+			if (!isCurrent()) {
+				return;
+			}
+			const current = body.querySelector(sel);
+			const next = nextBody.querySelector(sel);
+			if (next) {
+				next.classList.add('detail-reveal');
+				if (current) {
+					current.replaceWith(next);
+				} else {
+					body.appendChild(next);
+				}
+			} else if (current) {
+				current.remove();
+			}
+			return wait(250);
+		});
+	}, Promise.resolve()).then(() => {
+		if (!isCurrent()) {
+			return false;
+		}
+		body.classList.remove('placeholder');
+		body.querySelectorAll('.demo-detail-block').forEach((node) => {
+			node.remove();
+		});
+		Array.from(nextBody.children).forEach((node) => {
+			node.classList.add('detail-reveal');
+			body.appendChild(node);
+		});
+		return true;
+	});
+}
+
+function readListingFilter(root) {
+	const filter = {};
+	const edges = { price: {}, bed: {}, bath: {} };
+	root.querySelectorAll('.range-slider input[type="hidden"][data-key]').forEach((input) => {
+		const key = input.dataset.key;
+		const edge = input.dataset.edge;
+		if (!edges[key] || (edge !== 'min' && edge !== 'max')) {
+			return;
+		}
+		if (input.value === '') {
+			return;
+		}
+		edges[key][edge] = Number(input.value);
+	});
+	if (edges.price.min !== undefined) {
+		filter.minPrice = edges.price.min;
+	}
+	if (edges.price.max !== undefined) {
+		filter.maxPrice = edges.price.max;
+	}
+	if (edges.bed.min !== undefined) {
+		filter.minBed = edges.bed.min;
+	}
+	if (edges.bed.max !== undefined) {
+		filter.maxBed = edges.bed.max;
+	}
+	if (edges.bath.min !== undefined) {
+		filter.minBath = edges.bath.min;
+	}
+	if (edges.bath.max !== undefined) {
+		filter.maxBath = edges.bath.max;
+	}
+
+	const types = [...root.querySelectorAll('input[name="propertyType[]"]:checked')].map(
+		(input) => input.value,
+	);
+	if (types.length) {
+		filter.propertyTypes = types.map((value) => value.toUpperCase());
+	}
+
+	const status = root.querySelector('input[name="propertyStatus[]"]:checked');
+	if (status && status.value === 'sold') {
+		filter.searchPropertyStatus = 'INACTIVE';
+	} else if (status && status.value === 'rental') {
+		filter.searchPropertyStatus = 'FOR_RENT';
+	}
+
+	const photo = root.querySelector('input[name="photo"]');
+	if (photo && photo.checked) {
+		filter.hasPhoto = true;
+	}
+	const construction = root.querySelector('input[name="construction"]');
+	if (construction && construction.checked && !construction.disabled) {
+		filter.isNewConstruction = true;
+	}
+	const openhouse = root.querySelector('input[name="openhouse"]');
+	if (openhouse && openhouse.checked && !openhouse.disabled) {
+		filter.isOpenHousesOnly = true;
+	}
+	return filter;
+}
+
+let listingRequestId = 0;
+
+function sameListingPath(left, right) {
+	if (!left || !right) {
+		return false;
+	}
+	return left === right || left.endsWith(right) || right.endsWith(left);
+}
+
+function listingGeoPath() {
+	const matched = matchDemoSpaRoute(window.location.pathname);
+	if (matched?.id === 'geo' && matched.params.tail) {
+		return matched.params.tail.replace(/^\/+/, '');
+	}
+	if (matched?.id === 'map' && matched.params.state && matched.params.geoSlug) {
+		return `${matched.params.state}/${matched.params.geoSlug}`;
+	}
+	const geo = window.context?.geo;
+	return geo ? getPathByGeo(geo) || '' : '';
+}
+
+async function refreshListing(to) {
+	const requestId = ++listingRequestId;
+	const geoPath = listingGeoPath();
+	if (!geoPath) {
+		return;
+	}
+	const url = `/api/demo/search/${geoPath}${to.search || ''}`;
+	const response = await fetch(url, { headers: { Accept: 'application/json' } });
+	if (!response.ok || requestId !== listingRequestId) {
+		return;
+	}
+	const payload = await response.json();
+	if (requestId !== listingRequestId) {
+		return;
+	}
+	const articles = Array.isArray(payload.articles) ? payload.articles : [];
+	const html = articles.length
+		? renderEjsTemplate(
+			nearbyTpl,
+			{ articleComponent: { data: articles } },
+			window.context || {},
+		)
+		: '';
+	const current = document.querySelector(demoSpaNearbySel);
+	if (html) {
+		const wrap = document.createElement('div');
+		wrap.innerHTML = html.trim();
+		const next = wrap.querySelector(demoSpaNearbySel);
+		if (next && current) {
+			current.replaceWith(next);
+		} else if (next) {
+			const anchor =
+				document.querySelector(demoSpaRootSel) || document.querySelector('nav.listing-nav');
+			if (anchor) {
+				anchor.insertAdjacentElement('afterend', next);
+			}
+		}
+	} else if (current) {
+		current.remove();
+	}
+	emit('dom.load');
+}
+
+const OFF_MARKET_STATUS = new Set(['sold', 'rental']);
+const OFF_MARKET_TAGS = ['construction', 'openhouse'];
+
+function syncTagAvailability(root) {
+	const status = root.querySelector('input[name="propertyStatus[]"]:checked');
+	const offMarket = !!(status && OFF_MARKET_STATUS.has(status.value));
+	OFF_MARKET_TAGS.forEach((name) => {
+		const input = root.querySelector(`input[name="${name}"]`);
+		if (!input) {
+			return;
+		}
+		input.disabled = offMarket;
+		if (offMarket) {
+			input.checked = false;
+		}
+	});
+}
+
+function bindListingFilter() {
+	const root = document.getElementById('listing-filter');
+	if (!root || root.dataset.bound === 'true') {
+		return;
+	}
+	root.dataset.bound = 'true';
+	syncTagAvailability(root);
+
+	root.addEventListener('change', () => {
+		syncTagAvailability(root);
+		const current = new URLSearchParams(window.location.search);
+		const next = new URLSearchParams(getQueryStringByFilter(readListingFilter(root)));
+		['size', 'index'].forEach((key) => {
+			if (current.has(key)) {
+				next.set(key, current.get(key));
+			}
+		});
+		const search = next.toString();
+		const nextUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
+		const currentUrl = `${window.location.pathname}${window.location.search}`;
+		if (nextUrl !== currentUrl) {
+			const router = Router.active;
+			if (router) {
+				router.push(nextUrl);
+				return;
+			}
+			window.location.assign(nextUrl);
+		}
+	});
+}
+
+let demo = {
+	name: 'demo',
+	init: function ($el, opt, exportObj) {
+		bindListingFilter();
+		boolStatus.forEach((name) => {
+			defBool(name, $el, opt, exportObj);
+		});
+
+		let gridSnapshot = null;
+		let resultSnapshot = null;
+		/** @type {AbortController|null} */
+		let detailAbort = null;
+		let detailRequestId = 0;
+
+		bindViewFlip($el, opt);
+		enumStatus.forEach((e) => {
+			defEnum(e.key, e.names, $el, opt, exportObj);
+		});
+
+		/**
+		 * Restore pre-detail grid markup after SPA inject replaced it.
+		 * @returns {boolean}
+		 */
+		function restoreGridSnapshots() {
+			if (!gridSnapshot) {
+				return false;
+			}
+			const root =
+				document.querySelector(demoSpaRootSel) ||
+				document.querySelector('section.detail');
+			if (root) {
+				root.outerHTML = gridSnapshot;
+			}
+			if (resultSnapshot) {
+				const resultEl = document.querySelector(demoSpaNearbySel);
+				if (resultEl) {
+					resultEl.outerHTML = resultSnapshot;
+				}
+			}
+			emit('dom.load');
+			return true;
+		}
+
+		const detailPlaceholderHtml = [
+			'<h1 class="demo-title"></h1>',
+			'<div class="filter demo-detail-tags"></div>',
+			'<div class="slider demo-slider"></div>',
+			'<div class="demo-detail-description"></div>',
+			'<div class="demo-detail-block"></div>',
+			'<div class="demo-detail-block"></div>',
+			'<div class="demo-detail-block"></div>',
+		].join('');
+
+		exportObj.updateDetail = function (prId) {
+			if (detailAbort) {
+				detailAbort.abort();
+				detailAbort = null;
+			}
+			detailAbort = new AbortController();
+			const { signal } = detailAbort;
+			const requestId = ++detailRequestId;
+			const shownId = window.context?.detail?.metadata?.prId;
+			const detailRoot =
+				document.querySelector(demoSpaRootSel) || document.querySelector('section.detail');
+			const body = detailRoot ? detailRoot.querySelector('.detail-body') : null;
+			const skeletonAt = Date.now();
+			let showedSkeleton = false;
+			const switching =
+				body &&
+				body.childElementCount &&
+				(body.classList.contains('placeholder') || !shownId || shownId !== prId);
+			if (switching) {
+				showedSkeleton = true;
+				body.className = 'placeholder detail-body grid grid-xs-1';
+				body.innerHTML = detailPlaceholderHtml;
+			}
+			const holdSkeleton = () => {
+				if (!showedSkeleton) {
+					return Promise.resolve();
+				}
+				const wait = Math.max(0, 1500 - (Date.now() - skeletonAt));
+				return new Promise((resolve) => {
+					setTimeout(resolve, wait);
+				});
+			};
+
+			return fetch(`/api/demo/detail/${encodeURIComponent(prId)}`, { signal })
+				.then((r) => {
+					if (!r.ok) {
+						throw new Error(`Detail request failed (${r.status})`);
+					}
+					return r.json();
+				})
+				.then((envelope) => {
+					if (requestId !== detailRequestId) {
+						return null;
+					}
+					if (!envelope || envelope.code !== 200 || envelope.error) {
+						throw new Error(
+							(typeof envelope?.error === 'string' && envelope.error) ||
+								'Detail request failed',
+						);
+					}
+					return holdSkeleton().then(() => envelope);
+				})
+				.then(async (envelope) => {
+					if (!envelope || requestId !== detailRequestId) {
+						return null;
+					}
+					const root =
+						document.querySelector(demoSpaRootSel) ||
+						document.querySelector('section.detail');
+					if (gridSnapshot === null && root) {
+						gridSnapshot = root.outerHTML;
+						const resultEl = document.querySelector(demoSpaNearbySel);
+						if (resultEl) {
+							resultSnapshot = resultEl.outerHTML;
+						}
+					}
+					const html = buildDemoSpaInnerHtml(envelope.data);
+					const revealed = showedSkeleton
+						? await revealPlaceholder(html, () => requestId === detailRequestId)
+						: false;
+					if (requestId !== detailRequestId) {
+						return null;
+					}
+					if (revealed || (!showedSkeleton && html && injectDemoSpaHtml(html))) {
+						if (window.context && envelope.data) {
+							Object.assign(window.context, envelope.data);
+						}
+						emit('dom.load');
+						return true;
+					}
+					return false;
+				})
+				.catch((err) => {
+					if (err && err.name === 'AbortError') {
+						return null;
+					}
+					// eslint-disable-next-line no-console
+					console.error('updateDetail', err);
+					return false;
+				});
+		};
+
+		if (window.location.pathname.indexOf('/demo/sitemap') > -1) {
+			return;
+		}
+		return new Router(
+			[
+				{
+					reg: createDemoSpaRegExp('detail'),
+					loading: async (to, from, method) => {
+						if (method === 'replace') {
+							return null;
+						}
+						const propertyId = to.params[DEMO_SPA_ROUTES.detail.prIdParamIndex];
+						const sameDetail =
+							from &&
+							from.params &&
+							from.params[DEMO_SPA_ROUTES.detail.prIdParamIndex] === propertyId;
+						if (!sameDetail) {
+							const detailLoaded = await exportObj.updateDetail(propertyId);
+							if (detailLoaded == null) {
+								return null;
+							}
+							if (detailLoaded) {
+								exportObj.switchToDetail();
+							} else {
+								restoreGridSnapshots();
+								exportObj.switchToGrid();
+							}
+						}
+						await refreshListing(to);
+						return null;
+					},
+				},
+				{
+					reg: createDemoSpaRegExp('map'),
+					loading: async (to, _from, method) => {
+						exportObj.switchToMap();
+						if (method !== 'replace') {
+							await refreshListing(to);
+						}
+						return null;
+					},
+				},
+				{
+					reg: createDemoSpaRegExp('geo'),
+					loading: async (to, from, method) => {
+						if (method === 'replace') {
+							restoreGridSnapshots();
+							exportObj.switchToGrid();
+							return null;
+						}
+						const pathChanged = !from || !sameListingPath(from.pathname, to.pathname);
+						if (pathChanged) {
+							restoreGridSnapshots();
+							exportObj.switchToGrid();
+						}
+						await refreshListing(to);
+						return null;
+					},
+				},
+			],
+			{ linkScope: 'demo' },
+		);
+	},
+	load: function ($el, opt, exportObj) {
+		if (window.context?.detail) {
+			exportObj.switchToDetail();
+		} else {
+			exportObj.switchToGrid();
+		}
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				if (opt && opt.data) {
+					Object.assign(exportObj, opt.data);
+				}
+				resolve(exportObj);
+			}, 1000);
+		});
+	},
+	// Plugin lifecycle slot (Page still runs renderBefore/After).
+	render: function () {},
+};
+
+export default (function (win) {
+	window.page = main(win, demo);
+})(window);

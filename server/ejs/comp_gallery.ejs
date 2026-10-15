@@ -1,0 +1,10 @@
+<%_ if (comp && comp.imagesMeta && comp.imagesMeta.length) { const images = comp.imagesMeta.map(image => getSrc(image)); _%>
+	<section class="section section-gallery">
+		<div class="slider" data-role="slider" data-index="<%= comp.initialIndex %>"
+			data-images='<%= JSON.stringify(images) %>' data-images-meta='<%= JSON.stringify(comp.imagesMeta) %>'>
+			<div class="slider-list">
+					<img src="<%= images[comp.initialIndex] %>" loading="lazy" alt="<%= comp.alt %>">
+			</div>
+		</div>
+	</section>
+	<%_ } _%>

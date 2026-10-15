@@ -1,0 +1,186 @@
+@use './_mixins.scss' as *;
+
+
+* {
+	box-sizing: border-box;
+}
+
+:root {
+	color-scheme: light;
+}
+
+nav,
+menu,
+input,
+div,
+span,
+ul,
+li,
+ol,
+p,
+select,
+textarea,
+dl,
+dt,
+dd,
+html,
+body,
+select,
+form,
+figure {
+	margin: 0;
+	padding: 0;
+}
+
+address {
+	font-style: unset;
+}
+
+ol,
+ul {
+	list-style: none;
+}
+
+html {
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	font-family: var(--cui-font);
+	font-weight: var(--font-weight-regular);
+	font-style: normal;
+	font-size: 16px;
+	line-height: var(--line-height-2);
+	@include hidden-scrollbar();
+	//z-index
+	--ui-tooltip-index: 1000;
+	--ui-popover-index: 1050;
+	--ui-buttongroup-index: 1100;
+	--ui-pin-index: 1930;
+	--ui-pin-hover-index: 1940;
+	--ui-stick-index: 1960;
+	--ui-header-overlay: 1990;
+	--ui-header-index: 2000;
+	--ui-header-list-index: 2010;
+	--ui-datepicker-index: 2100;
+	--ui-gautocomplete-index: 3000;
+	--ui-dropdown-index: 3100;
+	--ui-modal-overlay: 10000;
+	--ui-modal-index: 10010;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	color: var(--color);
+	background-color: var(--color-bg);
+	min-height: 100%;
+
+	::selection {
+		background-color: var(--selection-background);
+		color: var(--selection-color);
+	}
+
+	::-moz-selection {
+		background-color: var(--selection-background);
+		color: var(--selection-color);
+	}
+
+	&.theme-dark {
+		color-scheme: dark;
+	}
+
+	&.theme-light {
+		color-scheme: light;
+	}
+}
+
+fieldset {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+legend {
+	color: inherit;
+}
+
+label[for] {
+	cursor: pointer;
+}
+
+input,
+select,
+textarea,
+button {
+	line-height: normal;
+	outline: none;
+	border: none;
+	margin: 0;
+	padding: 0;
+	color: inherit;
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	font-family: var(--cui-font);
+	font-style: normal;
+	font-size: var(--font-size-5);
+	font-weight: var(--font-weight-regular);
+}
+
+button {
+	cursor: pointer;
+	background-color: transparent;
+}
+
+input::-ms-clear {
+	width: 0;
+	height: 0;
+}
+
+input,
+select {
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
+img {
+	border: 0;
+	max-width: 100%;
+	object-fit: cover;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+	padding: 0;
+	line-height: inherit;
+	font-weight: inherit;
+	font-size: inherit;
+}
+
+abbr[title],
+acronym[title] {
+	text-decoration: none;
+	cursor: help;
+}
+
+q::after,
+q::before {
+	content: '';
+}
+
+b {
+	font-weight: var(--font-weight-bold);
+}
+
+button {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+[disable] {
+	pointer-events: none!important;
+}

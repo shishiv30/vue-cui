@@ -1,0 +1,1164 @@
+{
+  "project": {
+    "name": "pure",
+    "type": "web-application",
+    "architecture": {
+      "client": {
+        "type": "plugin-based",
+        "entry": "client/js/index.js",
+        "core": {
+          "plugin": "client/js/core/plugin.js",
+          "event": "client/js/core/event.js",
+          "page": "client/js/core/page.js",
+          "def": "client/js/core/def.js",
+          "dom_hook": "client/js/core/dom.hook.js"
+        },
+        "components": {
+          "structure": {
+            "javascript": "Event handling and state management",
+            "scss": "UI state definitions",
+            "html": "Component markup with custom attributes"
+          }
+        }
+      },
+      "server": {
+        "type": "express-ejs-config-driven",
+        "entry": "server/app.js",
+        "runtime_config": "server/config.js",
+        "routes": "server/routes/index.js",
+        "controller": {
+          "class": "BaseController",
+          "file": "server/controllers/index.js",
+          "configs_directory": "server/controllers/",
+          "contract_reference": "server/controllers/configbase.js"
+        },
+        "api": {
+          "app_prefix": "/api",
+          "soa_prefix": "/api/soa",
+          "soa_children": [
+            "server/routes/api.soa.property.js",
+            "server/routes/api.soa.school.js",
+            "server/routes/api.soa.poi.js",
+            "server/routes/api.soa.geoarea.js"
+          ]
+        },
+        "content_sources": {
+          "cms_with_fallback": "server/utils/cmsData.js",
+          "local_seed_data": "data/",
+          "local_seed_data_note": "See data_folder — all default/mock/sample hardcoded data lives under data/, not helpers/ or inline in configs"
+        }
+      }
+    }
+  },
+  "guidance_policy": {
+    "purpose": "Reference knowledge for architecture, utilities, and workflows",
+    "normative_source": ".cursor/rules/*.mdc",
+    "canonical_docs": [
+      "README.md",
+      "docs/index.md",
+      "docs/folder-ownership.md",
+      "client.md",
+      "server.md",
+      "build-system.md",
+      "docs/development-workflow.md",
+      "docs/routes-reference.md",
+      "docs/listing-data-pipeline.md",
+      "docs/client-js-lifecycle.md",
+      "docs/demo-tx-lifecycle.md",
+      "cms/API.md"
+    ],
+    "usage": [
+      "Use this file for context and examples",
+      "When guidance conflicts with rules or repo reality, follow rules and current code",
+      "For ports, scripts, and route topology, verify package.json, server/config.js, server/routes/*, and webpack.config*.js",
+      "Default, mock, or sample hardcoded data → data/ only (see data_folder); helpers/ is mapping/transform logic only"
+    ]
+  },
+  "data_folder": {
+    "root": "data/",
+    "purpose": "Canonical home for hardcoded seed data: example structures, defaults, and mock values used as samples or local fallbacks before/atop CMS.",
+    "agent_rules": [
+      "When you need default, mock, fixture, or sample data to illustrate shape or fill dev/demo — add or extend files under data/, not helpers/, route config modules in server/controllers/, or inline in routes.",
+      "helpers/ holds mapping and transform logic (geo, article, property, url, path); data/ holds the actual payload objects and CSV sources.",
+      "Page/comp/theme samples sync to CMS via cms/scripts/seed-and-sync.js; prefer CMS API for production updates (see cms/API.md)."
+    ],
+    "layout": {
+      "index.js": "Geo CSV ingest (data/csv → dist JSON), getGeoData() cache — runtime reference data, not page content",
+      "page/": "Page section arrays + layout (hero, points, gallery, …); one file per page key (e.g. index.js, ai-trend.js); see data/page/README.md",
+      "comps/": "Reusable comp seed objects (header, footer, theme-*, comp_template)",
+      "mock/": "Mock API/list payloads (e.g. mock/articles.js for property/article cards)",
+      "csv/": "Source CSV for geo generation (usstates, uscities, uscounties, usneighborhoods, uszips)"
+    },
+    "examples": {
+      "new_page_sections": "data/page/<page-key>.js — default export ordered section array",
+      "new_theme_comp": "data/comps/theme-<name>.js — default + dark CSS vars; comp key theme-<name>",
+      "new_mock_listing": "data/mock/<name>.js — structured sample records matching API/article shape"
+    }
+  },
+  "rules": {
+    "event_system": {
+      "core_functions": {
+        "on": {
+          "signature": "on(eventName, callback, options)",
+          "behavior": [
+            "Registers event listeners for custom events or DOM events",
+            "Supports space-separated multiple events",
+            "Supports namespaced events",
+            "Options parameter for DOM events"
+          ],
+          "example": "on('user.login', (userData) => console.log(userData))"
+        },
+        "once": {
+          "signature": "once(eventName, callback)",
+          "behavior": [
+            "Registers one-time event listener",
+            "Automatically removes after first execution"
+          ],
+          "example": "once('initial.load', () => console.log('Loaded'))"
+        },
+        "off": {
+          "signature": "off(eventName)",
+          "behavior": [
+            "Removes event listeners",
+            "Supports space-separated multiple events"
+          ],
+          "example": "off('user.login')"
+        },
+        "emit": {
+          "signature": "emit(eventName, data)",
+          "behavior": [
+            "Triggers custom events",
+            "Supports space-separated multiple events",
+            "Data can be single value or array"
+          ],
+          "example": "emit('user.login', { id: 1 })"
+        },
+        "trigger": {
+          "signature": "trigger(name, ...params)",
+          "behavior": [
+            "Calls function directly if name is function",
+            "Calls window[name] if name is string and function exists",
+            "Emits event if name is string and no function exists"
+          ],
+          "example": "trigger('user.login', { id: 1 })"
+        }
+      },
+      "data_attributes": {
+        "data-trigger": {
+          "purpose": "Specifies event name or function to trigger",
+          "example": "data-trigger='user.login'"
+        },
+        "data-params": {
+          "purpose": "JSON string containing parameters",
+          "example": "data-params='{\"id\": 1}'"
+        }
+      },
+      "namespaces": {
+        "format": "event.namespace",
+        "default": "DEFAULT",
+        "example": "user.login"
+      }
+    },
+    "plugin_system": {
+      "structure": {
+        "name": "String",
+        "defaultOpt": "Object",
+        "init": "Function",
+        "load": "Function",
+        "render": "Function",
+        "destroy": "Function"
+      },
+      "events": {
+        "initialization": [
+          "initBefore",
+          "initAfter"
+        ],
+        "loading": [
+          "loadBefore",
+          "loadAfter"
+        ],
+        "rendering": [
+          "renderBefore",
+          "renderAfter"
+        ],
+        "destruction": [
+          "destroyBefore",
+          "destroyAfter"
+        ]
+      }
+    },
+    "best_practices": {
+      "event_handling": {
+        "naming": [
+          "Use descriptive, action-oriented names",
+          "Follow consistent naming patterns",
+          "Use namespaces for organization"
+        ],
+        "cleanup": [
+          "Remove listeners on component destruction",
+          "Use off() for cleanup",
+          "Use once() for one-time events"
+        ],
+        "data": [
+          "Keep data minimal and relevant",
+          "Use consistent data structures",
+          "Document expected formats"
+        ],
+        "error_handling": [
+          "Implement error handling in callbacks",
+          "Use try-catch for critical operations",
+          "Log errors appropriately"
+        ]
+      },
+      "performance": {
+        "listeners": [
+          "Remove unused listeners",
+          "Use once() for one-time events",
+          "Implement proper cleanup"
+        ],
+        "data": [
+          "Keep payloads small",
+          "Avoid unnecessary data",
+          "Use references for large objects"
+        ],
+        "frequency": [
+          "Throttle high-frequency events",
+          "Debounce rapid sequences",
+          "Batch related events"
+        ]
+      },
+      "request_handling": {
+        "error_handling": [
+          "Legacy request helpers often resolve fallback values on error to avoid UI crashes",
+          "For new code, prefer explicit error behavior based on call-site needs",
+          "Log all errors through sendError system",
+          "Categorize errors by type (NETWORK, TIMEOUT, HTTP, PARSE, VALIDATION)",
+          "Include detailed error information in logs"
+        ],
+        "timeout_handling": [
+          "Default timeout of 15 seconds",
+          "Use AbortController for timeout management",
+          "Clean up timeout on request completion"
+        ],
+        "retry_logic": [
+          "Default 3 retries with 1 second delay",
+          "Configurable retry count and delay",
+          "Exponential backoff between retries"
+        ],
+        "validation": [
+          "Validate URL presence",
+          "Validate request data can be stringified",
+          "Check content-type headers",
+          "Handle JSON parsing errors"
+        ],
+        "configuration": {
+          "timeout": "15 seconds",
+          "retry_count": 3,
+          "retry_delay": "1 second",
+          "error_types": [
+            "NETWORK_ERROR",
+            "TIMEOUT_ERROR",
+            "HTTP_ERROR",
+            "PARSE_ERROR",
+            "VALIDATION_ERROR"
+          ]
+        }
+      },
+      "validation": {
+        "input_validation": [
+          "Validate all user inputs",
+          "Use appropriate validation methods",
+          "Handle edge cases"
+        ],
+        "format_validation": [
+          "Support international formats",
+          "Use comprehensive regex patterns",
+          "Consider using validation libraries"
+        ],
+        "error_messages": [
+          "Provide clear error messages",
+          "Include validation rules in messages",
+          "Support internationalization"
+        ]
+      },
+      "state_management": {
+        "global_state": [
+          "Avoid using globalThis",
+          "Use module-level variables",
+          "Implement proper state management"
+        ],
+        "ui_status_helpers": {
+          "overview": [
+            "Use defBool and defEnum from client/js/core/def.js to model UI state via CSS class names",
+            "Each status is driven by a CSS class on an element and a set of generated methods on exportObj",
+            "Prefer these helpers over hand-written add/remove/toggle for consistent behavior"
+          ],
+          "boolean_status": {
+            "helper": "defBool(name, $el, opt, exportObj)",
+            "css_class": "name (e.g. 'header-close') toggled on $el",
+            "status_property": "camelCase version of name on exportObj (e.g. 'headerClose')",
+            "methods": [
+              "add<Status>() – add the class and mark status true (e.g. addHeaderClose)",
+              "remove<Status>() – remove the class and mark status false (e.g. removeHeaderClose)",
+              "toggle<Status>() – toggle between add/remove (e.g. toggleHeaderClose)",
+              "is<Status>() – read-only check of the current DOM/class state (e.g. isHeaderClose)"
+            ],
+            "hooks_on_opt": [
+              "beforeAdd<Status>, afterAdd<Status>",
+              "beforeRemove<Status>, afterRemove<Status>"
+            ]
+          },
+          "enum_status": {
+            "helper": "defEnum(key, names, $el, opt, exportObj)",
+            "css_classes": "key-name for each value on $el (e.g. 'view-grid', 'view-detail', 'view-map')",
+            "status_property": "camelCase version of key on exportObj (e.g. 'view')",
+            "methods": [
+              "switchTo<Value>() – switch to one value and update classes (e.g. switchToGrid)",
+              "current<Key>() – read the current enum value (e.g. currentView)"
+            ],
+            "hooks_on_opt": [
+              "beforeSwitchTo<Value>, afterSwitchTo<Value> for each value"
+            ]
+          },
+          "plugin_pattern": [
+            "Define arrays like boolStatus and enumStatus inside a plugin/page (see client/js/plugins/_header.js and client/pages/demo/index.js)",
+            "In init($el, opt, exportObj), loop through boolStatus and enumStatus and call defBool/defEnum to attach all status methods",
+            "After init, use the generated methods on exportObj inside the plugin and in templates"
+          ]
+        },
+        "error_handling": [
+          "Handle all error cases",
+          "Provide meaningful error messages",
+          "Log errors appropriately"
+        ],
+        "type_safety": [
+          "Use constants for type checking",
+          "Validate type parameters",
+          "Handle type mismatches"
+        ]
+      },
+      "import_management": {
+        "rule": "Before adding any import, verify that the function/class is not already defined locally in the file",
+        "checklist": [
+          "Read the entire file or at least function definitions before adding imports",
+          "Check for local function declarations",
+          "Check for local class declarations",
+          "Check for local variable assignments"
+        ],
+        "examples": [
+          "data/index.js: csvToJson and saveAsJson are local functions, not external imports",
+          "Always verify local scope before importing from external modules"
+        ]
+      }
+    },
+    "code_standards": {
+      "formatting": {
+        "indentSize": 2,
+        "useTabs": true,
+        "trimTrailingWhitespace": true,
+        "insertFinalNewline": true,
+        "trailingComma": "all",
+        "semi": true,
+        "singleQuote": true
+      },
+      "analysis": {
+        "maxLineLength": 100,
+        "enforceTypeScript": "preferred for new or heavily modified modules where practical",
+        "enforceESLint": true,
+        "enforcePrettier": true
+      },
+      "naming": {
+        "function": {
+          "pattern": "^[a-z][a-zA-Z0-9]*$",
+          "example": "appleTree"
+        },
+        "cssClass": {
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "example": "apple-tree"
+        },
+        "className": {
+          "pattern": "^[A-Z][a-zA-Z0-9]*$",
+          "example": "AppleTree"
+        },
+        "constant": {
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "example": "APPLE_TREE"
+        }
+      }
+    },
+    "geo_system": {
+      "types": {
+        "state": "state",
+        "city": "city",
+        "county": "county",
+        "zipcode": "zipcode",
+        "address": "address",
+        "neighborhood": "neighborhood"
+      },
+      "path_patterns": {
+        "state": "{stateCode}",
+        "city": "{stateCode}/{cityCode}",
+        "county": "{stateCode}/{countyCode}_county",
+        "zipcode": "{stateCode}/{zipCode}",
+        "address": "{stateCode}/{cityCode}/{addressCode}_address",
+        "neighborhood": "{stateCode}/{cityCode}/{neighborhoodCode}_neighborhood"
+      },
+      "conventions": {
+        "state_code": {
+          "format": "2-letter lowercase",
+          "example": "ca",
+          "validation": "/^[a-z]{2}$/i"
+        },
+        "path_segments": {
+          "format": "lowercase with hyphens",
+          "example": "san-francisco",
+          "transformation": "toLowerCase().replace(/\\s+/g, '-')"
+        },
+        "suffixes": {
+          "county": "_county",
+          "address": "_address",
+          "neighborhood": "_neighborhood"
+        }
+      },
+      "functions": {
+        "getGeoByPath": {
+          "purpose": "Convert URL path to geo object",
+          "input": "URL path string",
+          "output": "Geo object with type and properties",
+          "validation": [
+            "State code must be 2 letters",
+            "Path segments must match expected patterns",
+            "Suffixes must match type conventions"
+          ]
+        },
+        "getPathByGeo": {
+          "purpose": "Convert geo object to URL path",
+          "input": "Geo object",
+          "output": "URL path string",
+          "validation": [
+            "Geo object must have type property",
+            "Required properties must be present for type",
+            "Values must be properly formatted"
+          ]
+        },
+        "getGeoDisplayText": {
+          "purpose": "Generate human-readable location text",
+          "input": "Geo object",
+          "output": "Formatted string",
+          "format": {
+            "address": "{address} {city}, {state} {zipcode}",
+            "neighborhood": "{neighborhood} {city}, {state}",
+            "city": "{city}, {state}",
+            "county": "{county}, {state}",
+            "zipcode": "{zipcode} {state}",
+            "state": "{state}"
+          }
+        }
+      },
+      "best_practices": {
+        "path_generation": [
+          "Always validate state codes",
+          "Handle special characters in names",
+          "Use consistent case (lowercase)",
+          "Replace spaces with hyphens",
+          "Add appropriate type suffixes"
+        ],
+        "geo_objects": [
+          "Include type property",
+          "Validate required properties",
+          "Handle missing optional properties",
+          "Maintain consistent property names"
+        ],
+        "error_handling": [
+          "Validate input parameters",
+          "Handle invalid state codes",
+          "Handle malformed paths",
+          "Return null for invalid inputs"
+        ]
+      },
+      "known_issues": {}
+    },
+    "known_issues": {
+      "request_system": {
+        "error_handling": {
+          "issue": "Resolving with null on error",
+          "design": "Intentional design choice to prevent app crashes",
+          "impact": "All errors are logged but not propagated",
+          "benefit": "Graceful degradation and consistent error handling"
+        },
+        "response_handling": {
+          "issue": "No response status validation",
+          "design": "Handled through error logging system",
+          "impact": "All HTTP errors are logged but not thrown",
+          "benefit": "Consistent error handling across the application"
+        },
+        "content_type": {
+          "issue": "Assumes all responses are JSON",
+          "design": "Falls back to text for non-JSON responses",
+          "impact": "May need to handle different response types",
+          "benefit": "Flexible response handling"
+        }
+      },
+      "validation_system": {
+        "phone_number": {
+          "issue": "Limited to 10-digit US format",
+          "fix": "Add international format support"
+        },
+        "email": {
+          "issue": "Basic regex validation",
+          "fix": "Use more comprehensive email validation"
+        },
+        "url": {
+          "issue": "Basic regex validation",
+          "fix": "Use URL constructor or more comprehensive validation"
+        },
+        "date": {
+          "issue": "Only validates Date objects",
+          "fix": "Add string date validation"
+        },
+        "price": {
+          "issue": "Only validates integers",
+          "fix": "Add decimal support"
+        }
+      }
+    }
+  },
+  "build_system": {
+    "overview": {
+      "type": "webpack-based",
+      "environments": [
+        "development",
+        "stage",
+        "production"
+      ],
+      "architecture": "multi-page entry system",
+      "focus": "lightweight and performance-focused"
+    },
+    "core_components": {
+      "base_config": {
+        "file": "webpack.config.base.js",
+        "purpose": "Common webpack rules and plugins",
+        "features": [
+          "Asset management (fonts, images, SCSS, JS, HTML)",
+          "Multiple page entries",
+          "Dynamic entry point generation"
+        ]
+      },
+      "page_config": {
+        "file": "webpack.config.base.page.js",
+        "purpose": "Page-specific configurations",
+        "pages": [
+          "animation",
+          "demo",
+          "index",
+          "3d",
+          "about",
+          "document",
+          "ai-trend",
+          "lower",
+          "presentation-slider",
+          "list-view"
+        ],
+        "auto_config": {
+          "entry": "./client/pages/{pageName}/index.js",
+          "template": "./client/pages/{pageName}/index.html",
+          "output": "{pageName}.html",
+          "favicon": "./client/assets/img/logo.png"
+        }
+      },
+      "environment_configs": {
+        "development": "webpack.config.dev.js or webpack.config.build.js with NODE_ENV=development (.env)",
+        "stage": "webpack.config.build.js with NODE_ENV=stage (.env.stage, CDN for GitHub Pages)",
+        "production": "webpack.config.build.js with NODE_ENV=production (.env.production, AWS same-origin)"
+      }
+    },
+    "build_scripts": {
+      "dev": {
+        "command": "npm run dev",
+        "config": "webpack.config.dev.js",
+        "features": [
+          "webpack-dev-server (default port WEBPACK_DEV_SERVER_PORT=3001)",
+          "devMiddleware.writeToDisk so Node can read built assets from dist/",
+          "proxy non-asset requests to app server (APP_HOST, default http://localhost:3000)",
+          "Hot reloading",
+          "Source maps",
+          "Auto browser open"
+        ]
+      },
+      "build:dev": {
+        "command": "npm run build:dev",
+        "config": "webpack.config.build.js (NODE_ENV=development loads .env)",
+        "features": [
+          "Uses .env",
+          "PWA manifest",
+          "Service worker",
+          "dist/ output"
+        ]
+      },
+      "build:stage": {
+        "command": "npm run build:stage",
+        "config": "webpack.config.build.js (NODE_ENV=stage loads .env.stage)",
+        "features": [
+          "Uses .env.stage",
+          "CDN public path for GitHub Pages",
+          "Optimized bundles"
+        ]
+      },
+      "build:prod": {
+        "command": "npm run build:prod",
+        "config": "webpack.config.build.js (NODE_ENV=production loads .env.production)",
+        "features": [
+          "Uses .env.production",
+          "Full production optimizations",
+          "Same-origin or AWS CDN (no cross-domain)"
+        ]
+      },
+      "build-docker:dev": {
+        "command": "npm run build-docker:dev",
+        "purpose": "Docker local/dev image, uses .env only"
+      },
+      "build-docker:prod": {
+        "command": "npm run build-docker:prod",
+        "purpose": "Docker production image (AWS), uses .env.production"
+      },
+      "deploy-gh": {
+        "command": "npm run deploy-gh",
+        "purpose": "GitHub Pages deployment (stage)",
+        "process": "Publishes dist/ to gh-pages branch (run after build:stage)"
+      }
+    },
+    "webpack_features": {
+      "development": [
+        "Source maps",
+        "Development mode optimizations",
+        "Webpack dev server with hot reloading"
+      ],
+      "production": [
+        "Bundle optimization and minification",
+        "PWA manifest generation",
+        "Service worker integration (Workbox)",
+        "CDN path configuration",
+        "Bundle analyzer support"
+      ]
+    },
+    "file_structure": {
+      "config_files": [
+        "webpack.config.base.js",
+        "webpack.config.base.page.js",
+        "webpack.config.dev.js",
+        "webpack.config.build.js",
+        "deploy.js"
+      ],
+      "directories": {
+        "client/pages/": "Page-specific code",
+        "client/assets/": "Static assets",
+        "client/js/": "JavaScript modules",
+        "client/scss/": "Stylesheets",
+        "dist/": "Build output"
+      }
+    },
+    "environment_variables": {
+      "development": ".env (and .env.local overrides)",
+      "stage": ".env.stage (CDN_HOST for GitHub Pages)",
+      "production": ".env.production (CDN_HOST empty for AWS same-origin or set AWS/CloudFront URL)"
+    },
+    "build_process": {
+      "flow": [
+        "Development: npm run dev → webpack dev server (default :3001) + Node (:3000), proxy between them; hot reload",
+        "Local build: npm run build:dev → .env, dist/ output",
+        "Stage (GitHub): npm run build:stage → .env.stage → then npm run deploy-gh",
+        "Production (AWS): npm run build:prod or npm run build-docker:prod → .env.production",
+        "Deploy stage: npm run deploy-gh → publishes dist/ to gh-pages (workflow runs build:stage then deploy-gh on merge to main)"
+      ]
+    },
+    "performance_optimizations": [
+      "Code splitting per page",
+      "Asset optimization",
+      "CSS extraction",
+      "PWA support",
+      "Bundle analysis capability"
+    ],
+    "customization": {
+      "new_pages": [
+        "Create client/pages/{pageName}/ directory",
+        "Add index.js and index.html files",
+        "Update webpack.config.base.page.js if needed"
+      ],
+      "build_modification": {
+        "development": "Edit webpack.config.dev.js",
+        "production": "Edit webpack.config.build.js",
+        "base": "Edit webpack.config.base.js"
+      }
+    },
+    "troubleshooting": {
+      "common_issues": [
+        "Port conflicts: Node PORT (default 3000), webpack dev server WEBPACK_DEV_SERVER_PORT (default 3001), Docker host DOCKER_PORT (default 3002)",
+        "Build failures (check syntax errors)",
+        "Asset loading (verify file paths)",
+        "Deployment issues (check GitHub Pages branch)"
+      ],
+      "debug_tools": [
+        "Webpack bundle analyzer",
+        "Source maps in development",
+        "Console logging in build process"
+      ]
+    }
+  },
+  "utilities": {
+    "client_core": {
+      "format": {
+        "file": "client/js/core/format.js",
+        "functions": [
+          {
+            "name": "formatPhone",
+            "purpose": "Format phone number to (XXX) XXX-XXXX",
+            "params": ["phone"]
+          },
+          {
+            "name": "formatCurrency",
+            "purpose": "Format number as currency with commas",
+            "params": ["value"]
+          },
+          {
+            "name": "formatNumber",
+            "purpose": "Format number with thousand separators",
+            "params": ["value"]
+          },
+          {
+            "name": "formatPercent",
+            "purpose": "Format number as percentage",
+            "params": ["value"]
+          },
+          {
+            "name": "formatDate",
+            "purpose": "Format date to locale date string",
+            "params": ["date"]
+          },
+          {
+            "name": "formatDateTime",
+            "purpose": "Format date to locale date-time string",
+            "params": ["date"]
+          },
+          {
+            "name": "formatTime",
+            "purpose": "Format date to locale time string",
+            "params": ["date"]
+          },
+          {
+            "name": "formatSqft",
+            "purpose": "Format square feet (converts to acres if >= 20000)",
+            "params": ["value"]
+          },
+          {
+            "name": "formatPrice",
+            "purpose": "Format price with K/M suffixes",
+            "params": ["value"]
+          },
+          {
+            "name": "formatTrim",
+            "purpose": "Trim whitespace from string",
+            "params": ["value"]
+          },
+          {
+            "name": "formatClassToStatus",
+            "purpose": "Convert CSS class name to camelCase status name",
+            "params": ["name"]
+          }
+        ]
+      },
+      "validate": {
+        "file": "client/js/core/validate.js",
+        "functions": [
+          {
+            "name": "isMobile",
+            "purpose": "Check if user agent is mobile device",
+            "params": ["userAgent"]
+          },
+          {
+            "name": "isPhoneNumber",
+            "purpose": "Validate 10-digit US phone number",
+            "params": ["value"]
+          },
+          {
+            "name": "isEmail",
+            "purpose": "Validate email format",
+            "params": ["value"]
+          },
+          {
+            "name": "isUrl",
+            "purpose": "Validate URL format",
+            "params": ["value"]
+          },
+          {
+            "name": "isDate",
+            "purpose": "Check if value is valid Date object",
+            "params": ["value"]
+          },
+          {
+            "name": "isZipcode",
+            "purpose": "Validate 5-digit zipcode",
+            "params": ["value"]
+          },
+          {
+            "name": "isPrice",
+            "purpose": "Validate positive integer price",
+            "params": ["value"]
+          }
+        ]
+      },
+      "query": {
+        "file": "client/js/core/query.js",
+        "functions": [
+          {
+            "name": "hasInput",
+            "purpose": "Check if input has value different from default",
+            "params": ["$input"]
+          }
+        ]
+      },
+      "guid": {
+        "file": "client/js/core/guid.js",
+        "purpose": "Generate unique GUIDs",
+        "methods": [
+          {
+            "name": "get",
+            "purpose": "Get next GUID (increments counter)"
+          }
+        ]
+      },
+      "log": {
+        "file": "client/js/core/log.js",
+        "functions": [
+          {
+            "name": "logError",
+            "purpose": "Log error to console",
+            "params": ["data"]
+          },
+          {
+            "name": "logInfo",
+            "purpose": "Log info to console",
+            "params": ["data"]
+          }
+        ]
+      },
+      "load": {
+        "file": "client/js/core/load.js",
+        "purpose": "Load external JS/CSS resources",
+        "functions": [
+          {
+            "name": "load",
+            "purpose": "Load multiple JS/CSS files",
+            "params": ["options"],
+            "options": {
+              "files": "Array of file URLs",
+              "type": "File type (js/css)",
+              "callback": "Callback function name for JS"
+            }
+          }
+        ]
+      },
+      "loadImg": {
+        "file": "client/js/core/load.img.js",
+        "purpose": "Load image with success/error handling",
+        "functions": [
+          {
+            "name": "loadImg",
+            "purpose": "Load image and add success/error classes",
+            "params": ["img", "imgSrc"],
+            "returns": "Promise<boolean>"
+          }
+        ]
+      },
+      "scroll": {
+        "file": "client/js/core/scroll.js",
+        "functions": [
+          {
+            "name": "disableScroll",
+            "purpose": "Disable page scrolling with named lock",
+            "params": ["name"]
+          },
+          {
+            "name": "enableScroll",
+            "purpose": "Enable page scrolling by removing named lock",
+            "params": ["name"]
+          }
+        ]
+      },
+      "def": {
+        "file": "client/js/core/def.js",
+        "purpose": "Define boolean and enum state management helpers",
+        "functions": [
+          {
+            "name": "defBool",
+            "purpose": "Define boolean state with add/remove/toggle/is methods based on a CSS class name",
+            "params": ["name", "$el", "opt", "exportObj"]
+          },
+          {
+            "name": "defEnum",
+            "purpose": "Define enum state with switchTo methods and a current<Key>() getter",
+            "params": ["key", "names", "$el", "opt", "exportObj"]
+          }
+        ],
+        "patterns": {
+          "bool": {
+            "meta_helper": "getBoolStatusMeta(name)",
+            "generated": {
+              "status_property": "camelCase of name (e.g. 'header-close' -> 'headerClose')",
+              "methods": [
+                "add<Status>(), remove<Status>(), toggle<Status>(), is<Status>()"
+              ],
+              "hooks_on_opt": [
+                "beforeAdd<Status>, afterAdd<Status>, beforeRemove<Status>, afterRemove<Status>"
+              ]
+            }
+          },
+          "enum": {
+            "meta_helper": "getEnumStatusMeta(key, names)",
+            "generated": {
+              "status_property": "camelCase of key (e.g. 'view' -> 'view')",
+              "methods": [
+                "switchTo<Value>() for each name",
+                "current<Key>() getter"
+              ],
+              "css_classes": "key-name toggled on $el for each value"
+            }
+          }
+        }
+      },
+      "base": {
+        "file": "client/js/core/base.js",
+        "purpose": "Base class for components",
+        "class": "Base",
+        "constructor": ["name", "type"]
+      }
+    },
+    "server_helpers": {
+      "geo": {
+        "file": "helpers/geo.js",
+        "purpose": "Geographic location utilities, US stateDict (codes/names), and SOA/Geoarea API → UI geo mappers",
+        "constants": [
+          {
+            "name": "stateDict",
+            "purpose": "US state/territory codes to full names"
+          },
+          {
+            "name": "geoType",
+            "purpose": "Geo type constants (state, city, county, zipcode, address, neighborhood)"
+          }
+        ],
+        "functions": [
+          {
+            "name": "getGeoByPath",
+            "purpose": "Convert URL path to geo object",
+            "params": ["_path"]
+          },
+          {
+            "name": "getPathByGeo",
+            "purpose": "Convert geo object to URL path",
+            "params": ["geo"]
+          },
+          {
+            "name": "getGeoDisplayText",
+            "purpose": "Generate human-readable location text",
+            "params": ["geo"]
+          },
+          {
+            "name": "getStatePath",
+            "purpose": "Get state path from state name",
+            "params": ["state"]
+          },
+          {
+            "name": "getCityPath",
+            "purpose": "Get city path from city and state",
+            "params": ["city", "state"]
+          },
+          {
+            "name": "getCountyPath",
+            "purpose": "Get county path from county and state",
+            "params": ["county", "state"]
+          },
+          {
+            "name": "getZipcodePath",
+            "purpose": "Get zipcode path from zipcode and state",
+            "params": ["zipcode", "state"]
+          },
+          {
+            "name": "getAddressPath",
+            "purpose": "Get address path from address, city, and state",
+            "params": ["address", "city", "state"]
+          },
+          {
+            "name": "getNeighborhoodPath",
+            "purpose": "Get neighborhood path from neighborhood, city, and state",
+            "params": ["neighborhood", "city", "state"]
+          },
+          {
+            "name": "getGeoCityByCityState",
+            "purpose": "Get geo object for city by city and state names",
+            "params": ["city", "state"]
+          },
+          {
+            "name": "getBreadcrumbByGeo",
+            "purpose": "Generate breadcrumb navigation from geo object",
+            "params": ["geo", "_path"]
+          },
+          {
+            "name": "mapGeoToSOAPath",
+            "purpose": "Map geo object to SOA API path format",
+            "params": ["geo"]
+          },
+          {
+            "name": "mapGeoPathToSOAPath",
+            "purpose": "Map geo path to SOA API path format",
+            "params": ["geoPath"]
+          }
+        ]
+      },
+      "fuse": {
+        "file": "helpers/fuse.js",
+        "purpose": "Fuzzy search utilities using Fuse.js",
+        "functions": [
+          {
+            "name": "initialFuseState",
+            "purpose": "Initialize Fuse instance for state search",
+            "params": ["state"]
+          },
+          {
+            "name": "initialFuseCity",
+            "purpose": "Initialize Fuse instance for city search",
+            "params": ["city"]
+          },
+          {
+            "name": "initialFuseCounty",
+            "purpose": "Initialize Fuse instance for county search",
+            "params": ["county"]
+          },
+          {
+            "name": "initialFuseZipcode",
+            "purpose": "Initialize Fuse instance for zipcode search",
+            "params": ["zipcode"]
+          },
+          {
+            "name": "initialFuseAddress",
+            "purpose": "Initialize Fuse instance for address search",
+            "params": ["address"]
+          },
+          {
+            "name": "initialFuseNeighborhood",
+            "purpose": "Initialize Fuse instance for neighborhood search",
+            "params": ["neighborhood"]
+          },
+          {
+            "name": "initialFuseGeo",
+            "purpose": "Initialize all geo Fuse instances",
+            "params": ["{state, city, county, zipcode, address, neighborhood}"]
+          },
+          {
+            "name": "searchGeo",
+            "purpose": "Search geo data by type and query",
+            "params": ["query", "type", "limit"]
+          }
+        ]
+      },
+      "path": {
+        "file": "helpers/path.js",
+        "purpose": "Path conversion only (no hosts): transform path strings between formats, e.g. our geo slugs vs SOA API paths. Not for appHost/cdnHost — use helpers/url.js",
+        "functions": [
+          {
+            "name": "mapGeoPathToSOAPath",
+            "purpose": "Map our geo path format to SOA API format",
+            "params": ["ourPath"]
+          },
+          {
+            "name": "mapSOAToGeoPath",
+            "purpose": "Map SOA API path format to our geo path format",
+            "params": ["soaPath", "stateCode"]
+          }
+        ]
+      },
+      "url": {
+        "file": "helpers/url.js",
+        "purpose": "Host + path only (no path-format conversion): build href (appHost) and src (cdnHost) from stored path values for EJS. Not for geo/SOA path mapping — use helpers/path.js",
+        "functions": [
+          {
+            "name": "getHref",
+            "purpose": "Build full link URL from item.path or item.href plus optional appHost",
+            "params": ["item", "appHost"]
+          },
+          {
+            "name": "getSrc",
+            "purpose": "Build full image URL from img.path or img.src plus optional cdnHost",
+            "params": ["img", "cdnHost"]
+          },
+          {
+            "name": "getImgCdnUrl",
+            "purpose": "Build CDN image URL from path relative to client/assets/images",
+            "params": ["cdnHost", "imagePath"]
+          }
+        ]
+      },
+      "listing_pipeline": {
+        "doc": "docs/listing-data-pipeline.md",
+        "purpose": "SOA Pure → mapSOADataToMetadata (property.js) → mapPropertyToArticle / mapPropertyDetailToArticle + mapXToComp (article.js) → EJS/plugins; demo is reference"
+      },
+      "property": {
+        "file": "helpers/property.js",
+        "purpose": "SOA Pure listing metadata: unwrap payloads, mapSOADataToMetadata, photo URLs, histories, groupedFeatures, open-house/timeline comp helpers",
+        "functions": [
+          {
+            "name": "mapSOADataToMetadata",
+            "purpose": "Normalize SOA Pure listing (+ optional histories) to metadata object",
+            "params": ["soaListing", "historiesRaw"]
+          },
+          {
+            "name": "mapHistoryRowsToTimelineComp",
+            "purpose": "History rows → comp_timeline model",
+            "params": ["rows"]
+          },
+          {
+            "name": "mapOpenHousesToComp",
+            "purpose": "Open houses → comp_open_houses model",
+            "params": ["openHouses"]
+          }
+        ]
+      },
+      "article": {
+        "file": "helpers/article.js",
+        "purpose": "Comp UI models from metadata: list cards (comp_article), detail (comp_article_detail), buildDetailSeo",
+        "functions": [
+          {
+            "name": "mapPropertyToArticle",
+            "purpose": "Map metadata to list/card article shape",
+            "params": ["metadata", "isFull"]
+          },
+          {
+            "name": "mapPropertyDetailToArticle",
+            "purpose": "Detail page: metadata + album, paragraph, record, tags, openHouses, timeline comp models",
+            "params": ["soaListing", "historiesRaw"]
+          },
+          {
+            "name": "mapSOADataListToArticles",
+            "purpose": "Map SOA listing array to article cards",
+            "params": ["soaListings"]
+          },
+          {
+            "name": "buildDetailSeo",
+            "purpose": "SEO from detail.metadata + detail.paragraph (no raw SOA)",
+            "params": ["detail"]
+          }
+        ]
+      },
+      "ip": {
+        "file": "helpers/ip.js",
+        "purpose": "IP-based geolocation utilities",
+        "functions": [
+          {
+            "name": "getGeoCityByIp",
+            "purpose": "Get geo city object from IP address",
+            "params": ["ip"]
+          }
+        ]
+      }
+    }
+  }
+}

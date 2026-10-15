@@ -1,0 +1,64 @@
+@use './_mixins.scss' as *;
+
+@include comp-color('group-btn');
+@include comp-size('group-btn');
+
+.group-btn {
+	border-radius: var(--radius-0);
+	margin: 0;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: nowrap;
+  box-shadow: 0 0 0 1px var(--group-btn-color-border);
+	input {
+		&:checked+span {
+			background-color: var(--group-btn-color-border);
+			color: var(--color-bg);
+		}
+	}
+
+	>label {
+		flex-shrink: 0;
+		flex-grow: 1;
+		overflow: hidden;
+		margin-right: 0;
+		border-color: var(--group-btn-color-border);
+
+		+label {
+			border-left: 0.5px solid var(--group-btn-color-border);
+		}
+
+		span {
+			display: block;
+			color: var(--group-btn-color);
+			background-color: var(--group-btn-color-bg);
+			text-align: center;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			cursor: pointer;
+			font-size: var(--group-btn-font-size);
+			font-weight: var(--group-btn-font-weight);
+			font-size: var(--group-btn-font-size);
+			height: var(--group-btn-size);
+			padding: var(--group-btn-gap) var(--g2);
+			line-height: var(--group-btn-line-height);
+
+			&::before {
+				display: none;
+			}
+		}
+	}
+
+	input {
+		&:checked+span {
+			color: var(--group-btn-color-bg);
+			background-color: var(--group-btn-color);
+		}
+	}
+
+	input {
+		display: none;
+	}
+
+}

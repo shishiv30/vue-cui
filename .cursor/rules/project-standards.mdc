@@ -1,0 +1,127 @@
+---
+description: Core project standards - formatting, coding style, naming conventions, and code reuse
+alwaysApply: true
+---
+
+# Project Standards
+
+This file is the **normative source of truth** for project standards. If another guidance file (for example, `.cursor/background.json` or a skill) differs, follow this file.
+
+## Formatting
+
+- **indentSize**: 2
+- **useTabs**: true
+- **trimTrailingWhitespace**: true
+- **insertFinalNewline**: true
+- **trailingComma**: "all"
+- **semi**: true (semicolons required)
+- **singleQuote**: true (single quotes only)
+- **maxLineLength**: 100 characters
+
+## Quality Gates
+
+- **enforceTypeScript**: preferred for new/modified modules when practical in this mixed JS/TS codebase
+- **enforceESLint**: true
+- **enforcePrettier**: true
+
+## Search Exclude Patterns
+
+- node_modules/**, dist/**, data/**, client/assets/video/**
+- **/*.png, **/*.jpg, **/*.jpeg, **/*.gif, **/*.svg, **/*.ico, **/*.webp
+- **/*.mp4, **/*.mp3, **/*.wav, **/*.ogg, **/*.flac
+- **/.DS_Store, **/*.log, records.json, report.html
+
+## Naming Conventions
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| **Function** | ^[a-z][a-zA-Z0-9]*$ | appleTree |
+| **CSS Class** | ^[a-z][a-z0-9-]*$ | apple-tree |
+| **Class Name** | ^[A-Z][a-zA-Z0-9]*$ | AppleTree |
+| **Constant** | ^[A-Z][A-Z0-9_]*$ | APPLE_TREE |
+
+## Coding style
+
+**Default: simple over clever.** The most important rule: do not make code complex—especially for hotfixes, naming, and templates.
+
+### Before every fix
+
+Ask: **hotfix or root cause?**
+
+| Choose root cause when | A hotfix is acceptable when |
+|------------------------|-----------------------------|
+| The bug will recur without fixing the real path | Cause is unknown and investigation is costly |
+| One config, condition, or missing field explains it | Change is tiny, scoped, and reversible |
+| You are adding layers (helpers, loops, rewriters) to mask a symptom | Production is blocked and you will follow up |
+
+Prefer the **smallest change that fixes the real cause**, not the most general framework.
+
+### Simplicity
+
+- **One name, one source of truth** — e.g. a single `welcomeImage` in config reused by preload and EJS; avoid string-matching in templates.
+- **Extract a function only when** the logic is genuinely common **and** used in **at least two places**. One call site → inline it; do not wrap.
+- **Names match the domain** — avoid overloading `context`, `ctx`, and `exportObj` without checking what each layer already means.
+- **Reuse existing utilities** (`getSrc`, `getHref`, config fields) instead of parallel logic in EJS or webpack.
+
+### Preload (`meta.preload` / route `preload` hook)
+
+- Each entry must use **`href` as an absolute URL with host** (e.g. `https://cdn.example.com/images/foo.webp`).
+- **Do not** pass path-only values (`/images/foo.webp`) or rely on EJS/`html_above.ejs` to add the domain.
+- Build the full URL once in config `get()` (e.g. `getImgCdnUrl(cdnHost, path)`), reuse the same string for preload and template `src`.
+
+### Listing data pipeline
+
+- Architecture and demo trace: **`docs/listing-data-pipeline.md`**.
+- Controllers: after `mapPropertyDetailToArticle` (or list mappers), use **`detail.metadata`**, **`detail.*` comp fields**, and **`buildDetailSeo(detail)`** only — not raw SOA listing for SEO or EJS.
+
+### SOA Pure listing data
+
+- Treat **SOA Pure** fields as the source of truth after `mapSOADataToMetadata` (list cards: `mapPropertyToArticle`; detail page: `mapPropertyDetailToArticle`).
+- **Do not** add `??` / `||` fallbacks to alternate field names, legacy shapes, or synthetic defaults unless the user explicitly asks.
+- If a required SOA field is missing, return empty / omit the UI piece — do not substitute `propertyId`, `fullAddress`, or guessed aliases.
+
+### Anti-patterns
+
+- Template loops or regex to find data that should live on `data` or config.
+- New pipelines (`basePath` rewriters, extra env flags) when webpack `publicPath` or env loading is wrong.
+- Duplicating the same path or URL in two places without a shared constant.
+- Preload entries with `path` and no host (templates read `href` only).
+- Fallback chains on SOA-mapped metadata (e.g. `fullAddress || propertyId` for display text).
+
+## Code Reuse
+
+**Rule**: Maximum reuse of utilities code.
+
+**Requirements**:
+- Always check existing utilities before implementing new functionality
+- Import and reuse utility functions from `client/js/core/` and `helpers/` directories
+- Never duplicate utility functionality - use existing utilities instead
+- If similar functionality exists, extend or refactor existing utilities rather than creating duplicates
+- Before writing new helper functions, search for existing utilities that can be reused or extended
+
+**Utility Locations**:
+- `client/js/core/` - Core client-side utilities (format, validate, query, log, load, etc.)
+- `helpers/` - Server-side and shared utilities (geo, fuse, mappers, etc.)
+
+**Checklist**:
+- Search existing utilities before implementing new functionality
+- Import from appropriate utility modules
+- Extend existing utilities if needed rather than duplicating
+- Document any new utility functions added
+
+## Operational Conventions
+
+- Prefer `rg` and project tools for search; avoid `grep`/`find` in agent workflows
+- Keep guidance and examples aligned with real repo paths and scripts
+- When a rule changes behavior, update related skills and docs in the same pass
+
+## Documentation alignment
+
+When you change architecture, routes, build scripts, ports, or CMS/theme conventions, update the **canonical** docs in the same pass where practical:
+
+- `README.md`, `client.md`, `server.md`, `build-system.md`
+- `docs/listing-data-pipeline.md`, `docs/development-workflow.md`, `docs/routes-reference.md`
+- `.cursor/background.json` (high-level context for agents)
+- Theme/CMS API details: `cms/API.md` and `.cursor/rules/theme-change.mdc`
+
+Normative standards stay in this file; narrative architecture stays in the markdown docs above.

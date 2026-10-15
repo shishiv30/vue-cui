@@ -1,0 +1,213 @@
+import { emit, off, on } from '../core/event.js';
+import guid from '../core/guid.js';
+import { defBool, defEnum } from '../core/def.js';
+const boolStatus = ['input-focus'];
+import { getPathByGeo, geoType } from '../../../helpers/geo.js';
+import debounce from 'lodash/debounce.js';
+
+export default {
+	name: 'autocomplete',
+	defaultOpt: {
+		method: 'GET',
+		type: geoType.city,
+		name: 'text',
+		delay: 300,
+		container: '.input',
+		abortController: null,
+	},
+	init($el, opt, exportObj) {
+		let $container = $el.closest(opt.container);
+
+		let _show = function () {
+			if (!$container.classList.contains('autocomplete-show')) {
+				document.addEventListener('click', _clickOutside);
+				$container.classList.add('autocomplete-show');
+			}
+		};
+		let _hide = function () {
+			if ($container.classList.contains('autocomplete-show')) {
+				document.removeEventListener('click', _clickOutside);
+				$container.classList.remove('autocomplete-show');
+				opt.selectedIndex = -1;
+			}
+		};
+		let _clickOutside = function (e) {
+			if (!e.target.closest(opt.container)) {
+				_hide();
+			}
+		};
+		//insert suggestionList below the input
+		let $suggestionList = document.createElement('div');
+		$suggestionList.className = 'suggestion-list';
+		$container.append($suggestionList);
+
+		let _selectSuggestion = function (item) {
+			if (item) {
+				window.location.href = `/demo/${getPathByGeo(item)}`;
+			}
+		};
+		let _updateSuggestion = function (data) {
+			//todo list update the UI of suggestion list
+			let html = '';
+			if (data && data.length > 0) {
+				opt.data = data;
+				opt.selectedIndex = -1;
+				data.forEach((item, i) => {
+					html += `<div class="suggestion-item" data-index="${i}">${item.city}, ${item.state}</div>`;
+				});
+			}
+			$suggestionList.innerHTML = html;
+		};
+		let _highlightItem = function (index) {
+			let items = $suggestionList.querySelectorAll('.suggestion-item');
+			items.forEach((item, i) => {
+				if (i === index) {
+					item.classList.add('selected');
+					item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+				} else {
+					item.classList.remove('selected');
+				}
+			});
+		};
+		let _navigateUp = function () {
+			if (!opt.data || opt.data.length === 0) return;
+			if (opt.selectedIndex === undefined || opt.selectedIndex === -1) {
+				opt.selectedIndex = opt.data.length - 1;
+			} else {
+				opt.selectedIndex = Math.max(0, opt.selectedIndex - 1);
+			}
+			_highlightItem(opt.selectedIndex);
+		};
+		let _navigateDown = function () {
+			if (!opt.data || opt.data.length === 0) return;
+			if (opt.selectedIndex === undefined || opt.selectedIndex === -1) {
+				opt.selectedIndex = 0;
+			} else {
+				opt.selectedIndex = Math.min(opt.data.length - 1, opt.selectedIndex + 1);
+			}
+			_highlightItem(opt.selectedIndex);
+		};
+		let _selectHighlighted = function () {
+			if (opt.selectedIndex !== undefined && opt.selectedIndex >= 0 && opt.data && opt.data[opt.selectedIndex]) {
+				let item = opt.data[opt.selectedIndex];
+				_selectSuggestion(item);
+				_hide();
+			}
+		};
+		let _handleKeydown = function (e) {
+			if (!$container.classList.contains('autocomplete-show')) {
+				return;
+			}
+			if (e.key === 'ArrowDown') {
+				e.preventDefault();
+				_navigateDown();
+			} else if (e.key === 'ArrowUp') {
+				e.preventDefault();
+				_navigateUp();
+			} else if (e.key === 'Enter') {
+				e.preventDefault();
+				_selectHighlighted();
+			} else if (e.key === 'Escape') {
+				e.preventDefault();
+				_hide();
+			}
+		};
+
+		let _getSuggestion = function () {
+			if (!$el || !$el.value || $el.value.trim() === '') {
+				return;
+			}
+
+			let value = $el.value;
+			if (opt.timer) {
+				clearTimeout(opt.timer);
+			}
+			opt.timer = setTimeout(() => {
+				//get text
+				let key = opt.name;
+				let url = opt.url;
+				let keys = opt.keys.split(',');
+				let method = opt.method;
+				let payload = {};
+				payload[key] = value;
+				if (keys && keys.length > 0) {
+					keys.forEach((item) => {
+						if (!item) return;
+						if (payload[item]) {
+							console.warn(`key ${item} is existing`);
+						} else if (!opt[item]) {
+							console.warn(`key ${item} haven't set data attribute`);
+						} else {
+							payload[item] = opt[item];
+						}
+					});
+				}
+				//check if previous request is still pending
+				if (
+					opt.abortController &&
+					opt.abortController.signal &&
+					opt.abortController.signal.aborted === false
+				) {
+					opt.abortController.abort();
+				}
+				opt.abortController = new AbortController();
+				new AbortController();
+				//fetch data from url
+				let body;
+				if (method === 'GET') {
+					url += '?' + new URLSearchParams(payload).toString();
+				} else {
+					body = JSON.stringify(payload);
+				}
+				fetch(url, {
+					method: method,
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: body,
+					signal: opt.abortController.signal,
+				})
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(`HTTP error: ${response.status}`);
+						}
+						response.json().then((res) => {
+							if (res && res.data && res.data.length > 0) {
+								_updateSuggestion(res.data);
+							}
+						});
+					})
+					.catch((error) => {
+						console.error('Error sending data:', error);
+					});
+			}, opt.delay);
+		};
+
+		$el.addEventListener('focus', () => {
+			//show suggestion list
+			_show();
+			//get suggestion
+			_getSuggestion();
+		});
+
+		$el.addEventListener('input', () => {
+			_show();
+			//get suggestion
+			_getSuggestion();
+		});
+
+		$el.addEventListener('keydown', _handleKeydown);
+
+		$suggestionList.addEventListener('click', (e) => {
+			if (e.target.classList.contains('suggestion-item')) {
+				let index = parseInt(e.target.dataset.index, 10);
+				let item = opt.data[index];
+				opt.selectedIndex = index;
+				_selectSuggestion(item);
+				_hide();
+			}
+		});
+		exportObj.show = _show;
+		exportObj.hide = _hide;
+	},
+};

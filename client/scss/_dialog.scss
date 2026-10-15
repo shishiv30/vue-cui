@@ -1,0 +1,72 @@
+@use './_mixins.scss' as *;
+
+dialog.dialog {
+	border: none;
+	padding: 0;
+	max-width: min(92vw, var(--screen-xs-max));
+	background-color: var(--color-bg);
+	color: var(--color);
+	border-radius: 5px;
+	box-shadow: 0 8px 32px hsla(var(--color-root-major-hue), 30%, 10%, 0.25);
+
+	&::backdrop {
+		background-color: hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.75
+		);
+		animation: dialog-backdrop-in 0.28s ease-out;
+	}
+
+	&[open] {
+		animation: dialog-panel-in 0.28s ease-out;
+	}
+}
+
+.dialog-body {
+	position: relative;
+	padding: var(--g2);
+	max-height: min(80vh, 100%);
+	overflow: auto;
+}
+
+.dialog-title-close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+	font-size: var(--font-size-3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--comp-size-3);
+	width: var(--comp-size-3);
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
+@keyframes dialog-backdrop-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes dialog-panel-in {
+	from {
+		opacity: 0;
+		transform: translateY(-6px) scale(0.98);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}

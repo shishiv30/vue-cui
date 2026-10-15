@@ -1,0 +1,159 @@
+@use './_mixins.scss' as *;
+
+[data-role*='textbox'] {
+	&:not([loaded]) {
+		.input {
+			input {
+				color: transparent;
+			}
+		}
+	}
+}
+
+[data-role*='textbox'] {
+	position: relative;
+
+	input::-webkit-input-placeholder,
+	textarea::-webkit-input-placeholder {
+		color: transparent;
+	}
+
+	input:-moz-placeholder,
+	textarea:-moz-placeholder {
+		color: transparent;
+	}
+
+	input:-ms-input-placeholder,
+	textarea:-ms-input-placeholder {
+		color: transparent;
+	}
+
+	.input,
+	.textarea {
+		>label {
+			padding: 0;
+			pointer-events: none;
+			margin: 0;
+			position: absolute;
+			transform: translateY(-50%);
+			border: none;
+			z-index: 1;
+			opacity: 0.8;
+			text-align: left;
+			@include singleline();
+			transition: all 0.2s ease-in-out;
+			pointer-events: none;
+		}
+	}
+
+	.input {
+		>label {
+			left: var(--g2);
+			right: auto;
+			top: 50%;
+			width: calc(100% - var(--g2));
+			color: var(--input-placeholder-color);
+		}
+
+		>input {
+			padding-top: var(--font-size-5);
+			padding-bottom: var(--g0);
+		}
+
+		&.small {
+			&.input {
+				>input {
+					padding-top: var(--font-size-6);
+					padding-bottom: 0;
+				}
+
+				&.right {
+					>input {
+						padding-right: var(--comp-size-3);
+					}
+				}
+
+				&.left {
+					>label {
+						left: var(--comp-size-3);
+					}
+
+					>input {
+						padding-left: var(--comp-size-3);
+					}
+				}
+			}
+		}
+
+		&.left,
+		&.right {
+			>label {
+				width: calc(100% - var(--comp-size-4));
+			}
+		}
+
+		&.right.left {
+			>label {
+				width: calc(100% - var(--comp-size-4) * 2);
+			}
+		}
+
+		&.right {
+			>input {
+				padding-right: var(--comp-size-4);
+			}
+		}
+
+		&.left {
+			>label {
+				left: var(--comp-size-4);
+			}
+
+			>input {
+				padding-left: var(--comp-size-4);
+			}
+		}
+	}
+
+	.textarea {
+		background-color: var(--color-bg);
+		border: 1px solid var(--color-l1);
+
+		label {
+			padding: 0 var(--g2);
+			left: 0;
+			right: 0;
+			top: var(--g3);
+			color: var(--textarea-placeholder-color);
+		}
+
+		textarea {
+			border: none;
+			margin: var(--g3) 0 var(--g0);
+			padding: 0 var(--g2);
+			min-height: 6.8rem;
+			overflow: hidden;
+			width: 100%;
+		}
+	}
+
+	&.focus {
+
+		.input,
+		.textarea {
+			>label {
+				top: var(--gxs);
+				right: auto;
+				transform: translateY(0);
+				transform-origin: left;
+				font-size: var(--font-size-7);
+			}
+
+			&.large {
+				>label {
+					top: var(--g0);
+				}
+			}
+		}
+	}
+}

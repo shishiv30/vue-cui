@@ -1,0 +1,55 @@
+@use './_mixins.scss' as *;
+
+.footer {
+
+	.footer-section {
+		display: flex;
+		flex-direction: column;
+		gap: var(--g2);
+		margin-bottom: var(--g3);
+
+		h4 {
+			font-size: var(--font-size-4);
+			font-weight: var(--font-weight-bold);
+			line-height: 1.25;
+		}
+	}
+
+	.input {
+		input {
+			border: none;
+		}
+	}
+
+	.footer-social-link>a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--comp-size-3);
+		height: var(--comp-size-3);
+		color: inherit;
+		background-color: color-mix(in hsl, currentColor 12%, transparent);
+		border-radius: var(--radius-1);
+		text-decoration: none;
+		transition: background-color 0.2s ease, transform 0.2s ease;
+
+		&:hover {
+			background-color: color-mix(in hsl, currentColor 22%, transparent);
+			transform: translateY(-2px);
+		}
+
+		i {
+			font-size: 1.25rem;
+		}
+	}
+
+	.footer-bottom {
+		padding-top: var(--g4);
+		border-top: 1px solid color-mix(in hsl, currentColor 18%, transparent);
+		text-align: center;
+
+		p {
+			font-size: var(--font-size-6);
+		}
+	}
+}

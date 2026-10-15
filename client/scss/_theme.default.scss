@@ -1,0 +1,366 @@
+@use './_var.screen.scss' as *;
+
+:root {
+	--animation-time: 0.1s;
+	--cui-font: 'Roboto';
+
+	--color-root-ink: #000;
+	--color-root-paper: #fff;
+
+	//breakpoint mirror: $screen-* are compile-time only, these expose the same
+	//values to var() and to getComputedStyle() in JS. keep both in sync.
+	--screen-xs-min: #{$screen-xs-min};
+	--screen-sm-min: #{$screen-sm-min};
+	--screen-md-min: #{$screen-md-min};
+	--screen-lg-min: #{$screen-lg-min};
+	--screen-xl-min: #{$screen-xl-min};
+	--screen-xs-max: #{$screen-xs-max};
+	--screen-sm-max: #{$screen-sm-max};
+	--screen-md-max: #{$screen-md-max};
+	--screen-lg-max: #{$screen-lg-max};
+
+	--color-root-0-lightness: 100%;
+	--color-root-1-lightness: 90%;
+	--color-root-2-lightness: 80%;
+	--color-root-3-lightness: 70%;
+	--color-root-4-lightness: 60%;
+	--color-root-5-lightness: 50%;
+	--color-root-6-lightness: 40%;
+	--color-root-7-lightness: 30%;
+	--color-root-8-lightness: 20%;
+	--color-root-9-lightness: 10%;
+
+	--color-root-r-saturation: 100%;
+	--color-root-r-lightness: 45%;
+	--color-root-r0-hue: 4;
+	--color-root-r1-hue: 34;
+	--color-root-r2-hue: 54;
+	--color-root-r3-hue: 84;
+	--color-root-r4-hue: 169;
+	--color-root-r5-hue: 174;
+	--color-root-r6-hue: 204;
+	--color-root-r7-hue: 224;
+	--color-root-r8-hue: 274;
+	--color-root-r9-hue: 344;
+	//NOTE: only the -root- sources live here. the --color-<role>-lightness
+	//aliases are declared on `body` instead, so that a `body.theme-dark`
+	//override of a -root- source actually re-resolves the alias. a var()
+	//in a custom property is substituted against the declaring element, so an
+	//alias declared here would freeze the light value on <html> forever.
+	--color-root-lightness: 5%;
+	--color-root-lightness-l1: 60%;
+	--color-root-saturation: 1%;
+	--color-root-saturation-l1: 4%;
+
+	--color-root-bg-lightness: 100%;
+	--color-root-bg-lightness-l1: 95%;
+	--color-root-bg-saturation: 1%;
+	--color-root-bg-saturation-l1: 4%;
+
+
+	--color-root-border-lightness: 80%;
+	--color-root-border-lightness-l1: 45%;
+	--color-root-border-saturation: 1%;
+	--color-root-border-saturation-l1: 4%;
+
+	--color-root-major-hue: 216;
+	--color-root-major-lightness: 23%;
+	--color-root-major-lightness-l1: 95%;
+	--color-root-major-saturation: 100%;
+	--color-root-major-saturation-l1: 100%;
+
+	--color-root-minor-hue: 280;
+	--color-root-minor-lightness: 31%;
+	--color-root-minor-lightness-l1: 95%;
+	--color-root-minor-saturation: 100%;
+	--color-root-minor-saturation-l1: 100%;
+
+	--color-root-safe-hue: 179;
+	--color-root-safe-lightness: 25%;
+	--color-root-safe-lightness-l1: 95%;
+	--color-root-safe-saturation: 100%;
+	--color-root-safe-saturation-l1: 100%;
+
+	--color-root-danger-hue: 343;
+	--color-root-danger-lightness: 48%;
+	--color-root-danger-lightness-l1: 92%;
+	--color-root-danger-saturation: 100%;
+	--color-root-danger-saturation-l1: 100%;
+
+	--color-root-tip-hue: 45;
+	--color-root-tip-lightness: 34%;
+	--color-root-tip-lightness-l1: 95%;
+	--color-root-tip-saturation: 100%;
+	--color-root-tip-saturation-l1: 100%;
+
+	--color-root: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness));
+	--color-root-l1: hsl(var(--color-root-major-hue), var(--color-root-saturation-l1), var(--color-root-lightness-l1));
+	--color-root-hover: color-mix(in hsl, var(--color-root) 92%, var(--color-root-paper));
+	--color-root-l1-hover: color-mix(in hsl, var(--color-root-l1) 50%, var(--color-root-paper));
+
+	--color-root-bg: hsl(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-bg-lightness));
+	--color-root-bg-l1: hsl(var(--color-root-major-hue), var(--color-root-bg-saturation-l1), var(--color-root-bg-lightness-l1));
+	--color-root-bg-hover: color-mix(in hsl, var(--color-root-bg) 94%, var(--color-root-ink));
+	--color-root-bg-l1-hover: color-mix(in hsl, var(--color-root-bg-l1) 50%, var(--color-root-paper));
+
+	--color-root-border: hsl(var(--color-root-major-hue), var(--color-root-border-saturation), var(--color-root-border-lightness));
+	--color-root-border-l1: hsl(var(--color-root-major-hue), var(--color-root-border-saturation-l1), var(--color-root-border-lightness-l1));
+	--color-root-border-hover: color-mix(in hsl, var(--color-root-border) 50%, var(--color-root-paper));
+	--color-root-border-l1-hover: color-mix(in hsl, var(--color-root-border-l1) 65%, var(--color-root-ink));
+
+
+	--color-root-major: hsl(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness));
+	--color-root-major-l1: hsl(var(--color-root-major-hue), var(--color-root-major-saturation-l1), var(--color-root-major-lightness-l1));
+	--color-root-major-hover: hsl(var(--color-root-major-hue), var(--color-root-major-saturation), calc(var(--color-root-major-lightness) + 8%));
+	--color-root-major-l1-hover: hsl(var(--color-root-major-hue), var(--color-root-major-saturation-l1), calc(var(--color-root-major-lightness-l1) + 4%));
+	--color-root-minor: hsl(var(--color-root-minor-hue), var(--color-root-minor-saturation), var(--color-root-minor-lightness));
+	--color-root-minor-l1: hsl(var(--color-root-minor-hue), var(--color-root-minor-saturation-l1), var(--color-root-minor-lightness-l1));
+	--color-root-minor-hover: hsl(var(--color-root-minor-hue), var(--color-root-minor-saturation), calc(var(--color-root-minor-lightness) - 6%));
+	--color-root-minor-l1-hover: hsl(var(--color-root-minor-hue), var(--color-root-minor-saturation-l1), calc(var(--color-root-minor-lightness-l1) + 14%));
+	--color-root-safe: hsl(var(--color-root-safe-hue), var(--color-root-safe-saturation), var(--color-root-safe-lightness));
+	--color-root-safe-l1: hsl(var(--color-root-safe-hue), var(--color-root-safe-saturation-l1), var(--color-root-safe-lightness-l1));
+	--color-root-safe-hover: hsl(var(--color-root-safe-hue), var(--color-root-safe-saturation), calc(var(--color-root-safe-lightness) - 14%));
+	--color-root-safe-l1-hover: hsl(var(--color-root-safe-hue), var(--color-root-safe-saturation-l1), calc(var(--color-root-safe-lightness-l1) - 8%));
+	--color-root-danger: hsl(var(--color-root-danger-hue), var(--color-root-danger-saturation), var(--color-root-danger-lightness));
+	--color-root-danger-l1: hsl(var(--color-root-danger-hue), var(--color-root-danger-saturation-l1), var(--color-root-danger-lightness-l1));
+	--color-root-danger-hover: hsl(var(--color-root-danger-hue), var(--color-root-danger-saturation), calc(var(--color-root-danger-lightness) - 6%));
+	--color-root-danger-l1-hover: hsl(var(--color-root-danger-hue), var(--color-root-danger-saturation-l1), calc(var(--color-root-danger-lightness-l1) - 16%));
+	--color-root-tip: hsl(var(--color-root-tip-hue), var(--color-root-tip-saturation), var(--color-root-tip-lightness));
+	--color-root-tip-l1: hsl(var(--color-root-tip-hue), var(--color-root-tip-saturation-l1), var(--color-root-tip-lightness-l1));
+	--color-root-tip-hover: hsl(var(--color-root-tip-hue), var(--color-root-tip-saturation), calc(var(--color-root-tip-lightness) - 16%));
+	--color-root-tip-l1-hover: hsl(var(--color-root-tip-hue), var(--color-root-tip-saturation-l1), calc(var(--color-root-tip-lightness-l1) - 18%));
+
+
+	--logo: url('../assets/img/logo.svg');
+	--logo-bg: url('../assets/img/logo-bg.svg');
+	--logo-size: 60px;
+
+
+	--line-height-1: 1;
+	--line-height-2: 1.25;
+	--line-height-3: 1.75;
+
+	//boderradius
+	--radius-0: 0.25rem;
+	--radius-1: 0.5rem;
+	--radius-2: 1rem;
+	--radius-3: 1.5rem;
+	--radius-4: 2rem;
+
+	//f1
+	--font-size-1: 2rem;
+	//f2
+	--font-size-2: 1.75rem;
+	//f3
+	--font-size-3: 1.5rem;
+	//f4
+	--font-size-4: 1.25rem;
+	//f5
+	--font-size-5: 1rem;
+	//f6
+	--font-size-6: 0.875rem;
+	//f7
+	--font-size-7: 0.75rem;
+
+	//half of gs
+	--gxs: 0.125rem;
+	//half of f7
+	--g0: 0.25rem;
+	//half of f5
+	--g1: 0.5rem;
+	//half of f3 or g0 + g1
+	--g2: 0.75rem;
+	//half of f1 or g1 + g2
+	--g3: 1rem;
+	//half of f1 or g2 + g3
+	--g4: 1.75rem;
+	//g3 + g4
+	--g5: 2.75rem;
+	//g4 + g5
+	--g6: 4.5rem;
+
+	--font-weight-light: 300;
+	--font-weight-regular: 400;
+	--font-weight-medium: 500;
+	--font-weight-bold: 700;
+}
+
+body {
+	//role lightness aliases — must be declared on the same element as the
+	//-root- sources they read, see the NOTE in :root above.
+
+	--color-r0: hsl(var(--color-root-r0-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r1: hsl(var(--color-root-r1-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r2: hsl(var(--color-root-r2-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r3: hsl(var(--color-root-r3-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r4: hsl(var(--color-root-r4-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r5: hsl(var(--color-root-r5-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r6: hsl(var(--color-root-r6-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r7: hsl(var(--color-root-r7-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r8: hsl(var(--color-root-r8-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+	--color-r9: hsl(var(--color-root-r9-hue), var(--color-root-r-saturation), var(--color-root-r-lightness));
+
+	--color: var(--color-root);
+	--color-border: var(--color-root-border);
+	--color-bg: var(--color-root-bg);
+	--color-hover: var(--color-root-hover);
+	--color-border-hover: var(--color-root-border-hover);
+	--color-bg-hover: var(--color-root-bg-hover);
+
+	--color-l1: var(--color-root-l1);
+	--color-border-l1: var(--color-root-border-l1);
+	--color-bg-l1: var(--color-root-bg-l1);
+	--color-l1-hover: var(--color-root-l1-hover);
+	--color-border-l1-hover: var(--color-root-border-l1-hover);
+	--color-bg-l1-hover: var(--color-root-bg-l1-hover);
+
+	--color-active: var(--color-root-bg);
+	--color-active-border: var(--color-root-border);
+	--color-active-bg: var(--color-root);
+	--color-active-hover: var(--color-root-bg-hover);
+	--color-active-bg-hover: var(--color-root-hover);
+	--color-active-border-hover: var(--color-root-border-hover);
+	--color-disabled: var(--color-root-l1);
+
+	--color-major: var(--color-root-major);
+	--color-major-l1: var(--color-root-major-l1);
+	--color-major-hover: var(--color-root-major-hover);
+	--color-major-l1-hover: var(--color-root-major-l1-hover);
+	--color-minor: var(--color-root-minor);
+	--color-minor-l1: var(--color-root-minor-l1);
+	--color-minor-hover: var(--color-root-minor-hover);
+	--color-minor-l1-hover: var(--color-root-minor-l1-hover);
+	--color-safe: var(--color-root-safe);
+	--color-safe-l1: var(--color-root-safe-l1);
+	--color-safe-hover: var(--color-root-safe-hover);
+	--color-safe-l1-hover: var(--color-root-safe-l1-hover);
+	--color-danger: var(--color-root-danger);
+	--color-danger-l1: var(--color-root-danger-l1);
+	--color-danger-hover: var(--color-root-danger-hover);
+	--color-danger-l1-hover: var(--color-root-danger-l1-hover);
+	--color-tip: var(--color-root-tip);
+	--color-tip-l1: var(--color-root-tip-l1);
+	--color-tip-hover: var(--color-root-tip-hover);
+	--color-tip-l1-hover: var(--color-root-tip-l1-hover);
+
+	--color-link: var(--color-minor);
+	--color-link-hover: var(--color-major);
+
+	--color-0: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-0-lightness));
+	--color-1: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-1-lightness));
+	--color-2: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-2-lightness));
+	--color-3: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-3-lightness));
+	--color-4: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-4-lightness));
+	--color-5: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-5-lightness));
+	--color-6: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-6-lightness));
+	--color-7: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-7-lightness));
+	--color-8: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-8-lightness));
+	--color-9: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-9-lightness));
+
+
+	--section-gap-x: var(--g3);
+	//keep in sync with the `.normal` branch of gap-size() in _mixins.scss
+	--section-gap-y: var(--g5);
+
+	--panel-gap-x: var(--g2);
+	--panel-gap-y: var(--g3);
+
+	//comps like: button, input, select, etc
+	//f3(f5*1.618)
+	--comp-size-1: 1.75rem;
+	//$gxs + f3(f5*1.618) + $gxs
+	--comp-size-2: 2rem;
+	//1.75 + .5 * 2 = 2.75
+	--comp-size-3: 2.75rem;
+	//1.25 * 1.25 +  0.5 * 2 = 2.25
+	--comp-size-4: 3.2rem;
+
+	--comp-height: var(--comp-size-3);
+	--comp-font-size: var(--font-size-5);
+	--comp-border-radius: var(--radius-1);
+	--comp-max-width: auto;
+	--comp-line-height: var(--line-height-3);
+
+	--selection-background: var(--color-bg);
+	--selection-color: var(--color-root);
+
+}
+
+@mixin theme-dark-tokens {
+		--logo: url('../assets/img/logo-bg.svg');
+		--color-root-lightness: 95%;
+		--color-root-lightness-l1: 60%;
+		--color-root-bg-lightness: 10%;
+		--color-root-bg-lightness-l1: 100%;
+		--color-root-major-lightness: 90%;
+		--color-root-major-lightness-l1: 10%;
+
+		--color-root-minor-lightness: 90%;
+		--color-root-minor-lightness-l1: 10%;
+		--color-root-safe-lightness: 90%;
+		--color-root-safe-lightness-l1: 10%;
+		--color-root-danger-lightness: 90%;
+		--color-root-danger-lightness-l1: 10%;
+		--color-root-tip-lightness: 90%;
+		--color-root-tip-lightness-l1: 10%;
+
+		//dark mode swaps which token is light: solid goes paler, l1 goes deeper
+		--color-root-l1-hover: color-mix(in hsl, var(--color-root-l1) 65%, var(--color-root-ink));
+		--color-root-bg-l1-hover: color-mix(in hsl, var(--color-root-bg-l1) 50%, var(--color-root-paper));
+		--color-root-major-hover: hsl(var(--color-root-major-hue), var(--color-root-major-saturation), calc(var(--color-root-major-lightness) - 4%));
+		--color-root-major-l1-hover: hsl(var(--color-root-major-hue), var(--color-root-major-saturation-l1), calc(var(--color-root-major-lightness-l1) + 14%));
+		--color-root-minor-hover: hsl(var(--color-root-minor-hue), var(--color-root-minor-saturation), calc(var(--color-root-minor-lightness) - 8%));
+		--color-root-minor-l1-hover: hsl(var(--color-root-minor-hue), var(--color-root-minor-saturation-l1), calc(var(--color-root-minor-lightness-l1) + 18%));
+		--color-root-safe-hover: hsl(var(--color-root-safe-hue), var(--color-root-safe-saturation), calc(var(--color-root-safe-lightness) - 18%));
+		--color-root-safe-l1-hover: hsl(var(--color-root-safe-hue), var(--color-root-safe-saturation-l1), calc(var(--color-root-safe-lightness-l1) + 12%));
+		--color-root-danger-hover: hsl(var(--color-root-danger-hue), var(--color-root-danger-saturation), calc(var(--color-root-danger-lightness) - 8%));
+		--color-root-danger-l1-hover: hsl(var(--color-root-danger-hue), var(--color-root-danger-saturation-l1), calc(var(--color-root-danger-lightness-l1) + 20%));
+		--color-root-tip-hover: hsl(var(--color-root-tip-hue), var(--color-root-tip-saturation), calc(var(--color-root-tip-lightness) - 20%));
+		--color-root-tip-l1-hover: hsl(var(--color-root-tip-hue), var(--color-root-tip-saturation-l1), calc(var(--color-root-tip-lightness-l1) + 22%));
+
+		--color-root-0-lightness: 10%;
+		--color-root-1-lightness: 20%;
+		--color-root-2-lightness: 30%;
+		--color-root-3-lightness: 40%;
+		--color-root-4-lightness: 50%;
+		--color-root-5-lightness: 60%;
+		--color-root-6-lightness: 70%;
+		--color-root-7-lightness: 80%;
+		--color-root-8-lightness: 90%;
+		--color-root-9-lightness: 100%;
+
+		#body{
+			.header.active {
+				--header-color: var(--color);
+				--header-color-bg: var(--color-bg);
+				--header-color-border: var(--color-border);
+				--header-color-hover: var(--color-hover);
+				--header-color-bg-hover: var(--color-bg-hover);
+				--header-color-border-hover: var(--color-border-hover);
+				.input {
+					--input-color: var(--color-bg);
+					--input-color-bg: var(--color);
+				}
+			}
+			.section.active{
+				--section-color: var(--color);
+				--section-color-bg: var(--color-bg);
+			}
+			.panel.active{
+				--panel-color: var(--color);
+				--panel-color-bg: var(--color-bg);
+			}
+		}
+}
+
+:root {
+	@media (prefers-color-scheme: dark) {
+		&:not(.theme-light) {
+			@include theme-dark-tokens;
+		}
+	}
+
+	&.theme-dark {
+		@include theme-dark-tokens;
+	}
+}

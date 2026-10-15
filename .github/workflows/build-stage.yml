@@ -1,0 +1,41 @@
+---
+# On merge of a PR into main: build stage bundle (.env.stage, GitHub CDN) then deploy dist/ to gh-pages.
+# Does not run on direct pushes to main.
+name: Build and Deploy to GitHub Pages (stage)
+
+'on':
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  build-stage-to-gh-pages:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    permissions:
+      contents: write # read repo, push gh-pages branch
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25.6'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build stage
+        run: npm run build:stage
+
+      - name: Configure git for gh-pages push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+
+      - name: Deploy to GitHub Pages
+        run: npm run deploy-gh

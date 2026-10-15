@@ -1,0 +1,140 @@
+@use './_mixins.scss' as *;
+
+@include comp-color('input');
+@include comp-size('input');
+
+.input {
+	--input-placeholder-color: color-mix(in hsl, var(--input-color) 80%, var(--input-color-bg));
+	position: relative;
+	display: block;
+	width: 100%;
+
+	>select {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		background: transparent;
+		cursor: pointer;
+
+		&[disabled] {
+			color: var(--color-l1);
+		}
+	}
+
+	option[disabled] {
+		color: var(--color-l1);
+	}
+
+	>input::placeholder {
+		color: var(--input-placeholder-color);
+	}
+
+
+	>input,
+	>select {
+		width: 100%;
+		border: 1px solid var(--input-color-border);
+		font-size: var(--input-font-size);
+		font-weight: var(--input-font-weight);
+		font-size: var(--input-font-size);
+		height: var(--input-size);
+		padding: var(--input-gap) var(--g2);
+		min-width: var(--input-size);
+		line-height: var(--input-line-height);
+		color: var(--input-color);
+		background-color: var(--input-color-bg);
+		border-radius: var(--input-radius);
+	}
+
+	>i,
+	>span,
+	>a,
+	>button,
+	>.btn {
+		color: var(--input-color);
+		position: absolute;
+		top: 0;
+		z-index: 1;
+		text-align: center;
+		width: var(--input-size);
+		height: var(--input-size);
+		line-height: var(--input-size);
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	>.btn {
+		background-color: var(--input-color-bg);
+		color: var(--input-color);
+		border-color: transparent;
+		box-shadow: none;
+		border-radius: var(--input-radius);
+	}
+
+	&.left {
+
+		>input,
+		>select {
+			padding-left: var(--input-size);
+		}
+
+		>span,
+		>i,
+		>a,
+		>button,
+		>.btn {
+			left: 0;
+			right: auto;
+		}
+	}
+
+	&.right {
+
+		>input,
+		>select {
+			padding-right: var(--input-size);
+
+			~span,
+			~i,
+			~a,
+			~button,
+			~.btn {
+				right: 0;
+				left: auto;
+			}
+		}
+	}
+
+	&.has-success {
+		color: var(--color);
+	}
+
+	&.has-error {
+		--input-color: var(--color-danger);
+		--input-color-bg: var(--color-danger-l1);
+		--input-color-border: var(--color-danger);
+
+		&[data-tooltip]:after {
+			position: absolute;
+			top: 2px;
+			right: var(--g2);
+			color: var(--input-color);
+			font-size: var(--font-size-6);
+			content: attr(data-tooltip);
+			line-height: 1.25;
+			z-index: 9
+		}
+	}
+}
+
+.input .suggestion-list:not(.active) {
+	--suggestion-list-color-bg: var(--input-color-bg);
+	--suggestion-list-color: var(--input-color);
+	--suggestion-list-color-border: var(--input-color-border);
+	--suggestion-list-color-hover: var(--input-color-hover);
+	--suggestion-list-color-bg-hover: var(--input-color-bg-hover);
+	--suggestion-list-color-border-hover: var(--input-color-border-hover);
+	--suggestion-list-color-active: var(--input-color-active);
+	--suggestion-list-color-bg-active: var(--input-color-bg-active);
+	--suggestion-list-color-border-active: var(--input-color-border-active);
+}

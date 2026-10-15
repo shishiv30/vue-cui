@@ -1,0 +1,281 @@
+@use './_mixins.scss' as *;
+
+@property --image-ratio {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 1.7778;
+}
+
+@include comp-color('article');
+
+.article {
+	--article-icon-size: var(--g4);
+	--article-icon-font-size: var(--font-size-6);
+	--article-font-weight: var(--font-weight-regular);
+	--article-line-height: var(--line-height-3);
+	--article-gap: var(--g2);
+	--article-animation-time: .4s;
+	// matches the icon mark, so the top-left badge never covers the title
+	--article-padding: var(--article-icon-size);
+	--article-color-muted: color-mix(in hsl, currentColor 70%, transparent);
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--article-gap);
+	padding: var(--article-padding);
+	position: relative;
+
+	color: var(--article-color);
+	background-color: var(--article-color-bg);
+	transition:
+		color var(--article-animation-time),
+		background-color var(--article-animation-time),
+		box-shadow var(--article-animation-time),
+		border-radius var(--article-animation-time),
+		transform var(--article-animation-time),
+		padding var(--article-animation-time),
+		gap var(--article-animation-time);
+
+	&.small {
+		--article-icon-size: var(--g3);
+		--article-gap: var(--g1);
+	}
+
+	&.large {
+		--article-icon-size: var(--g5);
+		--article-gap: var(--g3);
+		--article-border-weight: 2px;
+	}
+
+	// the card is inverted, so the mark reverts to the resting palette
+	&.active > i {
+		color: var(--color);
+		background-color: var(--color-bg);
+	}
+
+	// outline: border only, transparent bg
+	&.outline {
+		box-shadow: inset 0 0 0 var(--article-border-weight) var(--article-color-border);
+	}
+
+	// corner: rounded borders — outer --radius-2, inner --radius-1
+	&.corner {
+		border-radius: var(--radius-2);
+
+		// top corners follow the card; the bottom meets the content
+		figure {
+			border-radius: var(--radius-2) var(--radius-2) 0 0;
+		}
+
+		>i {
+			border-radius: var(--radius-2) 0 var(--radius-1) 0;
+		}
+	}
+
+	// shadow: drop shadow
+	&.shadow {
+		box-shadow: 0 var(--g0) var(--g3) hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.12);
+
+		&.outline {
+			box-shadow:
+				inset 0 0 0 var(--article-border-weight) var(--article-color-border),
+				0 var(--g0) var(--g3) hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.12);
+		}
+
+		&.active {
+			box-shadow:
+				inset 0 0 0 var(--article-border-weight) var(--article-color-border),
+				0 var(--g0) var(--g3) hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.15);
+		}
+	}
+
+	// inner elements
+
+	// icon mark — pinned to the top-left corner with inverted colors
+	>i {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--article-icon-size);
+		height: var(--article-icon-size);
+		font-size: var(--article-icon-font-size);
+		color: var(--article-color-bg);
+		background-color: var(--article-color);
+	}
+
+	// frame: bleeds past the card padding, clips the loaded image
+	>figure {
+		overflow: hidden;
+		position: relative;
+		margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
+
+		>img {
+			width: 100%;
+			object-fit: cover;
+			display: block;
+			transition:
+				transform var(--article-animation-time),
+				--image-ratio .5s ease-in-out;
+			transform: scale(1.02) translateY(0px);
+		}
+
+		>img[data-src] {
+			border: none;
+			height: 200px;
+			background-color: var(--color-bg-l1);
+			background-image: linear-gradient(
+				90deg,
+				var(--color-bg) 0%,
+				var(--color-bg-l1) 50%,
+				var(--color-bg) 100%
+			);
+			background-size: 200% 100%;
+			animation: lazyload-shimmer 1s ease-in-out infinite;
+		}
+
+		>figcaption {
+			position: absolute;
+			font-size: var(--font-size-7);
+			bottom: 0;
+			right: 0;
+			z-index: 2;
+			color: var(--color-bg);
+			padding: var(--g0);
+			background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.5);
+			border-radius: var(--radius-0) 0 0 0;
+		}
+
+		>img[ratio] {
+			--image-ratio: 1.7778;
+			width: 100%;
+			height: auto;
+			aspect-ratio: var(--image-ratio);
+			transition: --image-ratio .5s ease-in-out;
+		}
+
+		>img[data-src-loaded] {
+			transform: scale(1.25) translateY(-5px);
+		}
+
+		>img[data-src-loaded].img-load-error,
+		>img.img-load-error {
+			background-color: var(--color-bg-l1);
+			background-image: none;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center center;
+		}
+	}
+
+	>div:not(.tags):not(.tags-top) {
+		font-size: var(--article-icon-font-size);
+		line-height: var(--line-height-3);
+	}
+
+	>header,
+	>h3 {
+		margin: 0;
+		font-size: var(--font-size-3);
+		font-weight: var(--font-weight-bold);
+		line-height: var(--line-height-2);
+	}
+
+	>sub,
+	>sup {
+		font-size: var(--font-size-6);
+		color: var(--article-color-muted);
+		line-height: var(--line-height-2);
+	}
+
+	>.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--g0);
+	}
+
+	.tags-top,
+	figcaption {
+		transition: opacity var(--article-animation-time);
+	}
+
+	>footer {
+		font-size: var(--font-size-7);
+		color: var(--article-color-muted);
+	}
+
+	&.collapsed {
+		--article-padding: var(--article-gap);
+		aspect-ratio: 4/3;
+		overflow: hidden;
+
+		>figure {
+			flex: 1;
+
+			>img {
+				height: 100%;
+				filter: saturate(0.5);
+			}
+		}
+
+		>.dict,
+		>footer,
+		>header,
+		>a {
+			display: block;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+
+			>* {
+				display: inline;
+			}
+
+			>*:nth-child(even) {
+				padding-right: var(--article-gap);
+			}
+		}
+
+		&:hover,
+		&.selected,
+		&:focus-within {
+			>figure {
+				>img[data-src-loaded] {
+					filter: saturate(1);
+					transform: scale(1) translateY(0px);
+				}
+			}
+
+			.tags-top,
+			figcaption {
+				opacity: 0;
+			}
+
+			transform: translateY(-5px) scale(1.02);
+			box-shadow: 0px 1px 3px 1px var(--color-2);
+		}
+	}
+
+	// @media (prefers-reduced-motion: reduce) {
+	// 	transition: none;
+
+	// 	.tags-top,
+	// 	figcaption {
+	// 		transition: none;
+	// 	}
+
+	// 	>figure {
+	// 		>img {
+	// 			transition: none;
+	// 		}
+	// 	}
+	// }
+}
+
+@keyframes lazyload-shimmer {
+	0%   { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}

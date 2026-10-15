@@ -1,0 +1,35 @@
+.map-marker {
+	position: absolute;
+
+	&.removed {
+		display: none;
+	}
+
+	color: var(--color-bg);
+
+	.pin {
+		cursor: pointer;
+		position: relative;
+		border: 1px solid white;
+		background: var(--color-l1);
+		border-radius: 50%;
+		display: block;
+		font-size: var(--font-size-5);
+		width: 24px;
+		height: 24px;
+		line-height: 24px;
+		text-align: center;
+		transform: translateY(-50%) translateX(-50%);
+
+		i {
+			color: inherit;
+		}
+	}
+
+	&.on .pin,
+	.pin:hover {
+		box-shadow: 0 0 0 5px hsla(var(--color-root-minor-hue), var(--color-root-minor-saturation), var(--color-root-minor-lightness), 0.35);
+		background-color: var(--color-minor);
+		z-index: var(--ui-pin-hover-index);
+	}
+}

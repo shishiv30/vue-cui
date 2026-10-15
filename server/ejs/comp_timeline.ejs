@@ -1,0 +1,24 @@
+<%_ if (comp) { _%>
+<section class="section large">
+	<div class="grid grid-xs-1 panel">
+		<h2 class="f4"><%= comp.heading %></h2>
+		<div><%= comp.intro %></div>
+		<ul class="section-timeline">
+			<%_ if (comp.entries && comp.entries.length) { _%>
+				<%_ for (var i = 0; i < comp.entries.length; i++) { _%>
+					<%_ const entry = comp.entries[i]; _%>
+					<%_ if (entry.type === 'title') { _%>
+						<li class="title"><b><%= entry.label %></b>
+							<div></div>
+						</li>
+					<%_ } else if (entry.type === 'desc') { _%>
+						<li class="desc"><span><%= entry.date %></span> <span><%= entry.text %></span>
+							<div></div>
+						</li>
+					<%_ } _%>
+				<%_ } _%>
+			<%_ } _%>
+		</ul>
+	</div>
+</section>
+<%_ } _%>

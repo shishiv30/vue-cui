@@ -1,0 +1,71 @@
+@use './_mixins.scss' as *;
+
+@include comp-color(breadcrumb);
+@include comp-size(breadcrumb);
+
+.breadcrumb {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	color: var(--breadcrumb-color);
+	background-color: var(--breadcrumb-color-bg);
+
+	&.sticky {
+		position: sticky;
+		top: 0;
+		z-index: var(--ui-stick-index);
+	}
+
+	>ul {
+		@include singleline();
+		max-width: fit-content;
+		overflow: hidden;
+
+		li {
+			display: inline;
+		}
+
+		li+li {
+			&::before {
+				opacity: 0.6;
+				content: '>';
+				vertical-align: middle;
+				font-size: var(--font-size-7);
+			}
+		}
+	}
+
+	ul a {
+		padding: var(--g1) var(--g2);
+		border-bottom: 2px solid transparent;
+		font-size: var(--font-size-5);
+		color: var(--breadcrumb-color);
+		background-color: var(--breadcrumb-color-bg);
+		opacity: 0.8;
+		display: inline-block;
+		height: var(--comp-height);
+		line-height: var(--comp-line-height);
+
+		@include hover() {
+			opacity: 1;
+		}
+
+		&.active {
+			opacity: 1;
+			font-weight: var(--font-weight-medium);
+			color: var(--breadcrumb-color);
+			background-color: var(--breadcrumb-color-bg);
+		}
+	}
+
+	.breadcrumb-button {
+		margin-left: auto;
+		margin-right: var(--g0);
+		flex-shrink: 0;
+		line-height: var(--comp-size-3);
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		width: fit-content;
+	}
+}

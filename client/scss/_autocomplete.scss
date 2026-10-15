@@ -1,0 +1,51 @@
+@use './_mixins.scss' as *;
+
+@include comp-color('suggestion-list');
+@include comp-size('suggestion-list');
+.suggestion-list {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background-color: var(--suggestion-list-color-bg);
+  color: var(--suggestion-list-color);
+
+  line-height: 2;
+  overflow-y: auto;
+  overflow-x: hidden;
+  @include hidden-scrollbar();
+  border-radius: 0 0 var(--suggestion-list-radius) var(--suggestion-list-radius);
+}
+
+.suggestion-list:empty {
+  display: none !important;
+}
+
+.autocomplete-show {
+  .suggestion-list {
+    display: block;
+  }
+  &.input{
+    input {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.suggestion-item {
+  padding: var(--g1) var(--g2);
+  cursor: pointer;
+  border-top: var(--suggestion-list-color-border) 1px solid;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: var(--font-weight-bold);
+    color: var(--suggestion-list-color-hover);
+    background: var(--suggestion-list-color-bg-hover);
+  }
+
+  &.selected {
+    font-weight: var(--font-weight-bold);
+    background: var(--color-bg-l1);
+  }
+}

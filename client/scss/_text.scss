@@ -1,0 +1,69 @@
+@use './_mixins.scss' as *;
+
+.font-light {
+	@include font-light();
+}
+
+.font-bold {
+	@include font-bold();
+}
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-shadow {
+	@include text-shadow();
+}
+
+.text-white {
+	color: var(--color-bg);
+}
+
+.text-darkgray {
+	color: var(--color);
+}
+
+.text-gray {
+	color: var(--color-l1);
+}
+
+.text-lightgray {
+	color: var(--color-l1);
+}
+
+.text-safe {
+	color: var(--color-safe);
+}
+
+.text-minor {
+	color: var(--color-minor);
+}
+
+.text-danger {
+	color: var(--color-danger);
+}
+
+.text-major {
+	color: var(--color-major);
+}
+
+.text-uppercase {
+	text-transform: uppercase;
+}
+
+.text-lowercase {
+	text-transform: lowercase;
+}
+
+.text-capitalize {
+	text-transform: capitalize;
+}

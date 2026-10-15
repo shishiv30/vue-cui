@@ -1,0 +1,34 @@
+.collapse-line {
+	&.shown {
+		overflow: initial !important;
+		text-overflow: initial !important;
+		-webkit-line-clamp: initial !important;
+	}
+}
+.collapse-panel {
+	display: none;
+	&.shown {
+		display: block;
+	}
+}
+
+[data-role*='collapse'] {
+	&.shown {
+		&.i,
+		& > i {
+			display: inline-block;
+		}
+		&.icon-angle-down,
+		& > .icon-angle-down {
+			transform: rotate(180deg);
+		}
+		&.icon-angle-left,
+		& > .icon-angle-left {
+			transform: rotate(-90deg);
+		}
+		&.icon-angle-right,
+		& > .icon-angle-right {
+			transform: rotate(90deg);
+		}
+	}
+}
