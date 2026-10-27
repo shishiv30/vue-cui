@@ -45,7 +45,7 @@ No `<style>` in `.vue` files. Styles stay in `client/scss/index.scss`. Storybook
 
 Every docs example is inline with `min-height: 300px` from `docs.story` in `.storybook/preview.ts`. Preview padding is `layout: 'padded'` plus one rule in `.storybook/code-panel.css`: `.sb-show-main.sb-main-padded` for the story canvas and `#storybook-docs .docs-story` for each docs preview, both `padding: var(--g2)`. Do not set that height or padding on a single story.
 
-Docs theme follows the browser: `prefers-color-scheme: dark` uses `themes.dark`, otherwise `themes.light`. That switch lives in `SystemDocsContainer` in `.storybook/preview.ts`. Do not set `textColor` or `appContentBg` to a CSS variable — Storybook parses those tokens as colors and the docs page fails to render. Do not add CSS to fight `.sbdocs-wrapper` background.
+Docs chrome follows the browser: `prefers-color-scheme: dark` uses `themes.dark`, otherwise `themes.light`. That switch lives in `SystemDocsContainer` in `.storybook/preview.ts`. The canvas theme follows the Preview background toolbar: selecting light or dark sets `theme-light` or `theme-dark` on `html` and `body` in the preview decorator. Do not set `textColor` or `appContentBg` to a CSS variable — Storybook parses those tokens as colors and the docs page fails to render. Do not add CSS to fight `.sbdocs-wrapper` background.
 
 ## Check
 

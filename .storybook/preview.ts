@@ -156,6 +156,36 @@ function SystemDocsContainer(props: React.ComponentProps<typeof DocsContainer>) 
 	});
 }
 
+function previewTheme(globals: { backgrounds?: unknown }) {
+	const backgrounds = globals.backgrounds;
+	const value =
+		typeof backgrounds === 'string'
+			? backgrounds
+			: backgrounds &&
+				  typeof backgrounds === 'object' &&
+				  'value' in backgrounds &&
+				  typeof backgrounds.value === 'string'
+				? backgrounds.value
+				: '';
+	if (value.toLowerCase() === 'dark') {
+		return 'theme-dark';
+	}
+	if (value.toLowerCase() === 'light') {
+		return 'theme-light';
+	}
+	return '';
+}
+
+function applyPreviewTheme(globals: { backgrounds?: unknown }) {
+	const cls = previewTheme(globals);
+	for (const el of [document.documentElement, document.body]) {
+		el.classList.remove('theme-dark', 'theme-light');
+		if (cls) {
+			el.classList.add(cls);
+		}
+	}
+}
+
 const preview: Preview = {
 	parameters: {
 		layout: 'padded',
@@ -179,8 +209,9 @@ const preview: Preview = {
 		},
 	},
 	decorators: [
-		(story) => {
+		(story, context) => {
 			document.body.id = 'body';
+			applyPreviewTheme(context.globals);
 			return story();
 		},
 	],
