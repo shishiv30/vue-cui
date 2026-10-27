@@ -189,7 +189,7 @@ export function mapPropertyToArticle(property, isFull = false) {
 		imgTag: officeListName,
 		imgAlt: displayAddress,
 		title: geo?.address ? String(geo.address) : '',
-		path: `/demo/detail/${geo?.state?.toLowerCase()}/${geo.zipcode}/${property.prId}`,
+		path: `/property/detail/${geo?.state?.toLowerCase()}/${geo.zipcode}/${property.prId}`,
 		tags,
 		attrs,
 	};
@@ -282,7 +282,7 @@ export function mapPropertyDetailToArticle(soaListing, historiesRaw = null) {
 }
 
 /**
- * SEO fields for a demo detail page from metadata + comp models (no raw SOA listing).
+ * SEO fields for a property detail page from metadata + comp models (no raw SOA listing).
  *
  * @param {object} detail — result of `mapPropertyDetailToArticle`
  * @returns {{ title: string, description: string, desc: string, keywords: string }|null}
@@ -302,10 +302,10 @@ export function buildDetailSeo(detail) {
 	const title = detail.title || '';
 	const description = detail.paragraph?.text || '';
 	return {
-		title: `${title}${statusLabel ? ` | ${statusLabel}` : ''} - demo`,
+		title: `${title}${statusLabel ? ` | ${statusLabel}` : ''} - property`,
 		description,
 		desc: description,
-		keywords: `${title}${statusLabel ? `, ${statusLabel}` : ''}, demo`,
+		keywords: `${title}${statusLabel ? `, ${statusLabel}` : ''}, property`,
 	};
 }
 

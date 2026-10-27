@@ -7,7 +7,7 @@
 
 ## 摘要
 
-Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS），由 Dart Sass 编译，通过 webpack `sass-loader` + `mini-css-extract-plugin` 产出单一 `[name].min.css`。
+Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS），由 Dart Sass 经 Vite 编译，产出 `[name].min.css`。
 
 其核心不是"写样式"，而是**用 CSS 自定义属性构建一条可被任意祖先节点改道的值传递链**。SCSS 只承担两件编译期必需的工作：媒体查询断点（`$screen-*`）和图标码点（`$icon-*`）；其余全部是运行期可覆盖的 `--*` 变量。
 
@@ -136,8 +136,8 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 **这是本项目最值得保留的响应式思路。** 媒体查询内不写 `width` / `font-size`，只重新赋值 token，声明本身保持唯一：
 
 ```scss
-// client/scss/demo.scss:9-43
-.page-demo {
+// client/scss/property.scss:9-43
+.page-property {
   --item-width: 260px;
   --detail-max-width: 60%;
 
@@ -442,7 +442,7 @@ index.scss
 
 ## 四、结论
 
-**本体系已经具备的：** 一条纪律良好的三层值传递链；HSL 通道化让换肤成本降到几个数字；`comp-color()` / `comp-size()` 保证组件契约统一；以及最关键的——**"媒体查询只改变量、不改声明"** 这一响应式范式，已经在 `_grid.scss`、`demo.scss`、`_layout.scss` 中反复验证。
+**本体系已经具备的：** 一条纪律良好的三层值传递链；HSL 通道化让换肤成本降到几个数字；`comp-color()` / `comp-size()` 保证组件契约统一；以及最关键的——**"媒体查询只改变量、不改声明"** 这一响应式范式，已经在 `_grid.scss`、`property.scss`、`_layout.scss` 中反复验证。
 
 **尚未打通的：** 这条链在"尺寸随视口连续变化"这一维度上是断的。字号、间距、根字号三者全部是断点无关的常量，响应式只体现在栅格列数与个别宽度上。要达到"在不同设备上都有不错的显示效果"，缺的不是更多断点，而是：
 
@@ -541,7 +541,7 @@ body.theme-dark { --color-root-major-lightness: 50%; }                 /* 改的
 
 ### 验证
 
-- 5 个 SCSS 入口（`index` `base` `demo` `demo.article` `animation`）全部编译通过。
+- 5 个 SCSS 入口（`index` `base` `property` `property.article` `animation`）全部编译通过。
 - 全量 token 审计：**未定义却被消费的自定义属性从 27 个降到 0 个**。
 - 自定义属性解析模拟：亮色 / 暗色两种状态下 `body` 上均无 `INVALID` 解析结果。
 

@@ -17,13 +17,13 @@ const REMINDER = [
 ].join('\n');
 
 const STRUCTURAL_PATH =
-	/^(helpers\/|data\/|server\/(configs|routes|controllers|middleware|utils|ejs)\/|scripts\/|webpack\.config|\.cursor\/(background\.json|skills\/))/;
+	/^(helpers\/|data\/|server\/(configs|routes|controllers|middleware|utils|ejs)\/|scripts\/|vite\.config|docs\/|\.cursor\/(background\.json|skills\/))/;
 
 const SHELL_STRUCTURAL_CMD =
 	/\b(git\s+mv|git\s+rm\b|\bmv\s+|\bcp\s+-r\b|mkdir\s+-p|rm\s+-rf?\s+)\b/i;
 
 const SHELL_MENTIONS_PATH =
-	/(helpers\/|data\/|server\/|scripts\/|webpack\.config|\.cursor\/)/;
+	/(helpers\/|data\/|server\/|scripts\/|vite\.config|docs\/|\.cursor\/)/;
 
 function readInput() {
 	const raw = fs.readFileSync(0, 'utf8');

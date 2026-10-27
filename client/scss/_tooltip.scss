@@ -9,7 +9,13 @@
 	opacity: 0;
 	min-width: 150px;
 	max-width: 280px;
-	transition: opacity 0.2s ease-in-out;
+	transition:
+		opacity 0.3s linear 0.2s,
+		left 0.3s ease-out,
+		top 0.3s ease-out,
+		bottom 0.3s ease-out,
+		right 0.3s ease-out;
+	pointer-events: none;
 	--tooltip-color: var(--color-bg);
 	--tooltip-color-bg: var(--color);
 	--tooltip-color-border: var(--color);
@@ -25,6 +31,7 @@
 
 	&.in {
 		opacity: 1;
+		pointer-events: auto;
 	}
 
 	&.top {
@@ -69,11 +76,12 @@
 		}
 	}
 
-	&.bottom-left {
+	&.bottom.bottom-left {
 		.tooltip-arrow {
 			right: auto;
 			left: var(--tooltip-arrow-size);
-			margin-right: var(--tooltip-arrow-size);
+			margin-left: var(--tooltip-arrow-size);
+			margin-right: 0;
 		}
 	}
 

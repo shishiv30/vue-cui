@@ -1,6 +1,8 @@
+> Historical. GitHub Actions no longer build or deploy this repo. Storybook publishes from GitLab. See [storybook-ci.md](storybook-ci.md). Do not add GitHub secrets or an App Runner `start-deployment` step for Storybook.
+
 # AWS ECR setup for GitHub Actions
 
-Use this when you're ready to push Docker images to AWS. Until you complete it, the **Build and Release to AWS ECR** workflow is skipped on push (no failed runs). The job runs only when the repo variable **AWS_ECR_ENABLED** is set to `true`.
+The **Build and Release to AWS ECR** workflow and `AWS_ECR_ENABLED` are gone. The steps below are a record of that old GitHub path. They do not publish Storybook.
 
 ---
 
@@ -26,9 +28,7 @@ If you have an AWS account and want to do everything from the terminal:
 
    Defaults: region `us-east-1`, ECR repo name `pure`. Override: `./scripts/aws-ecr-setup.sh eu-west-1 my-repo`.
 
-3. **Add the printed values in GitHub**: repo **Settings** → **Secrets and variables** → **Actions** → add the two secrets and the **AWS_ECR_ENABLED** variable as shown in the script output.
-
-4. Push to `main` to trigger the first build.
+3. The setup script and GitHub secrets from this guide are retired. Do not add them under GitHub Actions.
 
 ---
 
@@ -115,17 +115,12 @@ Create a custom policy with this JSON (replace `123456789012` with your AWS acco
       "Effect": "Allow",
       "Action": ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"],
       "Resource": "arn:aws:cloudfront::ACCOUNT_ID:distribution/E3HB60PWQLPD0R"
-    },
-    {
-      "Effect": "Allow",
-      "Action": ["apprunner:StartDeployment", "apprunner:DescribeService"],
-      "Resource": "arn:aws:apprunner:REGION:ACCOUNT_ID:service/*"
     }
   ]
 }
 ```
 
-Replace `YOUR_CDN_BUCKET_NAME` with your S3 bucket name (e.g. `cdn.conjeezou.com`). For the CloudFront block, replace `ACCOUNT_ID` with your AWS account ID and `YOUR_DISTRIBUTION_ID` with your CloudFront distribution ID (AWS Console → CloudFront → your distribution → ID). For the App Runner block (needed only if you set `APP_RUNNER_SERVICE_ARN`), replace `REGION` and `ACCOUNT_ID` with your region and account ID.
+Replace `YOUR_CDN_BUCKET_NAME` with your S3 bucket name (e.g. `cdn.conjeezou.com`). For the CloudFront block, replace `ACCOUNT_ID` with your AWS account ID. This policy was for the old site image deploy. Storybook uses a separate IAM user; see [storybook-ci.md](storybook-ci.md).
 
 If you prefer not to hardcode the distribution ID in the policy, use `"Resource": "arn:aws:cloudfront::ACCOUNT_ID:distribution/*"` so the user can invalidate any distribution in the account.
 
@@ -141,69 +136,6 @@ If you prefer not to hardcode the distribution ID in the policy, use `"Resource"
 
 ---
 
-### 4. Add secrets in GitHub
+### 4. GitHub secrets and App Runner
 
-1. In your repo: **Settings** → **Secrets and variables** → **Actions**.
-2. **New repository secret**:
-   - Name: `AWS_ACCESS_KEY_ID`  
-     Value: the access key from step 3.
-3. **New repository secret**:
-   - Name: `AWS_SECRET_ACCESS_KEY`  
-     Value: the secret key from step 3.
-
-**Required variable** (under **Variables**):
-
-- `AWS_ECR_ENABLED` = `true` — turns on the build-prod job. Leave unset until AWS is configured.
-
-Optional variables:
-
-- `AWS_REGION` — e.g. `us-east-1` (default in the workflow).
-- `ECR_REPOSITORY` — ECR repo name (e.g. `pure`). If not set, the workflow uses the GitHub repo name.
-- `AWS_S3_CDN_BUCKET` — S3 bucket name for the CDN (e.g. `cdn.conjeezou.com`). When set, the workflow syncs `dist/` to this bucket after each build.
-- `AWS_CLOUDFRONT_DISTRIBUTION_ID` — CloudFront distribution ID for the CDN bucket. When set (together with `AWS_S3_CDN_BUCKET`), the workflow creates a cache invalidation after syncing to S3 so visitors get new CSS/JS immediately instead of cached old assets. Find the ID in AWS Console → CloudFront → your distribution.
-- `APP_RUNNER_SERVICE_ARN` — Full ARN of your App Runner service (e.g. `arn:aws:apprunner:us-east-1:123456789012:service/pure/...`). When set, the workflow runs `aws apprunner start-deployment` after pushing the image so the service deploys the new ECR image. Get it with: `aws apprunner list-services --region us-east-1 --query 'ServiceSummaryList[?ServiceName==\`pure\`].ServiceArn' --output text`. **App Runner must use the same ECR region as the workflow (us-east-1).** If the service was created with us-east-2 ECR, see **docs/apprunner-ecr-us-east-1.md** to repoint it.
-
----
-
-### 5. Verify and test
-
-Check that secrets and variables are configured:
-
-```bash
-./scripts/check-github-ecr-config.sh
-```
-
-Requires [GitHub CLI](https://cli.github.com/) (`brew install gh`) and `gh auth login`. Run from repo root.
-
-Then push a commit to `main`. The workflow **Build and Release to AWS ECR** should run, build the image, and push it to your ECR repository.
-
----
-
-### Troubleshooting
-
-**"The repository with name 'pure' does not exist in the registry"**
-
-The ECR repository has not been created yet. Either:
-
-1. **Create it in AWS Console:** ECR → **Create repository** → name `pure` (or whatever you set in `ECR_REPOSITORY`) → **Create repository**.
-2. **Create it via CLI:** `aws ecr create-repository --repository-name pure --region us-east-1` (use your region if different).
-
-The workflow now includes a step that creates the repository if it is missing (when the IAM user has `ecr:CreateRepository` permission).
-
----
-
-**"Could not load credentials from any providers"**
-
-This means `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are not set or are empty:
-
-1. Go to **Settings** → **Secrets and variables** → **Actions**.
-2. Ensure both `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` exist as **repository secrets** (not variables).
-3. Secret names are case-sensitive and must match exactly.
-4. If using organization secrets, ensure the repo has access under the org’s secret policies. You can pull it with:
-
-```bash
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
-docker pull 123456789012.dkr.ecr.us-east-1.amazonaws.com/pure:latest
-```
-
-(Replace region and URI with yours.)
+Do not add `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ECR_ENABLED`, or `APP_RUNNER_SERVICE_ARN` in GitHub Actions for this repo. Those workflows are removed. Storybook uses GitLab CI variables listed in [storybook-ci.md](storybook-ci.md). App Runner `pure` is the main site only. It does not serve Storybook.

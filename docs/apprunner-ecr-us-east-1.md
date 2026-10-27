@@ -1,3 +1,5 @@
+> Historical. This guide describes the previous EJS property or AWS deploy flow. Current behavior is in README.md and change-list.md.
+
 # App Runner: use us-east-1 ECR (same as CI)
 
 The **Build Pure Web (prod)** workflow pushes the main-site image to **us-east-1** ECR (`178912016721.dkr.ecr.us-east-1.amazonaws.com/pure:latest`). If your App Runner service was created with **us-east-2** ECR, it will never see new images because `start-deployment` only redeploys from the **existing** source.

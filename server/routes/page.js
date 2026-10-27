@@ -1,7 +1,7 @@
 import BaseController from '../controllers/index.js';
 
 export default function registerPage(router) {
-	// Dynamic page: :key drives data source. In production uses data/page/{key}.js only; else CMS then data/page/{key}.js
+	// Dynamic page: :key loads data/page/{key}.js
 	router.get('/page/:key', async (req, res) => {
 		try {
 			const controller = new BaseController(req, res, 'page');

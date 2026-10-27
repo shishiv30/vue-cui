@@ -1,3 +1,5 @@
+> Historical. This guide describes the previous EJS property or AWS deploy flow. Current behavior is in README.md and change-list.md.
+
 # Fix www.conjeezou.com → App Runner
 
 **www.conjeezou.com** is linked to your App Runner service (`https://qis7miipe5.us-east-1.awsapprunner.com/`).

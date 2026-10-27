@@ -72,18 +72,12 @@ function compileClientTemplate(absPath) {
 }
 
 /**
- * @param {string} _source
- * @this {import('webpack').LoaderContext<{}>}
+ * @param {string} resourcePath
  * @returns {string}
  */
-export default function ejsClientLoader(_source) {
-	const resourcePath = this.resourcePath;
+export function renderEjsClientModule(resourcePath) {
 	const rootKey = normalizePartialName(path.basename(resourcePath, '.ejs'));
 	const graph = buildDependencyGraph(resourcePath);
-
-	for (const { absPath } of graph.values()) {
-		this.addDependency(absPath);
-	}
 
 	const partialEntries = [...graph.values()].map(({ key, absPath }) => {
 		const fnSource = compileClientTemplate(absPath);
@@ -129,4 +123,13 @@ export function render(locals) {
 
 export default { render };
 `;
+}
+
+export default function ejsClientLoader(_source) {
+	const resourcePath = this.resourcePath;
+	const graph = buildDependencyGraph(resourcePath);
+	for (const { absPath } of graph.values()) {
+		this.addDependency(absPath);
+	}
+	return renderEjsClientModule(resourcePath);
 }

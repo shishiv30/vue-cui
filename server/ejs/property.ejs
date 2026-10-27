@@ -1,0 +1,41 @@
+<%- include('html_above') %>
+
+<%_ const headerComponent = data.headerComponent; _%>
+<% if (headerComponent) { %>
+  <%- include(headerComponent.template, { header: headerComponent.data, getHref, getSrc }) %>
+<% } else { %>
+  <%- include('comp_header') %>
+<% } %>
+
+<nav class="listing-nav" aria-label="Listing">
+  <div class="breadcrumb">
+    <%- include('comp_breadcrumb', { breadcrumbWrap: false }) %>
+  </div>
+  <div class="filter">
+    <%_ if (data.filterComponent) { _%>
+      <%- include(data.filterComponent.template, { filter: data.filterComponent.data }) %>
+    <%_ } _%>
+  </div>
+</nav>
+
+<% if (data.detail) { %>
+  <%- include('comp_article_detail', { detail: data.detail, getSrc, getHref }) %>
+<% } else { %>
+  <section class="detail property-detail" id="detail"></section>
+<% } %>
+
+
+<%_ if (data.articleComponent) { _%>
+  <%- include('comp_property_nearby', { articleComponent: data.articleComponent, getHref, getSrc }) %>
+<%_ } _%>
+
+<%- include('html_menu') %>
+
+<%_ const footerComponent = data.footerComponent; _%>
+<% if (footerComponent) { %>
+  <%- include(footerComponent.template, { footer: footerComponent.data, getHref, getSrc }) %>
+<% } else { %>
+  <%- include('html_footer') %>
+<% } %>
+
+<%- include('html_below') %>

@@ -1,11 +1,5 @@
 @use './_mixins.scss' as *;
 
-@property --image-ratio {
-	syntax: '<number>';
-	inherits: false;
-	initial-value: 1.7778;
-}
-
 @include comp-color('article');
 
 .article {
@@ -30,11 +24,9 @@
 	transition:
 		color var(--article-animation-time),
 		background-color var(--article-animation-time),
-		box-shadow var(--article-animation-time),
 		border-radius var(--article-animation-time),
 		transform var(--article-animation-time),
-		padding var(--article-animation-time),
-		gap var(--article-animation-time);
+		aspect-ratio var(--article-animation-time);
 
 	&.small {
 		--article-icon-size: var(--g3);
@@ -117,9 +109,10 @@
 			width: 100%;
 			object-fit: cover;
 			display: block;
+			height: auto;
 			transition:
 				transform var(--article-animation-time),
-				--image-ratio .5s ease-in-out;
+				height .5s ease-in-out;
 			transform: scale(1.02) translateY(0px);
 		}
 
@@ -134,7 +127,7 @@
 				var(--color-bg) 100%
 			);
 			background-size: 200% 100%;
-			animation: lazyload-shimmer 1s ease-in-out infinite;
+			animation: lazyload-shimmer 8s ease-in-out infinite;
 		}
 
 		>figcaption {
@@ -149,13 +142,6 @@
 			border-radius: var(--radius-0) 0 0 0;
 		}
 
-		>img[ratio] {
-			--image-ratio: 1.7778;
-			width: 100%;
-			height: auto;
-			aspect-ratio: var(--image-ratio);
-			transition: --image-ratio .5s ease-in-out;
-		}
 
 		>img[data-src-loaded] {
 			transform: scale(1.25) translateY(-5px);
@@ -171,7 +157,7 @@
 		}
 	}
 
-	>div:not(.tags):not(.tags-top) {
+	>div:not(.tags){
 		font-size: var(--article-icon-font-size);
 		line-height: var(--line-height-3);
 	}
@@ -197,7 +183,7 @@
 		gap: var(--g0);
 	}
 
-	.tags-top,
+	.tags,
 	figcaption {
 		transition: opacity var(--article-animation-time);
 	}
@@ -206,19 +192,70 @@
 		font-size: var(--font-size-7);
 		color: var(--article-color-muted);
 	}
-
-	&.collapsed {
-		--article-padding: var(--article-gap);
-		aspect-ratio: 4/3;
+	
+	&.article-card {
+		--article-width: min(100%, 460px);
+		--article-gap: min(var(--g2), 2.5%);
+		--article-padding: var(--g1);
+		--image-ratio: 1.333333;
+		width: var(--article-width);
 		overflow: hidden;
 
-		>figure {
-			flex: 1;
+		&:not(:has(img))::before {
+			content: '';
+			order: 1;
+			display: block;
+			flex: none;
+			width: calc(100% + var(--article-padding) * 2);
+			aspect-ratio: var(--image-ratio);
+			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
+			background-color: var(--color-bg-l1);
+		}
 
+		> :not(.tags):not(figure):not(header):not(footer):not(.dict):not(a){
+			display: none;
+		}
+
+		> figure {
+			flex: none;
+			overflow: hidden;
+			aspect-ratio: var(--image-ratio);
+		}
+
+		.tags {
+			position: absolute;
+			top: var(--g1);
+			left: var(--g1);
+			z-index: 3;
+			>*:nth-child(n+3) {
+				display: none;
+			}
+		}
+
+		>figure {
+			order: 1;
+			flex: 1;
+			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
 			>img {
-				height: 100%;
+				height: 100%!important;
 				filter: saturate(0.5);
 			}
+		}
+	
+
+		>header{
+			font-size: var(--font-size-6)!important;
+			order: 3;
+		}
+
+		>.dict {
+			order: 5;
+		}
+		>a {
+			order: 6;
+		}
+		>footer {
+			order: 10;
 		}
 
 		>.dict,
@@ -229,12 +266,13 @@
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			overflow: hidden;
-
 			>* {
 				display: inline;
 			}
-
+		}
+		>.dict, >a {
 			>*:nth-child(even) {
+				padding-left: var(--g0);
 				padding-right: var(--article-gap);
 			}
 		}
@@ -249,13 +287,12 @@
 				}
 			}
 
-			.tags-top,
+			.tags,
 			figcaption {
 				opacity: 0;
 			}
 
 			transform: translateY(-5px) scale(1.02);
-			box-shadow: 0px 1px 3px 1px var(--color-2);
 		}
 	}
 
@@ -273,6 +310,23 @@
 	// 		}
 	// 	}
 	// }
+}
+
+.article-frame {
+	position:absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	>.article {
+		width: 100%;
+		max-width: 360px;
+		height: fit-content;
+	}
 }
 
 @keyframes lazyload-shimmer {

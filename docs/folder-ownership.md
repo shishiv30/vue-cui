@@ -4,11 +4,12 @@ What each top-level area may contain. Normative coding rules: [`.cursor/rules/pr
 
 | Folder | Owns | Must not contain |
 |--------|------|------------------|
-| `client/js/core/` | Runtime primitives (event, plugin, page, router, request, def, DOM hooks) | Page-specific business (demo detail fetch rules) |
+| `client/js/core/` | Runtime primitives (event, plugin, page, router, request, def, DOM hooks) | Page-specific business (property detail fetch rules) |
 | `client/js/plugins/` | One widget per `_name.js` (`data-role`) | Shared mapping of SOA data |
-| `client/pages/<page>/` | Page settings + SPA glue for that page only | Generic helpers |
+| `client/src/` | Vue 3 app for `/property` (router, Vuex, SSR entry) | Plugin widgets |
+| `client/pages/<page>/` | Document and layout HTML plus their page boot | Generic helpers |
 | `helpers/` | Pure transforms / shared contracts (geo, property, article, path, url, routes) | Express handlers, seed payloads |
-| `helpers/routes/` | Shared route manifests (e.g. `demoSpaRoutes.js`) | HTTP handlers |
+| `helpers/routes/` | Shared route manifests (e.g. `propertySpaRoutes.js`) | HTTP handlers |
 | `data/` | Seed/mock/default payloads only | Mapping logic |
 | `server/routes/` | HTTP registration + thin adapters | Listing field mapping (`helpers/`), seed data (`data/`) |
 | `server/controllers/` | `beforeGet` / `get` / `seo` / `preload` page configs | Raw SOA field parsing (use helpers) |

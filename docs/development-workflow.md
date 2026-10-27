@@ -1,3 +1,5 @@
+> Historical. This guide describes the previous EJS property or AWS deploy flow. Current behavior is in README.md and change-list.md.
+
 # Development Workflow
 
 ## Daily Flow
@@ -50,9 +52,8 @@ Configured in `server/config.js`:
 - App: `3000`
 - Webpack dev server: `3001`
 - Docker host port: `3002`
-- CMS local app (separate project): `3003`
 
-## Adding a listing-backed feature (demo pattern)
+## Adding a listing-backed feature (property pattern)
 
 When changing property listings, detail sections, or SOA-backed article cards:
 
@@ -63,7 +64,7 @@ When changing property listings, detail sections, or SOA-backed article cards:
 5. Interactive UI → plugin + matching `data-role` in EJS (and SPA if applicable).
 6. Extend `helpers/__tests__/property.test.js`; run `npm run test`.
 
-Demo controller: `server/controllers/demo.js`. Do not use raw SOA listing in templates after mapping.
+Property controller: `server/controllers/property.js`. Do not use raw SOA listing in templates after mapping.
 
 ## Notes
 

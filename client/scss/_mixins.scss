@@ -38,7 +38,7 @@
 			--#{$name}-size: var(--comp-size-3);
 			--#{$name}-line-height: var(--line-height-3);
 			--#{$name}-width: #{$width};
-			--#{$name}-radius: var(--radius-1);
+			--#{$name}-radius: var(--radius-2);
 		}
 
 		&.tiny {
@@ -54,7 +54,7 @@
 			--#{$name}-font-size: var(--font-size-5);
 			--#{$name}-line-height: var(--line-height-3);
 			--#{$name}-size: var(--comp-size-2);
-			--#{$name}-radius: var(--radius-0);
+			--#{$name}-radius: var(--radius-1);
 		}
 
 		&.large {
@@ -63,7 +63,7 @@
 			--#{$name}-size: var(--comp-size-4);
 			--#{$name}-line-height: var(--line-height-3);
 			--#{$name}-border-weight: 2px;
-			--#{$name}-radius: var(--radius-2);
+			--#{$name}-radius: var(--radius-3);
 		}
 	}
 }
@@ -85,9 +85,9 @@
 		--color: var(--color-root-l1);
 		--color-border: var(--color-root-border-l1);
 		--color-bg: var(--color-root-bg-l1);
-		--color-hover: var(--color-root-hover-l1);
-		--color-border-hover: var(--color-root-border-hover-l1);
-		--color-bg-hover: var(--color-root-bg-hover-l1);
+		--color-hover: var(--color-root-l1-hover);
+		--color-border-hover: var(--color-root-border-l1-hover);
+		--color-bg-hover: var(--color-root-bg-l1-hover);
 	}
 
 	.major {

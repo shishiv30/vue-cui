@@ -1,0 +1,124 @@
+# Storybook only. Static S3 + CloudFront. No Helm / kotlin-service-template.
+
+variables:
+  DEPLOY_REVIEW_WEST: "true"
+  DEPLOY_DEV_WEST: "true"
+  CACHE_TTL: "300"
+
+stages:
+  - build
+  - review-storybook
+  - dev-storybook
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+  policy: pull-push
+
+.npm-job:
+  image: docker.ojointernal.com/build-images/node:25
+  cache:
+    key:
+      files: [package-lock.json]
+    paths:
+      - .npm/
+    policy: pull-push
+  before_script:
+    - npm ci --cache .npm --prefer-offline --no-audit
+
+build-storybook:
+  stage: build
+  extends: .npm-job
+  script:
+    - cd "$CI_PROJECT_DIR"
+    - |
+      if [ -z "$STORYBOOK_PUBLIC_HOST" ]; then
+        echo "STORYBOOK_PUBLIC_HOST is required (hostname in front of the Storybook CloudFront distribution)"
+        exit 1
+      fi
+    - |
+      if [ -n "$CI_MERGE_REQUEST_IID" ]; then
+        export URL_SLUG="mr-$(echo "$CI_MERGE_REQUEST_IID" | tr '[:upper:]' '[:lower:]' | tr '/' '-')."
+      else
+        export URL_SLUG=""
+      fi
+    - export PUBLIC_PATH="https://${URL_SLUG}${STORYBOOK_PUBLIC_HOST}/"
+    - export STORYBOOK_BASE="$PUBLIC_PATH"
+    - npm run build:storybook
+  artifacts:
+    name: $CI_PIPELINE_ID
+    paths:
+      - dist/storybook/
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DEPLOY_REVIEW_WEST == "true"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_DEV_WEST == "true"
+
+.deploy-storybook:
+  image: amazon/aws-cli
+  dependencies:
+    - build-storybook
+  needs:
+    - build-storybook
+  script:
+    - cd "$CI_PROJECT_DIR"
+    - |
+      if [ -n "$CI_MERGE_REQUEST_IID" ]; then
+        export URL_SLUG="mr-$(echo "$CI_MERGE_REQUEST_IID" | tr '[:upper:]' '[:lower:]' | tr '/' '-')"
+      else
+        export URL_SLUG="primary"
+      fi
+    - export AWS_ACCESS_KEY_ID="$STORYBOOK_AWS_ACCESS_KEY_ID"
+    - export AWS_SECRET_ACCESS_KEY="$STORYBOOK_AWS_SECRET_ACCESS_KEY"
+    - export AWS_DEFAULT_REGION="${STORYBOOK_AWS_REGION:-us-east-1}"
+    - aws s3 sync dist/storybook/ "s3://$STORYBOOK_S3_BUCKET/$URL_SLUG" --cache-control "public, max-age=$CACHE_TTL"
+    - aws cloudfront create-invalidation --distribution-id "$STORYBOOK_AWS_DISTRIBUTION_ID" --paths "/${URL_SLUG}/*"
+
+mr-storybook-deploy:
+  stage: review-storybook
+  environment:
+    name: review-storybook-${CI_MERGE_REQUEST_IID}
+    url: https://mr-${CI_MERGE_REQUEST_IID}.${STORYBOOK_PUBLIC_HOST}/
+    on_stop: stop-mr-storybook-deploy
+  allow_failure: true
+  extends:
+    - .deploy-storybook
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DEPLOY_REVIEW_WEST == "true"
+      when: manual
+
+stop-mr-storybook-deploy:
+  stage: review-storybook
+  environment:
+    name: review-storybook-${CI_MERGE_REQUEST_IID}
+    action: stop
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DEPLOY_REVIEW_WEST == "true"
+      when: manual
+  needs:
+    - mr-storybook-deploy
+  image: amazon/aws-cli
+  script:
+    - export URL_SLUG="mr-$(echo "$CI_MERGE_REQUEST_IID" | tr '[:upper:]' '[:lower:]' | tr '/' '-')"
+    - export AWS_ACCESS_KEY_ID="$STORYBOOK_AWS_ACCESS_KEY_ID"
+    - export AWS_SECRET_ACCESS_KEY="$STORYBOOK_AWS_SECRET_ACCESS_KEY"
+    - export AWS_DEFAULT_REGION="${STORYBOOK_AWS_REGION:-us-east-1}"
+    - aws s3 rm "s3://$STORYBOOK_S3_BUCKET/$URL_SLUG" --recursive
+    - aws cloudfront create-invalidation --distribution-id "$STORYBOOK_AWS_DISTRIBUTION_ID" --paths "/$URL_SLUG/*"
+
+dev-storybook-deploy:
+  stage: dev-storybook
+  environment:
+    name: dev-storybook
+    url: https://${STORYBOOK_PUBLIC_HOST}/
+  allow_failure: true
+  extends:
+    - .deploy-storybook
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_DEV_WEST == "true"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DEPLOY_DEV_WEST == "true"
+      when: manual

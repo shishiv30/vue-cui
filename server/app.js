@@ -7,7 +7,6 @@ import config from './config.js';
 import { uploadStaticHtmlToS3 } from './utils/uploadStaticHtmlS3.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { useCms } from './utils/cmsData.js';
 import cors from 'cors';
 import { runWithSoaLogs } from './controllers/realestate.js';
 
@@ -42,22 +41,15 @@ app.use(cors({ origin: config.corsOrigins }));
 app.use(express.static('dist', { redirect: false }));
 app.use('/', router);
 
-// Set CMS health before starting server so routes use local vs CMS consistently
 (async () => {
-	config.cmsHealth = await useCms();
 	if (config.mode === 'production' && config.s3CdnBucket) {
 		config.uploadStaticHtml = uploadStaticHtmlToS3;
-	}
-	if (!config.cmsHealth) {
-		console.error('CMS is not healthy, use local data only');
-	} else {
-		console.log('CMS is healthy, use CMS data');
 	}
 	await geo(app);
 	app.listen(config.port, function () {
 		console.log(`Example app listening on host ${config.appHost}`);
 		console.log(`API docs available at ${config.appHost}/api-docs`);
-		console.log(`Demo docs available at state like ${config.appHost}/demo/tx`);
+		console.log(`Property docs available at state like ${config.appHost}/property/tx`);
 		console.log(`About page available at ${config.appHost}/about`);
 	});
 })();

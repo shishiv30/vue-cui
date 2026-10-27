@@ -117,11 +117,10 @@ Prefer the **smallest change that fixes the real cause**, not the most general f
 
 ## Documentation alignment
 
-When you change architecture, routes, build scripts, ports, or CMS/theme conventions, update the **canonical** docs in the same pass where practical:
+When you change architecture, routes, build scripts, ports, or theme conventions, update the **canonical** docs in the same pass where practical:
 
 - `README.md`, `client.md`, `server.md`, `build-system.md`
 - `docs/listing-data-pipeline.md`, `docs/development-workflow.md`, `docs/routes-reference.md`
 - `.cursor/background.json` (high-level context for agents)
-- Theme/CMS API details: `cms/API.md` and `.cursor/rules/theme-change.mdc`
 
 Normative standards stay in this file; narrative architecture stays in the markdown docs above.

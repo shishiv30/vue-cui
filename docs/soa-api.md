@@ -1,3 +1,5 @@
+> Historical. This guide describes the previous EJS property or AWS deploy flow. Current behavior is in README.md and change-list.md.
+
 # SOA APIs
 
 Short reference for the SOA APIs (Geoarea, Property, School, User, POI). Full specs: use each service’s OpenAPI/Swagger docs.

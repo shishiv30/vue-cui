@@ -9,7 +9,7 @@
  *   POI_API_DOMAIN=http://HOST:8787/poi
  *
  * Upstream hosts come from .env.local (PROPERTY_API_DOMAIN and the other SOA domains).
- * Demo listing calls use PROPERTY_API_DOMAIN.
+ * Property listing calls use PROPERTY_API_DOMAIN.
  *
  * Toggle: node scripts/soa-reverse-proxy.js on|off|status
  * Foreground: node scripts/soa-reverse-proxy.js start

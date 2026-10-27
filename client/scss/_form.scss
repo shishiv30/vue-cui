@@ -1,8 +1,10 @@
 @use './_mixins.scss' as *;
 
 .form {
-	label {
-		margin-bottom: var(--g1);
+	> div{
+		> label {
+			line-height: 2;
+		}
 	}
 }
 

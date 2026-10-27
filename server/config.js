@@ -40,10 +40,6 @@ let config = {
 	userApiDomain: (process.env.USER_API_DOMAIN || '').replace(/\/$/, ''),
 	/** POI SOA API. Auth: X-MData-Key = SOA_API_KEY. */
 	poiApiDomain: (process.env.POI_API_DOMAIN || '').replace(/\/$/, ''),
-	cmsUrl: (process.env.CMS_HOST || '').replace(/\/$/, ''),
-	/** Set by cmsData utility: true = use CMS API, false = use local data/ only. Undefined until first use. */
-	cmsHealth: undefined,
-
 	// Build Configuration
 	webpackMode: process.env.WEBPACK_MODE || NODE_ENV,
 	webpackDevtool:

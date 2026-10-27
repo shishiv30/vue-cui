@@ -1,0 +1,5 @@
+@use 'sass:meta';
+
+@layer app {
+	@include meta.load-css('../client/scss/index');
+}

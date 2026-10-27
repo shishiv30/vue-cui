@@ -53,6 +53,12 @@
 	z-index: 2;
 }
 
+.range-slider-label {
+	display: flex;
+	justify-content: space-between;
+	font-size: var(--font-size-6);
+}
+
 .range-slider output {
 	text-align: center;
 	font-size: var(--font-size-6);

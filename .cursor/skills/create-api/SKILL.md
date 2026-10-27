@@ -17,7 +17,6 @@ Build new API routes from a provided Swagger/OpenAPI document. Covers config, do
 
 - Only a small bugfix is needed in existing routes
 - No OpenAPI/Swagger source is available and the user did not request API scaffolding
-- Task is CMS page/comp operations (use `cms-manager`)
 
 ## Workflow
 

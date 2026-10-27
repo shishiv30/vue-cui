@@ -21,12 +21,15 @@
 		cursor: wait !important;
 	}
 
+	&.pill {
+		--btn-radius: calc(var(--btn-size) / 2);
+	}
 	font-weight: var(--btn-font-weight);
 	font-size: var(--btn-font-size);
 	height: var(--btn-size);
 	padding: var(--btn-gap) var(--g2);
 	min-width: var(--btn-size);
-	border-radius: calc(var(--btn-size) / 2);
+	border-radius: var(--btn-radius);
 	width: var(--btn-width);
 	line-height: var(--btn-line-height);
 

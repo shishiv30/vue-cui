@@ -2,11 +2,11 @@
 import useragent from 'express-useragent';
 import serverConfig from '../config.js';
 import geo from './geo.js';
-import demo from './demo.js';
-import demoSitemap from './demoSitemap.js';
-import demoSitemapState from './demoSitemapState.js';
-import demoSitemapCounty from './demoSitemapCounty.js';
-import demoSitemapCity from './demoSitemapCity.js';
+import property from './property.js';
+import propertySitemap from './propertySitemap.js';
+import propertySitemapState from './propertySitemapState.js';
+import propertySitemapCounty from './propertySitemapCounty.js';
+import propertySitemapCity from './propertySitemapCity.js';
 import sitemap from './sitemap.js';
 import sitemapState from './sitemapState.js';
 import sitemapCounty from './sitemapCounty.js';
@@ -27,11 +27,11 @@ const queryGroupKey = ['utm', 'hack'];
 
 const routeConfigs = [
 	geo,
-	demo,
-	demoSitemap,
-	demoSitemapState,
-	demoSitemapCounty,
-	demoSitemapCity,
+	property,
+	propertySitemap,
+	propertySitemapState,
+	propertySitemapCounty,
+	propertySitemapCity,
 	sitemap,
 	sitemapState,
 	sitemapCounty,

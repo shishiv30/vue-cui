@@ -64,7 +64,7 @@ function buildFooterFromTable(rows) {
 
 /**
  * Create the footer UI component config.
- * @param {Array|null} [footerTableOverride] - Optional footer rows (e.g. from CMS comp key footer). If null/undefined, uses data/comps/footer.js.
+ * @param {Array|null} [footerTableOverride] - Optional footer rows. If null/undefined, uses data/comps/footer.js.
  * @returns {{ name: string, template: string, data: object }}
  */
 export function createFooterComponent(footerTableOverride) {

@@ -1,7 +1,7 @@
 @use './_mixins.scss' as *;
 
-[data-role*='textbox'] {
-	&:not([loaded]) {
+.textbox {
+	&:not([textbox-loaded]) {
 		.input {
 			input {
 				color: transparent;
@@ -10,7 +10,7 @@
 	}
 }
 
-[data-role*='textbox'] {
+.textbox {
 	position: relative;
 
 	input::-webkit-input-placeholder,

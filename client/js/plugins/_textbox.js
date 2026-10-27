@@ -26,6 +26,7 @@ export default {
 		});
 		$input.addEventListener('change', _switchLabel);
 		_switchLabel();
+		$el.setAttribute('textbox-loaded', '');
 	},
 	setOptionsBefore: null,
 	setOptionsAfter: null,

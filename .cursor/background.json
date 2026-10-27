@@ -23,7 +23,7 @@
       },
       "server": {
         "type": "express-ejs-config-driven",
-        "entry": "server/app.js",
+        "entry": "server/index.ts",
         "runtime_config": "server/config.js",
         "routes": "server/routes/index.js",
         "controller": {
@@ -43,7 +43,7 @@
           ]
         },
         "content_sources": {
-          "cms_with_fallback": "server/utils/cmsData.js",
+          "local_page_data": "server/utils/localData.js",
           "local_seed_data": "data/",
           "local_seed_data_note": "See data_folder — all default/mock/sample hardcoded data lives under data/, not helpers/ or inline in configs"
         }
@@ -64,8 +64,7 @@
       "docs/routes-reference.md",
       "docs/listing-data-pipeline.md",
       "docs/client-js-lifecycle.md",
-      "docs/demo-tx-lifecycle.md",
-      "cms/API.md"
+      "docs/property-tx-lifecycle.md"
     ],
     "usage": [
       "Use this file for context and examples",
@@ -76,11 +75,10 @@
   },
   "data_folder": {
     "root": "data/",
-    "purpose": "Canonical home for hardcoded seed data: example structures, defaults, and mock values used as samples or local fallbacks before/atop CMS.",
+    "purpose": "Canonical home for hardcoded seed data: example structures, defaults, and mock values used as samples.",
     "agent_rules": [
-      "When you need default, mock, fixture, or sample data to illustrate shape or fill dev/demo — add or extend files under data/, not helpers/, route config modules in server/controllers/, or inline in routes.",
-      "helpers/ holds mapping and transform logic (geo, article, property, url, path); data/ holds the actual payload objects and CSV sources.",
-      "Page/comp/theme samples sync to CMS via cms/scripts/seed-and-sync.js; prefer CMS API for production updates (see cms/API.md)."
+      "When you need default, mock, fixture, or sample data to illustrate shape or fill dev/property — add or extend files under data/, not helpers/, route config modules in server/controllers/, or inline in routes.",
+      "helpers/ holds mapping and transform logic (geo, article, property, url, path); data/ holds the actual payload objects and CSV sources."
     ],
     "layout": {
       "index.js": "Geo CSV ingest (data/csv → dist JSON), getGeoData() cache — runtime reference data, not page content",
@@ -321,7 +319,7 @@
             ]
           },
           "plugin_pattern": [
-            "Define arrays like boolStatus and enumStatus inside a plugin/page (see client/js/plugins/_header.js and client/pages/demo/index.js)",
+            "Define arrays like boolStatus and enumStatus inside a plugin/page (see client/js/plugins/_header.js and client/pages/property/index.js)",
             "In init($el, opt, exportObj), loop through boolStatus and enumStatus and call defBool/defEnum to attach all status methods",
             "After init, use the generated methods on exportObj inside the plugin and in templates"
           ]
@@ -549,7 +547,7 @@
         "purpose": "Page-specific configurations",
         "pages": [
           "animation",
-          "demo",
+          "property",
           "index",
           "3d",
           "about",
@@ -1099,7 +1097,7 @@
       },
       "listing_pipeline": {
         "doc": "docs/listing-data-pipeline.md",
-        "purpose": "SOA Pure → mapSOADataToMetadata (property.js) → mapPropertyToArticle / mapPropertyDetailToArticle + mapXToComp (article.js) → EJS/plugins; demo is reference"
+        "purpose": "SOA Pure → mapSOADataToMetadata (property.js) → mapPropertyToArticle / mapPropertyDetailToArticle + mapXToComp (article.js) → EJS/plugins; property is reference"
       },
       "property": {
         "file": "helpers/property.js",

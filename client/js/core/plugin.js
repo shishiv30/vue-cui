@@ -195,50 +195,55 @@ export class Plugin extends Base {
 		// return plugin;
 	}
 
+	emitPhase(phase, $el, options, exportObj) {
+		const eventName = `${phase}.${this.setting.name}`;
+		logPluginPhase(this.setting.name, phase, $el, options, exportObj);
+		emit(eventName, [$el, options, exportObj]);
+	}
 	initBefore($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'init', $el, options, exportObj);
+		this.emitPhase('init', $el, options, exportObj);
 		if (this.setting.initBefore) {
 			trigger(this.setting.initBefore, $el, options, exportObj);
 		}
 	}
 	initAfter($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'initialed', $el, options, exportObj);
+		this.emitPhase('initialed', $el, options, exportObj);
 		if (this.setting.initAfter) {
 			trigger(this.setting.initAfter, $el, options, exportObj);
 		}
 	}
 	loadBefore($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'load', $el, options, exportObj);
+		this.emitPhase('load', $el, options, exportObj);
 		if (this.setting.loadBefore) {
 			trigger(this.setting.loadBefore, $el, options, exportObj);
 		}
 	}
 	loadAfter($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'loaded', $el, options, exportObj);
+		this.emitPhase('loaded', $el, options, exportObj);
 		if (this.setting.loadAfter) {
 			trigger(this.setting.loadAfter, $el, options, exportObj);
 		}
 	}
 	renderBefore($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'render', $el, options, exportObj);
+		this.emitPhase('render', $el, options, exportObj);
 		if (this.setting.renderBefore) {
 			trigger(this.setting.renderBefore, $el, options, exportObj);
 		}
 	}
 	renderAfter($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'rendered', $el, options, exportObj);
+		this.emitPhase('rendered', $el, options, exportObj);
 		if (this.setting.renderAfter) {
 			trigger(this.setting.renderAfter, $el, options, exportObj);
 		}
 	}
 	destroyBefore($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'destroy', $el, options, exportObj);
+		this.emitPhase('destroy', $el, options, exportObj);
 		if (this.setting.destroyBefore) {
 			trigger(this.setting.destroyBefore, $el, options, exportObj);
 		}
 	}
 	destroyAfter($el, options, exportObj) {
-		logPluginPhase(this.setting.name, 'destroyed', $el, options, exportObj);
+		this.emitPhase('destroyed', $el, options, exportObj);
 		if (this.setting.destroyAfter) {
 			trigger(this.setting.destroyAfter, $el, options, exportObj);
 		}
@@ -255,6 +260,14 @@ export class Plugin extends Base {
 		if (this.setting.init) {
 			this.setting.init.apply(this, [$el, opt, exportObj]);
 		}
+		const pluginDestroy = exportObj.destroy;
+		exportObj.destroy = () => {
+			this.destroyBefore($el, opt, exportObj);
+			if (typeof pluginDestroy === 'function') {
+				pluginDestroy();
+			}
+			this.destroyAfter($el, opt, exportObj);
+		};
 		this.initAfter($el, opt, exportObj);
 
 		//load page data

@@ -52,7 +52,7 @@ function getHeaderData(linkTableOverride) {
 
 /**
  * Create the header UI component config.
- * @param {Array|null} [linkTableOverride] - Optional link rows (e.g. from CMS comp key header). If null/undefined, uses data/links.js.
+ * @param {Array|null} [linkTableOverride] - Optional link rows. If null/undefined, uses data/links.js.
  * @returns {{ name: string, template: string, data: object }}
  */
 export function createHeaderComponent(linkTableOverride) {

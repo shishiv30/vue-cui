@@ -1,32 +1,154 @@
 function clearRing(main) {
-	const stage = main.querySelector(':scope > .layout-ring-stage');
+	const frame = main.querySelector(':scope > .layout-ring-frame');
+	const stage = frame
+		? frame.querySelector(':scope > .layout-ring-stage')
+		: main.querySelector(':scope > .layout-ring-stage');
 	if (stage) {
 		while (stage.firstChild) {
-			main.insertBefore(stage.firstChild, stage);
+			const child = stage.firstChild;
+			if (child instanceof HTMLElement) {
+				child.style.removeProperty('visibility');
+				child.style.removeProperty('pointer-events');
+				child.style.removeProperty('--ring-angle');
+			}
+			main.insertBefore(child, frame || stage);
 		}
-		stage.remove();
+		(frame || stage).remove();
 	}
 	main.classList.remove('layout-ring');
 	main.style.removeProperty('--ring-perspective');
+	main.style.removeProperty('--ring-radius');
+}
+
+function gridColumnCount(main) {
+	const style = getComputedStyle(main);
+	const gap = parseFloat(style.columnGap) || 0;
+	const min = parseFloat(style.getPropertyValue('--layout-grid-min')) || 260;
+	const width = main.clientWidth
+		- (parseFloat(style.paddingLeft) || 0)
+		- (parseFloat(style.paddingRight) || 0);
+	if (min + gap <= 0) {
+		return 1;
+	}
+	return Math.max(1, Math.floor((width + gap) / (min + gap)));
+}
+
+function bindGrid(main) {
+	if (main._layoutGrid) {
+		main._layoutGrid.disconnect();
+	}
+	const firstCount = main.classList.contains('layout-grid')
+		? gridColumnCount(main)
+		: (parseInt(getComputedStyle(main).columnCount, 10) || 1);
+	let lastCols = firstCount;
+	let lastRects = [...main.querySelectorAll(':scope > .article')].map((article) => {
+		return article.getBoundingClientRect();
+	});
+	let token = 0;
+	const observer = new ResizeObserver(() => {
+		if (main.classList.contains('layout-horizontal')) {
+			return;
+		}
+		const cols = main.classList.contains('layout-grid')
+			? gridColumnCount(main)
+			: (parseInt(getComputedStyle(main).columnCount, 10) || 1);
+		const articles = [...main.querySelectorAll(':scope > .article')];
+		if (cols === lastCols || articles.length !== lastRects.length) {
+			lastCols = cols;
+			lastRects = articles.map((article) => article.getBoundingClientRect());
+			return;
+		}
+		const from = lastRects;
+		lastCols = cols;
+		token += 1;
+		const current = token;
+		const moves = [];
+		articles.forEach((article, index) => {
+			const prev = from[index];
+			const next = article.getBoundingClientRect();
+			lastRects[index] = next;
+			const dx = prev.left - next.left;
+			const dy = prev.top - next.top;
+			if (dx === 0 && dy === 0) {
+				return;
+			}
+			article.style.transition = 'none';
+			article.style.transform = `translate(${dx}px, ${dy}px)`;
+			moves.push(article);
+		});
+		if (!moves.length) {
+			return;
+		}
+		main.classList.add('is-col-animating');
+		main.offsetWidth;
+		requestAnimationFrame(() => {
+			if (current !== token) {
+				return;
+			}
+			moves.forEach((article) => {
+				article.style.transition = '';
+				article.style.transform = '';
+			});
+			let remaining = moves.length;
+			let settled = false;
+			const finish = () => {
+				if (settled || current !== token) {
+					return;
+				}
+				settled = true;
+				moves.forEach((article) => {
+					article.removeEventListener('transitionend', onEnd);
+				});
+				main.classList.remove('is-col-animating');
+			};
+			const onEnd = (event) => {
+				if (event.propertyName !== 'transform') {
+					return;
+				}
+				remaining -= 1;
+				if (remaining <= 0) {
+					finish();
+				}
+			};
+			moves.forEach((article) => {
+				article.addEventListener('transitionend', onEnd);
+			});
+			setTimeout(finish, 580);
+		});
+	});
+	observer.observe(main);
+	main._layoutGrid = observer;
+}
+
+function clearGrid(main) {
+	if (main._layoutGrid) {
+		main._layoutGrid.disconnect();
+		main._layoutGrid = null;
+	}
+	main.classList.remove('layout-grid', 'is-col-animating');
 }
 
 function mountRing(main) {
 	clearRing(main);
 	const articles = [...main.querySelectorAll(':scope > .article')];
-	if (articles.length <= 20) {
+	if (articles.length < 2) {
 		return;
 	}
+	const frame = document.createElement('div');
+	frame.className = 'layout-ring-frame';
 	const stage = document.createElement('div');
 	stage.className = 'layout-ring-stage';
 	articles.forEach((article) => stage.appendChild(article));
-	main.prepend(stage);
+	frame.appendChild(stage);
+	main.prepend(frame);
 	const count = articles.length;
 	const step = 360 / count;
 	const cardWidth = 300;
-	const gap = 24;
-	const radius = Math.round(((cardWidth + gap) / 2) / Math.tan(Math.PI / count));
-	stage.style.setProperty('--ring-radius', radius + 'px');
-	main.style.setProperty('--ring-perspective', radius + 'px');
+	const theta = Math.tan(Math.PI / count);
+	const radius = theta > 0.01
+		? Math.round((cardWidth / 2) / theta)
+		: cardWidth;
+	frame.style.setProperty('--ring-radius', radius + 'px');
 	articles.forEach((article, index) => {
 		article.style.setProperty('--ring-angle', index * step + 'deg');
 	});
@@ -54,9 +176,10 @@ function bindRingDrag(stage, radius, articles, step) {
 		}
 		articles.forEach((article, index) => {
 			const position = wrap(index * step + spin);
-			const fromFront = Math.abs(position - 180);
-			const delta = Math.min(fromFront, 360 - fromFront);
-			article.style.pointerEvents = delta < 90 ? 'auto' : 'none';
+			const delta = Math.min(position, 360 - position);
+			const front = delta < 90;
+			article.style.visibility = front ? 'visible' : 'hidden';
+			article.style.pointerEvents = front ? 'auto' : 'none';
 		});
 	}
 
@@ -174,12 +297,25 @@ export default {
 	name: 'layout',
 	defaultOpt: {},
 	init: function ($el, opt, exportObj) {
-		exportObj.model = $el.classList.contains('layout-horizontal') ? 'horizontal' : 'default';
+		if ($el.classList.contains('layout-grid')) {
+			exportObj.model = 'grid';
+		} else if (
+			$el.classList.contains('layout-horizontal')
+			|| $el.classList.contains('layout-ring')
+		) {
+			exportObj.model = 'horizontal';
+		} else {
+			exportObj.model = 'default';
+		}
 		if (exportObj.model === 'horizontal') {
-			mountRing($el);
+			$el.classList.add('layout-horizontal');
+			clearRing($el);
+		}
+		if (exportObj.model !== 'horizontal') {
+			bindGrid($el);
 		}
 		exportObj.setModel = function (model) {
-			const next = model === 'horizontal' ? 'horizontal' : 'default';
+			const next = model === 'horizontal' || model === 'grid' ? model : 'default';
 			if (next === exportObj.model) {
 				return;
 			}
@@ -189,9 +325,15 @@ export default {
 			playLayoutMove($el, () => {
 				$el.classList.remove('layout-horizontal');
 				clearRing($el);
+				clearGrid($el);
 				if (next === 'horizontal') {
 					$el.classList.add('layout-horizontal');
-					mountRing($el);
+				}
+				if (next === 'grid') {
+					$el.classList.add('layout-grid');
+				}
+				if (next !== 'horizontal') {
+					bindGrid($el);
 				}
 				exportObj.model = next;
 			});

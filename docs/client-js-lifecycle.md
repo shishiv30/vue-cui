@@ -1,8 +1,8 @@
 # Client-side JS lifetime (Pure)
 
-Canonical reference for how webpack page bundles boot, run the Page/plugin pipeline, wire the demo Router, and refresh `[data-role]` components. Use this when debugging duplicate `init`, double fetches, or missing plugin binding after SPA HTML inject. **Router `push` / `replace` / `goto` contract:** [§4](#4-client-router-contract).
+Canonical reference for how webpack page bundles boot, run the Page/plugin pipeline, wire the property Router, and refresh `[data-role]` components. Use this when debugging duplicate `init`, double fetches, or missing plugin binding after SPA HTML inject. **Router `push` / `replace` / `goto` contract:** [§4](#4-client-router-contract).
 
-For the full `/demo/tx` path (build + Express SSR + APIs + client), see [`demo-tx-lifecycle.md`](demo-tx-lifecycle.md).
+For the full `/property/tx` path (build + Express SSR + APIs + client), see [`property-tx-lifecycle.md`](property-tx-lifecycle.md).
 
 ---
 
@@ -20,8 +20,8 @@ sequenceDiagram
 		SSR->>Browser: window.context = JSON
 		SSR->>Browser: meta.js script tag
 	end
-	HTML->>Bundle: Load e.g. demo.min.js
-	Note over Bundle: Entry client/pages/demo/index.js
+	HTML->>Bundle: Load e.g. property.min.js
+	Note over Bundle: Entry client/pages/property/index.js
 	Bundle->>Bundle: import chain loads core + plugins SCSS
 ```
 
@@ -41,7 +41,7 @@ When the bundle entry module runs, imports execute **top-down** before `main()`:
 ```mermaid
 flowchart TD
 	subgraph moduleEval [Module evaluation order]
-		A[demo/index.js imports]
+		A[property/index.js imports]
 		B[index.js imports Page Plugin plugins]
 		C[installDOMHooks]
 		D[Each plugin module loaded]
@@ -76,11 +76,11 @@ flowchart TB
 		direction TB
 		el["$el = body if missing"]
 		ctxSetup[Page wrapper init initCtxByWindow Ua Url Cookie Storage]
-		demoInit[demo.init defBool defEnum updateDetail new Router]
-		demoLoad[demo.load switchToDetail or Grid delay]
-		demoRender[demo.render empty]
+		propertyInit[property.init defBool defEnum updateDetail new Router]
+		propertyLoad[property.load switchToDetail or Grid delay]
+		propertyRender[property.render empty]
 		pageRender[Page wrapper render eventListener emit dom.load]
-		el --> ctxSetup --> demoInit --> demoLoad --> demoRender --> pageRender
+		el --> ctxSetup --> propertyInit --> propertyLoad --> propertyRender --> pageRender
 	end
 
 	init --> pageInit
@@ -89,17 +89,17 @@ flowchart TB
 | Step | File | Behavior |
 |------|------|----------|
 | Register plugins | `client/js/plugins/index.js` | `new Plugin(setting)` → `Plugin.register` → `Plugin.records['cui_<name>']` |
-| Page instance | `client/js/core/page.js` | Merges page-specific settings (e.g. `demo`) into Plugin lifecycle |
+| Page instance | `client/js/core/page.js` | Merges page-specific settings (e.g. `property`) into Plugin lifecycle |
 | `page.init()` | `client/js/index.js` | Direct call on `Page` instance (not via `data-role` scan) |
 | `exportObj` | Same | Exposed as `window.exportObj` after promise resolves |
 
-**Important:** Widget plugins use `data-role` + `refreshComponents`. The **page/demo** plugin runs only via `main()` → `page.init()`, not by scanning the body for `data-role="demo"`.
+**Important:** Widget plugins use `data-role` + `refreshComponents`. The **page/property** plugin runs only via `main()` → `page.init()`, not by scanning the body for `data-role="property"`.
 
 ---
 
 ## 4. Client Router contract
 
-Source: [`client/js/core/router.js`](../client/js/core/router.js). Demo rules: [`client/pages/demo/index.js`](../client/pages/demo/index.js). URL patterns: [`helpers/routes/demoSpaRoutes.js`](../helpers/routes/demoSpaRoutes.js).
+Source: [`client/js/core/router.js`](../client/js/core/router.js). Property rules: [`client/pages/property/index.js`](../client/pages/property/index.js). URL patterns: [`helpers/routes/propertySpaRoutes.js`](../helpers/routes/propertySpaRoutes.js).
 
 ```text
 new Router(rules, options)
@@ -121,13 +121,13 @@ new Router(rules, options)
 1. Do **not** use `to.pathname === window.location.pathname` to mean “initial load.” Use `method === 'replace'` (or `from == null`).
 2. On `goto` / `replace`, the address bar is already correct; `loading` must still update the DOM when the view should change.
 3. `loading` is the only hook. Return values are unused.
-4. Demo pages must pass `{ linkScope: 'demo' }` so `/page`, `/api`, and `/demo/sitemap` are not hijacked. Omitting `linkScope` intercepts every same-origin path `getInternalPath` can parse.
+4. Property pages must pass `{ linkScope: 'property' }` so `/page`, `/api`, and `/property/sitemap` are not hijacked. Omitting `linkScope` intercepts every same-origin path `getInternalPath` can parse.
 
 Example (detail skip only on SSR boot):
 
 ```javascript
 {
-  reg: createDemoSpaRegExp('detail'),
+  reg: createPropertySpaRegExp('detail'),
   loading: async (to, from, method) => {
     if (method === 'replace') {
       return null; // SSR already painted this page
@@ -139,20 +139,20 @@ Example (detail skip only on SSR boot):
 
 ---
 
-## 5. Demo `init`: Router and global listeners
+## 5. Property `init`: Router and global listeners
 
-Inside `demo.init` ([`client/pages/demo/index.js`](../client/pages/demo/index.js)):
+Inside `property.init` ([`client/pages/property/index.js`](../client/pages/property/index.js)):
 
 ```mermaid
 flowchart LR
-	demoInit[demo.init]
-	router[new Router rules linkScope demo]
+	propertyInit[property.init]
+	router[new Router rules linkScope property]
 	rInit[Router.init]
 	click[document click listener]
 	pop[window popstate listener]
 	replace[replace current pathname]
 
-	demoInit --> router --> rInit
+	propertyInit --> router --> rInit
 	rInit --> click
 	rInit --> pop
 	rInit --> replace
@@ -160,13 +160,13 @@ flowchart LR
 
 | `Router.init` | Effect |
 |---------------|--------|
-| `click` | Intercepts same-origin `/demo/` links → `push()` → rule `loading` |
+| `click` | Intercepts same-origin `/property/` links → `push()` → rule `loading` |
 | `popstate` | Back/forward → `navigate(..., 'goto')` |
 | `replace(pathname)` | Initial route sync (`method === 'replace'`; detail skips fetch — SSR already painted) |
 
 **Lifetime issue (fixed):** Each `new Router()` used to add another `document` click listener with no teardown. **Now:** `Router.destroy()` removes listeners; constructing a new `Router` destroys `Router.active`; `main()` is idempotent per frame (`__pureMainPage` boot guard). HMR can call `resetMain()` via `module.hot.dispose`.
 
-If `main()` / `demo.init` still appears to double-fetch, check that the entry script is not evaluated twice without dispose, and that DevTools shows a single `document` click listener.
+If `main()` / `property.init` still appears to double-fetch, check that the entry script is not evaluated twice without dispose, and that DevTools shows a single `document` click listener.
 
 ---
 
@@ -190,15 +190,15 @@ flowchart TB
 
 ---
 
-## 7. Demo SPA detail path
+## 7. Property SPA detail path
 
 ```mermaid
 sequenceDiagram
 	participant User
 	participant Router
-	participant Index as demo_index.js
-	participant API as GET_api_demo_detail
-	participant EJS as detailSpa_buildDemoSpaInnerHtml
+	participant Index as property_index.js
+	participant API as GET_api_property_detail
+	participant EJS as detailSpa_buildPropertySpaInnerHtml
 	participant DOM as inject_outerHTML
 	participant Ev as emit_dom_load
 
@@ -208,16 +208,16 @@ sequenceDiagram
 	API-->>Index: envelope.data
 	Index->>EJS: renderEjsTemplate comp_article_detail + nearby
 	EJS-->>Index: HTML string
-	Index->>DOM: injectDemoSpaHtml
+	Index->>DOM: injectPropertySpaHtml
 	Index->>Ev: emit dom.load
 	Ev->>Index: refreshComponents sliders list-dict etc
 ```
 
 | Piece | Role |
 |-------|------|
-| `client/pages/demo/detailSpa.js` | Webpack-compiled EJS → HTML |
+| `client/pages/property/detailSpa.js` | Webpack-compiled EJS → HTML |
 | `client/js/core/renderEjs.js` + `helpers/ejsRenderContext.js` | `getHref` / `getSrc` like SSR |
-| `injectDemoSpaHtml` | Replaces `#detail` and `section.result` `outerHTML` |
+| `injectPropertySpaHtml` | Replaces `#detail` and `section.result` `outerHTML` |
 | `emit('dom.load')` | Re-binds plugins on new markup |
 
 `outerHTML` updates go through DOM hooks → `dom.updated` → partial `refreshComponents`. See also [`docs/listing-data-pipeline.md`](listing-data-pipeline.md).
@@ -254,8 +254,8 @@ flowchart TB
 ```mermaid
 flowchart LR
 	HMR[Webpack HMR re-executes entry module]
-	main2[main win demo again]
-	init2[demo.init again]
+	main2[main win property again]
+	init2[property.init again]
 	router2[new Router again]
 
 	HMR --> main2 --> init2 --> router2
@@ -265,11 +265,11 @@ Same in production if the entry script were evaluated twice (unusual).
 
 **Symptoms (before fix):**
 
-- `console.count('demo.init')` → 2+
+- `console.count('property.init')` → 2+
 - `updateDetail` / detail API called twice per click
 - Multiple `document` click listeners (DevTools: `getEventListeners(document).click`)
 
-**Not caused by:** `refreshComponents` alone (does not call `demo.init`). **Was caused by:** repeated `Router.init()` without teardown.
+**Not caused by:** `refreshComponents` alone (does not call `property.init`). **Was caused by:** repeated `Router.init()` without teardown.
 
 **Mitigation (implemented):** `Router.destroy()` + `Router.active` singleton teardown; `main()` boot guard (`__pureMainPage`); `resetMain()` for HMR dispose. See [`client/js/core/router.js`](../client/js/core/router.js) and [`client/js/index.js`](../client/js/index.js).
 
@@ -280,8 +280,8 @@ Same in production if the entry script were evaluated twice (unusual).
 | Concern | Owner | Init trigger |
 |---------|--------|----------------|
 | Page context (`exportObj.ctx`) | `Page` wrapper | `page.init()` |
-| Demo view state (`switchToGrid`, etc.) | `defEnum` on `body` | `demo.init` |
-| Client routing | `Router` | `demo.init` → `new Router` — [§4 contract](#4-client-router-contract) |
+| Property view state (`switchToGrid`, etc.) | `defEnum` on `body` | `property.init` |
+| Client routing | `Router` | `property.init` → `new Router` — [§4 contract](#4-client-router-contract) |
 | Detail HTML + fetch | `exportObj.updateDetail` | Router `loading` or manual |
 | Widget plugins (slider, header, …) | `Plugin.register` | `dom.load` / `dom.updated` → `refreshComponents` |
 | SOA-shaped data | `window.context` / API envelope | SSR inline or `updateDetail` assign |
@@ -291,6 +291,6 @@ Same in production if the entry script were evaluated twice (unusual).
 ## Related docs
 
 - [`client.md`](../client.md) — plugin model, SCSS, practical guidelines
-- [`docs/listing-data-pipeline.md`](listing-data-pipeline.md) — demo data → EJS / SPA
-- [`docs/routes-reference.md`](routes-reference.md) — server + demo SPA URL patterns
+- [`docs/listing-data-pipeline.md`](listing-data-pipeline.md) — property data → EJS / SPA
+- [`docs/routes-reference.md`](routes-reference.md) — server + property SPA URL patterns
 - [`build-system.md`](../build-system.md) — webpack entries and output

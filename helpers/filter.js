@@ -1,5 +1,5 @@
 /**
- * Demo listing query string ↔ SOA nearby-search filter fields.
+ * Property listing query string ↔ SOA nearby-search filter fields.
  * URL enums are lowercase. SOA enums are uppercase.
  */
 

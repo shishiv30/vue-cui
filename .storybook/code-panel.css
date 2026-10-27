@@ -1,0 +1,31 @@
+/*
+ * App styles sit in layer(app). This file is unlayered so it wins over that
+ * layer for font and button chrome only. Color and background stay with
+ * Storybook.
+ */
+.sb-show-main.sb-main-padded,
+#storybook-docs .docs-story {
+	box-sizing: border-box;
+	padding: var(--g2);
+}
+
+.docblock-source {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 13px;
+	font-weight: 400;
+	font-style: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+}
+
+.docblock-source button {
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+	font: inherit;
+	line-height: inherit;
+	max-width: none;
+	overflow: visible;
+	cursor: pointer;
+}

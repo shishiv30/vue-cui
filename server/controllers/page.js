@@ -1,8 +1,8 @@
 import { createHeaderComponent } from '../ejs/comp_header.js';
 import { createFooterComponent } from '../ejs/comp_footer.js';
-import { getPageData, getComps, getCompByKey } from '../utils/cmsData.js';
+import { getPageData, getComps, getCompByKey } from '../utils/localData.js';
 
-// Shared page handler logic: uses cmsData utility (config.cmsHealth → API, else data/)
+// Shared page handler logic: loads page and comp modules from data/
 async function handlePageGet(key) {
 	const fallback = () => ({
 		headerComponent: createHeaderComponent(),

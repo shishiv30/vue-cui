@@ -31,7 +31,7 @@
                 <div data-id="distance" hidden>
                     <label for="filter-distance">Distance</label>
                     <input id="filter-distance" type="range" min="0" max="9" step="1" value="0" data-empty="0">
-                    <div class="distance-scale">
+                    <div class="range-slider-label">
                         <span>1 mi</span>
                         <output id="filter-distance-label" for="filter-distance">no limit</output>
                         <span>no limit</span>
@@ -84,19 +84,19 @@
         </div>
     </nav>
     <main id="mylayout" class="layout" data-role="layout">
-        <!-- 1. demo — wide landscape, medium title, both sub/sup, single desc, tags + dict, footer created -->
+        <!-- 1. property — wide landscape, medium title, both sub/sup, single desc, tags + dict, footer created -->
         <article class="article default shadow corner" id="article-1">
             <i class="icon-graduation-cap"></i>
             <figure><img ratio src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://picsum.photos/800/200?random=1"></figure>
-            <header class="f3">Demo Article</header>
+            <header class="f3">Property Article</header>
             <sub>Est. 1985 · Public School</sub>
             <sup>Education</sup>
             <div>Greenfield Primary serves 600+ students across grades K–6, known for its STEM programme and bilingual curriculum.</div>
             <div class="tags">
-                <span class="tag">K–6</span>
-                <span class="tag">STEM</span>
-                <span class="tag">Bilingual</span>
-                <span class="tag">Public</span>
+                <span class="attr">K–6</span>
+                <span class="attr">STEM</span>
+                <span class="attr">Bilingual</span>
+                <span class="attr">Public</span>
             </div>
             <dl class="dict">
                 <dt>Principal</dt>
@@ -117,10 +117,10 @@
             <sup>Education</sup>
             <div>Greenfield Primary serves 600+ students across grades K–6, known for its STEM programme and bilingual curriculum.</div>
             <div class="tags">
-                <span class="tag">K–6</span>
-                <span class="tag">STEM</span>
-                <span class="tag">Bilingual</span>
-                <span class="tag">Public</span>
+                <span class="attr">K–6</span>
+                <span class="attr">STEM</span>
+                <span class="attr">Bilingual</span>
+                <span class="attr">Public</span>
             </div>
             <dl class="dict">
                 <dt>Principal</dt>
@@ -142,9 +142,9 @@
             <div>A cosy izakaya tucked in Midtown offering handcrafted ramen, fresh sushi, and a curated sake selection.</div>
             <div>Weekend omakase available with 48-hr advance booking. Vegan options available on request.</div>
             <div class="tags">
-                <span class="tag">Japanese</span>
-                <span class="tag">Fusion</span>
-                <span class="tag">Sake</span>
+                <span class="attr">Japanese</span>
+                <span class="attr">Fusion</span>
+                <span class="attr">Sake</span>
             </div>
             <footer>Updated 11 Sep 2026</footer>
         </article>
@@ -177,9 +177,9 @@
             <sub>Level 1 Trauma Centre · 24/7</sub>
             <div>Metro General is the city's primary trauma centre with 800 beds, cardiac ICU, and a dedicated stroke unit. Current A&amp;E wait: 28 min.</div>
             <div class="tags">
-                <span class="tag">Trauma L1</span>
-                <span class="tag">Cardiac</span>
-                <span class="tag">24/7</span>
+                <span class="attr">Trauma L1</span>
+                <span class="attr">Cardiac</span>
+                <span class="attr">24/7</span>
             </div>
             <dl class="dict">
                 <dt>Beds</dt>
@@ -218,11 +218,11 @@
             <div>Maintenance will interrupt water supply from 02:00–06:00 on Saturday 14 September. Residents are advised to store sufficient water in advance.</div>
             <div>Tanker trucks will be stationed at Maple Park and Central Square throughout the maintenance window for emergency supply.</div>
             <div class="tags">
-                <span class="tag">Official</span>
-                <span class="tag">Zone 4</span>
-                <span class="tag">Zone 7</span>
-                <span class="tag">Zone 9</span>
-                <span class="tag">Water</span>
+                <span class="attr">Official</span>
+                <span class="attr">Zone 4</span>
+                <span class="attr">Zone 7</span>
+                <span class="attr">Zone 9</span>
+                <span class="attr">Water</span>
             </div>
             <footer>Updated 12 Sep 2026, 06:30</footer>
         </article>
@@ -235,9 +235,9 @@
             <sup>Weather Alert</sup>
             <div>A low-pressure system brings heavy rain and wind gusts up to 80 km/h along the coast this Saturday. Inland areas can expect overcast skies with light showers.</div>
             <div class="tags">
-                <span class="tag">Storm</span>
-                <span class="tag">80 km/h</span>
-                <span class="tag">Weekend</span>
+                <span class="attr">Storm</span>
+                <span class="attr">80 km/h</span>
+                <span class="attr">Weekend</span>
             </div>
         </article>
 
@@ -267,10 +267,10 @@
             <header class="f3">Void Frontier — Open World RPG</header>
             <div>Explore a 200-hour hand-crafted universe with branching storylines, dynamic faction politics, and fully destructible environments. Multiplayer co-op up to 4 players.</div>
             <div class="tags">
-                <span class="tag">RPG</span>
-                <span class="tag">Open world</span>
-                <span class="tag">Co-op</span>
-                <span class="tag">Award winner</span>
+                <span class="attr">RPG</span>
+                <span class="attr">Open world</span>
+                <span class="attr">Co-op</span>
+                <span class="attr">Award winner</span>
             </div>
             <dl class="dict">
                 <dt>Developer</dt>
@@ -301,10 +301,10 @@
             <div>Three weeks across Swiss and Austrian Alps. Highlights: Jungfraujoch sunrise and Hallstatt village at golden hour.</div>
             <div>Spontaneous fondue with strangers at a mountain hut above 2,400 m — the unexpected highlight of the trip.</div>
             <div class="tags">
-                <span class="tag">Alps</span>
-                <span class="tag">Travel</span>
-                <span class="tag">Hiking</span>
-                <span class="tag">Summer</span>
+                <span class="attr">Alps</span>
+                <span class="attr">Travel</span>
+                <span class="attr">Hiking</span>
+                <span class="attr">Summer</span>
             </div>
         </article>
 
@@ -334,10 +334,10 @@
             <div>We're looking for a frontend engineer with 5+ years in TypeScript, React, and design systems to lead our component library effort.</div>
             <div>You'll mentor two junior engineers and collaborate closely with Product and Design to define the next generation of our UI.</div>
             <div class="tags">
-                <span class="tag">TypeScript</span>
-                <span class="tag">React</span>
-                <span class="tag">Remote</span>
-                <span class="tag">Senior</span>
+                <span class="attr">TypeScript</span>
+                <span class="attr">React</span>
+                <span class="attr">Remote</span>
+                <span class="attr">Senior</span>
             </div>
             <dl class="dict">
                 <dt>Salary</dt>
@@ -355,9 +355,9 @@
             <sup>Quick &amp; Easy</sup>
             <div>Silky spaghetti tossed in nutty brown butter, zesty lemon, crispy capers, and a snowfall of Parmesan. Ready in 20 minutes from pantry staples.</div>
             <div class="tags">
-                <span class="tag">Pasta</span>
-                <span class="tag">Vegetarian</span>
-                <span class="tag">20 min</span>
+                <span class="attr">Pasta</span>
+                <span class="attr">Vegetarian</span>
+                <span class="attr">20 min</span>
             </div>
             <footer>Created 3 Jul 2026</footer>
         </article>
@@ -401,10 +401,10 @@
             <div>A fragmented novel told through handwritten maps, letters, and footnotes, tracking three generations of a Congolese family across colonial and post-colonial history.</div>
             <div>Amara Diallo's prose moves between languages and centuries without losing intimacy — a structural feat as impressive as its emotional one.</div>
             <div class="tags">
-                <span class="tag">Literary fiction</span>
-                <span class="tag">History</span>
-                <span class="tag">Africa</span>
-                <span class="tag">Shortlisted</span>
+                <span class="attr">Literary fiction</span>
+                <span class="attr">History</span>
+                <span class="attr">Africa</span>
+                <span class="attr">Shortlisted</span>
             </div>
             <dl class="dict">
                 <dt>Author</dt>
@@ -423,9 +423,9 @@
             <sub>Studio Apex · 06:30 MWF</sub>
             <div>45-min high-intensity intervals followed by a 15-min progressive strength circuit. All levels welcome. Bring water and a sweat towel.</div>
             <div class="tags">
-                <span class="tag">HIIT</span>
-                <span class="tag">Morning</span>
-                <span class="tag">3 spots left</span>
+                <span class="attr">HIIT</span>
+                <span class="attr">Morning</span>
+                <span class="attr">3 spots left</span>
             </div>
             <footer>Created 1 Sep 2026</footer>
         </article>
@@ -454,9 +454,9 @@
             <div>A research consortium announced stable operation of a 1,000-logical-qubit processor at room temperature — a threshold many considered a decade away.</div>
             <div>Peer review is ongoing; independent replication is expected to take 6–18 months.</div>
             <div class="tags">
-                <span class="tag">Quantum</span>
-                <span class="tag">Hardware</span>
-                <span class="tag">Milestone</span>
+                <span class="attr">Quantum</span>
+                <span class="attr">Hardware</span>
+                <span class="attr">Milestone</span>
             </div>
             <footer>Updated 12 Sep 2026, 07:00</footer>
         </article>
@@ -480,9 +480,9 @@
             <div>Home charging kit, floor mats, and two key cards included. No accidents on record.</div>
             <div>Finance available from $389/month over 60 months with 10% deposit. Delivery available nationwide.</div>
             <div class="tags">
-                <span class="tag">EV</span>
-                <span class="tag">Autopilot</span>
-                <span class="tag">AWD</span>
+                <span class="attr">EV</span>
+                <span class="attr">Autopilot</span>
+                <span class="attr">AWD</span>
             </div>
             <dl class="dict">
                 <dt>Price</dt>
@@ -522,10 +522,10 @@
             <div>House-trained and great with children and other dogs. Loves long walks, fetch, and sleeping at your feet.</div>
             <div>Spayed, microchipped, and up to date on all vaccinations. Adoption fee covers first vet check.</div>
             <div class="tags">
-                <span class="tag">Dog</span>
-                <span class="tag">Golden mix</span>
-                <span class="tag">Kid-friendly</span>
-                <span class="tag">Vaccinated</span>
+                <span class="attr">Dog</span>
+                <span class="attr">Golden mix</span>
+                <span class="attr">Kid-friendly</span>
+                <span class="attr">Vaccinated</span>
             </div>
             <footer>Created 2 Sep 2026</footer>
         </article>
@@ -554,9 +554,9 @@
             <header class="f3">Lumio</header>
             <div>AI-powered meal planning that learns your taste, dietary needs, and budget — generating weekly plans with auto-filled grocery lists. iOS and Android. First month free.</div>
             <div class="tags">
-                <span class="tag">AI</span>
-                <span class="tag">Food-tech</span>
-                <span class="tag">Freemium</span>
+                <span class="attr">AI</span>
+                <span class="attr">Food-tech</span>
+                <span class="attr">Freemium</span>
             </div>
             <dl class="dict">
                 <dt>Funding</dt>
@@ -593,9 +593,9 @@
             <sub>Superior Court · Case No. 2026-CV-04471</sub>
             <div>If you purchased a DataPulse subscription in the specified period you may be entitled to compensation. Claim deadline: 31 Oct 2026.</div>
             <div class="tags">
-                <span class="tag">Settlement</span>
-                <span class="tag">Class action</span>
-                <span class="tag">Deadline Oct</span>
+                <span class="attr">Settlement</span>
+                <span class="attr">Class action</span>
+                <span class="attr">Deadline Oct</span>
             </div>
             <dl class="dict">
                 <dt>Case</dt>
@@ -615,10 +615,10 @@
             <sup>Urgent Recall</sup>
             <div>Batch codes A204–A211 of "Harvest Crunch Granola Bars" may contain undeclared peanuts. Do not consume if you have a peanut allergy. Return to point of purchase for a full refund.</div>
             <div class="tags">
-                <span class="tag">Recall</span>
-                <span class="tag">Peanuts</span>
-                <span class="tag">Urgent</span>
-                <span class="tag">Batches A204–A211</span>
+                <span class="attr">Recall</span>
+                <span class="attr">Peanuts</span>
+                <span class="attr">Urgent</span>
+                <span class="attr">Batches A204–A211</span>
             </div>
         </article>
 
@@ -650,9 +650,9 @@
             <div>Researchers identified a novel compound — UCT-783 — that kills extensively drug-resistant tuberculosis bacteria in vitro with no detectable cytotoxicity.</div>
             <div>Phase I human trials are scheduled to begin Q1 2027 at three sites across Sub-Saharan Africa.</div>
             <div class="tags">
-                <span class="tag">Antibiotic</span>
-                <span class="tag">TB</span>
-                <span class="tag">Phase I 2027</span>
+                <span class="attr">Antibiotic</span>
+                <span class="attr">TB</span>
+                <span class="attr">Phase I 2027</span>
             </div>
         </article>
 
@@ -663,9 +663,9 @@
             <div>Councillor Sandra Ortega (Progressive) wins the runoff with 52.4%, defeating incumbent Ray Huang (Conservative).</div>
             <div>Voter turnout reached 61% — the highest in 16 years, driven by record youth participation.</div>
             <div class="tags">
-                <span class="tag">Election</span>
-                <span class="tag">District 7</span>
-                <span class="tag">Official</span>
+                <span class="attr">Election</span>
+                <span class="attr">District 7</span>
+                <span class="attr">Official</span>
             </div>
             <dl class="dict">
                 <dt>Winner</dt>
@@ -685,10 +685,10 @@
             <sup>This Weekend</sup>
             <div>Float hundreds of glowing lanterns on the river at dusk while sampling street food from 30 vendors. Traditional dragon dance performance at 20:30.</div>
             <div class="tags">
-                <span class="tag">Free entry</span>
-                <span class="tag">Family</span>
-                <span class="tag">Street food</span>
-                <span class="tag">Sat–Sun</span>
+                <span class="attr">Free entry</span>
+                <span class="attr">Family</span>
+                <span class="attr">Street food</span>
+                <span class="attr">Sat–Sun</span>
             </div>
         </article>
 
@@ -735,10 +735,10 @@
             <div>The investigation began with a single log-file anomaly flagged by an automated SIEM rule — a reminder that the boring stuff saves companies.</div>
             <div>Runtime: 58 minutes. Available on Spotify, Apple Podcasts, and wherever you get your podcasts.</div>
             <div class="tags">
-                <span class="tag">Cybersecurity</span>
-                <span class="tag">True crime</span>
-                <span class="tag">Insider threat</span>
-                <span class="tag">58 min</span>
+                <span class="attr">Cybersecurity</span>
+                <span class="attr">True crime</span>
+                <span class="attr">Insider threat</span>
+                <span class="attr">58 min</span>
             </div>
             <footer>Created 9 Sep 2026</footer>
         </article>
@@ -768,10 +768,10 @@
             <div>The inaugural VF World Championship brings together 64 regional finalists for a 3-day live event in Seoul.</div>
             <div>Qualifying brackets close 30 September. Spectator tickets now available — floor seats already sold out.</div>
             <div class="tags">
-                <span class="tag">Esports</span>
-                <span class="tag">$500k</span>
-                <span class="tag">Seoul</span>
-                <span class="tag">64 teams</span>
+                <span class="attr">Esports</span>
+                <span class="attr">$500k</span>
+                <span class="attr">Seoul</span>
+                <span class="attr">64 teams</span>
             </div>
             <dl class="dict">
                 <dt>Dates</dt>
@@ -809,9 +809,9 @@
             <sup>Private Invite</sup>
             <div>Join us for afternoon tea and games at Claire's place. Gift registry linked separately. RSVP by 21 September — limited to 20 guests.</div>
             <div class="tags">
-                <span class="tag">Baby shower</span>
-                <span class="tag">Afternoon tea</span>
-                <span class="tag">RSVP needed</span>
+                <span class="attr">Baby shower</span>
+                <span class="attr">Afternoon tea</span>
+                <span class="attr">RSVP needed</span>
             </div>
             <footer>Updated 5 Sep 2026</footer>
         </article>
@@ -839,10 +839,10 @@
             <header class="f3">Sony WH-1000XM7 Review</header>
             <div>Sony's seventh-generation flagship sets a new standard for noise cancellation. The updated driver delivers richer bass without sacrificing midrange clarity. Battery now lasts 38 hours.</div>
             <div class="tags">
-                <span class="tag">Headphones</span>
-                <span class="tag">ANC</span>
-                <span class="tag">38-hr battery</span>
-                <span class="tag">★ 4.8 / 5</span>
+                <span class="attr">Headphones</span>
+                <span class="attr">ANC</span>
+                <span class="attr">38-hr battery</span>
+                <span class="attr">★ 4.8 / 5</span>
             </div>
             <dl class="dict">
                 <dt>Price</dt>
@@ -899,10 +899,10 @@
             <div>The new East Wing doubles the display space and introduces an interactive digital layer synced to each artefact label.</div>
             <div>Guided audio tour included with museum admission. Schools programme available on weekday mornings.</div>
             <div class="tags">
-                <span class="tag">Ancient Rome</span>
-                <span class="tag">Pompeii</span>
-                <span class="tag">New wing</span>
-                <span class="tag">Audio tour</span>
+                <span class="attr">Ancient Rome</span>
+                <span class="attr">Pompeii</span>
+                <span class="attr">New wing</span>
+                <span class="attr">Audio tour</span>
             </div>
             <footer>Created 1 Sep 2026</footer>
         </article>
@@ -913,9 +913,9 @@
             <header class="f3">Author Talk &amp; Signing — Amara Diallo Reads from "The Cartography of Loss" at Elmwood Public Library</header>
             <div>Join Booker Prize-shortlisted author Amara Diallo for a reading and Q&amp;A. Books available for signing. Reserve your seat — capacity 60.</div>
             <div class="tags">
-                <span class="tag">Free</span>
-                <span class="tag">Signing</span>
-                <span class="tag">60 seats</span>
+                <span class="attr">Free</span>
+                <span class="attr">Signing</span>
+                <span class="attr">60 seats</span>
             </div>
             <dl class="dict">
                 <dt>Date</dt>
@@ -936,10 +936,10 @@
             <div>Help us clear 2 km of coastline ahead of nesting season. Equipment and gloves provided. Meet at the Pier carpark at 08:00.</div>
             <div>Coffee and breakfast rolls included. All ages welcome — the more the merrier. 8 of 20 spots filled.</div>
             <div class="tags">
-                <span class="tag">Volunteer</span>
-                <span class="tag">Environment</span>
-                <span class="tag">Family OK</span>
-                <span class="tag">Free breakfast</span>
+                <span class="attr">Volunteer</span>
+                <span class="attr">Environment</span>
+                <span class="attr">Family OK</span>
+                <span class="attr">Free breakfast</span>
             </div>
         </article>
 
@@ -968,11 +968,11 @@
             <div>Over 60 vendors selling street food, vinyl records, vintage clothing, handmade jewellery, and artisan spirits in the Warehouse District.</div>
             <div>Live DJ set from 20:00. Dog-friendly. Cash and card accepted. Free entry every week.</div>
             <div class="tags">
-                <span class="tag">Every Friday</span>
-                <span class="tag">Street food</span>
-                <span class="tag">Vintage</span>
-                <span class="tag">Dog-friendly</span>
-                <span class="tag">Free</span>
+                <span class="attr">Every Friday</span>
+                <span class="attr">Street food</span>
+                <span class="attr">Vintage</span>
+                <span class="attr">Dog-friendly</span>
+                <span class="attr">Free</span>
             </div>
             <footer>Created 4 Sep 2026</footer>
         </article>
@@ -987,10 +987,10 @@
             <div>Residents in low-lying streets must proceed immediately to the nearest designated shelter. Do not drive through floodwater under any circumstances — turn around, don't drown.</div>
             <div>Pets are welcome at the Elmwood shelter. Medication and essential documents only — leave immediately, do not delay to pack.</div>
             <div class="tags">
-                <span class="tag">Flash flood</span>
-                <span class="tag">Zone C</span>
-                <span class="tag">Evacuate NOW</span>
-                <span class="tag">EMERGENCY</span>
+                <span class="attr">Flash flood</span>
+                <span class="attr">Zone C</span>
+                <span class="attr">Evacuate NOW</span>
+                <span class="attr">EMERGENCY</span>
             </div>
             <dl class="dict">
                 <dt>Zone</dt>
