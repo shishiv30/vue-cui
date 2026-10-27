@@ -2,7 +2,7 @@
 	<div
 		ref="rootEl"
 		class="group-dropdown"
-		:class="phase"
+		:class="[phase, { compact }]"
 		@focusout="onFocusOut"
 	>
 		<ul
@@ -10,6 +10,23 @@
 			class="group-dropdown-button small"
 			:class="{ changed: barChanged }"
 		>
+			<li v-if="compact" class="group-dropdown-filter">
+				<button
+					type="button"
+					data-target="all"
+					:class="{ selected: barChanged, opened: sheetOpen }"
+					@click.stop="onFilter"
+				>
+					Filter
+				</button>
+				<button
+					type="button"
+					class="group-dropdown-reset"
+					aria-label="Clear all"
+					:hidden="!barChanged"
+					@click.stop="resetAll"
+				></button>
+			</li>
 			<li v-for="field in data" :key="field.id">
 				<button
 					type="button"
@@ -28,10 +45,12 @@
 				></button>
 			</li>
 		</ul>
+		<Teleport to="body" :disabled="!compact">
 		<div
 			ref="listEl"
 			class="group-dropdown-list"
-			:style="listStyle"
+			:class="{ 'group-dropdown-sheet': compact && phase !== 'close' }"
+			:style="compact ? undefined : listStyle"
 			@mousedown="onListMouseDown"
 			@animationend="onFlyOut"
 		>
@@ -39,8 +58,10 @@
 				v-for="field in data"
 				:key="field.id"
 				:data-id="field.id"
-				:hidden="shownId !== field.id"
+				:hidden="sheetOpen ? false : shownId !== field.id"
+				@reset="onPanelReset(field, $event)"
 			>
+				<div class="group-dropdown-title">{{ field.label }}</div>
 				<RangeSlider
 					v-if="field.type === 'range'"
 					:data="stopOptions(field)"
@@ -71,6 +92,7 @@
 				</div>
 			</div>
 		</div>
+		</Teleport>
 	</div>
 </template>
 
@@ -123,6 +145,8 @@ const uid = useId();
 const rootEl = ref<HTMLElement | null>(null);
 const barEl = ref<HTMLElement | null>(null);
 const listEl = ref<HTMLElement | null>(null);
+const compactQuery = '(max-width: 639px)';
+const compact = ref(false);
 const phase = ref<'close' | 'open' | 'closing'>('close');
 const shownId = ref('');
 const labels = ref<Record<string, string>>({});
@@ -130,6 +154,7 @@ const listStyle = ref<Record<string, string>>({});
 let hideTimer = 0;
 
 const openedId = computed(() => (phase.value === 'open' ? shownId.value : ''));
+const sheetOpen = computed(() => compact.value && phase.value !== 'close');
 
 const barChanged = computed(() => props.data.some((field) => isSelected(field)));
 
@@ -318,12 +343,34 @@ function onChoice(field: GroupDropdownChoiceField, value: string, event: Event) 
 	emitInput();
 }
 
-function resetField(field: GroupDropdownField) {
-	patch(field.id, isRange(field) || field.type !== 'single' ? (isRange(field) ? ['', ''] : []) : '');
-	const panel = listEl.value?.querySelector(`[data-id="${field.id}"]`);
-	panel?.querySelector('[data-role="rangeslider"], .range-slider')
+function emptyValue(field: GroupDropdownField) {
+	if (isRange(field)) {
+		return ['', ''];
+	}
+	return field.type === 'single' ? '' : [];
+}
+
+function onPanelReset(field: GroupDropdownField, event: Event) {
+	if (event.target !== event.currentTarget) {
+		return;
+	}
+	patch(field.id, emptyValue(field));
+	(event.currentTarget as HTMLElement)
+		.querySelector('[data-role="rangeslider"], .range-slider')
 		?.dispatchEvent(new CustomEvent('reset'));
+	emitInput();
 	emitChange();
+}
+
+function resetField(field: GroupDropdownField) {
+	listEl.value?.querySelector(`[data-id="${field.id}"]`)
+		?.dispatchEvent(new CustomEvent('reset', { bubbles: true }));
+}
+
+function resetAll() {
+	listEl.value?.querySelectorAll('[data-id]').forEach((panel) => {
+		panel.dispatchEvent(new CustomEvent('reset', { bubbles: true }));
+	});
 }
 
 function buttonEl(id: string) {
@@ -452,6 +499,28 @@ function onButton(id: string) {
 	open(id);
 }
 
+function onFilter() {
+	if (phase.value === 'open') {
+		close();
+		return;
+	}
+	if (phase.value === 'closing') {
+		cancelHide();
+	}
+	phase.value = 'open';
+	shownId.value = 'all';
+	listStyle.value = {};
+	emitVue('open', 'all');
+	emit(`open.${NAME}`, [rootEl.value, 'all']);
+}
+
+function onCompactChange(event: MediaQueryListEvent) {
+	compact.value = event.matches;
+	if (!event.matches && shownId.value === 'all') {
+		close();
+	}
+}
+
 function onFocusOut(event: FocusEvent) {
 	const root = rootEl.value;
 	if (!root || (event.relatedTarget && root.contains(event.relatedTarget as Node))) {
@@ -473,7 +542,12 @@ function onListMouseDown(event: MouseEvent) {
 	}
 }
 
+let compactMedia: MediaQueryList | null = null;
+
 onMounted(() => {
+	compactMedia = window.matchMedia(compactQuery);
+	compact.value = compactMedia.matches;
+	compactMedia.addEventListener('change', onCompactChange);
 	emitPhase('init', NAME, rootEl.value);
 	emitPhase('initialed', NAME, rootEl.value);
 	emitPhase('load', NAME, rootEl.value);
@@ -484,6 +558,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+	compactMedia?.removeEventListener('change', onCompactChange);
 	emitPhase('destroy', NAME, rootEl.value);
 	window.clearTimeout(hideTimer);
 	emitPhase('destroyed', NAME, rootEl.value);

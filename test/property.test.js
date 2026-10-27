@@ -199,7 +199,7 @@ describe('mapPropertyToArticle', () => {
 		);
 		assert.equal(
 			article.title,
-			'101 Mel St',
+			'101 Mel St, Winters, Runnels County, TX 79567',
 		);
 		assert.equal(article.imgTag, 'Hunter Ranch and Realty');
 		assert.deepEqual(article.tags, [{ text: 'Pending', className: 'tip' }]);
@@ -249,7 +249,7 @@ describe('mapPropertyDetailToArticle', () => {
 				histories: [{ eventDate: '2024-06-01', eventType: 'Listed', price: 135000 }],
 			},
 		);
-		assert.equal(detail.title, '101 Mel St');
+		assert.equal(detail.title, '101 Mel St, Winters, Runnels County, TX 79567');
 		assert.deepEqual(detail.tags.items.slice(-2), [
 			{ text: 'Winters', className: 'default' },
 			{ text: '79567', className: 'default' },

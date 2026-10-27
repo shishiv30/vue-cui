@@ -5,7 +5,7 @@
 		class="article shadow corner article-card"
 		:class="model.className"
 	>
-		<a :href="href">
+		<a :href="href" @click="onAddressClick">
 			<address class="f6 text-gray">{{ model.title }}</address>
 		</a>
 		<dl v-if="attrs.length" class="dict">
@@ -17,7 +17,7 @@
 		<figure>
 			<img
 				ratio
-				:src="model.img || '/n_a.svg'"
+				:src="model.img || '/images/n_a.svg'"
 				:alt="model.imgAlt"
 				loading="lazy"
 				data-role="imgerror"
@@ -36,7 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue';
+import { routerKey } from 'vue-router';
 import type { ArticleUiModel } from './articleModel';
 import { emitPhase } from './emitPhase';
 
@@ -61,6 +62,34 @@ const href = computed(() => {
 	const separator = url.includes('?') ? '&' : '?';
 	return `${url}${separator}id=${encodeURIComponent(item.id)}`;
 });
+
+const router = inject(routerKey, null);
+
+function onAddressClick(event: MouseEvent) {
+	const url = href.value;
+	if (
+		!router
+		|| !url
+		|| !url.startsWith('/')
+		|| url.startsWith('//')
+		|| event.metaKey
+		|| event.ctrlKey
+		|| event.shiftKey
+		|| event.altKey
+		|| event.button !== 0
+	) {
+		return;
+	}
+	event.preventDefault();
+	const queryIndex = url.indexOf('?');
+	const path = queryIndex === -1 ? url : url.slice(0, queryIndex);
+	const search = queryIndex === -1 ? '' : url.slice(queryIndex + 1);
+	const query: Record<string, string> = {};
+	new URLSearchParams(search).forEach((value, key) => {
+		query[key] = value;
+	});
+	void router.push({ path, query });
+}
 
 onMounted(() => {
 	emitPhase('init', 'article', rootEl.value);

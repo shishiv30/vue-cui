@@ -103,7 +103,6 @@
 	>figure {
 		overflow: hidden;
 		position: relative;
-		margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
 
 		>img {
 			width: 100%;
@@ -192,7 +191,11 @@
 		font-size: var(--font-size-7);
 		color: var(--article-color-muted);
 	}
-	
+	&:not(.article-card) {
+		>figure {
+			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
+		}
+	}
 	&.article-card {
 		--article-width: min(100%, 460px);
 		--article-gap: min(var(--g2), 2.5%);
@@ -220,6 +223,7 @@
 			flex: none;
 			overflow: hidden;
 			aspect-ratio: var(--image-ratio);
+			margin-bottom: var(--article-padding);
 		}
 
 		.tags {
@@ -235,7 +239,6 @@
 		>figure {
 			order: 1;
 			flex: 1;
-			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
 			>img {
 				height: 100%!important;
 				filter: saturate(0.5);

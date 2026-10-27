@@ -1,6 +1,6 @@
 <template>
-	<div :class="pageClass">
-		<Header v-if="header" :model="header" />
+	<div ref="pageEl" :class="pageClass">
+		<Header v-if="header" :model="{ ...header, sticky: 'true' }" />
 		<nav
 			v-if="kind === 'search'"
 			class="listing-nav"
@@ -35,35 +35,14 @@
 				</li>
 			</ul>
 		</nav>
-		<section
-			v-if="kind === 'sitemap'"
-			class="section grid grid-xs-1 fixed"
-		>
-			<h1 class="f3 text-bold text-center">{{ title }}</h1>
-			<template v-for="(group, groupIndex) in groups" :key="groupIndex">
-				<h2 v-if="group.title" class="f4 text-bold">{{ group.title }}</h2>
-				<ul
-					v-if="group.links.length"
-					class="grid grid-xs-1 grid-sm-2 grid-md-3 grid-lg-4 grid-xl-5"
-				>
-					<li v-for="(link, linkIndex) in group.links" :key="linkIndex">
-						<a class="link" :href="link.href">{{ link.text }}</a>
-					</li>
-				</ul>
-			</template>
-		</section>
-		<section v-if="kind === 'search'" class="detail" id="detail"></section>
-		<section v-if="kind === 'search'" class="result">
-			<ul>
-				<li
-					v-for="(article, index) in articles"
-					:key="article.id || index"
-					class="item"
-				>
-					<Article :model="article" />
-				</li>
-			</ul>
-		</section>
+		<Sitemap v-if="kind === 'sitemap'" :title="title" :groups="groups" />
+		<Detail
+			v-if="kind === 'search' && (detail || detailPlaceholder || leaving)"
+			:model="detail"
+			:placeholder="detailPlaceholder"
+			:reveal="detailReveal"
+		/>
+		<Result v-if="kind === 'search'" :articles="articles" />
 		<footer v-if="footer" class="footer">
 			<section class="section small major inline bg active">
 				<div class="fixed fixed-max-xs grid grid-xs-1">
@@ -122,15 +101,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import Article from '../components/Article.vue';
+import Detail from '../components/Detail.vue';
 import GroupDropdown from '../components/GroupDropdown.vue';
 import Header from '../components/Header.vue';
+import Result from '../components/Result.vue';
+import Sitemap from '../components/Sitemap.vue';
+import type { PropertyDetailModel } from '../components/detailModel';
 import type { ArticleUiModel } from '../components/articleModel';
 import type { GroupDropdownField, GroupDropdownValue } from '../components/groupdropdownModel';
 import { getQueryStringByFilter } from '../../../helpers/filter.js';
+import { matchPropertySpaRoute } from '../../../helpers/routes/propertySpaRoutes.js';
 import type { PropertyState } from '../store';
 
 const store = useStore<PropertyState>();
@@ -138,6 +121,9 @@ const route = useRoute();
 const router = useRouter();
 const title = computed(() => store.state.title);
 const kind = computed(() => store.state.kind);
+const detail = computed(() => store.state.detail);
+const detailPlaceholder = ref(false);
+const detailReveal = ref(false);
 const header = computed(() => store.state.header);
 const footer = computed(() => store.state.footer);
 const groups = computed(() => store.state.groups);
@@ -145,7 +131,22 @@ const articles = computed(() => store.state.articles);
 const filters = computed(() => store.state.filters);
 const breadcrumbLinks = computed(() => store.state.breadcrumb?.links ?? []);
 
-const view = ref<'grid' | 'detail' | 'map'>('grid');
+type PropertyView = 'grid' | 'detail' | 'map';
+
+const viewFlipMs = 500;
+
+function viewFromPath(path: string): PropertyView {
+	const match = matchPropertySpaRoute(path);
+	if (match?.id === 'detail' || match?.id === 'map') {
+		return match.id;
+	}
+	return 'grid';
+}
+
+const pageEl = ref<HTMLElement | null>(null);
+const view = ref<PropertyView>(viewFromPath(route.path));
+const animating = ref(false);
+const leaving = ref(false);
 const lock = ref(false);
 const collapse = ref(false);
 const menu = ref(false);
@@ -157,10 +158,308 @@ const pageClass = computed(() => {
 	return {
 		'page-property': true,
 		[`view-${view.value}`]: true,
+		'view-animating': animating.value,
+		'detail-leaving': leaving.value,
 		lock: lock.value,
 		collapse: collapse.value,
 		menu: menu.value,
 	};
+});
+
+type ItemRect = {
+	item: HTMLElement;
+	top: number;
+	left: number;
+	width: number;
+	height: number;
+};
+
+let flipToken = 0;
+let flyToken = 0;
+let pendingFlip: { target: PropertyView; from: ItemRect[]; token: number } | null = null;
+
+function resultItems() {
+	const root = pageEl.value;
+	if (!root) {
+		return [];
+	}
+	return Array.from(root.querySelectorAll<HTMLElement>('section.result li.item'));
+}
+
+function measureItems(items: HTMLElement[]) {
+	return items
+		.map((item) => {
+			const rect = item.getBoundingClientRect();
+			return {
+				item,
+				top: rect.top,
+				left: rect.left,
+				width: rect.width,
+				height: rect.height,
+			};
+		})
+		.filter((entry) => entry.width > 0 && entry.height > 0);
+}
+
+function clearItemTransforms(items: HTMLElement[]) {
+	items.forEach((item) => {
+		item.style.transition = '';
+		item.style.transform = '';
+	});
+}
+
+function endFlip(token: number, items: HTMLElement[]) {
+	if (token !== flipToken) {
+		return;
+	}
+	flipToken += 1;
+	clearItemTransforms(items);
+	animating.value = false;
+}
+
+function beginFlip(target: PropertyView) {
+	flipToken += 1;
+	const token = flipToken;
+	const from = view.value === 'grid' || view.value === 'detail' ? measureItems(resultItems()) : [];
+	clearItemTransforms(from.map((entry) => entry.item));
+	if (!from.length) {
+		pendingFlip = null;
+		animating.value = false;
+		return;
+	}
+	animating.value = true;
+	pendingFlip = { target, from, token };
+}
+
+function playFlip(target: PropertyView) {
+	const pending = pendingFlip;
+	pendingFlip = null;
+	if (!pending || pending.target !== target || pending.token !== flipToken) {
+		return;
+	}
+	const { from, token } = pending;
+	const moves: HTMLElement[] = [];
+	from.forEach((prev) => {
+		const next = prev.item.getBoundingClientRect();
+		const dx = prev.left - next.left;
+		const dy = prev.top - next.top;
+		if (dx === 0 && dy === 0) {
+			return;
+		}
+		prev.item.style.transition = 'none';
+		prev.item.style.transform = `translate(${dx}px, ${dy}px)`;
+		moves.push(prev.item);
+	});
+	if (!moves.length) {
+		endFlip(token, from.map((entry) => entry.item));
+		return;
+	}
+	requestAnimationFrame(() => {
+		if (token !== flipToken) {
+			return;
+		}
+		moves.forEach((item) => {
+			item.style.transition = '';
+			item.style.transform = '';
+		});
+		let remaining = moves.length;
+		let settled = false;
+		const finish = () => {
+			if (settled) {
+				return;
+			}
+			settled = true;
+			moves.forEach((item) => {
+				item.removeEventListener('transitionend', onEnd);
+			});
+			endFlip(token, from.map((entry) => entry.item));
+		};
+		const onEnd = (event: TransitionEvent) => {
+			if (event.propertyName !== 'transform') {
+				return;
+			}
+			remaining -= 1;
+			if (remaining <= 0) {
+				finish();
+			}
+		};
+		moves.forEach((item) => {
+			item.addEventListener('transitionend', onEnd);
+		});
+		setTimeout(finish, viewFlipMs + 80);
+	});
+}
+
+function detailBody() {
+	return pageEl.value?.querySelector<HTMLElement>('.detail-body') ?? null;
+}
+
+function pinDetailBody(transform: string) {
+	const body = detailBody();
+	if (!body) {
+		return;
+	}
+	body.style.transition = 'none';
+	body.style.transform = transform;
+}
+
+function releaseDetailBody() {
+	const body = detailBody();
+	if (!body) {
+		return;
+	}
+	body.style.transition = '';
+	body.style.transform = '';
+}
+
+function beginFly(target: 'detail' | 'grid') {
+	flyToken += 1;
+	const from = view.value;
+	if ((from !== 'grid' && from !== 'detail') || !detailBody()) {
+		leaving.value = false;
+		return;
+	}
+	if (target === 'grid' && from === 'detail') {
+		leaving.value = true;
+		pinDetailBody('translateX(0)');
+		return;
+	}
+	if (target === 'detail' && from === 'grid') {
+		leaving.value = false;
+		pinDetailBody('translateX(100%)');
+	}
+}
+
+function playFly(target: 'detail' | 'grid') {
+	const token = flyToken;
+	const body = detailBody();
+	if (!body || !body.style.transform) {
+		return;
+	}
+	requestAnimationFrame(() => {
+		if (token !== flyToken) {
+			return;
+		}
+		releaseDetailBody();
+		if (target !== 'grid') {
+			return;
+		}
+		let settled = false;
+		const finish = () => {
+			if (settled || token !== flyToken) {
+				return;
+			}
+			settled = true;
+			body.removeEventListener('transitionend', onEnd);
+			leaving.value = false;
+		};
+		const onEnd = (event: TransitionEvent) => {
+			if (event.propertyName !== 'transform') {
+				return;
+			}
+			finish();
+		};
+		body.addEventListener('transitionend', onEnd);
+		setTimeout(finish, viewFlipMs + 80);
+	});
+}
+
+async function applyView(next: PropertyView) {
+	const prev = view.value;
+	if (prev === next) {
+		return;
+	}
+	const pair = (prev === 'grid' && next === 'detail') || (prev === 'detail' && next === 'grid');
+	if (pair && (next === 'grid' || next === 'detail')) {
+		beginFlip(next);
+		beginFly(next);
+		view.value = next;
+		await nextTick();
+		playFlip(next);
+		playFly(next);
+		return;
+	}
+	leaving.value = false;
+	animating.value = false;
+	view.value = next;
+}
+
+let detailRequest = 0;
+
+function wait(ms: number) {
+	return new Promise((resolve) => {
+		window.setTimeout(resolve, ms);
+	});
+}
+
+async function loadDetail(prId: string, animate: boolean) {
+	const requestId = ++detailRequest;
+	const fromGrid = view.value !== 'detail';
+	const switching = animate && !fromGrid && store.state.detail != null;
+	const skeletonAt = Date.now();
+	if (switching) {
+		detailReveal.value = false;
+		detailPlaceholder.value = true;
+	}
+	const response = await fetch(`/api/property/detail/${encodeURIComponent(prId)}`);
+	if (requestId !== detailRequest || !response.ok) {
+		return;
+	}
+	const body = await response.json() as { data?: { detail?: PropertyDetailModel | null } };
+	if (requestId !== detailRequest) {
+		return;
+	}
+	const nextDetail = body.data?.detail ?? null;
+	if (switching) {
+		await wait(Math.max(0, 1500 - (Date.now() - skeletonAt)));
+		if (requestId !== detailRequest) {
+			return;
+		}
+		detailPlaceholder.value = false;
+		detailReveal.value = true;
+		store.state.detail = nextDetail;
+		return;
+	}
+	detailPlaceholder.value = false;
+	store.state.detail = nextDetail;
+	if (animate && fromGrid) {
+		detailReveal.value = false;
+		await nextTick();
+		detailReveal.value = true;
+		await applyView('detail');
+		return;
+	}
+	detailReveal.value = false;
+}
+
+watch(() => route.path, (path) => {
+	const next = viewFromPath(path);
+	if (next !== 'detail') {
+		detailPlaceholder.value = false;
+		detailReveal.value = false;
+		void applyView(next).then(() => {
+			window.setTimeout(() => {
+				if (view.value !== 'detail') {
+					store.state.detail = null;
+				}
+			}, viewFlipMs);
+		});
+		return;
+	}
+	const prId = matchPropertySpaRoute(path)?.params.prId;
+	if (prId) {
+		void loadDetail(prId, true);
+	}
+});
+
+onMounted(() => {
+	if (view.value !== 'detail' || store.state.detail) {
+		return;
+	}
+	const prId = matchPropertySpaRoute(route.path)?.params.prId;
+	if (prId) {
+		void loadDetail(prId, false);
+	}
 });
 
 function modelFromFields(fields: GroupDropdownField[]): GroupDropdownValue {
@@ -264,6 +563,9 @@ function onFilterChange() {
 
 watch(() => route.fullPath, async (fullPath, previous) => {
 	if (kind.value !== 'search' || fullPath === previous || previous === undefined) {
+		return;
+	}
+	if (matchPropertySpaRoute(route.path)?.id !== 'geo') {
 		return;
 	}
 	const geo = route.path.replace(/^\/property\//, '');

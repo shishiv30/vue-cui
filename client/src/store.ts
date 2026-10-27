@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import type { ArticleUiModel } from './components/articleModel';
+import type { PropertyDetailModel } from './components/detailModel';
 import type { GroupDropdownField } from './components/groupdropdownModel';
 import type { HeaderUiModel } from './components/headerModel';
 
@@ -52,6 +53,7 @@ export type PropertyState = {
 	groups: LinkGroup[];
 	articles: ArticleUiModel[];
 	filters: GroupDropdownField[];
+	detail: PropertyDetailModel | null;
 };
 
 export function createPropertyStore() {
@@ -66,6 +68,7 @@ export function createPropertyStore() {
 			groups: [],
 			articles: [],
 			filters: [],
+			detail: null,
 		},
 	});
 }

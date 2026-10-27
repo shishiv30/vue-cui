@@ -9,7 +9,6 @@ import form from './directives/form';
 import tab from './directives/tab';
 import tooltip from './directives/tooltip';
 import validation from './directives/validation';
-import '../scss/index.scss';
 
 export function createApp(history: RouterHistory) {
 	const app = createSSRApp(App);

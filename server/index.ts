@@ -9,6 +9,24 @@ import session from './middleware/session.js';
 import geo from './middleware/geo.js';
 import router from './routes/index.js';
 import { loadPropertyPageState } from './utils/propertyPageState.js';
+import { matchPropertySpaRoute } from '../helpers/routes/propertySpaRoutes.js';
+
+type ListingPreloadState = {
+	kind?: string;
+	articles?: { img?: string }[];
+	detail?: { album?: { images?: string[] } | null } | null;
+};
+
+function listingPreload(url: string, state: ListingPreloadState) {
+	const id = matchPropertySpaRoute(url)?.id;
+	if (id === 'detail') {
+		return state.detail?.album?.images?.[0] || '';
+	}
+	if (id === 'geo' || id === 'map') {
+		return state.articles?.[0]?.img || '';
+	}
+	return '';
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -104,6 +122,14 @@ app.use(async (req, res, next) => {
 			|| (isDocument ? 'Document' : 'Property');
 		template = template.replace('<title>Property</title>', `<title>${title}</title>`);
 		const rendered = await render(url, pageState);
+		const preloadImage = listingPreload(url, rendered.state as ListingPreloadState);
+		if (preloadImage) {
+			const href = preloadImage.replace(/"/g, '%22');
+			template = template.replace(
+				'</head>',
+				`\t<link rel="preload" href="${href}" as="image" />\n</head>`,
+			);
+		}
 		const page = template
 			.replace('<!--app-html-->', rendered.html)
 			.replace(

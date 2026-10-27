@@ -29,9 +29,6 @@ export function classifyPropertyPath(path) {
 	if (pagePath === '/property') {
 		return { action: 'redirect' };
 	}
-	if (pagePath.startsWith('/property/detail/')) {
-		return null;
-	}
 	if (pagePath === '/property/sitemap') {
 		return { action: 'sitemap', config: propertySitemap, heading: '' };
 	}
@@ -46,7 +43,7 @@ export function classifyPropertyPath(path) {
 	}
 
 	const spa = matchPropertySpaRoute(pagePath);
-	if (spa && (spa.id === 'geo' || spa.id === 'map')) {
+	if (spa && (spa.id === 'geo' || spa.id === 'map' || spa.id === 'detail')) {
 		return { action: 'search', config: property, heading: '', spa };
 	}
 	return null;
@@ -102,6 +99,9 @@ function toPageState(classified, data) {
 		groups: classified.action === 'sitemap' ? groups : [],
 		articles: classified.action === 'search' ? (data?.articleComponent?.data ?? []) : [],
 		filters: classified.action === 'search' ? filterFields(data?.filterComponent) : [],
+		detail: classified.action === 'search' && classified.spa?.id === 'detail'
+			? (data?.detail ?? null)
+			: null,
 	};
 }
 
@@ -120,6 +120,10 @@ export async function loadPropertyPageState(req) {
 		} else if (classified.spa.id === 'map') {
 			const { state, geoSlug, coords } = classified.spa.params;
 			req.query.geoPath = `${state}/${geoSlug}/${coords}`;
+		} else if (classified.spa.id === 'detail') {
+			const { state, zip, prId } = classified.spa.params;
+			req.query.geoPath = `${state}/${zip}`;
+			req.query.prId = prId;
 		}
 	}
 

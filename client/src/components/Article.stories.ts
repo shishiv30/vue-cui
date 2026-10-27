@@ -61,7 +61,7 @@ const meta = {
 		},
 		img: {
 			control: 'text',
-			description: 'Photo URL. Empty uses /n_a.svg.',
+			description: 'Photo URL. Empty uses /images/n_a.svg.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
 		imgAlt: {

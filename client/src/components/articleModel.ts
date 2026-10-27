@@ -29,7 +29,7 @@ export interface ArticleUiModel {
 	path?: string;
 	/** Appended as ?id= when present. */
 	id?: string;
-	/** Photo URL. Empty uses /n_a.svg. */
+	/** Photo URL. Empty uses /images/n_a.svg. */
 	img?: string;
 	/** Image alt text. */
 	imgAlt?: string;
