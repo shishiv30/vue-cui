@@ -2,16 +2,31 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createServer } from 'vite';
 
-test('vue ssr property renders the vuex marker', async () => {
+test('vue ssr property sitemap renders groups heading', async () => {
 	const vite = await createServer({
 		server: { middlewareMode: true },
 		appType: 'custom',
 	});
 	try {
 		const mod = await vite.ssrLoadModule('/client/src/entry-server.ts');
-		const rendered = await mod.render('/property');
-		assert.match(rendered.html, /data-property-marker="vue-property"/);
+		const rendered = await mod.render('/property/sitemap');
+		assert.match(rendered.html, /<h1 class="f3 text-bold text-center">Property<\/h1>/);
 		assert.equal(rendered.state.marker, 'vue-property');
+	} finally {
+		await vite.close();
+	}
+});
+
+test('vue ssr property search renders listing page', async () => {
+	const vite = await createServer({
+		server: { middlewareMode: true },
+		appType: 'custom',
+	});
+	try {
+		const mod = await vite.ssrLoadModule('/client/src/entry-server.ts');
+		const rendered = await mod.render('/property/tx');
+		assert.match(rendered.html, /page-property/);
+		assert.match(rendered.html, /aria-label="Listing"/);
 	} finally {
 		await vite.close();
 	}

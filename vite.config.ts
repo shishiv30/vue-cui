@@ -48,6 +48,45 @@ function ejsClient() {
 		}
 	};
 }
+/** Dev only: sw.js imports workbox (not installed), so serve a stub that clears any stale registration. */
+function devSwStub() {
+	return {
+		name: 'dev-sw-stub',
+		apply: 'serve' as const,
+		configureServer(server: { middlewares: { use: (fn: (req: { url?: string }, res: { setHeader: (k: string, v: string) => void; end: (body: string) => void }, next: () => void) => void) => void } }) {
+			server.middlewares.use((req, res, next) => {
+				if (req.url?.split('?')[0] !== '/sw.js') {
+					return next();
+				}
+				res.setHeader('Content-Type', 'text/javascript');
+				res.end("self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',()=>self.registration.unregister());");
+			});
+		}
+	};
+}
+/** Dev only: build copies client/assets/images to dist/images, so serve the same folder at /images. */
+function devImages() {
+	const dir = path.resolve(root, 'client/assets/images');
+	return {
+		name: 'dev-images',
+		apply: 'serve' as const,
+		configureServer(server: { middlewares: { use: (fn: (req: { url?: string }, res: { setHeader: (k: string, v: string) => void; end: (body: Buffer) => void }, next: () => void) => void) => void } }) {
+			server.middlewares.use((req, res, next) => {
+				const url = req.url?.split('?')[0] ?? '';
+				if (!url.startsWith('/images/')) {
+					return next();
+				}
+				const file = path.join(dir, decodeURIComponent(url.slice('/images/'.length)));
+				if (!file.startsWith(dir + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+					return next();
+				}
+				const types: Record<string, string> = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.gif': 'image/gif' };
+				res.setHeader('Content-Type', types[path.extname(file).toLowerCase()] ?? 'application/octet-stream');
+				res.end(fs.readFileSync(file));
+			});
+		}
+	};
+}
 function copyStatic() {
 	return {
 		name: 'copy-static',
@@ -85,7 +124,7 @@ export default defineConfig({
 	define: {
 		__APP_BASE__: JSON.stringify('')
 	},
-	plugins: [vue(), includeHtml(), ejsClient(), copyStatic()],
+	plugins: [vue(), includeHtml(), ejsClient(), devSwStub(), devImages(), copyStatic()],
 	build: {
 		outDir: 'dist',
 		emptyOutDir: true,

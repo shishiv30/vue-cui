@@ -24,26 +24,26 @@
       "server": {
         "type": "express-ejs-config-driven",
         "entry": "server/index.ts",
-        "runtime_config": "server/config.js",
-        "routes": "server/routes/index.js",
+        "runtime_config": "server/config.ts",
+        "routes": "server/routes/index.ts",
         "controller": {
           "class": "BaseController",
-          "file": "server/controllers/index.js",
+          "file": "server/controllers/index.ts",
           "configs_directory": "server/controllers/",
-          "contract_reference": "server/controllers/configbase.js"
+          "contract_reference": "server/controllers/configbase.ts"
         },
         "api": {
           "app_prefix": "/api",
           "soa_prefix": "/api/soa",
           "soa_children": [
-            "server/routes/api.soa.property.js",
-            "server/routes/api.soa.school.js",
-            "server/routes/api.soa.poi.js",
-            "server/routes/api.soa.geoarea.js"
+            "server/routes/api.soa.property.ts",
+            "server/routes/api.soa.school.ts",
+            "server/routes/api.soa.poi.ts",
+            "server/routes/api.soa.geoarea.ts"
           ]
         },
         "content_sources": {
-          "local_page_data": "server/utils/localData.js",
+          "local_page_data": "server/utils/localData.ts",
           "local_seed_data": "data/",
           "local_seed_data_note": "See data_folder — all default/mock/sample hardcoded data lives under data/, not helpers/ or inline in configs"
         }
@@ -69,7 +69,7 @@
     "usage": [
       "Use this file for context and examples",
       "When guidance conflicts with rules or repo reality, follow rules and current code",
-      "For ports, scripts, and route topology, verify package.json, server/config.js, server/routes/*, and webpack.config*.js",
+      "For ports, scripts, and route topology, verify package.json, server/config.ts, server/routes/*, and webpack.config*.js",
       "Default, mock, or sample hardcoded data → data/ only (see data_folder); helpers/ is mapping/transform logic only"
     ]
   },

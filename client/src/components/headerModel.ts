@@ -41,15 +41,8 @@ export const headerMock: HeaderUiModel = {
 		spellcheck: false,
 	},
 	menu: [
-		{ text: 'Home', href: '/' },
-		{
-			text: 'Property',
-			href: '/property.html',
-			children: [
-				{ text: 'About', href: '/about.html' },
-				{ text: 'Layout', href: '/layout.html' },
-			],
-		},
-		{ text: 'Document', href: '/document' },
+		{ text: 'Document', href: '/' },
+		{ text: 'Sitemap', href: '/property' },
+		{ text: 'Search', href: '/property/search' },
 	],
 };

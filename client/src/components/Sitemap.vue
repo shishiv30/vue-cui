@@ -1,6 +1,6 @@
 <template>
+	<h1 class="f3 text-bold text-center">{{ title }}</h1>
 	<section class="section grid grid-xs-1 fixed">
-		<h1 class="f3 text-bold text-center">{{ title }}</h1>
 		<template v-for="(group, groupIndex) in groups" :key="groupIndex">
 			<h2 v-if="group.title" class="f4 text-bold">{{ group.title }}</h2>
 			<ul

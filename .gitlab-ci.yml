@@ -19,7 +19,7 @@ cache:
   policy: pull-push
 
 .npm-job:
-  image: docker.ojointernal.com/build-images/node:25
+  image: node:25
   cache:
     key:
       files: [package-lock.json]

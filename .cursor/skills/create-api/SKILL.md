@@ -41,7 +41,7 @@ console.log(JSON.stringify({ paths: Object.keys(d.paths || {}), schemas: Object.
 
 ### 2. Add config
 
-In `server/config.js` add:
+In `server/config.ts` add:
 
 - Base URL (e.g. `geoareaApiDomain` from `GEOAREA_API_DOMAIN`)
 - API key (e.g. `soaAPIKey` from `SOA_API_KEY`)
@@ -61,7 +61,7 @@ Add `docs/<name>-api.md` (e.g. `docs/soa-api.md`) with:
 
 ### 4. Create fetch layer
 
-In `server/controllers/<name>.js` (e.g. `realestate.js`):
+In `server/controllers/<name>.ts` (e.g. `realestate.ts`):
 
 - `getHeaders()` – build auth headers (e.g. `X-MData-Key`)
 - `fetchFromApi(method, path, options)` – generic fetch with:
@@ -85,7 +85,7 @@ Response mappers encapsulate `ensureArray` + item mappers. Keep all mapping logi
 
 ### 6. Add router
 
-Create `server/routes/api.<name>.js` (e.g. `api.soa.js`):
+Create `server/routes/api.<name>.ts` (e.g. `api.soa.ts`):
 
 - Import `fetchFromApi` (and specific fetchers) from config
 - Import response mappers from the mapper helper
@@ -98,14 +98,14 @@ Do **not** put `ensureArray`, `map*ToGeo`, or other mapping logic in the router.
 
 ### 7. Mount router
 
-In `server/routes/index.js`:
+In `server/routes/index.ts`:
 
 ```js
 import apiSoaRouter from './api.soa.js';
 router.use('/api/soa', apiSoaRouter);
 ```
 
-Add the new routes file to `server/swaggerConfig.js` `apis` array if you use JSDoc Swagger.
+Add the new routes file to `server/swaggerConfig.ts` `apis` array if you use JSDoc Swagger.
 
 ### 8. Add Swagger JSDoc
 
@@ -130,17 +130,17 @@ When adding explicit SOA proxy endpoints (e.g. Property, School):
 - **Path variants**: When an ID can be passed via query or path (e.g. `?propertyId=123` vs `/getXById/123`), add separate `@swagger` path entries for each variant so both appear in Swagger UI.
 - **Shared proxy helper**: Use a helper like `proxyToPropertyPath(req, res, method, path, overrides)` to avoid duplication; `overrides` can include `query` or `body` for remapped inputs.
 
-Reference: `server/routes/api.soa.property.js`.
+Reference: `server/routes/api.soa.property.ts`.
 
 ## Pattern Summary
 
 | Layer | Responsibility |
 |-------|----------------|
-| `server/config.js` | Base URL, API key from env |
+| `server/config.ts` | Base URL, API key from env |
 | `docs/*-api.md` | Reference: APIs table, schemas, POST bodies |
-| `server/controllers/*.js` | Fetch upstream API |
+| `server/controllers/*.ts` | Fetch upstream API |
 | `helpers/*Mapper.js` | Raw → UI model (ensureArray + map*) |
-| `server/routes/api.*.js` | Route registration, handlers: fetch → map → res.json |
+| `server/routes/api.*.ts` | Route registration, handlers: fetch → map → res.json |
 
 **SOA proxy routes**: Use semantic names (`/getPropertyByPath`), remap inputs (path→url, propertyId), document full input/output in Swagger, add path variants when ID can be query or path. See §9.
 
@@ -164,8 +164,8 @@ export async function getCountiesByStateCode(req, res) {
 
 - API list and schemas: `docs/soa-api.md`
 - Geo SOA mappers: `helpers/geo.js` (`mapSoaStatesResponse`, etc.)
-- Config: `server/controllers/realestate.js`
-- Routes: `server/routes/api.soa.js`
+- Config: `server/controllers/realestate.ts`
+- Routes: `server/routes/api.soa.ts`
 
 ## Done checklist
 
@@ -173,4 +173,4 @@ export async function getCountiesByStateCode(req, res) {
 - Config/env keys were added or verified
 - Route handlers delegate to fetch + mapper layers
 - Swagger docs represent UI-facing response shape
-- Router is mounted and reachable from `server/routes/index.js`
+- Router is mounted and reachable from `server/routes/index.ts`

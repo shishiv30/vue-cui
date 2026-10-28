@@ -55,7 +55,7 @@ flowchart TB
 | **Webpack emit (“build”)** | `dist/property.min.js`, `property.min.css`, shell `dist/property.html` | `npm run build:prod` / `build:stage` / `dev` |
 | **No separate CLI** | There is **no** `npm run compile` | — |
 | **SSR EJS** | **Not** baked into live `/property/tx` HTML at webpack time; rendered per request | Express views [`server/ejs/`](../server/ejs/) |
-| **Dev HMR** | When `webpackHotReload` is on | [`webpack.config.dev.js`](../webpack.config.dev.js), [`server/config.js`](../server/config.js) |
+| **Dev HMR** | When `webpackHotReload` is on | [`webpack.config.dev.js`](../webpack.config.dev.js), [`server/config.ts`](../server/config.ts) |
 
 Live URL `http://localhost:3000/property/tx` is **Express SSR** (`property.ejs`), not the webpack HtmlWebpackPlugin shell `dist/property.html`.
 
@@ -73,9 +73,9 @@ Live URL `http://localhost:3000/property/tx` is **Express SSR** (`property.ejs`)
 
 Ordered path (no `beforeRequest` / `afterResponse` hooks):
 
-1. [`server/app.js`](../server/app.js) — `compression` → session → Referrer-Policy → CORS → `express.static('dist')` (may serve a previously saved `dist/property/tx.html`) → `app.use('/', router)`
-2. [`server/routes/index.js`](../server/routes/index.js) — `registerProperty` among other registrars
-3. [`server/routes/property.js`](../server/routes/property.js) — geo catch-all `createPropertySpaRegExp('geo')` matches `/property/tx`
+1. [`server/index.ts`](../server/index.ts) — swagger → compression → session → Referrer-Policy → CORS → SOA logs → Vue SSR (`loadPropertySearchPageState`) → `app.use('/', router)`
+2. [`server/routes/index.ts`](../server/routes/index.ts) — `registerPropertySitemap` then `registerProperty` among other registrars
+3. [`server/routes/property.ts`](../server/routes/property.ts) — geo catch-all `createPropertySpaRegExp('geo')` matches `/property/tx`
    - `tail` → `"/tx"`
    - `getCanonicalPropertyGeoRedirectPath(tail)` → **`null`** for bare `tx` (no 301)
    - `req.query.geoPath = tail`
@@ -83,7 +83,7 @@ Ordered path (no `beforeRequest` / `afterResponse` hooks):
 
 ### Controller hooks that exist (property config)
 
-Contract: [`server/controllers/configbase.js`](../server/controllers/configbase.js). Property implements:
+Contract: [`server/controllers/configbase.ts`](../server/controllers/configbase.ts). Property implements:
 
 | Hook | Role on `/property/tx` |
 |------|--------------------|
@@ -96,7 +96,7 @@ Contract: [`server/controllers/configbase.js`](../server/controllers/configbase.
 
 ### `property.get()` for `/property/tx`
 
-[`server/controllers/property.js`](../server/controllers/property.js):
+[`server/controllers/property.ts`](../server/controllers/property.ts):
 
 ```text
 Promise.all([
@@ -110,11 +110,11 @@ Promise.all([
            footerComponent, welcomeImage, cdnHost, appHost, detail }
 ```
 
-SOA helpers live in [`server/routes/api.soa.property.js`](../server/routes/api.soa.property.js). Failed SOA (`fetchFromSoa` → `null`) yields **empty articles**, still **HTTP 200** for HTML (no throw).
+SOA helpers live in [`server/routes/api.soa.property.ts`](../server/routes/api.soa.property.ts). Failed SOA (`fetchFromSoa` → `null`) yields **empty articles**, still **HTTP 200** for HTML (no throw).
 
 ### `toPage` → HTML
 
-[`BaseController.toPage`](../server/controllers/index.js):
+[`BaseController.toPage`](../server/controllers/index.ts):
 
 1. `initialMeta` — `meta.css` / `meta.js` → `/property.min.css`, `/property.min.js`; merges `preload`
 2. `initialSeo` / `initialBreadcrumb` / theme `inlineCss`
@@ -193,7 +193,7 @@ After `toPage`, the render model also has top-level `meta`, `seo`, `breadcrumb`,
 
 ### `GET /api/property/detail/:prId`
 
-- **Route:** [`server/routes/api.js`](../server/routes/api.js) — sets `req.query.prId` → `BaseController('property').get()` → [`toData`](../server/controllers/index.js)
+- **Route:** [`server/routes/api.ts`](../server/routes/api.ts) — sets `req.query.prId` → `BaseController('property').get()` → [`toData`](../server/controllers/index.ts)
 - **Success (typical):** HTTP status = `code` (200)
 
 ```js

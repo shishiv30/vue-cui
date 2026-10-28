@@ -1,8 +1,8 @@
 {
-	"name": "pure",
-	"version": "1.0.0",
-	"description": "try to made light performance first ui framework",
-	"main": "server/index.ts",
+	"name": "@shishiv30/vue-cui",
+	"version": "0.1.0",
+	"description": "Performance-first Vue 3 UI component library",
+	"main": "./dist-lib/index.js",
 	"type": "module",
 	"scripts": {
 		"dev:client": "vite --port 3001",
@@ -16,7 +16,7 @@
 		"build-docker:prod": "npx cross-env NODE_ENV=production ./run-docker.sh",
 		"docker:run": "./run-container.sh",
 		"start": "npx cross-env NODE_ENV=production tsx server/index.ts",
-		"test": "node --test test/*.test.js && node test/test-geo-mapping.js && node test/test-auto-detection.js && node test/test-dialog-plugin.js",
+		"test": "npx tsx --test test/*.test.js && node test/test-geo-mapping.js && node test/test-auto-detection.js && node test/test-dialog-plugin.js",
 		"lint": "eslint helpers/geo.js helpers/routes/ client/js/core/router.js client/js/index.js helpers/property.js helpers/article.js",
 		"storybook": "npx cross-env LAUNCH_EDITOR=./scripts/open-cursor.sh storybook dev -p 6006",
 		"build:storybook": "storybook build -o dist/storybook",
@@ -24,9 +24,11 @@
 		"test-storybook": "vitest --project=storybook",
 		"postinstall": "node scripts/fix-storybook-coverage-reporter.mjs",
 		"clean": "rm -rf dist",
-		"prebuild": "npm run clean"
+		"prebuild": "npm run clean",
+		"build:lib": "vite build -c vite.lib.config.ts && node scripts/build-lib-css.mjs",
+		"prepack": "npm run build:lib"
 	},
-	"license": "ISC",
+	"license": "MIT",
 	"engines": {
 		"node": ">=25.6.0"
 	},
@@ -52,8 +54,10 @@
 		"tsx": "^4.20.0",
 		"typescript": "^5.9.0",
 		"vite": "^7.0.0",
+		"vite-plugin-dts": "^5.1.2",
 		"vitest": "^5.0.5",
-		"vue": "^3.5.0"
+		"vue": "^3.5.0",
+		"vue-tsc": "^3.3.13"
 	},
 	"dependencies": {
 		"@vue/server-renderer": "^3.5.0",
@@ -71,5 +75,31 @@
 		"swagger-ui-express": "^5.0.1",
 		"vue-router": "^4.5.0",
 		"vuex": "^4.1.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shishiv30/vue-cui.git"
+	},
+	"homepage": "https://shishiv30.github.io/vue-cui/",
+	"sideEffects": [
+		"**/*.css"
+	],
+	"files": [
+		"dist-lib"
+	],
+	"module": "./dist-lib/index.js",
+	"types": "./dist-lib/lib/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist-lib/lib/index.d.ts",
+			"import": "./dist-lib/index.js"
+		},
+		"./style.css": "./dist-lib/style.css"
+	},
+	"peerDependencies": {
+		"vue": "^3.5.0"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

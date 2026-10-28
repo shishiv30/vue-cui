@@ -1,6 +1,6 @@
 /**
  * Shared property SPA URL patterns for server routes and client Router.
- * Sitemap routes stay in server/routes/property.js; update patterns here for detail/map/grid.
+ * Sitemap routes stay in server/routes/propertySitemap.ts; update patterns here for detail/map/grid.
  */
 
 export const PROPERTY_SEG = {

@@ -37,7 +37,7 @@ flowchart LR
 
 After calling `mapPropertyDetailToArticle(listingRaw, historiesRaw)` (or list mappers), controllers must use **`metadata`**, **`detail.*` comp fields**, and **`buildDetailSeo(detail)`** only — not raw `listingRaw` for SEO, EJS, or business logic.
 
-Example: [`server/controllers/property.js`](../server/controllers/property.js).
+Example: [`server/controllers/property.ts`](../server/controllers/property.ts).
 
 ---
 
@@ -47,9 +47,9 @@ Example: [`server/controllers/property.js`](../server/controllers/property.js).
 
 | Path | Purpose | Key files |
 |------|---------|-----------|
-| **SSR HTML** | Full property pages | `server/routes/property.js` → `BaseController('property')` → `server/controllers/property.js` |
-| **JSON API** | SPA detail fetch | `GET /api/property/detail/:prId` in `server/routes/api.js` → same `property.get()` → `toData()` |
-| **HTTP proxy** | External/tools call SOA verbatim | `/api/soa/property/*` → `server/routes/api.soa.property.js` → `fetchFromSoa()` in `server/controllers/realestate.js` |
+| **SSR HTML** | Full property pages | `server/routes/property.ts` → `BaseController('property')` → `server/controllers/property.ts` |
+| **JSON API** | SPA detail fetch | `GET /api/property/detail/:prId` in `server/routes/api.ts` → same `property.get()` → `toData()` |
+| **HTTP proxy** | External/tools call SOA verbatim | `/api/soa/property/*` → `server/routes/api.soa.property.ts` → `fetchFromSoa()` in `server/controllers/realestate.ts` |
 
 ### Property controller SOA calls
 
@@ -59,7 +59,7 @@ Example: [`server/controllers/property.js`](../server/controllers/property.js).
 - `getPropertyListingInfoById(prId)` — primary listing (detail)
 - `getPropertyHistoryById(prId)` — histories (detail)
 
-Imported from `server/routes/api.soa.property.js` (not an internal HTTP hop to `/api/soa`).
+Imported from `server/routes/api.soa.property.ts` (not an internal HTTP hop to `/api/soa`).
 
 `searchHouse` posts to `POST /listings/nearbysearch/v2`. `getSearchInputByGeo` picks the first matching method (5):
 
@@ -71,13 +71,15 @@ Imported from `server/routes/api.soa.property.js` (not an internal HTTP hop to `
 | 4 | county + state | `{county} {state}` |
 | 5 | state | `{state}` |
 
+`/property/search` has no geo path. `property.beforeGet` uses `getGeoCityByIp`: geoip city+state when present, otherwise nearest `uscities` lat/lng from the Fuse city cache, otherwise search by IP lat/lng via `GET /listings/nearbysearch/v2`. Fuse city search is name-only; nearest-city uses the `lat`/`lng` fields on that same city list.
+
 `searchType` is `geo.type` uppercased. App types in `helpers/geo.js` are `state`, `city`, `county`, `zipcode`, `neighborhood`, `address`, and `school`. There is no address branch in `getSearchInputByGeo`; an address geo falls through the table above or sends an empty `input`.
 
 A school path `/property/{state}/{city}/{id}_school` does not use nearby search. `searchHouse` loads `GET /baseInfo?id={id}` on the school API, then posts `POST /listings/schools/v2` with `searchType: SCHOOL` and `schoolRequest: [{ schoolId, schoolBoundaryId }]`. `schoolId` in that body is the school service id from `baseInfo`, and `schoolBoundaryId` is `baseInfo.boundaryId`. The path `{id}` is the `baseInfo` query id (an NCES id is accepted).
 
 `searchHouse(geo, filter)` copies the filter object onto the nearby-search body (`input` and `searchType` stay). Property pages pass the SOA field set from `helpers/filter.js`. `getFilterByPayloadFilter` still maps this wider payload field list into the older internal filter shape (pagination and sort included):
 
-`minPrice`, `maxPrice`, `minBed`, `maxBed`, `minBath`, `maxBath`, `propertyTypes`, `minSqft`, `maxSqft`, `minLot`, `maxLot`, `minYear`, `maxYear`, `minDom`, `maxDom`, `minHoa`, `maxHoa`, `attributesTags` (`pool` and `garage` also set their own flags), `isNewListingsOnly`, `isReducedPrice`, `isVirtualTourLinkOnly`, `hasVideo`, `isNewConstruction`, `isDistressed`, `isOpenHousesOnly`, `movotoListing`, `hasPhoto`, `sortColumn` + `sortOrder`, `searchPropertyStatus` (`FOR_RENT`, `INACTIVE` with optional `soldDateRange`, `ACTIVE`), `schoolRequest` (first school only), `pageIndex`, `maxCountPerPage`, and the viewport quartet `maxLat` / `minLat` / `maxLng` / `minLng`.
+`minPrice`, `maxPrice`, `minBed`, `maxBed`, `minBath`, `maxBath`, `propertyTypes`, `minSqft`, `maxSqft`, `minLot`, `maxLot`, `minYear`, `maxYear`, `minDom`, `maxDom`, `minHoa`, `maxHoa`, `attributesTags` (`pool` and `garage` also set their own flags), `isNewListingsOnly`, `isReducedPrice`, `isVirtualTourLinkOnly`, `hasVideo`, `isNewConstruction`, `isDistressed`, `isOpenHousesOnly`, `hasPhoto`, `sortColumn` + `sortOrder`, `searchPropertyStatus` (`FOR_RENT`, `INACTIVE` with optional `soldDateRange`, `ACTIVE`), `schoolRequest` (first school only), `pageIndex`, `maxCountPerPage`, and the viewport quartet `maxLat` / `minLat` / `maxLng` / `minLng`.
 
 That is 33 payload fields. Template keys that stay at their defaults and are not read from the payload include `fixerupper` and `propertyCriteriaLuxuryHome`.
 
@@ -176,7 +178,7 @@ List grid: [`property.ejs`](../server/ejs/property.ejs) loops `articleComponent.
 
 Both call the same `config.get()` — property SSR and SPA share one data builder.
 
-Contract: [`server/controllers/configbase.js`](../server/controllers/configbase.js).
+Contract: [`server/controllers/configbase.ts`](../server/controllers/configbase.ts).
 
 ---
 
@@ -250,7 +252,7 @@ No Playwright/e2e in repo; optional Lighthouse via `npm run test:lighthouse`.
 
 ### Route patterns
 
-- Server: regexes in `server/routes/property.js`.
+- Server: regexes in `server/routes/property.ts`.
 - Client: regexes in `client/pages/property/index.js`.
 - **Direction:** shared route manifest (e.g. `data/routes/property.json`) consumed by both sides.
 

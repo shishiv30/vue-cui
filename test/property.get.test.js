@@ -6,6 +6,11 @@ import assert from 'node:assert/strict';
 import propertyConfig from '../server/controllers/property.js';
 import { mapPropertyDetailToArticle } from '../helpers/article.js';
 
+try {
+	process.loadEnvFile('.env.local');
+} catch {}
+const PHOTO_HOST = process.env.TEST_PHOTO_HOST || 'https://photos.example.com';
+
 const DETAIL_COMP_KEYS = [
 	'metadata',
 	'title',
@@ -32,7 +37,7 @@ const soaPureListing = {
 	listPrice: 135000,
 	listingStatus: { displayName: 'Active', name: 'ACTIVE' },
 	listingUrl: 'winters-tx/101-mel-st-winters-tx-79567/pid_dh5p9ng4nh/',
-	photos: [{ url: 'https://pi.movoto.com/p/402/21259416_0_ZjJZN2.webp' }],
+	photos: [{ url: `${PHOTO_HOST}/p/402/21259416_0_ZjJZN2.webp` }],
 	sqftTotal: 1246,
 	yearBuilt: 1958,
 };

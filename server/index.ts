@@ -4,11 +4,18 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import type { ViteDevServer } from 'vite';
+import swaggerUi from 'swagger-ui-express';
 import config from './config.js';
 import session from './middleware/session.js';
 import geo from './middleware/geo.js';
 import router from './routes/index.js';
-import { loadPropertyPageState } from './utils/propertyPageState.js';
+import swaggerSpec from './swaggerConfig.js';
+import { runWithSoaLogs } from './controllers/realestate.js';
+import {
+	loadPropertySearchPageState,
+	loadPropertySitemapPageState,
+} from './utils/propertyPageState.js';
 import { matchPropertySpaRoute } from '../helpers/routes/propertySpaRoutes.js';
 
 type ListingPreloadState = {
@@ -35,6 +42,7 @@ const isProd = config.mode === 'production' || config.mode === 'stage';
 const app = express();
 app.set('views', path.join(__dirname, 'ejs'));
 app.set('view engine', 'ejs');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(compression());
 session(app);
 app.use(cors({ origin: config.corsOrigins }));
@@ -43,13 +51,11 @@ app.use((req, res, next) => {
 	res.append('Link', '</llms.txt>; rel="describedby"');
 	next();
 });
+app.use((_req, _res, next) => {
+	runWithSoaLogs(() => next());
+});
 
-let vite: {
-	transformIndexHtml: (url: string, html: string) => Promise<string>;
-	ssrLoadModule: (id: string) => Promise<{ render: (url: string) => Promise<{ html: string; state: unknown }> }>;
-	ssrFixStacktrace: (error: Error) => void;
-	middlewares: express.RequestHandler;
-} | null = null;
+let vite: ViteDevServer | null = null;
 
 if (!isProd) {
 	const { createServer } = await import('vite');
@@ -71,7 +77,7 @@ if (!isProd) {
 			next();
 			return;
 		}
-		vite.middlewares(req, res, next);
+		vite?.middlewares(req, res, next);
 	});
 } else {
 	app.use(express.static(path.join(root, 'dist'), { redirect: false }));
@@ -84,9 +90,11 @@ app.get('/document.html', (_req, res) => {
 app.use(async (req, res, next) => {
 	const pagePath = req.path.replace(/\/+$/, '') || '/';
 	const isDocument = pagePath === '/' || pagePath === '/document';
-	const propertyPage = pagePath.startsWith('/property')
-		? await loadPropertyPageState(req)
-		: null;
+	const propertyPage = pagePath === '/property' || pagePath.startsWith('/property/sitemap')
+		? await loadPropertySitemapPageState(req)
+		: pagePath.startsWith('/property')
+			? await loadPropertySearchPageState(req)
+			: null;
 	if (!isDocument && !propertyPage) {
 		next();
 		return;
@@ -106,7 +114,7 @@ app.use(async (req, res, next) => {
 		if (!isProd && vite) {
 			template = await vite.transformIndexHtml(url, template);
 			template = template.replaceAll('/index.min.css', '/client/scss/index.scss');
-			render = (await vite.ssrLoadModule('/client/src/entry-server.ts')).render;
+			render = (await vite.ssrLoadModule('/client/src/entry-server.ts')).render as typeof render;
 		} else {
 			const serverEntry = pathToFileURL(path.join(root, 'dist/server/entry-server.js')).href;
 			render = (await import(serverEntry)).render;
@@ -149,6 +157,7 @@ app.use('/', router);
 await geo(app);
 app.listen(config.port, () => {
 	console.log(`App listening on ${config.appHost}`);
+	console.log(`API docs at ${config.appHost}/api-docs`);
 	console.log(`Property page at ${config.appHost}/property`);
 	console.log(`Document page at ${config.appHost}/`);
 });

@@ -21,6 +21,11 @@ import {
 	toSoaPreviewPhotoUrl,
 } from '../helpers/property.js';
 
+try {
+	process.loadEnvFile('.env.local');
+} catch {}
+const PHOTO_HOST = process.env.TEST_PHOTO_HOST || 'https://photos.example.com';
+
 /** Minimal SOA Pure listing (subset of production shape). */
 const soaPureListing = {
 	address: {
@@ -48,8 +53,8 @@ const soaPureListing = {
 	officeListName: 'Hunter Ranch and Realty',
 	photoCount: 29,
 	photos: [
-		{ url: 'https://pi.movoto.com/p/402/21259416_0_ZjJZN2.webp' },
-		{ url: 'https://pi.movoto.com/p/402/21259416_0_YVZb7M.webp' },
+		{ url: `${PHOTO_HOST}/p/402/21259416_0_ZjJZN2.webp` },
+		{ url: `${PHOTO_HOST}/p/402/21259416_0_YVZb7M.webp` },
 	],
 	priceChangeAmount: null,
 	sqftTotal: 1246,
@@ -114,8 +119,8 @@ describe('mapSOADataToMetadata', () => {
 		assert.equal(meta.pricePerArea, 135000 / 1246);
 		assert.equal(meta.yearBuilt, 1958);
 		assert.deepEqual(meta.photos, [
-			'https://pi.movoto.com/p/402/21259416_0_ZjJZN2_p.webp',
-			'https://pi.movoto.com/p/402/21259416_0_YVZb7M_p.webp',
+			`${PHOTO_HOST}/p/402/21259416_0_ZjJZN2_p.webp`,
+			`${PHOTO_HOST}/p/402/21259416_0_YVZb7M_p.webp`,
 		]);
 		assert.equal(meta.photoCount, 29);
 		assert.equal(meta.officeListName, 'Hunter Ranch and Realty');
@@ -136,13 +141,13 @@ describe('mapSOADataToMetadata', () => {
 
 	test('collectPhotoUrls reads photos[].url from SOA Pure', () => {
 		assert.deepEqual(collectPhotoUrls(soaPureListing), [
-			'https://pi.movoto.com/p/402/21259416_0_ZjJZN2_p.webp',
-			'https://pi.movoto.com/p/402/21259416_0_YVZb7M_p.webp',
+			`${PHOTO_HOST}/p/402/21259416_0_ZjJZN2_p.webp`,
+			`${PHOTO_HOST}/p/402/21259416_0_YVZb7M_p.webp`,
 		]);
 	});
 
 	test('toSoaPreviewPhotoUrl normalizes webp suffixes to _p.webp', () => {
-		const base = 'https://pi.movoto.com/p/402/21259416_0_ZjJZN2';
+		const base = `${PHOTO_HOST}/p/402/21259416_0_ZjJZN2`;
 		assert.equal(toSoaPreviewPhotoUrl(`${base}.webp`), `${base}_p.webp`);
 		assert.equal(toSoaPreviewPhotoUrl(`${base}_r.webp`), `${base}_p.webp`);
 		assert.equal(toSoaPreviewPhotoUrl(`${base}_l.webp`), `${base}_p.webp`);

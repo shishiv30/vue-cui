@@ -90,9 +90,14 @@ export const Default: Story = {
 		template: '<Header :model="model" />',
 	}),
 	play: async ({ canvas }) => {
-		const expand = canvas.getByRole('button', { name: 'Expand Property' });
-		const item = expand.closest('li');
-		expand.click();
-		await expect(item).toHaveClass('hover');
+		await expect(canvas.getByRole('link', { name: 'Document' })).toHaveAttribute('href', '/');
+		await expect(canvas.getByRole('link', { name: 'Sitemap' })).toHaveAttribute(
+			'href',
+			'/property',
+		);
+		await expect(canvas.getByRole('link', { name: 'Search' })).toHaveAttribute(
+			'href',
+			'/property/search',
+		);
 	},
 };

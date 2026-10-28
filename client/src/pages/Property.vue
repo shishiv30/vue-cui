@@ -1,8 +1,7 @@
 <template>
 	<div ref="pageEl" :class="pageClass">
-		<Header v-if="header" :model="{ ...header, sticky: 'true' }" />
+		<Header :model="header" />
 		<nav
-			v-if="kind === 'search'"
 			class="listing-nav"
 			aria-label="Listing"
 		>
@@ -23,26 +22,13 @@
 				/>
 			</div>
 		</nav>
-		<nav
-			v-else-if="breadcrumbLinks.length"
-			class="breadcrumb"
-			aria-label="breadcrumb"
-		>
-			<ul>
-				<li v-for="(link, index) in breadcrumbLinks" :key="index">
-					<span v-if="!link.href">{{ link.text }}</span>
-					<a v-else :href="link.href">{{ link.text }}</a>
-				</li>
-			</ul>
-		</nav>
-		<Sitemap v-if="kind === 'sitemap'" :title="title" :groups="groups" />
 		<Detail
-			v-if="kind === 'search' && (detail || detailPlaceholder || leaving)"
+			v-if="detail || detailPlaceholder || leaving"
 			:model="detail"
 			:placeholder="detailPlaceholder"
 			:reveal="detailReveal"
 		/>
-		<Result v-if="kind === 'search'" :articles="articles" />
+		<Result :articles="articles" />
 		<footer v-if="footer" class="footer">
 			<section class="section small major inline bg active">
 				<div class="fixed fixed-max-xs grid grid-xs-1">
@@ -108,25 +94,22 @@ import Detail from '../components/Detail.vue';
 import GroupDropdown from '../components/GroupDropdown.vue';
 import Header from '../components/Header.vue';
 import Result from '../components/Result.vue';
-import Sitemap from '../components/Sitemap.vue';
 import type { PropertyDetailModel } from '../components/detailModel';
 import type { ArticleUiModel } from '../components/articleModel';
 import type { GroupDropdownField, GroupDropdownValue } from '../components/groupdropdownModel';
 import { getQueryStringByFilter } from '../../../helpers/filter.js';
 import { matchPropertySpaRoute } from '../../../helpers/routes/propertySpaRoutes.js';
+import { headerMock } from '../components/headerModel';
 import type { PropertyState } from '../store';
 
 const store = useStore<PropertyState>();
 const route = useRoute();
 const router = useRouter();
-const title = computed(() => store.state.title);
-const kind = computed(() => store.state.kind);
 const detail = computed(() => store.state.detail);
 const detailPlaceholder = ref(false);
 const detailReveal = ref(false);
-const header = computed(() => store.state.header);
+const header = headerMock;
 const footer = computed(() => store.state.footer);
-const groups = computed(() => store.state.groups);
 const articles = computed(() => store.state.articles);
 const filters = computed(() => store.state.filters);
 const breadcrumbLinks = computed(() => store.state.breadcrumb?.links ?? []);
@@ -151,20 +134,15 @@ const lock = ref(false);
 const collapse = ref(false);
 const menu = ref(false);
 
-const pageClass = computed(() => {
-	if (kind.value !== 'search') {
-		return undefined;
-	}
-	return {
-		'page-property': true,
-		[`view-${view.value}`]: true,
-		'view-animating': animating.value,
-		'detail-leaving': leaving.value,
-		lock: lock.value,
-		collapse: collapse.value,
-		menu: menu.value,
-	};
-});
+const pageClass = computed(() => ({
+	'page-property': true,
+	[`view-${view.value}`]: true,
+	'view-animating': animating.value,
+	'detail-leaving': leaving.value,
+	lock: lock.value,
+	collapse: collapse.value,
+	menu: menu.value,
+}));
 
 type ItemRect = {
 	item: HTMLElement;
@@ -562,15 +540,17 @@ function onFilterChange() {
 }
 
 watch(() => route.fullPath, async (fullPath, previous) => {
-	if (kind.value !== 'search' || fullPath === previous || previous === undefined) {
+	if (fullPath === previous || previous === undefined) {
 		return;
 	}
-	if (matchPropertySpaRoute(route.path)?.id !== 'geo') {
+	const pagePath = route.path.replace(/\/+$/, '') || '/';
+	const isIpSearch = pagePath === '/property/search';
+	if (!isIpSearch && matchPropertySpaRoute(route.path)?.id !== 'geo') {
 		return;
 	}
-	const geo = route.path.replace(/^\/property\//, '');
+	const geo = isIpSearch ? '' : route.path.replace(/^\/property\//, '');
 	const search = route.fullPath.includes('?') ? route.fullPath.slice(route.fullPath.indexOf('?')) : '';
-	const response = await fetch(`/api/property/search/${geo}${search}`);
+	const response = await fetch(`/api/property/search${geo ? `/${geo}` : ''}${search}`);
 	if (!response.ok) {
 		return;
 	}

@@ -14,6 +14,7 @@ type ArticleStoryArgs = {
 	path: string;
 	id: string;
 	img: string;
+	fallbackImg: string;
 	imgAlt: string;
 	imgTag: string;
 	attrs: ArticleAttr[];
@@ -61,7 +62,12 @@ const meta = {
 		},
 		img: {
 			control: 'text',
-			description: 'Photo URL. Empty uses /images/n_a.svg.',
+			description: 'Photo URL. Empty or failed to load uses fallbackImg.',
+			table: { category: 'props', type: { summary: 'string' } },
+		},
+		fallbackImg: {
+			control: 'text',
+			description: 'Image shown when img is empty or fails to load. Defaults to empty.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
 		imgAlt: {
@@ -102,6 +108,7 @@ export const Default: Story = {
 		path: articleMock.path ?? '',
 		id: articleMock.id ?? '',
 		img: articleMock.img ?? '',
+		fallbackImg: articleMock.fallbackImg ?? '',
 		imgAlt: articleMock.imgAlt ?? '',
 		imgTag: articleMock.imgTag ?? '',
 		attrs: articleMock.attrs ?? [],
@@ -117,6 +124,7 @@ export const Default: Story = {
 				path: args.path || undefined,
 				id: args.id || undefined,
 				img: args.img,
+				fallbackImg: args.fallbackImg || undefined,
 				imgAlt: args.imgAlt,
 				imgTag: args.imgTag,
 				attrs: args.attrs,

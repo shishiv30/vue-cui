@@ -1,6 +1,6 @@
 # Storybook CI (GitLab)
 
-Push to [homeowner/llm](https://git.ojointernal.com/homeowner/llm) runs [`.gitlab-ci.yml`](../.gitlab-ci.yml). The pipeline builds static Storybook and syncs it to S3. It does not use Helm, `kotlin-service-template`, GitHub Actions, ECR, or App Runner.
+Push to this repository runs [`.gitlab-ci.yml`](../.gitlab-ci.yml). The pipeline builds static Storybook and syncs it to S3. It does not use Helm, `kotlin-service-template`, GitHub Actions, ECR, or App Runner.
 
 App Runner `pure` stays the main site. Storybook is a separate static site.
 
@@ -29,7 +29,7 @@ Set these on the GitLab project (**Settings → CI/CD → Variables**). Mask the
 | `STORYBOOK_AWS_REGION` | variable | Optional. Defaults to `us-east-1` |
 | `CACHE_TTL` | variable | Optional. Defaults to `300` in `.gitlab-ci.yml` |
 
-consumer-web stores the same AWS names as GitLab variables. Those values belong to the Movoto Storybook bucket. This project needs its own bucket, distribution, and keys.
+This project needs its own bucket, distribution, and keys.
 
 ## AWS resources to create once
 
@@ -61,6 +61,6 @@ consumer-web stores the same AWS names as GitLab variables. Those values belong 
 ```
 
 4. **DNS** for `STORYBOOK_PUBLIC_HOST` (and a wildcard if merge-request subdomains should resolve). Without DNS, the CloudFront domain name can be the host.
-5. **GitLab runners** that can pull `docker.ojointernal.com/build-images/node:25` and `amazon/aws-cli`.
+5. **GitLab runners** that can pull `node:25` and `amazon/aws-cli`.
 
 Not required for Storybook: GitHub secrets, Chromatic, an ECR image, or an App Runner service.

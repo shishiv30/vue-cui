@@ -1,6 +1,6 @@
 # Client Architecture
 
-Layout still boots `client/js/index.js` and `data-role` plugins. `/property` and `/document` are the Vue 3 app in `client/src/` (`router.ts`, `store.ts`, `pages/Property.vue`, `pages/Document.vue`) and are server-rendered from `entry-server.ts`.
+Layout still boots `client/js/index.js` and `data-role` plugins. `/property` and `/document` are the Vue 3 app in `client/src/` (`router.ts`, `store.ts`, `pages/Property.vue`, `pages/PropertySitemap.vue`, `pages/Document.vue`) and are server-rendered from `entry-server.ts`.
 
 
 

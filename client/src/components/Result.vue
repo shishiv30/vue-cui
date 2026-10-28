@@ -6,7 +6,7 @@
 				:key="article.id || index"
 				class="item"
 			>
-				<Article :model="article" />
+				<Article :model="{ fallbackImg: '/images/n_a.svg', ...article }" />
 			</li>
 		</ul>
 	</section>

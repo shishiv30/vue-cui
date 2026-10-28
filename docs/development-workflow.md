@@ -41,7 +41,7 @@
 
 ## Environment Resolution
 
-Configured in `server/config.js`:
+Configured in `server/config.ts`:
 
 - development: `.env`, then `.env.local`
 - stage: `.env.stage`
@@ -64,7 +64,7 @@ When changing property listings, detail sections, or SOA-backed article cards:
 5. Interactive UI → plugin + matching `data-role` in EJS (and SPA if applicable).
 6. Extend `helpers/__tests__/property.test.js`; run `npm run test`.
 
-Property controller: `server/controllers/property.js`. Do not use raw SOA listing in templates after mapping.
+Property controller: `server/controllers/property.ts`. Do not use raw SOA listing in templates after mapping.
 
 ## Notes
 

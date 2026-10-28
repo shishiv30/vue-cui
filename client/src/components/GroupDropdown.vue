@@ -59,7 +59,6 @@
 				:key="field.id"
 				:data-id="field.id"
 				:hidden="sheetOpen ? false : shownId !== field.id"
-				@reset="onPanelReset(field, $event)"
 			>
 				<div class="group-dropdown-title">{{ field.label }}</div>
 				<RangeSlider
@@ -350,27 +349,29 @@ function emptyValue(field: GroupDropdownField) {
 	return field.type === 'single' ? '' : [];
 }
 
-function onPanelReset(field: GroupDropdownField, event: Event) {
-	if (event.target !== event.currentTarget) {
-		return;
-	}
-	patch(field.id, emptyValue(field));
-	(event.currentTarget as HTMLElement)
-		.querySelector('[data-role="rangeslider"], .range-slider')
+function resetSlider(panel: ParentNode | null | undefined) {
+	panel?.querySelector('[data-role="rangeslider"], .range-slider')
 		?.dispatchEvent(new CustomEvent('reset'));
+}
+
+function resetField(field: GroupDropdownField) {
+	patch(field.id, emptyValue(field));
+	resetSlider(listEl.value?.querySelector(`[data-id="${field.id}"]`));
 	emitInput();
 	emitChange();
 }
 
-function resetField(field: GroupDropdownField) {
-	listEl.value?.querySelector(`[data-id="${field.id}"]`)
-		?.dispatchEvent(new CustomEvent('reset', { bubbles: true }));
-}
-
 function resetAll() {
-	listEl.value?.querySelectorAll('[data-id]').forEach((panel) => {
-		panel.dispatchEvent(new CustomEvent('reset', { bubbles: true }));
+	const next = { ...modelValue.value };
+	props.data.forEach((field) => {
+		next[field.id] = emptyValue(field);
 	});
+	write(next);
+	listEl.value?.querySelectorAll('[data-id]').forEach((panel) => {
+		resetSlider(panel);
+	});
+	emitInput();
+	emitChange();
 }
 
 function buttonEl(id: string) {

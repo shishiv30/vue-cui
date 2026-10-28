@@ -5,7 +5,7 @@
 		class="article shadow corner article-card"
 		:class="model.className"
 	>
-		<a :href="href" @click="onAddressClick">
+		<a :href="href">
 			<address class="f6 text-gray">{{ model.title }}</address>
 		</a>
 		<dl v-if="attrs.length" class="dict">
@@ -17,10 +17,10 @@
 		<figure>
 			<img
 				ratio
-				:src="model.img || '/images/n_a.svg'"
+				:src="imgSrc"
 				:alt="model.imgAlt"
 				loading="lazy"
-				data-role="imgerror"
+				@error="onImgError"
 			/>
 			<figcaption>{{ model.imgTag }}</figcaption>
 		</figure>
@@ -36,14 +36,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue';
-import { routerKey } from 'vue-router';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { ArticleUiModel } from './articleModel';
 import { emitPhase } from './emitPhase';
 
 const props = defineProps<{ model: ArticleUiModel }>();
 
 const rootEl = ref<HTMLElement | null>(null);
+
+const failedSrc = ref('');
+const imgSrc = computed(() => {
+	const src = props.model.img;
+	return (src && src !== failedSrc.value ? src : props.model.fallbackImg) || undefined;
+});
+
+function onImgError() {
+	failedSrc.value = props.model.img ?? '';
+}
 
 const attrs = computed(() => props.model.attrs ?? []);
 const tags = computed(() => (props.model.tags ?? []).filter((tag) => tag.text));
@@ -62,34 +71,6 @@ const href = computed(() => {
 	const separator = url.includes('?') ? '&' : '?';
 	return `${url}${separator}id=${encodeURIComponent(item.id)}`;
 });
-
-const router = inject(routerKey, null);
-
-function onAddressClick(event: MouseEvent) {
-	const url = href.value;
-	if (
-		!router
-		|| !url
-		|| !url.startsWith('/')
-		|| url.startsWith('//')
-		|| event.metaKey
-		|| event.ctrlKey
-		|| event.shiftKey
-		|| event.altKey
-		|| event.button !== 0
-	) {
-		return;
-	}
-	event.preventDefault();
-	const queryIndex = url.indexOf('?');
-	const path = queryIndex === -1 ? url : url.slice(0, queryIndex);
-	const search = queryIndex === -1 ? '' : url.slice(queryIndex + 1);
-	const query: Record<string, string> = {};
-	new URLSearchParams(search).forEach((value, key) => {
-		query[key] = value;
-	});
-	void router.push({ path, query });
-}
 
 onMounted(() => {
 	emitPhase('init', 'article', rootEl.value);

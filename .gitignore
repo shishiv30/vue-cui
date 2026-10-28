@@ -6,3 +6,4 @@ report.html
 .vite/
 /client/assets/video
 .env.local
+dist-lib

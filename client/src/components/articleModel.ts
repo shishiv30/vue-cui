@@ -29,8 +29,10 @@ export interface ArticleUiModel {
 	path?: string;
 	/** Appended as ?id= when present. */
 	id?: string;
-	/** Photo URL. Empty uses /images/n_a.svg. */
+	/** Photo URL. Empty or failed to load uses fallbackImg. */
 	img?: string;
+	/** Image shown when img is empty or fails to load. Defaults to empty, so no image is rendered. */
+	fallbackImg?: string;
 	/** Image alt text. */
 	imgAlt?: string;
 	/** Caption over the photo. */
@@ -47,6 +49,7 @@ export const articleMock: ArticleUiModel = {
 	title: '1200 Main St',
 	path: '/property/detail/tx/78701/1',
 	img: 'https://picsum.photos/800/600?random=1',
+	fallbackImg: '/images/n_a.svg',
 	imgAlt: '1200 Main St',
 	imgTag: 'Sample Office',
 	className: '',

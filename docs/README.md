@@ -32,6 +32,8 @@ Vite builds `layout` from `client/pages.config.js`. `/property` and `/document` 
 - `client/src/` Vue app
 - `client/pages/layout` plugin page
 - `client/src/pages/Document.vue` Vue document catalog
+- `client/src/pages/Property.vue` Vue listing search and detail
+- `client/src/pages/PropertySitemap.vue` Vue property sitemap
 - `client/scss/` CSS framework
 - `server/index.ts` process entry
 - `data/` content payloads

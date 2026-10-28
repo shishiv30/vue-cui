@@ -61,11 +61,34 @@
 				</template>
 			</div>
 		</section>
-		<section class="section large major inline bg active">
+		<section class="section large inline bg active">
 			<div class="fixed fixed-max-xs panel large inline corner-1 grid grid-xs-1">
 				<h2 class="f3">Button</h2>
 				<div class="flex wrap">
-					<button type="button" class="btn default small active">
+					<button type="button" class="btn default">
+						<i class="icon-plus"></i> Apply
+					</button>
+					<button type="button" class="btn gray">
+						<i class="icon-plus"></i> Apply
+					</button>
+					<button type="button" class="btn danger">
+						<i class="icon-plus"></i> Apply
+					</button>
+					<button type="button" class="btn minor">
+						<i class="icon-plus"></i> Apply
+					</button>
+					<button type="button" class="btn major">
+						<i class="icon-plus"></i> Apply
+					</button>
+					<button type="button" class="btn safe">
+						<i class="icon-plus"></i> Apply
+					</button>
+					<button type="button" class="btn tip">
+						<i class="icon-plus"></i> The long text button Apply will be truncated
+					</button>
+				</div>
+				<div class="flex wrap">
+					<button type="button" class="btn default active">
 						<i class="icon-plus"></i> Apply
 					</button>
 					<button type="button" class="btn gray active">
@@ -90,8 +113,19 @@
 			</div>
 		</section>
 		<section class="section large">
-			<div class="fixed major fixed-max-xs bg active panel large inline corner-1 grid grid-xs-1">
+			<div class="fixed default fixed-max-xs bg active panel large inline corner-1 grid grid-xs-1">
 				<h2 class="f3">Tag</h2>
+				<div class="flex wrap">
+					<button type="button" class="attr active default"><i class="icon-plus"></i> Tag</button>
+					<button type="button" class="attr active gray"><i class="icon-plus"></i> Tag</button>
+					<button type="button" class="attr active danger"><i class="icon-plus"></i> Tag</button>
+					<button type="button" class="attr active minor"><i class="icon-plus"></i> Tag</button>
+					<button type="button" class="attr active major"><i class="icon-plus"></i> Tag</button>
+					<button type="button" class="attr active safe"><i class="icon-plus"></i> Tag</button>
+					<button type="button" class="attr active tip">
+						<i class="icon-plus"></i>The long text tag will be truncated
+					</button>
+				</div>
 				<div class="flex wrap">
 					<button type="button" class="attr default"><i class="icon-plus"></i> Tag</button>
 					<button type="button" class="attr gray"><i class="icon-plus"></i> Tag</button>
@@ -105,7 +139,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="section large major inline bg active">
+		<section class="section large inline">
 			<div class="fixed fixed-max-xs panel large inline corner-1 grid grid-xs-1">
 				<h2 class="f3">Circle</h2>
 				<h3 class="f5">Colors</h3>
