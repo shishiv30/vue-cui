@@ -61,7 +61,7 @@
 	},
 	"dependencies": {
 		"@vue/server-renderer": "^3.5.0",
-		"compression": "^1.7.4",
+		"compression": "^1.8.2",
 		"cors": "^2.8.5",
 		"dotenv": "^16.5.0",
 		"ejs": "^3.1.10",
