@@ -48,6 +48,7 @@
 				:class="{ active: dot === index }"
 				:data-index="dot"
 				:aria-label="`Go to ${dot + 1}`"
+				:aria-current="dot === index ? 'true' : undefined"
 				@click="go(dot)"
 			></button>
 		</div>

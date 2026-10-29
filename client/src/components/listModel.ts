@@ -4,8 +4,16 @@ export type ListSize = 'tiny' | 'small' | 'normal' | 'large';
 
 /** One row: icon class, uppercase title, description, and a palette class on the icon. */
 export interface ListItem {
-	/** Font-awesome class, e.g. `icon-home`. */
-	icon: string;
+	/** Font-awesome class, e.g. `icon-home`. Ignored when `image` is set. */
+	icon?: string;
+	/** Image src that replaces the icon, filling the icon well. */
+	image?: string;
+	/** Alt text for `image`. Empty (decorative) by default. */
+	imageAlt?: string;
+	/** Small line on top of the title. */
+	sub?: string;
+	/** Highlighted (blue) line below the description, e.g. a call to action. */
+	sup?: string;
 	/** Small uppercase label above the description. */
 	title: string;
 	/** Primary line. */

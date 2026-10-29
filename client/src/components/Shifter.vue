@@ -12,7 +12,7 @@
 			aria-label="Previous"
 			@click="prev"
 		>
-			<i class="icon-angle-left"></i>
+			<i class="icon-angle-left" role="img" aria-label="Previous items"></i>
 		</button>
 		<div
 			ref="scrollerEl"
@@ -29,7 +29,7 @@
 			aria-label="Next"
 			@click="next"
 		>
-			<i class="icon-angle-right"></i>
+			<i class="icon-angle-right" role="img" aria-label="Next items"></i>
 		</button>
 	</div>
 </template>

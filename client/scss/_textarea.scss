@@ -6,6 +6,7 @@
 	--textarea-placeholder-color: color-mix(in hsl, var(--textarea-color) 60%, var(--textarea-color-bg));
 	position: relative;
 	margin-bottom: 20px;
+	border-radius: var(--radius-0);
 
 	textarea {
 		width: 100%;

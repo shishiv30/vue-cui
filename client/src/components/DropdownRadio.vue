@@ -2,13 +2,18 @@
 	<div ref="rootEl" class="group-dropdown" :class="open ? 'open' : 'close'">
 		<ul class="group-dropdown-button small">
 			<li>
-				<button type="button" @click="open = !open">{{ buttonText }}</button>
+				<button
+					type="button"
+					:aria-expanded="open"
+					:aria-controls="`${name}-list`"
+					@click="open = !open"
+				>{{ buttonText }}</button>
 			</li>
 		</ul>
-		<div class="group-dropdown-list">
+		<div :id="`${name}-list`" class="group-dropdown-list">
 			<div>
-				<label v-if="label">{{ label }}</label>
-				<div class="radio">
+				<label v-if="label" :id="`${name}-label`">{{ label }}</label>
+				<div class="radio" role="radiogroup" :aria-labelledby="label ? `${name}-label` : undefined">
 					<label v-for="(option, index) in data" :key="option.value" :for="optionId(index)">
 						<input
 							:id="optionId(index)"

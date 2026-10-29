@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<label v-if="label">{{ label }}</label>
-		<div class="radio">
+		<label v-if="label" :id="`${name}-label`">{{ label }}</label>
+		<div class="radio" role="radiogroup" :aria-labelledby="label ? `${name}-label` : undefined">
 			<label v-for="(option, index) in data" :key="option.value" :for="optionId(index)">
 				<input
 					:id="optionId(index)"

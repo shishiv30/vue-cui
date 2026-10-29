@@ -45,7 +45,8 @@
 				type="button"
 				:data-index="i"
 				:class="{ active: i === index }"
-				:aria-label="`Go to ${i}`"
+				:aria-label="`Go to ${i + 1}`"
+				:aria-current="i === index ? 'true' : undefined"
 				@click="goTo(i)"
 			></button>
 		</div>

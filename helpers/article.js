@@ -143,11 +143,11 @@ export function mapPropertyToArticle(property, isFull = false) {
 			const openHouse = property.openHouses;
 			const dom = daysOnMarket;
 			if (openHouse && openHouse.length > 0) {
-				tags.push({ className: 'major active', text: 'Open House' });
+				tags.push({ className: 'safe active', text: 'Open House' });
 			} else if ((dom && parseInt(dom, 10) <= 7) || dom === 0) {
-				tags.push({ className: 'major active', text: 'New' });
+				tags.push({ className: 'safe active', text: 'New' });
 			} else {
-				tags.push({ className: 'major active', text: 'For Sale' });
+				tags.push({ className: 'safe active', text: 'For Sale' });
 			}
 			break;
 		}

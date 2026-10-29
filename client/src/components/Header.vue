@@ -24,7 +24,7 @@
 					:data-type="model.search.type"
 				/>
 				<a href="javascript:;" aria-label="Do Search" class="btn">
-					<i class="icon-search"></i>
+					<i class="icon-search" role="img" aria-label="Search"></i>
 				</a>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 						:aria-label="`Expand ${item.text}`"
 						@click="toggleSub(index)"
 					>
-						<i class="icon-caret-left"></i>
+						<i class="icon-caret-left" role="img" :aria-label="`Expand ${item.text}`"></i>
 					</button>
 				</li>
 			</ul>
@@ -59,7 +59,7 @@
 				class="menu-icon header-switch-link"
 				@click.prevent="toggleMenu"
 			>
-				<i class="icon-bars f3"></i>
+				<i class="icon-bars f3" role="img" aria-label="Menu"></i>
 			</a>
 		</nav>
 	</header>

@@ -12,14 +12,17 @@
 				:class="item.className"
 				@click="onClick(item, index)"
 			>
-				<span class="list-icon" :class="item.theme">
-					<i :class="item.icon"></i>
+				<span class="list-icon" :class="[item.theme, { 'list-icon-image': item.image }]">
+					<img v-if="item.image" :src="item.image" :alt="item.imageAlt ?? ''" />
+					<i v-else-if="item.icon" :class="item.icon" role="img" :aria-label="iconLabel(item.icon)"></i>
 				</span>
 				<span class="list-body">
+					<span v-if="item.sub" class="list-sub">{{ item.sub }}</span>
 					<span class="list-title">{{ item.title }}</span>
 					<span class="list-desc">{{ item.desc }}</span>
+					<span v-if="item.sup" class="list-sup">{{ item.sup }}</span>
 				</span>
-				<i class="list-arrow icon-angle-right" aria-hidden="true"></i>
+				<i class="list-arrow icon-angle-right" role="img" aria-label="Open"></i>
 			</button>
 		</li>
 	</ul>
@@ -40,6 +43,12 @@ const emit = defineEmits<{
 }>();
 
 const rootEl = ref<HTMLElement | null>(null);
+
+/** Readable name of the glyph itself, e.g. `icon-folder-o` becomes "folder". */
+function iconLabel(icon = '') {
+	const name = icon.split(/\s+/).find((cls) => cls.startsWith('icon-')) ?? '';
+	return name.replace(/^icon-/, '').replace(/-o$/, '').replace(/-/g, ' ');
+}
 
 function onClick(item: ListItem, index: number) {
 	emit('click', item, index);

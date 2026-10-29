@@ -117,7 +117,7 @@
 		font-size: var(--article-icon-font-size);
 		cursor: pointer;
 		color: var(--color-root);
-		background-color: hsla(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-bg-lightness), 0.8RangeSlider);
+		background-color: hsla(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-bg-lightness), 0.8);
 
 		&.on {
 			color: var(--color-danger, #e0245e);
@@ -174,7 +174,7 @@
 			z-index: 2;
 			color: var(--color-bg);
 			padding: var(--g0);
-			background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.5);
+			background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.8);
 			border-radius: var(--radius-0) 0 0 0;
 		}
 

@@ -7,7 +7,7 @@
 				{{ option.text }}
 			</option>
 		</select>
-		<i class="icon-angle-down"></i>
+		<i class="icon-angle-down" role="img" aria-label="Show options"></i>
 	</div>
 </template>
 

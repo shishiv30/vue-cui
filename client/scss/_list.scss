@@ -9,6 +9,26 @@
 	width: var(--list-width);
 	display: flex;
 	flex-direction: column;
+	&.tiny {
+		--list-gap: var(--g1);
+		--list-radius: var(--radius-0);
+		--list-size: 3rem;
+	}
+	&.small {
+		--list-gap: var(--g2);
+		--list-radius: var(--radius-0);
+		--list-size: 3rem;
+	}
+	&.normal {
+		--list-gap: var(--g3);
+		--list-radius: var(--radius-1);
+		--list-size: 3.5rem;
+	}
+	&.large {
+		--list-gap: var(--g4);
+		--list-radius: var(--radius-2);
+		--list-size: 4rem;
+	}
 
 	> li {
 		margin: 0;
@@ -42,12 +62,24 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: var(--list-size);
-		height: var(--list-size);
+		min-height: var(--list-size);
+		height: 100%;
+		aspect-ratio: 1/1;
 		border-radius: var(--list-radius);
 		font-size: var(--list-font-size);
 		color: var(--color);
 		background-color: var(--color-bg);
+	}
+
+	.list-icon-image {
+		overflow: hidden;
+		background: none;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 	}
 
 	.list-body {
@@ -56,6 +88,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--gxs);
+		height: stretch;
+		justify-content: space-evenly;
 	}
 
 	.list-arrow {
@@ -66,7 +100,7 @@
 		color: var(--color-3);
 	}
 
-	.list-title {
+	.list-desc {
 		font-size: var(--font-size-7);
 		font-weight: var(--font-weight-medium);
 		line-height: var(--line-height-1);
@@ -75,7 +109,20 @@
 		color: var(--color-5);
 	}
 
-	.list-desc {
+	.list-sub {
+		font-size: var(--font-size-7);
+		line-height: var(--line-height-1);
+		color: var(--color-5);
+	}
+
+	.list-sup {
+		font-size: var(--font-size-7);
+		font-weight: var(--font-weight-medium);
+		line-height: var(--line-height-1);
+		color: var(--color-major);
+	}
+
+	.list-title {
 		font-size: var(--list-font-size);
 		font-weight: var(--font-weight-bold);
 		line-height: var(--line-height-2);

@@ -93,3 +93,63 @@ export const Default: Story = {
 		await expect(args.click).toHaveBeenCalled();
 	},
 };
+
+/** Free random photo from picsum.photos, 80x80; `random` varies the picture. */
+const thumb = (random: number) => `https://picsum.photos/80/80?random=${random}`;
+
+const imageItems: ListItem[] = [
+	{
+		image: thumb(1),
+		imageAlt: 'House',
+		title: 'Access up to $327k of your home equity',
+		desc: 'My Home',
+		sup: 'Get started now',
+	},
+	{
+		image: thumb(2),
+		imageAlt: 'Map',
+		title: 'Explore schools, commute and local activity',
+		desc: 'Neighborhood',
+		sup: 'See now',
+	},
+	{
+		image: thumb(3),
+		imageAlt: 'Agent',
+		title: 'Talk with a local expert about your next move',
+		desc: 'Your Agent',
+		sup: 'Connect now',
+	},
+];
+
+export const WithImage: Story = {
+	args: { items: imageItems },
+	render: Default.render,
+	play: async ({ canvas }) => {
+		await expect(canvas.getByAltText('House')).toBeInTheDocument();
+		await expect(canvas.getByText('Get started now')).toBeInTheDocument();
+	},
+};
+
+export const WithSubAndSup: Story = {
+	args: {
+		items: imageItems.map((item, index) => ({
+			...item,
+			sub: ['Equity', 'Explore', 'Support'][index],
+		})),
+	},
+	render: Default.render,
+	play: async ({ canvas }) => {
+		await expect(canvas.getByText('Equity')).toBeInTheDocument();
+		await expect(canvas.getByText('See now')).toBeInTheDocument();
+	},
+};
+
+export const IconWithSup: Story = {
+	args: {
+		items: [
+			{ icon: 'icon-folder-o', theme: 'major', title: 'Documents', desc: 'Contracts and disclosures', sup: 'Open folder' },
+			{ icon: 'icon-user', sub: 'Account', title: 'Profile', desc: 'Update your details', sup: 'Edit profile' },
+		],
+	},
+	render: Default.render,
+};
