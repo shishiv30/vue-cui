@@ -21,7 +21,7 @@ export interface ArticleTag {
  * Same fields mapPropertyToArticle returns for the template.
  */
 export interface ArticleUiModel {
-	/** Address line. */
+	/** Full address: street, city, state and zipcode. */
 	title: string;
 	/** Link when set. Otherwise path is used. */
 	href?: string;
@@ -46,11 +46,11 @@ export interface ArticleUiModel {
 }
 
 export const articleMock: ArticleUiModel = {
-	title: '1200 Main St',
+	title: '1200 Main St, Austin, TX 78701',
 	path: '/property/detail/tx/78701/1',
 	img: 'https://picsum.photos/800/600?random=1',
 	fallbackImg: '/images/n_a.svg',
-	imgAlt: '1200 Main St',
+	imgAlt: '1200 Main St, Austin, TX 78701',
 	imgTag: 'Sample Office',
 	className: '',
 	attrs: [

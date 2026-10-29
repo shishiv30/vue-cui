@@ -5,6 +5,7 @@ const colors = ['', 'default', 'gray', 'major', 'minor', 'danger', 'safe', 'tip'
 const active = ['', 'active'];
 const inline = ['', 'inline'];
 const outline = ['', 'outline'];
+const corners = ['', 'corner-0', 'corner-1', 'corner-2', 'corner-3'];
 
 const colorLabels = {
 	'': 'none',
@@ -28,11 +29,20 @@ const flagLabels = {
 	outline: 'outline',
 };
 
+const cornerLabels = {
+	'': 'none',
+	'corner-0': 'corner-0',
+	'corner-1': 'corner-1',
+	'corner-2': 'corner-2',
+	'corner-3': 'corner-3',
+};
+
 type PanelArgs = {
 	color: string;
 	active: string;
 	inline: string;
 	outline: string;
+	corner: string;
 };
 
 const meta = {
@@ -43,14 +53,18 @@ const meta = {
 			description: {
 				component: [
 					'Put `panel` on a block. Color and `active` come from the shared color mixin.',
-					'`inline` drops the outer vertical margin. `outline` draws an inset border.',
-					'Those two classes can be combined.',
+					'`inline` drops the outer vertical margin. `outline` sets the border color.',
+					'The default border is transparent. Radius uses the shared `corner-*` classes.',
 					'',
 					'| Class | What it does |',
 					'| --- | --- |',
-					'| `panel` | Padded block. Text and background follow the color variables. |',
+					'| `panel` | Padded block. Text and background follow the color variables. Transparent border and a drop shadow. |',
 					'| `inline` | Removes the outer vertical margin and keeps the padding. |',
-					'| `outline` | Inset border using the panel border color. |',
+					'| `outline` | Border color follows the panel border token. |',
+					'| `corner-0` | Square corners. |',
+					'| `corner-1` | Radius `--radius-1`. |',
+					'| `corner-2` | Radius `--radius-2`. |',
+					'| `corner-3` | Radius `--radius-3`. |',
 					'| `default` | Root text, border, and background. |',
 					'| `gray` | Lighter root text, border, and background. |',
 					'| `major` | Major text and border on a light major background. |',
@@ -85,7 +99,13 @@ const meta = {
 		outline: {
 			control: { type: 'inline-radio', labels: flagLabels },
 			options: outline,
-			description: 'Adds `outline`.',
+			description: 'Adds `outline`, which paints the border.',
+			table: { category: 'props' },
+		},
+		corner: {
+			control: { type: 'inline-radio', labels: cornerLabels },
+			options: corners,
+			description: 'Radius class. `corner-0` through `corner-3`.',
 			table: { category: 'props' },
 		},
 	},
@@ -94,6 +114,7 @@ const meta = {
 		active: '',
 		inline: '',
 		outline: 'outline',
+		corner: 'corner-2',
 	},
 } satisfies Meta<PanelArgs>;
 
@@ -106,7 +127,7 @@ export const Default: Story = {
 			return { args };
 		},
 		template: `
-<div class="panel" :class="[args.color, args.active, args.inline, args.outline]">
+<div class="panel" :class="[args.color, args.active, args.inline, args.outline, args.corner]">
 	Panel
 </div>
 		`,
@@ -116,6 +137,7 @@ export const Default: Story = {
 		await expectClassWhenSet(panel, args.color);
 		await expectClassWhenSet(panel, args.inline);
 		await expectClassWhenSet(panel, args.outline);
+		await expectClassWhenSet(panel, args.corner);
 		if (args.active) {
 			await expectClassWhenSet(panel, args.active);
 		} else {

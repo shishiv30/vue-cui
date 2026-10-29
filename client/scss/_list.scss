@@ -1,0 +1,84 @@
+@use './_mixins.scss' as *;
+
+@include comp-size('list', 100%);
+
+.list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: var(--list-width);
+	display: flex;
+	flex-direction: column;
+
+	> li {
+		margin: 0;
+		padding: 0;
+		border-bottom: 1px solid var(--color-border);
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	.list-item {
+		display: flex;
+		align-items: center;
+		gap: var(--list-gap);
+		width: 100%;
+		margin: 0;
+		padding: var(--list-gap) 0;
+		border: 0;
+		background: transparent;
+		text-align: start;
+		cursor: pointer;
+		color: inherit;
+		font: inherit;
+		line-height: var(--list-line-height);
+		@include hover-scale(var(--color-bg-hover));
+	}
+
+	.list-icon {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--list-size);
+		height: var(--list-size);
+		border-radius: var(--list-radius);
+		font-size: var(--list-font-size);
+		color: var(--color);
+		background-color: var(--color-bg);
+	}
+
+	.list-body {
+		min-width: 0;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: var(--gxs);
+	}
+
+	.list-arrow {
+		flex-shrink: 0;
+		margin-left: auto;
+		margin-right: var(--g2);
+		font-size: var(--list-font-size);
+		color: var(--color-3);
+	}
+
+	.list-title {
+		font-size: var(--font-size-7);
+		font-weight: var(--font-weight-medium);
+		line-height: var(--line-height-1);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: var(--color-5);
+	}
+
+	.list-desc {
+		font-size: var(--list-font-size);
+		font-weight: var(--font-weight-bold);
+		line-height: var(--line-height-2);
+		color: var(--color);
+	}
+}

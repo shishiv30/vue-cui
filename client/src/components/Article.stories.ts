@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Article from './Article.vue';
 import {
 	articleMock,
@@ -20,6 +20,8 @@ type ArticleStoryArgs = {
 	attrs: ArticleAttr[];
 	tags: ArticleTag[];
 	className: string;
+	toggleStatus: boolean | null;
+	toggleStyle: 'heart' | 'star' | 'bookmark';
 	model?: ArticleUiModel;
 };
 
@@ -95,6 +97,19 @@ const meta = {
 			description: 'Extra classes on the card. The article classes stay on the component.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
+		toggleStatus: {
+			control: 'select',
+			options: [null, true, false],
+			description:
+				'null hides the toggle button. true / false shows it filled / outlined. The story flips it on each @toggle.',
+			table: { category: 'props', type: { summary: 'boolean | null' } },
+		},
+		toggleStyle: {
+			control: 'inline-radio',
+			options: ['heart', 'star', 'bookmark'],
+			description: 'Icon of the toggle button.',
+			table: { category: 'props', type: { summary: "'heart' | 'star' | 'bookmark'" } },
+		},
 	},
 } satisfies Meta<ArticleStoryArgs>;
 
@@ -114,6 +129,8 @@ export const Default: Story = {
 		attrs: articleMock.attrs ?? [],
 		tags: articleMock.tags ?? [],
 		className: articleMock.className ?? '',
+		toggleStatus: true,
+		toggleStyle: 'heart',
 	},
 	render: (args) => ({
 		components: { Article },
@@ -131,10 +148,26 @@ export const Default: Story = {
 				tags: args.tags,
 				className: args.className,
 			}));
-			return { model };
+			const status = ref(args.toggleStatus);
+			watch(
+				() => args.toggleStatus,
+				(value) => {
+					status.value = value;
+				}
+			);
+			// @toggle hands back the new status: 1 -> 0 or 0 -> 1
+			const onToggle = (next: boolean) => {
+				status.value = next;
+			};
+			return { model, args, status, onToggle };
 		},
 		template: `<div class="article-frame">
-			<Article :model="model" />
+			<Article
+				:model="model"
+				:toggle-status="status"
+				:toggle-style="args.toggleStyle"
+				@toggle="onToggle"
+			/>
 		</div>`,
 	}),
 };

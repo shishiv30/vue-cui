@@ -5,6 +5,16 @@
 		class="article shadow corner article-card"
 		:class="model.className"
 	>
+		<button
+			v-if="toggleStatus !== null"
+			type="button"
+			class="article-toggle"
+			:class="{ on: toggleStatus }"
+			:aria-pressed="toggleStatus"
+			@click="onToggle"
+		>
+			<i :class="toggleIcon"></i>
+		</button>
 		<a :href="href">
 			<address class="f6 text-gray">{{ model.title }}</address>
 		</a>
@@ -40,7 +50,22 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { ArticleUiModel } from './articleModel';
 import { emitPhase } from './emitPhase';
 
-const props = defineProps<{ model: ArticleUiModel }>();
+const props = withDefaults(
+	defineProps<{
+		model: ArticleUiModel;
+		toggleStatus?: boolean | null;
+		toggleStyle?: 'heart' | 'star' | 'bookmark';
+	}>(),
+	{ toggleStatus: null, toggleStyle: 'heart' }
+);
+
+const emit = defineEmits<{ (e: 'toggle', status: boolean): void }>();
+
+const toggleIcon = computed(() => [props.toggleStyle, props.toggleStatus ? 'on' : 'off']);
+
+function onToggle() {
+	emit('toggle', !props.toggleStatus);
+}
 
 const rootEl = ref<HTMLElement | null>(null);
 

@@ -47,16 +47,16 @@
 	//override of a -root- source actually re-resolves the alias. a var()
 	//in a custom property is substituted against the declaring element, so an
 	//alias declared here would freeze the light value on <html> forever.
-	--color-root-lightness: 5%;
-	--color-root-lightness-hover: 20%;
-	--color-root-lightness-l1: 60%;
-	--color-root-lightness-l1-hover: 80%;
+	--color-root-lightness: 20%;
+	--color-root-lightness-hover: 0%;
+	--color-root-lightness-l1: 30%;
+	--color-root-lightness-l1-hover: 20%;
 	--color-root-saturation: 1%;
 	--color-root-saturation-l1: 4%;
 
-	--color-root-bg-lightness: 95%;
+	--color-root-bg-lightness: 100%;
 	--color-root-bg-lightness-hover: 89%;
-	--color-root-bg-lightness-l1: 85%;
+	--color-root-bg-lightness-l1: 90%;
 	--color-root-bg-lightness-l1-hover: 43%;
 	--color-root-bg-saturation: 1%;
 	--color-root-bg-saturation-l1: 4%;
@@ -314,7 +314,7 @@ body {
 	--color-root-lightness: 95%;
 	--color-root-lightness-hover: 95%;
 	--color-root-lightness-l1: 40%;
-	--color-root-lightness-l1-hover: 26%;
+	--color-root-lightness-l1-hover: 16%;
 	--color-root-bg-lightness: 5%;
 	--color-root-bg-lightness-hover: 5%;
 	--color-root-bg-lightness-l1: 15%;

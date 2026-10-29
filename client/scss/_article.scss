@@ -1,4 +1,5 @@
 @use './_mixins.scss' as *;
+@use './_var.icon.scss' as *;
 
 @include comp-color('article');
 
@@ -97,6 +98,42 @@
 		font-size: var(--article-icon-font-size);
 		color: var(--article-color-bg);
 		background-color: var(--article-color);
+	}
+
+	// toggle (heart/star/bookmark) — pinned to the top-right corner
+	>.article-toggle {
+		position: absolute;
+		top: var(--g3);
+		right: var(--g1);
+		z-index: 4;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--article-icon-size);
+		height: var(--article-icon-size);
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		font-size: var(--article-icon-font-size);
+		cursor: pointer;
+		color: var(--color-root);
+		background-color: hsla(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-bg-lightness), 0.8RangeSlider);
+
+		&.on {
+			color: var(--color-danger, #e0245e);
+		}
+
+		// the glyph is picked here: <i class="heart on">, <i class="star off">, ...
+		>i {
+			@include icon();
+
+			&.heart.on::before { content: $icon-heart; }
+			&.heart.off::before { content: $icon-heart-o; }
+			&.star.on::before { content: $icon-star; }
+			&.star.off::before { content: $icon-star-o; }
+			&.bookmark.on::before { content: $icon-bookmark; }
+			&.bookmark.off::before { content: $icon-bookmark-o; }
+		}
 	}
 
 	// frame: bleeds past the card padding, clips the loaded image
@@ -215,7 +252,7 @@
 			background-color: var(--color-bg-l1);
 		}
 
-		> :not(.tags):not(figure):not(header):not(footer):not(.dict):not(a){
+		> :not(.tags):not(figure):not(header):not(footer):not(.dict):not(a):not(.article-toggle){
 			display: none;
 		}
 
@@ -223,12 +260,12 @@
 			flex: none;
 			overflow: hidden;
 			aspect-ratio: var(--image-ratio);
-			margin-bottom: var(--article-padding);
+			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) var(--article-padding) calc(var(--article-padding) * -1);
 		}
 
 		.tags {
 			position: absolute;
-			top: var(--g1);
+			top: var(--g3);
 			left: var(--g1);
 			z-index: 3;
 			>*:nth-child(n+3) {

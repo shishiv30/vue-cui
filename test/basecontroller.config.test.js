@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import BaseController from '../server/controllers/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DIST_DIR = path.resolve(__dirname, '../../../dist');
+const DIST_DIR = path.resolve(__dirname, '../dist');
 const STATIC_UT_REL = '__basecontroller_ut__.html';
 const STATIC_UT_ABS = path.join(DIST_DIR, STATIC_UT_REL);
 

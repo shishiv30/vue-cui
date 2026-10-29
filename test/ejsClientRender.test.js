@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { createEjsRenderContext } from '../helpers/ejsRenderContext.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ejsRoot = path.resolve(__dirname, '../../server/ejs');
+const ejsRoot = path.resolve(__dirname, '../server/ejs');
 
 const STATIC_INCLUDE_RE = /<%-?\s*include\s*\(\s*['"]([^'"]+)['"]/g;
 

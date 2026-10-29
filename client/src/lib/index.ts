@@ -4,6 +4,7 @@ import Checkbox from '../components/Checkbox.vue';
 import DropdownCheckbox from '../components/DropdownCheckbox.vue';
 import DropdownRadio from '../components/DropdownRadio.vue';
 import GroupDropdown from '../components/GroupDropdown.vue';
+import GoogleMap from '../components/GoogleMap.vue';
 import Header from '../components/Header.vue';
 import Layout from '../components/Layout.vue';
 import Player from '../components/Player.vue';
@@ -24,6 +25,7 @@ export {
 	Checkbox,
 	DropdownCheckbox,
 	DropdownRadio,
+	GoogleMap,
 	GroupDropdown,
 	Header,
 	Layout,
@@ -43,6 +45,7 @@ export {
 
 export type { FormEnumOption } from '../components/formEnumOption';
 export type { ArticleUiModel, ArticleAttr, ArticleTag } from '../components/articleModel';
+export type { MapUiModel, MapMarker, MapLatLng, MapBounds, MapType } from '../components/mapModel';
 export type { HeaderUiModel, HeaderMenuItem, HeaderSearch } from '../components/headerModel';
 
 const components = {
@@ -50,6 +53,7 @@ const components = {
 	Checkbox,
 	DropdownCheckbox,
 	DropdownRadio,
+	GoogleMap,
 	GroupDropdown,
 	Header,
 	Layout,

@@ -8,7 +8,7 @@
 		"jsx": "preserve",
 		"allowJs": true,
 		"noEmit": true,
-		"types": ["vite/client"]
+		"types": ["vite/client", "google.maps"]
 	},
 	"include": [
 		"client/src/**/*.ts",
