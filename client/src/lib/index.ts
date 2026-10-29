@@ -15,6 +15,7 @@ import Shifter from '../components/Shifter.vue';
 import Slider from '../components/Slider.vue';
 import Textbox from '../components/Textbox.vue';
 import ValueSlider from '../components/ValueSlider.vue';
+import Welcome from '../components/Welcome.vue';
 import collapse from '../directives/collapse';
 import lazyload from '../directives/lazyload';
 import tab from '../directives/tab';
@@ -37,6 +38,7 @@ export {
 	Slider,
 	Textbox,
 	ValueSlider,
+	Welcome,
 	collapse,
 	lazyload,
 	tab,
@@ -46,6 +48,14 @@ export {
 export type { FormEnumOption } from '../components/formEnumOption';
 export type { ArticleUiModel, ArticleAttr, ArticleTag } from '../components/articleModel';
 export type { MapUiModel, MapMarker, MapLatLng, MapBounds, MapType } from '../components/mapModel';
+export type {
+	WelcomeUiModel,
+	WelcomeData,
+	WelcomePanel,
+	WelcomeSrc,
+	WelcomeAnimation,
+	WelcomeAnimationMode,
+} from '../components/welcomeModel';
 export type { HeaderUiModel, HeaderMenuItem, HeaderSearch } from '../components/headerModel';
 
 const components = {
@@ -65,6 +75,7 @@ const components = {
 	Slider,
 	Textbox,
 	ValueSlider,
+	Welcome,
 };
 
 const directives: Record<string, Directive> = { collapse, lazyload, tab, tooltip } as Record<string, Directive>;

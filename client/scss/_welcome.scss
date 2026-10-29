@@ -1,0 +1,287 @@
+@use './_mixins.scss' as *;
+
+@keyframes welcomeShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes welcomeFadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes welcomeFlyin {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--welcome-fly-x, -80px), 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes welcomeJumpin {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translate3d(0, -14px, 0);
+  }
+
+  75% {
+    transform: translate3d(0, 5px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes welcomeRotatein {
+  from {
+    opacity: 0;
+    transform: rotate(-200deg) scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes welcomeOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.7) translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes welcomeZoomin {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.welcome {
+  --welcome-ratio: 16 / 9;
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--welcome-ratio);
+  overflow: hidden;
+  // Sizes below use cqw, which resolves against this box.
+  container-type: inline-size;
+  color: #fff;
+  // Placeholder while the image loads: a moving highlight over a flat tone.
+  background-color: hsla(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-lightness-l1), 1);
+  background-image: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
+  background-size: 200% 100%;
+  animation: welcomeShimmer 1.4s linear infinite;
+
+  .welcome-picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .welcome-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+  }
+
+  .welcome-panel {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.125rem, 1.2cqw, var(--g2, 0.75rem));
+    // A panel never takes more than half of the container.
+    max-width: 50%;
+    box-sizing: border-box;
+    padding: clamp(0.25rem, 1.2cqw, var(--g2, 0.75rem)) clamp(0.25rem, 1.8cqw, var(--g3, 1rem));
+    border-radius: var(--radius-2);
+    color: #1a1a1a;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    // Hidden until the image has loaded and an animation takes over.
+    opacity: 0;
+    animation-duration: 0.7s;
+    animation-delay: var(--welcome-delay, 0ms);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-fill-mode: both;
+  }
+
+  .welcome-nw {
+    top: var(--g3);
+    left: var(--g3);
+    --welcome-fly-x: -80px;
+  }
+
+  .welcome-ne {
+    top: var(--g3);
+    right: var(--g3);
+    --welcome-fly-x: 80px;
+  }
+
+  .welcome-sw {
+    bottom: max(5rem, 9cqw);
+    left: var(--g3);
+    --welcome-fly-x: -80px;
+  }
+
+  .welcome-se {
+    bottom: max(5rem, 9cqw);
+    right: var(--g3);
+    --welcome-fly-x: 80px;
+  }
+
+  .welcome-fadein {
+    animation-name: welcomeFadein;
+  }
+
+  .welcome-flyin {
+    animation-name: welcomeFlyin;
+  }
+
+  .welcome-jumpin {
+    animation-name: welcomeJumpin;
+  }
+
+  .welcome-rotatein {
+    animation-name: welcomeRotatein;
+  }
+
+  .welcome-zoomin {
+    animation-name: welcomeZoomin;
+  }
+
+  // Panel leaving while the list rotates. Must stay after the entrance classes.
+  .welcome-out {
+    animation-name: welcomeOut;
+    animation-duration: 0.5s;
+    animation-delay: 0ms;
+    animation-timing-function: ease-in;
+  }
+
+  .welcome-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: clamp(1rem, 4.2cqw, 2.5rem);
+    height: clamp(1rem, 4.2cqw, 2.5rem);
+    border-radius: var(--radius-1);
+    background: rgba(0, 0, 0, 0.06);
+    font-size: clamp(0.75rem, 2.2cqw, 1.25rem);
+  }
+
+  .welcome-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .welcome-sup,
+  .welcome-sub {
+    // Default size is the ceiling. cqw shrinks it so 20 letters stay on one line in a half-width panel.
+    font-size: clamp(0.5rem, 2.2cqw, var(--font-size-7, 0.75rem));
+    color: #666;
+  }
+
+  .welcome-sup {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .welcome-main {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--g1);
+  }
+
+  .welcome-title {
+    font-size: clamp(0.625rem, 3.2cqw, var(--font-size-3, 1.5rem));
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+  }
+
+  .welcome-caption {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    // Height follows the text. The top padding is the length of the fade.
+    padding: max(var(--g3), 4cqw) var(--g3) var(--g3);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.6s ease-out 0.2s;
+  }
+
+  .welcome-caption-title {
+    font-style: normal;
+    font-weight: bold;
+    font-size: clamp(0.875rem, 3cqw, var(--font-size-4, 1.25rem));
+  }
+
+  .welcome-caption-sub {
+    font-size: clamp(0.625rem, 2cqw, var(--font-size-6, 0.875rem));
+    opacity: 0.85;
+  }
+
+  &.welcome-loaded {
+    animation: none;
+    background-image: none;
+
+    .welcome-img,
+    .welcome-caption {
+      opacity: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome {
+    animation: none;
+  }
+
+  .welcome .welcome-panel {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
+}
