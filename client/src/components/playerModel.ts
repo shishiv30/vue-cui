@@ -1,3 +1,5 @@
+import { assetUrl } from './assetUrl';
+
 /** Markup from `client/pages/document/index.html`, options from `client/js/plugins/_player.js`. */
 export interface PlayerUiModel {
 	/** Image URLs. The mock list matches `data-images` in `client/pages/document/index.html`. */
@@ -25,13 +27,13 @@ export interface PlayerUiModel {
 
 export const playerMock: PlayerUiModel = {
 	images: [
-		'/images/01.jpg',
-		'/images/02.jpg',
-		'/images/03.jpg',
-		'/images/04.jpg',
-		'/images/05.jpg',
-		'/images/06.jpg',
-		'/images/07.jpg',
+		assetUrl('/images/01.jpg'),
+		assetUrl('/images/02.jpg'),
+		assetUrl('/images/03.jpg'),
+		assetUrl('/images/04.jpg'),
+		assetUrl('/images/05.jpg'),
+		assetUrl('/images/06.jpg'),
+		assetUrl('/images/07.jpg'),
 	],
 	initialIndex: 0,
 	showProcess: true,

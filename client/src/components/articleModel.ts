@@ -1,3 +1,5 @@
+import { assetUrl } from './assetUrl';
+
 export interface ArticleAttr {
 	/** Fact label, for example Bd. */
 	key?: string;
@@ -49,7 +51,7 @@ export const articleMock: ArticleUiModel = {
 	title: '1200 Main St, Austin, TX 78701',
 	path: '/property/detail/tx/78701/1',
 	img: 'https://picsum.photos/800/600?random=1',
-	fallbackImg: '/images/n_a.svg',
+	fallbackImg: assetUrl('/images/n_a.svg'),
 	imgAlt: '1200 Main St, Austin, TX 78701',
 	imgTag: 'Sample Office',
 	className: '',

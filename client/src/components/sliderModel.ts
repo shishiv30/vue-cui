@@ -1,3 +1,5 @@
+import { assetUrl } from './assetUrl';
+
 export interface SliderImageMeta {
 	index: string | number;
 	title: string;
@@ -26,13 +28,13 @@ export interface SliderUiModel {
 
 export const sliderMock: SliderUiModel = {
 	images: [
-		'/images/01.jpg',
-		'/images/02.jpg',
-		'/images/03.jpg',
-		'/images/04.jpg',
-		'/images/05.jpg',
-		'/images/06.jpg',
-		'/images/07.jpg',
+		assetUrl('/images/01.jpg'),
+		assetUrl('/images/02.jpg'),
+		assetUrl('/images/03.jpg'),
+		assetUrl('/images/04.jpg'),
+		assetUrl('/images/05.jpg'),
+		assetUrl('/images/06.jpg'),
+		assetUrl('/images/07.jpg'),
 	],
 	initialIndex: 0,
 	alt: 'Slider',
