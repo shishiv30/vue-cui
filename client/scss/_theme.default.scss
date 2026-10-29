@@ -49,8 +49,8 @@
 	//alias declared here would freeze the light value on <html> forever.
 	--color-root-lightness: 20%;
 	--color-root-lightness-hover: 0%;
-	--color-root-lightness-l1: 30%;
-	--color-root-lightness-l1-hover: 20%;
+	--color-root-lightness-l1: 45%;
+	--color-root-lightness-l1-hover: 30%;
 	--color-root-saturation: 1%;
 	--color-root-saturation-l1: 4%;
 
@@ -312,9 +312,9 @@ body {
 @mixin theme-dark-tokens {
 	--logo: url('../assets/img/logo-bg.svg');
 	--color-root-lightness: 95%;
-	--color-root-lightness-hover: 95%;
-	--color-root-lightness-l1: 40%;
-	--color-root-lightness-l1-hover: 16%;
+	--color-root-lightness-hover: 100%;
+	--color-root-lightness-l1: 65%;
+	--color-root-lightness-l1-hover: 80%;
 	--color-root-bg-lightness: 5%;
 	--color-root-bg-lightness-hover: 5%;
 	--color-root-bg-lightness-l1: 15%;

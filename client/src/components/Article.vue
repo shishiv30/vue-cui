@@ -10,13 +10,14 @@
 			type="button"
 			class="article-toggle"
 			:class="{ on: toggleStatus }"
+			:aria-label="toggleLabel"
 			:aria-pressed="toggleStatus"
 			@click="onToggle"
 		>
 			<i :class="toggleIcon"></i>
 		</button>
 		<a :href="href">
-			<address class="f6 text-gray">{{ model.title }}</address>
+			<address class="f6 text-gray text-bold">{{ model.title }}</address>
 		</a>
 		<dl v-if="attrs.length" class="dict">
 			<template v-for="(attr, index) in attrs" :key="index">
@@ -26,10 +27,13 @@
 		</dl>
 		<figure>
 			<img
+				ref="imgEl"
 				ratio
 				:src="imgSrc"
 				:alt="model.imgAlt"
 				loading="lazy"
+				:data-src-loaded="imgLoaded ? '' : undefined"
+				@load="imgLoaded = true"
 				@error="onImgError"
 			/>
 			<figcaption>{{ model.imgTag }}</figcaption>
@@ -61,6 +65,9 @@ const props = withDefaults(
 
 const emit = defineEmits<{ (e: 'toggle', status: boolean): void }>();
 
+/** Constant noun per style. `aria-pressed` carries the on/off state. */
+const toggleLabels = { heart: 'Favorite', star: 'Star', bookmark: 'Bookmark' };
+const toggleLabel = computed(() => toggleLabels[props.toggleStyle]);
 const toggleIcon = computed(() => [props.toggleStyle, props.toggleStatus ? 'on' : 'off']);
 
 function onToggle() {
@@ -69,6 +76,9 @@ function onToggle() {
 
 const rootEl = ref<HTMLElement | null>(null);
 
+const imgEl = ref<HTMLImageElement | null>(null);
+/** Mirrors the `data-src-loaded` attribute that `v-lazyload` sets, which the card styles key on. */
+const imgLoaded = ref(false);
 const failedSrc = ref('');
 const imgSrc = computed(() => {
 	const src = props.model.img;
@@ -76,6 +86,7 @@ const imgSrc = computed(() => {
 });
 
 function onImgError() {
+	imgLoaded.value = false;
 	failedSrc.value = props.model.img ?? '';
 }
 
@@ -98,6 +109,10 @@ const href = computed(() => {
 });
 
 onMounted(() => {
+	// The image may have finished loading before hydration attached @load.
+	if (imgEl.value?.complete && imgEl.value.naturalWidth) {
+		imgLoaded.value = true;
+	}
 	emitPhase('init', 'article', rootEl.value);
 	emitPhase('initialed', 'article', rootEl.value);
 	emitPhase('load', 'article', rootEl.value);

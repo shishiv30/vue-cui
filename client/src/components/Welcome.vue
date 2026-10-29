@@ -13,6 +13,7 @@
 			<img
 				ref="imgEl"
 				class="welcome-img"
+				:data-src-loaded="loaded ? '' : undefined"
 				:src="fallbackSrc"
 				:alt="model.alt ?? model.data.title ?? ''"
 				@load="onLoad"

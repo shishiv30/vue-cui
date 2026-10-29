@@ -1,12 +1,12 @@
 @use './_mixins.scss' as *;
 
 @keyframes welcomeShimmer {
-  0% {
-    background-position: 100% 0;
+  from {
+    transform: translateX(-100%);
   }
 
-  100% {
-    background-position: -100% 0;
+  to {
+    transform: translateX(100%);
   }
 }
 
@@ -97,16 +97,22 @@
   display: block;
   width: 100%;
   aspect-ratio: var(--welcome-ratio);
-  border-radius: var(--welcome-radius);
+  border-radius: var(--radius-3);
   overflow: hidden;
   // Sizes below use cqw, which resolves against this box.
   container-type: inline-size;
   color: #fff;
   // Placeholder while the image loads: a moving highlight over a flat tone.
-  background-color: hsla(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-lightness-l1), 1);
-  background-image: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
-  background-size: 200% 100%;
-  animation: welcomeShimmer 1.4s linear infinite;
+  background-color: #dde1e7;
+
+  // The sweeping highlight. White to transparent white, so the gradient never dips through black.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0) 25%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 75%);
+    animation: welcomeShimmer 1.4s ease-in-out infinite;
+  }
 
   .welcome-picture {
     position: absolute;
@@ -130,10 +136,11 @@
     align-items: center;
     gap: clamp(0.125rem, 1.2cqw, var(--g2, 0.75rem));
     // A panel never takes more than half of the container.
+    width: fit-content;
     max-width: 50%;
     box-sizing: border-box;
     padding: clamp(0.25rem, 1.2cqw, var(--g2, 0.75rem)) clamp(0.25rem, 1.8cqw, var(--g3, 1rem));
-    border-radius: var(--radius-2);
+    border-radius: var(--radius-1);
     color: #1a1a1a;
     background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
@@ -218,13 +225,14 @@
   .welcome-sup,
   .welcome-sub {
     // Default size is the ceiling. cqw shrinks it so 20 letters stay on one line in a half-width panel.
-    font-size: clamp(0.5rem, 2.2cqw, var(--font-size-7, 0.75rem));
+    font-size: min( 1cqw, var(--font-size-7));
     color: #666;
   }
 
   .welcome-sup {
     text-transform: uppercase;
     letter-spacing: 0.04em;
+    font-size: min( 1.5cqw, var(--font-size-4));
   }
 
   .welcome-main {
@@ -235,11 +243,13 @@
   }
 
   .welcome-title {
-    font-size: clamp(0.625rem, 3.2cqw, var(--font-size-3, 1.5rem));
+    font-size: min( 2.2cqw, var(--font-size-3));
     overflow-wrap: anywhere;
     line-height: 1.2;
   }
-
+  .welcome-label{
+    font-size: min( 1.5cqw, var(--font-size-7));
+  }
   .welcome-caption {
     position: absolute;
     z-index: 1;
@@ -259,17 +269,18 @@
   .welcome-caption-title {
     font-style: normal;
     font-weight: bold;
-    font-size: clamp(0.875rem, 3cqw, var(--font-size-4, 1.25rem));
+    font-size: min(3cqw, var(--font-size-3));
   }
 
   .welcome-caption-sub {
-    font-size: clamp(0.625rem, 2cqw, var(--font-size-6, 0.875rem));
+    font-size: min(3cqw, var(--font-size-6));
     opacity: 0.85;
   }
 
   &.welcome-loaded {
-    animation: none;
-    background-image: none;
+    &::before {
+      display: none;
+    }
 
     .welcome-img,
     .welcome-caption {
@@ -279,7 +290,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .welcome {
+  .welcome::before {
     animation: none;
   }
 
