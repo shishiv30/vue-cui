@@ -5,7 +5,7 @@ import { getGeoData } from '../data/index.js';
 /** Skip cities farther than this (degrees, ~50 miles at mid-latitudes). */
 const MAX_CITY_DISTANCE_DEG = 0.75;
 
-export function normalizeClientIp(ip) {
+export function normalizeClientIp(ip: any) {
 	if (!ip) {
 		return '';
 	}
@@ -20,7 +20,7 @@ export function normalizeClientIp(ip) {
  * @param {number} lng
  * @param {Array<{ lat?: string|number, lng?: string|number, city?: string, state?: string, path?: string }>|null} [cities]
  */
-export function getNearestCityByLatLng(lat, lng, cities) {
+export function getNearestCityByLatLng(lat: any, lng: any, cities: any) {
 	if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
 		return null;
 	}
@@ -63,7 +63,7 @@ export function getNearestCityByLatLng(lat, lng, cities) {
 	};
 }
 
-export function getGeoCityByIp(ip, cities) {
+export function getGeoCityByIp(ip: any, cities: any) {
 	const ipInfo = geoip.lookup(normalizeClientIp(ip));
 	if (!ipInfo) {
 		return null;

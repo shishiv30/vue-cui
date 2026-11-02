@@ -25,12 +25,11 @@ Local URLs:
 
 ## Pages
 
-Vite builds `layout` from `client/pages.config.js`. `/property` and `/document` are server-rendered Vue, not static HTML pages.
+Vite builds the Vue app from `client/src/main.ts`; `client/pages.config.js` has no static pages. `/property` and `/document` are server-rendered Vue, not static HTML pages.
 
 ## Layout
 
 - `client/src/` Vue app
-- `client/pages/layout` plugin page
 - `client/src/pages/Document.vue` Vue document catalog
 - `client/src/pages/Property.vue` Vue listing search and detail
 - `client/src/pages/PropertySitemap.vue` Vue property sitemap

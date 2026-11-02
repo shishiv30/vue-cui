@@ -1,11 +1,11 @@
 import Fuse from 'fuse.js';
 import { geoType } from '../helpers/geo.js';
 
-export function initialFuseState(state) {
-	if (globalThis[geoType.state]) {
-		return globalThis[geoType.state];
+export function initialFuseState(state: any) {
+	if ((globalThis as any)[geoType.state]) {
+		return (globalThis as any)[geoType.state];
 	}
-	globalThis[geoType.state] = new Fuse(state, {
+	(globalThis as any)[geoType.state] = new Fuse(state, {
 		keys: [
 			{
 				name: 'state',
@@ -18,29 +18,28 @@ export function initialFuseState(state) {
 		],
 		threshold: 0.1,
 	});
-	return globalThis[geoType.state];
+	return (globalThis as any)[geoType.state];
 }
 
-export function initialFuseCity(city) {
-	if (globalThis[geoType.city]) {
-		return globalThis[geoType.city];
+export function initialFuseCity(city: any) {
+	if ((globalThis as any)[geoType.city]) {
+		return (globalThis as any)[geoType.city];
 	}
-	globalThis[geoType.city] = new Fuse(city, {
+	(globalThis as any)[geoType.city] = new Fuse(city, {
 		keys: ['input'],
 		threshold: 0.1,
 		includeScore: true,
 		ignoreLocation: true,
 		findAllMatches: true,
-		limit: 10, // Limit to 10 results
 	});
-	return globalThis[geoType.city];
+	return (globalThis as any)[geoType.city];
 }
 
-export function initialFuseCounty(county) {
-	if (globalThis[geoType.county]) {
-		return globalThis[geoType.county];
+export function initialFuseCounty(county: any) {
+	if ((globalThis as any)[geoType.county]) {
+		return (globalThis as any)[geoType.county];
 	}
-	globalThis[geoType.county] = new Fuse(county, {
+	(globalThis as any)[geoType.county] = new Fuse(county, {
 		keys: [
 			{
 				name: 'input',
@@ -60,14 +59,14 @@ export function initialFuseCounty(county) {
 		ignoreLocation: true,
 		findAllMatches: true,
 	});
-	return globalThis[geoType.county];
+	return (globalThis as any)[geoType.county];
 }
 
-export function initialFuseZipcode(zipcode) {
-	if (globalThis[geoType.zipcode]) {
-		return globalThis[geoType.zipcode];
+export function initialFuseZipcode(zipcode: any) {
+	if ((globalThis as any)[geoType.zipcode]) {
+		return (globalThis as any)[geoType.zipcode];
 	}
-	globalThis[geoType.zipcode] = new Fuse(zipcode, {
+	(globalThis as any)[geoType.zipcode] = new Fuse(zipcode, {
 		keys: [
 			{
 				name: 'input',
@@ -83,25 +82,25 @@ export function initialFuseZipcode(zipcode) {
 		ignoreLocation: true,
 		findAllMatches: true,
 	});
-	return globalThis[geoType.zipcode];
+	return (globalThis as any)[geoType.zipcode];
 }
 
-export function initialFuseAddress(address) {
-	if (globalThis[geoType.address]) {
-		return globalThis[geoType.address];
+export function initialFuseAddress(address: any) {
+	if ((globalThis as any)[geoType.address]) {
+		return (globalThis as any)[geoType.address];
 	}
-	globalThis[geoType.address] = new Fuse(address, {
+	(globalThis as any)[geoType.address] = new Fuse(address, {
 		keys: ['address'],
 		threshold: 0.1,
 	});
-	return globalThis[geoType.address];
+	return (globalThis as any)[geoType.address];
 }
 
-export function initialFuseNeighborhood(neighborhood) {
-	if (globalThis[geoType.neighborhood]) {
-		return globalThis[geoType.neighborhood];
+export function initialFuseNeighborhood(neighborhood: any) {
+	if ((globalThis as any)[geoType.neighborhood]) {
+		return (globalThis as any)[geoType.neighborhood];
 	}
-	globalThis[geoType.neighborhood] = new Fuse(neighborhood, {
+	(globalThis as any)[geoType.neighborhood] = new Fuse(neighborhood, {
 		keys: [
 			{
 				name: 'input',
@@ -125,31 +124,31 @@ export function initialFuseNeighborhood(neighborhood) {
 		ignoreLocation: true,
 		findAllMatches: true,
 	});
-	return globalThis[geoType.neighborhood];
+	return (globalThis as any)[geoType.neighborhood];
 }
 
-export function initialFuseGeo({ state, city, county, zipcode, address, neighborhood }) {
-	if (!globalThis[geoType.state] && state) {
+export function initialFuseGeo({ state, city, county, zipcode, address, neighborhood }: Record<string, any>) {
+	if (!(globalThis as any)[geoType.state] && state) {
 		initialFuseState(state);
 	}
-	if (!globalThis[geoType.city] && city) {
+	if (!(globalThis as any)[geoType.city] && city) {
 		initialFuseCity(city);
 	}
-	if (!globalThis[geoType.zipcode] && zipcode) {
+	if (!(globalThis as any)[geoType.zipcode] && zipcode) {
 		initialFuseZipcode(zipcode);
 	}
-	if (!globalThis[geoType.county] && county) {
+	if (!(globalThis as any)[geoType.county] && county) {
 		initialFuseCounty(county);
 	}
-	if (!globalThis[geoType.neighborhood] && neighborhood) {
+	if (!(globalThis as any)[geoType.neighborhood] && neighborhood) {
 		initialFuseNeighborhood(neighborhood);
 	}
-	// if (!globalThis[geoType.address] && address) {
+	// if (!(globalThis as any)[geoType.address] && address) {
 	// 	initialFuseAddress(address);
 	// }
 }
 
-export function searchGeo(query, type, limit = 10) {
+export function searchGeo(query: any, type: any, limit = 10) {
 	try {
 		// Validate inputs
 		if (!query || typeof query !== 'string') {
@@ -162,7 +161,7 @@ export function searchGeo(query, type, limit = 10) {
 		}
 
 		let result = [];
-		const fuseInstance = globalThis[type];
+		const fuseInstance = (globalThis as any)[type];
 
 		// Check if Fuse instance exists
 		if (!fuseInstance) {

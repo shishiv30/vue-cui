@@ -3,7 +3,7 @@
  * @param {string} dateString
  * @returns {Date|null}
  */
-export function stringToDate(dateString) {
+export function stringToDate(dateString: any) {
 	if (dateString == null || dateString === '') {
 		return null;
 	}
@@ -38,7 +38,7 @@ export function stringToDate(dateString) {
 	return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-function toDate(value) {
+function toDate(value: any) {
 	if (value instanceof Date) {
 		return Number.isNaN(value.getTime()) ? null : value;
 	}
@@ -52,18 +52,18 @@ function toDate(value) {
 	return null;
 }
 
-function pad2(value) {
+function pad2(value: any) {
 	return String(value).padStart(2, '0');
 }
 
-function applyFormat(date, formatString, tokenEntries) {
+function applyFormat(date: any, formatString: any, tokenEntries: any) {
 	const tokenMap = Object.fromEntries(
-		tokenEntries.map(([token, value]) => [
+		tokenEntries.map(([token, value]: [string, any]) => [
 			token,
 			token === 'YYYY' ? String(value) : pad2(value),
 		]),
 	);
-	const tokens = tokenEntries.map(([token]) => token).sort((a, b) => b.length - a.length);
+	const tokens = tokenEntries.map(([token]: [string]) => token).sort((a: any, b: any) => b.length - a.length);
 	let result = formatString;
 	for (const token of tokens) {
 		result = result.replaceAll(token, tokenMap[token]);
@@ -77,7 +77,7 @@ function applyFormat(date, formatString, tokenEntries) {
  * @param {string} formatString
  * @returns {string}
  */
-export function dateToString(date, formatString) {
+export function dateToString(date: any, formatString: any) {
 	const parsed = toDate(date);
 	if (!parsed) {
 		return '';
@@ -95,7 +95,7 @@ export function dateToString(date, formatString) {
  * @param {string} formatString
  * @returns {string}
  */
-export function timeToString(date, formatString) {
+export function timeToString(date: any, formatString: any) {
 	const parsed = toDate(date);
 	if (!parsed) {
 		return '';
@@ -111,7 +111,7 @@ const MINUTE_MS = 60 * 1000;
 const HOUR_MS = 60 * MINUTE_MS;
 const DAY_MS = 24 * HOUR_MS;
 
-function calendarMonthGap(earlier, later) {
+function calendarMonthGap(earlier: any, later: any) {
 	let months =
 		(later.getFullYear() - earlier.getFullYear()) * 12 + (later.getMonth() - earlier.getMonth());
 	if (later.getDate() < earlier.getDate()) {
@@ -120,7 +120,7 @@ function calendarMonthGap(earlier, later) {
 	return Math.max(months, 0);
 }
 
-function calendarYearGap(earlier, later) {
+function calendarYearGap(earlier: any, later: any) {
 	let years = later.getFullYear() - earlier.getFullYear();
 	if (
 		later.getMonth() < earlier.getMonth() ||
@@ -137,7 +137,7 @@ function calendarYearGap(earlier, later) {
  * @param {Date|string|number|null} [compareDate] defaults to now
  * @returns {string}
  */
-export function timeDiff(date, compareDate = null) {
+export function timeDiff(date: any, compareDate = null) {
 	const target = toDate(date);
 	if (!target) {
 		return '';

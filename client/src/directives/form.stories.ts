@@ -75,7 +75,7 @@ export const Default: Story = {
 		</div>
 		
 		<div>
-			<label>Select Gender</label>
+			<div>Select Gender</div>
 			<div class="radio">
 				<label for="chMale">
 					<input id="chMale" name="gender" type="radio" checked value="Male" />
@@ -88,7 +88,7 @@ export const Default: Story = {
 			</div>
 		</div>
 		<div>
-			<label>Select Favor</label>
+			<div>Select Favor</div>
 			<div class="checkbox">
 				<label for="rbtnFavor1">
 					<input id="rbtnFavor1" name="favor" checked type="checkbox" value="Dance" />

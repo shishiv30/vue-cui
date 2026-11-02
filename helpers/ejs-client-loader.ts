@@ -15,7 +15,7 @@ const STATIC_INCLUDE_RE = /<%-?\s*include\s*\(\s*['"]([^'"]+)['"]/g;
  * @param {string} name
  * @returns {string}
  */
-function normalizePartialName(name) {
+function normalizePartialName(name: any) {
 	return name.replace(/\.ejs$/i, '');
 }
 
@@ -24,7 +24,7 @@ function normalizePartialName(name) {
  * @param {string} ejsRoot
  * @param {Map<string, { key: string, absPath: string }>} nodes
  */
-function collectGraph(absPath, ejsRoot, nodes) {
+function collectGraph(absPath: any, ejsRoot: any, nodes: any) {
 	const resolved = path.resolve(absPath);
 	if (nodes.has(resolved)) {
 		return;
@@ -50,7 +50,7 @@ function collectGraph(absPath, ejsRoot, nodes) {
  * @param {string} resourcePath
  * @returns {Map<string, { key: string, absPath: string }>}
  */
-function buildDependencyGraph(resourcePath) {
+function buildDependencyGraph(resourcePath: any) {
 	const ejsRoot = path.dirname(resourcePath);
 	const nodes = new Map();
 	collectGraph(resourcePath, ejsRoot, nodes);
@@ -61,7 +61,7 @@ function buildDependencyGraph(resourcePath) {
  * @param {string} absPath
  * @returns {string} JSON-stringified compiled function source
  */
-function compileClientTemplate(absPath) {
+function compileClientTemplate(absPath: any) {
 	const source = fs.readFileSync(absPath, 'utf8');
 	const compiled = ejs.compile(source, {
 		client: true,
@@ -75,7 +75,7 @@ function compileClientTemplate(absPath) {
  * @param {string} resourcePath
  * @returns {string}
  */
-export function renderEjsClientModule(resourcePath) {
+export function renderEjsClientModule(resourcePath: any) {
 	const rootKey = normalizePartialName(path.basename(resourcePath, '.ejs'));
 	const graph = buildDependencyGraph(resourcePath);
 
@@ -125,7 +125,7 @@ export default { render };
 `;
 }
 
-export default function ejsClientLoader(_source) {
+export default function ejsClientLoader(this: any, _source: any) {
 	const resourcePath = this.resourcePath;
 	const graph = buildDependencyGraph(resourcePath);
 	for (const { absPath } of graph.values()) {

@@ -2,10 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { fn } from 'storybook/test';
 import { computed, ref } from 'vue';
 import GoogleMap from './GoogleMap.vue';
+import { articleMock } from './articleModel';
 import { mapMock, type MapMarker, type MapType, type MapUiModel } from './mapModel';
 
 type GoogleMapStoryArgs = {
-	apiKey: string;
+	apiKey?: string;
 	markers: MapMarker[];
 	zoom: number;
 	mapType: MapType;
@@ -15,6 +16,8 @@ type GoogleMapStoryArgs = {
 	mapClick?: (position: { lat: number; lng: number }) => void;
 };
 
+const keyNote = '<p v-else>Enter a Maps JavaScript API key in the <code>apiKey</code> control to render the map.</p>';
+
 const meta = {
 	title: 'Components/GoogleMap',
 	component: GoogleMap,
@@ -23,16 +26,16 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Google Map with custom pins (icon, price label, image or your own element), an info window, fit-to-markers and click events. Needs a Maps JavaScript API key; set it in the `apiKey` control.',
+					'Google Map with custom pins (icon, price label, image or your own HTML element). Clicking a pin emits `marker-click`; set `selectedId` and a popover opens next to the pin with its `article` card, kept inside the map and flipped below the pin when there is no room above. Pins drop in, the popover fades in and slides between pins, and the map fits all pins after they are added. Needs a Maps JavaScript API key. Enter it in the `apiKey` control; the app build reads `GOOGLE_MAPS_API_KEY` from `.env.local` when `apiKey` is not passed.',
 			},
 		},
 	},
 	argTypes: {
-		apiKey: { control: 'text', description: 'Maps JavaScript API key.', table: { category: 'props' } },
-		markers: { control: 'object', description: 'Pins. Each has id, position and an optional look.', table: { category: 'props', type: { summary: 'MapMarker[]' } } },
+		apiKey: { control: 'text', description: 'Maps JavaScript API key. Required in Storybook; the app build falls back to GOOGLE_MAPS_API_KEY from .env.local.', table: { category: 'props' } },
+		markers: { control: 'object', description: 'Pins. Each has id, position, an optional look and an optional `article` for the popover.', table: { category: 'props', type: { summary: 'MapMarker[]' } } },
 		zoom: { control: { type: 'range', min: 1, max: 20 }, table: { category: 'props' } },
 		mapType: { control: 'inline-radio', options: ['roadmap', 'satellite', 'hybrid', 'terrain'], table: { category: 'props' } },
-		fitMarkers: { control: 'boolean', description: 'Zoom to show every pin when the list changes.', table: { category: 'props' } },
+		fitMarkers: { control: 'boolean', description: 'Zoom to show every pin after pins are added or removed. Several changes in a row fit once.', table: { category: 'props' } },
 		className: { control: 'text', table: { category: 'props' } },
 		markerClick: { description: 'A pin was clicked.', table: { category: 'events', type: { summary: 'marker: MapMarker' } } },
 		mapClick: { description: 'The empty map was clicked.', table: { category: 'events', type: { summary: 'position: { lat, lng }' } } },
@@ -72,6 +75,8 @@ export const Default: Story = {
 			};
 			return { args, model, onMarker, onSelect };
 		},
-		template: `<GoogleMap :model="model" :api-key="args.apiKey" @marker-click="onMarker" @select="onSelect" @map-click="args.mapClick" />`,
+		template: `
+			<GoogleMap v-if="args.apiKey" :key="args.apiKey" :model="model" :api-key="args.apiKey" @marker-click="onMarker" @select="onSelect" @map-click="args.mapClick" />
+			<p v-else>Enter a Maps JavaScript API key in the <code>apiKey</code> control to render the map.</p>`,
 	}),
 };

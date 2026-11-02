@@ -5,7 +5,7 @@ import { getHref, getSrc } from './url.js';
  * @param {object} model — page data (API envelope.data or SSR model.data)
  * @returns {object}
  */
-export function createEjsRenderContext(model) {
+export function createEjsRenderContext(model: any) {
 	const m = model || {};
 	const appHost = m.appHost ?? m.meta?.appHost ?? '';
 	const cdnHost = m.cdnHost ?? m.meta?.cdnHost ?? '';
@@ -13,7 +13,7 @@ export function createEjsRenderContext(model) {
 		...m,
 		appHost,
 		cdnHost,
-		getHref: (item) => getHref(item, appHost),
-		getSrc: (img) => getSrc(img, cdnHost),
+		getHref: (item: any) => getHref(item, appHost),
+		getSrc: (img: any) => getSrc(img, cdnHost),
 	};
 }

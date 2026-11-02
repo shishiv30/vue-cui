@@ -57,18 +57,18 @@ export const stateDict = {
 	VI: 'U.S. Virgin Islands',
 };
 
-export function isValidStateCode(stateCode) {
+export function isValidStateCode(stateCode: any) {
 	return stateCode && typeof stateCode === 'string' && stateCode.toUpperCase() in stateDict;
 }
 
-export function getStateFullName(stateCode) {
+export function getStateFullName(stateCode: any) {
 	if (!isValidStateCode(stateCode)) {
 		return null;
 	}
-	return stateDict[stateCode.toUpperCase()];
+	return (stateDict as Record<string, string>)[stateCode.toUpperCase()];
 }
 
-export function getStateCode(fullName) {
+export function getStateCode(fullName: any) {
 	if (!fullName || typeof fullName !== 'string') {
 		return null;
 	}
@@ -102,7 +102,7 @@ export const geoType = {
 	school: 'school',
 };
 
-export function getGeoCityByCityState(city, state) {
+export function getGeoCityByCityState(city: any, state: any) {
 	let cityPath = getCityPath(city, state);
 	if (cityPath) {
 		return getGeoByPath(cityPath);
@@ -111,10 +111,10 @@ export function getGeoCityByCityState(city, state) {
 }
 
 
-export function getGeoByPath(_path) {
+export function getGeoByPath(_path: any) {
 	let path = _path.replace(/^\//, '').replace(/\/$/, '');
 	let segments = path.split('/');
-	let geo = {};
+	let geo: Record<string, any> = {};
 	if (isValidStateCode(segments[0])) {
 		geo.state = segments[0];
 	} else {
@@ -163,12 +163,12 @@ export function getGeoByPath(_path) {
 	return geo;
 }
 
-export function getStatePath(state) {
+export function getStatePath(state: any) {
 	let stateCode = state.toLowerCase();
 	return stateCode;
 }
 
-export function getCityPath(city, state) {
+export function getCityPath(city: any, state: any) {
 	let stateCode = state.toLowerCase();
 	// Remove "City" suffix if present and trim whitespace
 	let cityName = city.replace(/\s+city$/i, '').trim();
@@ -176,7 +176,7 @@ export function getCityPath(city, state) {
 	return `${stateCode}/${cityCode}`;
 }
 
-export function getCountyPath(county, state) {
+export function getCountyPath(county: any, state: any) {
 	let stateCode = state.toLowerCase();
 	// Remove "County" suffix if present and trim whitespace
 	let countyName = county.replace(/\s+county$/i, '').trim();
@@ -184,12 +184,12 @@ export function getCountyPath(county, state) {
 	return `${stateCode}/${countyCode}_county`;
 }
 
-export function getZipcodePath(zipcode, state) {
+export function getZipcodePath(zipcode: any, state: any) {
 	let stateCode = state.toLowerCase();
 	return `${stateCode}/${zipcode}`;
 }
 
-export function getAddressPath(address, city, state) {
+export function getAddressPath(address: any, city: any, state: any) {
 	let stateCode = state.toLowerCase();
 	// Remove "City" suffix if present for city
 	let cityName = city.replace(/\s+city$/i, '').trim();
@@ -198,14 +198,14 @@ export function getAddressPath(address, city, state) {
 	return `${stateCode}/${cityCode}/${addressCode}_address`;
 }
 
-export function getSchoolPath(schoolId, city, state) {
+export function getSchoolPath(schoolId: any, city: any, state: any) {
 	let stateCode = state.toLowerCase();
 	let cityName = city.replace(/\s+city$/i, '').trim();
 	let cityCode = cityName.toLowerCase().replace(/\s+/g, '-');
 	return `${stateCode}/${cityCode}/${schoolId}_school`;
 }
 
-export function getNeighborhoodPath(neighborhood, city, state) {
+export function getNeighborhoodPath(neighborhood: any, city: any, state: any) {
 	let stateCode = state.toLowerCase();
 	// Remove "City" suffix if present for city
 	let cityName = city.replace(/\s+city$/i, '').trim();
@@ -215,7 +215,7 @@ export function getNeighborhoodPath(neighborhood, city, state) {
 }
 
 
-export function getPathByGeo(geo) {
+export function getPathByGeo(geo: any) {
 	if (geo.type === geoType.state) {
 		return getStatePath(geo.state);
 	} else if (geo.type === geoType.city) {
@@ -235,7 +235,7 @@ export function getPathByGeo(geo) {
 }
 
 
-export function getStatesForSitemap(basePath) {
+export function getStatesForSitemap(basePath: any) {
 	const codes = getAllStateCodes();
 	return codes.map((code) => ({
 		href: `${basePath}/${getStatePath(code)}`,
@@ -250,7 +250,7 @@ export function getStatesForSitemap(basePath) {
  * @param {Array} countiesData - Array of county data from geo cache
  * @returns {{ href: string, text: string }[]}
  */
-export function getCountiesForSitemap(stateCode, basePath, countiesData) {
+export function getCountiesForSitemap(stateCode: any, basePath: any, countiesData: any) {
 	if (!stateCode || !countiesData || !Array.isArray(countiesData)) {
 		return [];
 	}
@@ -286,7 +286,7 @@ export function getCountiesForSitemap(stateCode, basePath, countiesData) {
  * @param {Array} citiesData - Array of city data from geo cache
  * @returns {{ href: string, text: string }[]}
  */
-export function getCitiesForSitemap(countyName, stateCode, basePath, citiesData) {
+export function getCitiesForSitemap(countyName: any, stateCode: any, basePath: any, citiesData: any) {
 	if (!countyName || !stateCode || !citiesData || !Array.isArray(citiesData)) {
 		return [];
 	}
@@ -324,7 +324,7 @@ export function getCitiesForSitemap(countyName, stateCode, basePath, citiesData)
  * @param {Array} zipcodesData - Array of zipcode data from geo cache
  * @returns {{ href: string, text: string }[]}
  */
-export function getZipcodesForSitemap(cityName, stateCode, basePath, zipcodesData) {
+export function getZipcodesForSitemap(cityName: any, stateCode: any, basePath: any, zipcodesData: any) {
 	if (!cityName || !stateCode || !zipcodesData || !Array.isArray(zipcodesData)) {
 		return [];
 	}
@@ -350,7 +350,7 @@ export function getZipcodesForSitemap(cityName, stateCode, basePath, zipcodesDat
 	return Array.from(zipcodes.values());
 }
 
-export function getBreadcrumbByGeo(geo, _path) {
+export function getBreadcrumbByGeo(geo: any, _path: any) {
 	let path = _path || '';
 	let data = [
 		{
@@ -403,7 +403,7 @@ export function getBreadcrumbByGeo(geo, _path) {
 }
 
 
-export function getGeoDisplayText(geo) {
+export function getGeoDisplayText(geo: any) {
 	if (!geo) {
 		return '';
 	}
@@ -441,7 +441,7 @@ export function getGeoDisplayText(geo) {
  * @param {Record<string, unknown>|null|undefined} address
  * @returns {object|null}
  */
-export function mapAddressToGeo(address) {
+export function mapAddressToGeo(address: any) {
 	if (!address || typeof address !== 'object') {
 		return null;
 	}
@@ -457,7 +457,7 @@ export function mapAddressToGeo(address) {
 	const street = String(
 		address.addressInfo ?? address.street ?? address.addressLine1 ?? '',
 	).trim();
-	const geo = { state };
+	const geo: Record<string, any> = { state };
 	if (city) {
 		geo.city = city;
 	}
@@ -489,14 +489,14 @@ export function mapAddressToGeo(address) {
  * SOA format: round-rock-ca/, ca/, ca/95121/, round-rock-ca/central-san-jose/, santa-clara-county-ca/
  */
 const pathMappings = {
-	city: (city, state) => `${city.toLowerCase().replace(/\s+/g, '-')}-${state.toLowerCase()}/`,
-	state: (state) => `${state.toLowerCase()}/`,
-	zipcode: (zipcode, state) => `${state.toLowerCase()}/${zipcode}/`,
-	neighborhood: (city, neighborhood, state) =>
+	city: (city: any, state: any) => `${city.toLowerCase().replace(/\s+/g, '-')}-${state.toLowerCase()}/`,
+	state: (state: any) => `${state.toLowerCase()}/`,
+	zipcode: (zipcode: any, state: any) => `${state.toLowerCase()}/${zipcode}/`,
+	neighborhood: (city: any, neighborhood: any, state: any) =>
 		`${city.toLowerCase().replace(/\s+/g, '-')}-${state.toLowerCase()}/${neighborhood
 			.toLowerCase()
 			.replace(/\s+/g, '-')}/`,
-	county: (county, state) => {
+	county: (county: any, state: any) => {
 		// Remove 'county' if it exists in the name and add it back in the correct format
 		const cleanName = county
 			.toLowerCase()
@@ -506,7 +506,7 @@ const pathMappings = {
 	},
 };
 
-export function mapGeoToSOAPath(geo) {
+export function mapGeoToSOAPath(geo: any) {
 	// Auto-detect geo type based on geo properties
 	// Priority order: zipcode > neighborhood > city > county > state
 
@@ -540,7 +540,7 @@ export function mapGeoToSOAPath(geo) {
  * @param {string} geoPath - Our geo path format (e.g., "tx/round-rock")
  * @returns {string} - SOA API path format (e.g., "round-rock-ca/")
  */
-export function mapGeoPathToSOAPath(geoPath) {
+export function mapGeoPathToSOAPath(geoPath: any) {
 	if (!geoPath) {
 		throw new Error('Path is required');
 	}
@@ -553,27 +553,27 @@ export function mapGeoPathToSOAPath(geoPath) {
  * SOA / Geoarea API → UI geo model ({ state, city?, county?, zipcode?, type, id?, path? }).
  */
 
-function pickStateCode(item) {
+function pickStateCode(item: any) {
 	return item.stateCode ?? item.state ?? item.code ?? '';
 }
 
-function pickStateName(item) {
+function pickStateName(item: any) {
 	return item.stateName ?? item.name ?? item.state ?? '';
 }
 
-function pickCityName(item) {
+function pickCityName(item: any) {
 	return item.cityName ?? item.city ?? item.name ?? '';
 }
 
-function pickCountyName(item) {
+function pickCountyName(item: any) {
 	return item.countyName ?? item.county ?? item.name ?? '';
 }
 
-function pickZipcode(item) {
+function pickZipcode(item: any) {
 	return item.zipcode ?? item.zip ?? item.zipCode ?? item.code ?? '';
 }
 
-function pickNeighborhoodName(item) {
+function pickNeighborhoodName(item: any) {
 	return item.name ?? item.neighborhood ?? item.neighborhoodName ?? '';
 }
 
@@ -582,7 +582,7 @@ function pickNeighborhoodName(item) {
  * @param {Object} item - Raw state from Geoarea API (e.g. stateCode, name / stateName)
  * @returns {{ state: string, type: string, id?: string, path?: string }}
  */
-export function mapSoaStateToGeo(item) {
+export function mapSoaStateToGeo(item: any) {
 	if (!item) return null;
 	const rawCode = pickStateCode(item).toString().trim();
 	const rawName = pickStateName(item).toString().trim();
@@ -605,7 +605,7 @@ export function mapSoaStateToGeo(item) {
  * @param {Object} item - Raw city from Geoarea API (e.g. cityId, cityName, stateCode)
  * @returns {{ state: string, city: string, type: string, id?: string, path?: string }}
  */
-export function mapSoaCityToGeo(item) {
+export function mapSoaCityToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
 	const state =
@@ -628,7 +628,7 @@ export function mapSoaCityToGeo(item) {
  * @param {Object} item - Raw county from Geoarea API (e.g. countyId, countyName, stateCode)
  * @returns {{ state: string, county: string, type: string, id?: string, path?: string }}
  */
-export function mapSoaCountyToGeo(item) {
+export function mapSoaCountyToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
 	const state =
@@ -651,7 +651,7 @@ export function mapSoaCountyToGeo(item) {
  * @param {Object} item - Raw zipcode from Geoarea API
  * @returns {{ state: string, zipcode: string, type: string, city?: string, id?: string, path?: string }}
  */
-export function mapSoaZipcodeToGeo(item) {
+export function mapSoaZipcodeToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
 	const state =
@@ -660,7 +660,7 @@ export function mapSoaZipcodeToGeo(item) {
 	if (!state || !zipcode) return null;
 	const id = item.id ?? zipcode;
 	const path = getZipcodePath(zipcode, state);
-	const geo = {
+	const geo: Record<string, any> = {
 		state,
 		zipcode,
 		type: geoType.zipcode,
@@ -677,7 +677,7 @@ export function mapSoaZipcodeToGeo(item) {
  * @param {Object} item - Raw neighborhood from Geoarea API (name, cityName, stateCode)
  * @returns {{ state: string, city: string, neighborhood: string, type: string, id?: string, path?: string }}
  */
-export function mapSoaNeighborhoodToGeo(item) {
+export function mapSoaNeighborhoodToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
 	const state =
@@ -702,7 +702,7 @@ export function mapSoaNeighborhoodToGeo(item) {
  * @param {Array<Object>} items - Raw state array from Geoarea API
  * @returns {Array<{ state, type, id?, path? }>}
  */
-export function mapSoaStatesToGeo(items) {
+export function mapSoaStatesToGeo(items: any) {
 	if (!Array.isArray(items)) return [];
 	return items.map(mapSoaStateToGeo).filter(Boolean);
 }
@@ -712,7 +712,7 @@ export function mapSoaStatesToGeo(items) {
  * @param {Array<Object>} items - Raw city array from Geoarea API
  * @returns {Array<{ state, city, type, id?, path? }>}
  */
-export function mapSoaCitiesToGeo(items) {
+export function mapSoaCitiesToGeo(items: any) {
 	if (!Array.isArray(items)) return [];
 	return items.map(mapSoaCityToGeo).filter(Boolean);
 }
@@ -722,7 +722,7 @@ export function mapSoaCitiesToGeo(items) {
  * @param {Array<Object>} items - Raw county array from Geoarea API
  * @returns {Array<{ state, county, type, id?, path? }>}
  */
-export function mapSoaCountiesToGeo(items) {
+export function mapSoaCountiesToGeo(items: any) {
 	if (!Array.isArray(items)) return [];
 	return items.map(mapSoaCountyToGeo).filter(Boolean);
 }
@@ -732,7 +732,7 @@ export function mapSoaCountiesToGeo(items) {
  * @param {Array<Object>} items - Raw zipcode array from Geoarea API
  * @returns {Array<{ state, zipcode, type, city?, id?, path? }>}
  */
-export function mapSoaZipcodesToGeo(items) {
+export function mapSoaZipcodesToGeo(items: any) {
 	if (!Array.isArray(items)) return [];
 	return items.map(mapSoaZipcodeToGeo).filter(Boolean);
 }
@@ -742,7 +742,7 @@ export function mapSoaZipcodesToGeo(items) {
  * @param {Array<Object>} items - Raw neighborhood array from Geoarea API
  * @returns {Array<{ state, city, neighborhood, type, id?, path? }>}
  */
-export function mapSoaNeighborhoodsToGeo(items) {
+export function mapSoaNeighborhoodsToGeo(items: any) {
 	if (!Array.isArray(items)) return [];
 	return items.map(mapSoaNeighborhoodToGeo).filter(Boolean);
 }
@@ -752,7 +752,7 @@ export function mapSoaNeighborhoodsToGeo(items) {
  * @param {unknown} data - Raw Geoarea response
  * @returns {Array<Object>}
  */
-function ensureArray(data) {
+function ensureArray(data: any) {
 	if (Array.isArray(data)) return data;
 	if (data && typeof data === 'object' && Array.isArray(data.data)) return data.data;
 	if (data && typeof data === 'object' && Array.isArray(data.list)) return data.list;
@@ -764,7 +764,7 @@ function ensureArray(data) {
  * @param {unknown} raw - Raw response from Geoarea /states
  * @returns {Array<{ state: string, type: string, id?: string, path?: string }>}
  */
-export function mapSoaStatesResponse(raw) {
+export function mapSoaStatesResponse(raw: any) {
 	return mapSoaStatesToGeo(ensureArray(raw));
 }
 
@@ -773,7 +773,7 @@ export function mapSoaStatesResponse(raw) {
  * @param {unknown} raw - Raw response from Geoarea counties endpoints
  * @returns {Array<{ state: string, county: string, type: string, id?: string, path?: string }>}
  */
-export function mapSoaCountiesResponse(raw) {
+export function mapSoaCountiesResponse(raw: any) {
 	return mapSoaCountiesToGeo(ensureArray(raw));
 }
 
@@ -782,7 +782,7 @@ export function mapSoaCountiesResponse(raw) {
  * @param {unknown} raw - Raw response from Geoarea cities endpoints
  * @returns {Array<{ state: string, city: string, type: string, id?: string, path?: string }>}
  */
-export function mapSoaCitiesResponse(raw) {
+export function mapSoaCitiesResponse(raw: any) {
 	return mapSoaCitiesToGeo(ensureArray(raw));
 }
 
@@ -795,7 +795,7 @@ export function mapSoaCitiesResponse(raw) {
  * @param {unknown} raw - Raw response from Geoarea neighborhoods endpoint
  * @returns {Array<{ state: string, city: string, neighborhood: string, type: string, id?: string, path?: string }>}
  */
-export function mapSoaNeighborhoodsResponse(raw) {
+export function mapSoaNeighborhoodsResponse(raw: any) {
 	let items = [];
 	if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
 		const n = raw.N_NEIGHBORHOOD;
@@ -819,7 +819,7 @@ export function mapSoaNeighborhoodsResponse(raw) {
  * @param {unknown} raw - Raw response from Geoarea postalcodes endpoints
  * @returns {Array<{ state: string, zipcode: string, type: string, city?: string, id?: string, path?: string }>}
  */
-export function mapSoaZipcodesResponse(raw) {
+export function mapSoaZipcodesResponse(raw: any) {
 	return mapSoaZipcodesToGeo(ensureArray(raw));
 }
 
@@ -829,7 +829,7 @@ export function mapSoaZipcodesResponse(raw) {
  * @param {unknown} raw - Raw response (single object or array)
  * @returns {{ state: string, city?: string, county?: string, type: string, id?: string, path?: string } | null}
  */
-export function mapSoaSingleItemResponse(raw) {
+export function mapSoaSingleItemResponse(raw: any) {
 	if (!raw || Array.isArray(raw)) return null;
 	return mapSoaItemToGeo(raw);
 }
@@ -840,7 +840,7 @@ export function mapSoaSingleItemResponse(raw) {
  * @param {Object} item - Raw item from Geoarea API
  * @returns {{ state: string, city?: string, county?: string, type: string, id?: string, path?: string } | null}
  */
-export function mapSoaItemToGeo(item) {
+export function mapSoaItemToGeo(item: any) {
 	if (!item) return null;
 	const neighborhood = pickNeighborhoodName(item);
 	const county = pickCountyName(item);

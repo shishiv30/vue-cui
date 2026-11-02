@@ -6,22 +6,12 @@
 .checkbox {
 	font-weight: var(--checkbox-font-weight);
 	font-size: var(--checkbox-font-size);
-	min-height: var(--checkbox-size);
-	padding: var(--checkbox-gap) var(--g2);
-	min-width: var(--checkbox-size);
-	border-radius: calc(var(--checkbox-size) / 2);
-	width: var(--checkbox-width);
 	line-height: var(--checkbox-line-height);
 }
 
 .radio {
 	font-weight: var(--radio-font-weight);
 	font-size: var(--radio-font-size);
-	min-height: var(--radio-size);
-	padding: var(--radio-gap) var(--g2);
-	min-width: var(--radio-size);
-	border-radius: calc(var(--radio-size) / 2);
-	width: var(--radio-width);
 	line-height: var(--radio-line-height);
 }
 
@@ -33,7 +23,7 @@
 
 	label {
 		cursor: pointer;
-		margin-right: var(--g1);
+		margin-right: var(--g3);
 		user-select: none;
 
 		>input {
@@ -46,7 +36,7 @@
 
 			&::before {
 				@include icon();
-				margin-right: var(--g0);
+				margin-right: var(--g1);
 			}
 		}
 

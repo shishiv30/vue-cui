@@ -133,6 +133,7 @@ body > .group-dropdown-list:not(.group-dropdown-sheet) {
 	padding: 0;
 	list-style: none;
 	gap: var(--g1);
+	width: var(--group-dropdown-button-width);
 
 	>li {
 		position: relative;

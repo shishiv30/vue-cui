@@ -43,8 +43,8 @@ const DEFAULT_FLAGS = 'i';
  * @param {string} [flags]
  * @returns {RegExp}
  */
-export function createPropertySpaRegExp(id, flags = DEFAULT_FLAGS) {
-	const route = PROPERTY_SPA_ROUTES[id];
+export function createPropertySpaRegExp(id: any, flags = DEFAULT_FLAGS) {
+	const route = (PROPERTY_SPA_ROUTES as Record<string, any>)[id];
 	if (!route) {
 		throw new Error(`Unknown property SPA route id: ${id}`);
 	}
@@ -56,20 +56,20 @@ export function createPropertySpaRegExp(id, flags = DEFAULT_FLAGS) {
  * @param {string} [flags]
  * @returns {{ id: string, params: Record<string, string> } | null}
  */
-export function matchPropertySpaRoute(pathname, flags = DEFAULT_FLAGS) {
+export function matchPropertySpaRoute(pathname: any, flags = DEFAULT_FLAGS) {
 	if (!pathname) {
 		return null;
 	}
 	for (const id of PROPERTY_SPA_ROUTE_ORDER) {
-		const route = PROPERTY_SPA_ROUTES[id];
+		const route = (PROPERTY_SPA_ROUTES as Record<string, any>)[id];
 		const reg = new RegExp(route.source, flags);
 		const match = pathname.match(reg);
 		if (!match) {
 			continue;
 		}
 		/** @type {Record<string, string>} */
-		const params = {};
-		route.paramNames.forEach((name, index) => {
+		const params: Record<string, string> = {};
+		route.paramNames.forEach((name: any, index: any) => {
 			params[name] = match[index + 1];
 		});
 		return { id, params };
@@ -83,7 +83,7 @@ export function matchPropertySpaRoute(pathname, flags = DEFAULT_FLAGS) {
  * @param {string} [flags]
  * @returns {'detail' | 'geo' | null}
  */
-export function matchPropertySpaServerRoute(pathname, flags = DEFAULT_FLAGS) {
+export function matchPropertySpaServerRoute(pathname: any, flags = DEFAULT_FLAGS) {
 	for (const id of ['detail', 'geo']) {
 		if (createPropertySpaRegExp(id, flags).test(pathname)) {
 			return id;

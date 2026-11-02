@@ -9,7 +9,7 @@ const SOA_PHOTO_WEBP_SUFFIX = /(?:_r|_l|_p)?\.webp$/i;
  * @param {unknown} raw
  * @returns {unknown}
  */
-function unwrapPropertyApiPayload(raw) {
+function unwrapPropertyApiPayload(raw: any) {
 	if (raw == null || typeof raw !== 'object') {
 		return raw;
 	}
@@ -26,7 +26,7 @@ function unwrapPropertyApiPayload(raw) {
  * @param {string} url
  * @returns {string}
  */
-export function toSoaPreviewPhotoUrl(url) {
+export function toSoaPreviewPhotoUrl(url: any) {
 	return String(url).replace(SOA_PHOTO_WEBP_SUFFIX, '_p.webp');
 }
 
@@ -35,7 +35,7 @@ export function toSoaPreviewPhotoUrl(url) {
  * @param {unknown} photos
  * @returns {string[]}
  */
-export function mapSoaPhotosToUrls(photos) {
+export function mapSoaPhotosToUrls(photos: any) {
 	if (!Array.isArray(photos)) {
 		return [];
 	}
@@ -57,7 +57,7 @@ export function mapSoaPhotosToUrls(photos) {
  * @param {unknown} groupedFeatures — object or JSON string from SOA
  * @returns {Record<string, string[]>|null}
  */
-export function normalizeGroupedFeatures(groupedFeatures) {
+export function normalizeGroupedFeatures(groupedFeatures: any) {
 	if (groupedFeatures == null) {
 		return null;
 	}
@@ -79,7 +79,7 @@ export function normalizeGroupedFeatures(groupedFeatures) {
  * @param {Record<string, unknown>} listing
  * @returns {unknown}
  */
-function resolveSoaListingPrice(listing) {
+function resolveSoaListingPrice(listing: any) {
 	if(listing.listingStatus.name === 'SOLD') {
 		return listing.soldPrice || listing.closePrice;
 	} else if (listing.listingStatus.name !== 'ACTIVE' && listing.listingStatus.name !== 'PENDING') {
@@ -97,7 +97,7 @@ function resolveSoaListingPrice(listing) {
  * @param {unknown} [historiesRaw]
  * @returns {object|null}
  */
-export function mapSOADataToMetadata(soaListing, historiesRaw = null) {
+export function mapSOADataToMetadata(soaListing: any, historiesRaw: any = null) {
 	if (!soaListing || typeof soaListing !== 'object') {
 		return null;
 	}
@@ -119,7 +119,7 @@ export function mapSOADataToMetadata(soaListing, historiesRaw = null) {
 	const areaDisplay = area > 0 ? formatSqft(Number(area)) : '';
 	const pricePerArea = area > 0 && price > 0 ? price / area : null;
 
-	const meta = {
+	const meta: Record<string, any> = {
 		propertyId,
 		geo: mapAddressToGeo(address),
 		bed: L.bedrooms,
@@ -169,7 +169,7 @@ export function mapSOADataToMetadata(soaListing, historiesRaw = null) {
  * @param {object} listing
  * @returns {string[]}
  */
-export function collectPhotoUrls(listing) {
+export function collectPhotoUrls(listing: any) {
 	if (!listing || typeof listing !== 'object') {
 		return [];
 	}
@@ -181,7 +181,7 @@ export function collectPhotoUrls(listing) {
  * @param {object|null} listing
  * @returns {string}
  */
-export function extractListingDescription(listing) {
+export function extractListingDescription(listing: any) {
 	if (!listing || typeof listing !== 'object') {
 		return '';
 	}
@@ -203,7 +203,7 @@ export function extractListingDescription(listing) {
  * @param {unknown} raw
  * @returns {object[]}
  */
-export function normalizeHistoryList(raw) {
+export function normalizeHistoryList(raw: any) {
 	const data = unwrapPropertyApiPayload(raw);
 	if (Array.isArray(data)) {
 		return data;
@@ -222,7 +222,7 @@ export function normalizeHistoryList(raw) {
  * @param {object} h
  * @returns {{ date: string, title: string, subtitle: string }}
  */
-export function mapHistoryRow(h) {
+export function mapHistoryRow(h: any) {
 	if (!h || typeof h !== 'object') {
 		return { date: '', title: '', subtitle: '' };
 	}
@@ -246,7 +246,7 @@ export function mapHistoryRow(h) {
  * @param {unknown} historiesRaw
  * @returns {Array<{ date: string, title: string, subtitle: string }>}
  */
-export function mapHistoriesToDatelist(historiesRaw) {
+export function mapHistoriesToDatelist(historiesRaw: any) {
 	const rows = normalizeHistoryList(historiesRaw).map(mapHistoryRow);
 	rows.sort((a, b) => String(b.date).localeCompare(String(a.date)));
 	return rows;
@@ -257,7 +257,7 @@ export function mapHistoriesToDatelist(historiesRaw) {
  * @param {Array<{ date: string, title: string, subtitle: string }>} rows
  * @returns {{ heading: string, intro: string, entries: object[] }|null}
  */
-export function mapHistoryRowsToTimelineComp(rows) {
+export function mapHistoryRowsToTimelineComp(rows: any) {
 	if (!Array.isArray(rows) || !rows.length) {
 		return null;
 	}
@@ -277,7 +277,7 @@ export function mapHistoryRowsToTimelineComp(rows) {
  * @param {unknown} openHouses
  * @returns {{ heading: string, items: object[] }|null}
  */
-export function mapOpenHousesToComp(openHouses) {
+export function mapOpenHousesToComp(openHouses: any) {
 	if (!Array.isArray(openHouses) || !openHouses.length) {
 		return null;
 	}
@@ -296,7 +296,7 @@ export function mapOpenHousesToComp(openHouses) {
  * @param {string} [basePath]
  * @returns {{ links: Array<{ text: string, href: string }> }}
  */
-export function buildDetailBreadcrumb(prop, basePath = '/property') {
+export function buildDetailBreadcrumb(prop: any, basePath = '/property') {
 	const base = basePath.replace(/\/$/, '') || '/property';
 	const links = [{ text: 'Home', href: base }];
 	if (prop.state) {

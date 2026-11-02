@@ -11,7 +11,7 @@ import { geoType } from './geo.js';
  * @param {string} ourPath - Our geo path format (e.g., "tx/round-rock")
  * @returns {string} - SOA API path format (e.g., "round-rock-tx/")
  */
-export function mapGeoPathToSOAPath(ourPath) {
+export function mapGeoPathToSOAPath(ourPath: any) {
 	if (!ourPath) {
 		throw new Error('Path is required');
 	}
@@ -47,14 +47,14 @@ export function mapGeoPathToSOAPath(ourPath) {
  * @param {string} stateCode - State code to use in our format (e.g., "tx")
  * @returns {string} - Our geo path format (e.g., "tx/round-rock")
  */
-export function mapSOAToGeoPath(soaPath, stateCode = 'tx') {
+export function mapSOAToGeoPath(soaPath: any, stateCode = 'tx') {
 	if (!soaPath) {
 		throw new Error('Path is required');
 	}
 
 	// Remove trailing slash
 	const cleanPath = soaPath.replace(/\/$/, '');
-	const segments = cleanPath.split('/').filter((segment) => segment.trim());
+	const segments = cleanPath.split('/').filter((segment: any) => segment.trim());
 
 	if (segments.length === 0) {
 		throw new Error('Invalid path format');

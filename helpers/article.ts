@@ -11,7 +11,7 @@ import {
  * @param {unknown} groupedFeatures
  * @returns {Array<{ key: string, value: string, desc: string }>}
  */
-export function mapGroupedFeaturesToAttrs(groupedFeatures) {
+export function mapGroupedFeaturesToAttrs(groupedFeatures: any) {
 	const groups = normalizeGroupedFeatures(groupedFeatures);
 	if (!groups) {
 		return [];
@@ -39,7 +39,7 @@ export function mapGroupedFeaturesToAttrs(groupedFeatures) {
  * @param {unknown} soaListings
  * @returns {object[]}
  */
-export function mapSOADataListToArticles(soaListings) {
+export function mapSOADataListToArticles(soaListings: any) {
 	if (!Array.isArray(soaListings)) {
 		return [];
 	}
@@ -49,7 +49,7 @@ export function mapSOADataListToArticles(soaListings) {
 		.map((meta) => mapPropertyToArticle(meta));
 }
 
-export function mapPropertyToAttrs(property, allAttrs = false) {
+export function mapPropertyToAttrs(property: any, allAttrs = false) {
 	let attrs = [];
 	if (property.price) {
 		attrs.push({
@@ -125,7 +125,7 @@ export function mapPropertyToAttrs(property, allAttrs = false) {
  * @param {object} property — metadata from `mapSOADataToMetadata`
  * @returns {object}
  */
-export function mapPropertyToArticle(property, isFull = false) {
+export function mapPropertyToArticle(property: any, isFull = false) {
 	const listingStatus = property.listingStatus;
 	const status =
 		listingStatus &&
@@ -199,7 +199,7 @@ export function mapPropertyToArticle(property, isFull = false) {
  * @param {object[]} tags
  * @returns {{ items: object[] }|null}
  */
-export function mapTagsToComp(tags) {
+export function mapTagsToComp(tags: any) {
 	if (!Array.isArray(tags) || !tags.length) {
 		return null;
 	}
@@ -211,7 +211,7 @@ export function mapTagsToComp(tags) {
  * @param {string} [alt]
  * @returns {{ images: string[], initialIndex: number, alt: string }|null}
  */
-export function mapAlbumToComp(photos, alt = '') {
+export function mapAlbumToComp(photos: any, alt = '') {
 	const images = Array.isArray(photos) ? photos : [];
 	if (!images.length) {
 		return null;
@@ -227,7 +227,7 @@ export function mapAlbumToComp(photos, alt = '') {
  * @param {unknown} description
  * @returns {{ text: string }|null}
  */
-export function mapParagraphToComp(description) {
+export function mapParagraphToComp(description: any) {
 	if (description == null || description === '') {
 		return null;
 	}
@@ -239,7 +239,7 @@ export function mapParagraphToComp(description) {
  * @param {string} [heading]
  * @returns {{ heading: string, items: object[] }|null}
  */
-export function mapRecordToComp(attrs, heading = 'Facts') {
+export function mapRecordToComp(attrs: any, heading = 'Facts') {
 	if (!Array.isArray(attrs) || !attrs.length) {
 		return null;
 	}
@@ -254,7 +254,7 @@ export function mapRecordToComp(attrs, heading = 'Facts') {
  * @param {unknown} [historiesRaw]
  * @returns {object|null}
  */
-export function mapPropertyDetailToArticle(soaListing, historiesRaw = null) {
+export function mapPropertyDetailToArticle(soaListing: any, historiesRaw: any = null) {
 	const metadata = mapSOADataToMetadata(soaListing, historiesRaw);
 	if (!metadata || !metadata.listingUrl) {
 		return null;
@@ -287,7 +287,7 @@ export function mapPropertyDetailToArticle(soaListing, historiesRaw = null) {
  * @param {object} detail — result of `mapPropertyDetailToArticle`
  * @returns {{ title: string, description: string, desc: string, keywords: string }|null}
  */
-export function buildDetailSeo(detail) {
+export function buildDetailSeo(detail: any) {
 	if (!detail || !detail.metadata) {
 		return null;
 	}
@@ -313,6 +313,6 @@ export function buildDetailSeo(detail) {
  * @param {object[]} properties
  * @returns {object[]}
  */
-export function mapPropertiesToArticles(properties) {
-	return properties.map((property) => mapPropertyToArticle(property));
+export function mapPropertiesToArticles(properties: any) {
+	return properties.map((property: any) => mapPropertyToArticle(property));
 }

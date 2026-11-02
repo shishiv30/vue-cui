@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { renderEjsClientModule } from './helpers/ejs-client-loader.js';
 import { pageConfig } from './client/pages.config.js';
@@ -119,10 +119,13 @@ function copyStatic() {
 		}
 	};
 }
+/** Browser Maps key from .env.local. Storybook asks for its own key instead, so it is never baked in there. */
+const googleMapsApiKey = process.env.STORYBOOK ? '' : loadEnv('development', root, 'GOOGLE_').GOOGLE_MAPS_API_KEY ?? '';
 const mpaInput = Object.fromEntries(pageConfig.pages.map(page => [page.name, path.resolve(root, `client/pages/${page.name}/index.html`)]));
 export default defineConfig({
 	define: {
-		__APP_BASE__: JSON.stringify('')
+		__APP_BASE__: JSON.stringify(''),
+		__GOOGLE_MAPS_API_KEY__: JSON.stringify(googleMapsApiKey)
 	},
 	plugins: [vue(), includeHtml(), ejsClient(), devSwStub(), devImages(), copyStatic()],
 	build: {

@@ -4,8 +4,8 @@ Vite builds client assets. Express serves them and renders `/property` and `/doc
 
 ## Config
 
-- `vite.config.ts` builds `layout` and the Vue client entry.
-- `client/pages.config.js` lists the static MPA pages (`layout`).
+- `vite.config.ts` builds the Vue client entry (`client/src/main.ts`).
+- `client/pages.config.js` lists static MPA pages (currently none).
 - `server/config.ts` loads `.env` then `.env.local` in development, `.env.stage` for stage, and `.env.production` for production.
 
 ## Commands
@@ -33,6 +33,5 @@ npm run build:prod
 
 ## Output
 
-- `dist/layout.html`
-- `layout.min.js`, `property.min.js`, and one `index.min.css` linked from the Vue shell
+- `property.min.js`, and one `index.min.css` linked from the Vue shell
 - `dist/llms.txt`, `dist/images/`, `dist/sw.js`, `dist/manifest.webmanifest`

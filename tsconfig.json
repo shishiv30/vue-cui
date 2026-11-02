@@ -14,6 +14,8 @@
 		"client/src/**/*.ts",
 		"client/src/**/*.vue",
 		"server/**/*.ts",
-		"vite.config.ts"
+		"vite.config.ts",
+		"helpers/**/*.ts",
+		"helpers/**/*.d.ts"
 	]
 }

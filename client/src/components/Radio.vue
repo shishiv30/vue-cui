@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<label v-if="label" :id="`${name}-label`">{{ label }}</label>
+		<div v-if="label" :id="`${name}-label`">{{ label }}</div>
 		<div class="radio" role="radiogroup" :aria-labelledby="label ? `${name}-label` : undefined">
 			<label v-for="(option, index) in data" :key="option.value" :for="optionId(index)">
 				<input

@@ -23,7 +23,7 @@
  * @param {string} imagePath - Path starting with "/" (e.g. '/welcome/point0.jpeg'); leading slash is stripped when building URL
  * @returns {string} Full URL, e.g. `${cdnHost}/images/welcome/point0.jpeg`
  */
-export function getImgCdnUrl(cdnHost, imagePath) {
+export function getImgCdnUrl(cdnHost: any, imagePath: any) {
 	const base = cdnHost ? `${cdnHost}/images` : '/images';
 	if (!imagePath.startsWith('/')) {
 		imagePath = `/${imagePath}`;
@@ -47,7 +47,7 @@ export const WELCOME_IMG = {
  * @param {string} appHost - Base app host (no trailing slash)
  * @returns {string}
  */
-export function getHref(item, appHost = '') {
+export function getHref(item: any, appHost = '') {
 	if (item == null) return '';
 	let url = '';
 	if (item.href) {
@@ -68,7 +68,7 @@ export function getHref(item, appHost = '') {
  * @param {string} cdnHost - Base CDN host (no trailing slash)
  * @returns {string}
  */
-export function getSrc(img, cdnHost = '') {
+export function getSrc(img: any, cdnHost = '') {
 	if (img == null) return '';
 	if (typeof img === 'string') return img;
 	if (img.src) return img.src;

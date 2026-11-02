@@ -37,7 +37,7 @@ const FLAG_FIELDS = [
 	{ key: 'openhouse', soa: 'isOpenHousesOnly' },
 ];
 
-function asList(query, key) {
+function asList(query: any, key: any) {
 	const raw = query[`${key}[]`] !== undefined ? query[`${key}[]`] : query[key];
 	if (raw == null || raw === '') {
 		return [];
@@ -46,7 +46,7 @@ function asList(query, key) {
 	return list.map((value) => String(value).trim().toLowerCase()).filter(Boolean);
 }
 
-function parseRange(value) {
+function parseRange(value: any) {
 	if (typeof value !== 'string' || !value.includes('_')) {
 		return null;
 	}
@@ -69,7 +69,7 @@ function parseRange(value) {
 	return { min, max };
 }
 
-function formatRange(min, max) {
+function formatRange(min: any, max: any) {
 	if (min === undefined && max === undefined) {
 		return '';
 	}
@@ -81,7 +81,7 @@ function formatRange(min, max) {
 	return `${minText}_${maxText}`;
 }
 
-function parseNumber(value) {
+function parseNumber(value: any) {
 	if (value == null || value === '') {
 		return undefined;
 	}
@@ -92,7 +92,7 @@ function parseNumber(value) {
 	return number;
 }
 
-function isOffMarket(status) {
+function isOffMarket(status: any) {
 	return status === 'INACTIVE' || status === 'FOR_RENT';
 }
 
@@ -100,9 +100,9 @@ function isOffMarket(status) {
  * @param {Record<string, unknown>} [query]
  * @returns {Record<string, unknown>}
  */
-export function getFilterByQuery(query = {}) {
-	const filter = {};
-	const source = query && typeof query === 'object' ? query : {};
+export function getFilterByQuery(query: Record<string, any> = {}) {
+	const filter: Record<string, any> = {};
+	const source: Record<string, any> = query && typeof query === 'object' ? query : {};
 
 	for (const field of RANGE_FIELDS) {
 		const raw = source[field.key];
@@ -125,8 +125,8 @@ export function getFilterByQuery(query = {}) {
 	}
 
 	const status = asList(source, 'propertyStatus')[0];
-	if (status && STATUS_TO_SOA[status]) {
-		filter.searchPropertyStatus = STATUS_TO_SOA[status];
+	if (status && (STATUS_TO_SOA as Record<string, string>)[status]) {
+		filter.searchPropertyStatus = (STATUS_TO_SOA as Record<string, string>)[status];
 	}
 
 	for (const field of FLAG_FIELDS) {
@@ -157,9 +157,9 @@ export function getFilterByQuery(query = {}) {
  * @param {Record<string, unknown>} [filter]
  * @returns {Record<string, string | string[]>}
  */
-export function getQueryByFilter(filter = {}) {
-	const query = {};
-	const source = filter && typeof filter === 'object' ? filter : {};
+export function getQueryByFilter(filter: Record<string, any> = {}) {
+	const query: Record<string, any> = {};
+	const source: Record<string, any> = filter && typeof filter === 'object' ? filter : {};
 	const offMarket = isOffMarket(source.searchPropertyStatus);
 
 	for (const field of RANGE_FIELDS) {
@@ -176,14 +176,14 @@ export function getQueryByFilter(filter = {}) {
 
 	if (Array.isArray(source.propertyTypes) && source.propertyTypes.length) {
 		const values = source.propertyTypes
-			.map((value) => String(value).trim().toLowerCase())
-			.filter((value) => PROPERTY_TYPE_SET.has(value));
+			.map((value: any) => String(value).trim().toLowerCase())
+			.filter((value: any) => PROPERTY_TYPE_SET.has(value));
 		if (values.length) {
 			query['propertyType[]'] = values;
 		}
 	}
 
-	const status = SOA_TO_STATUS[source.searchPropertyStatus];
+	const status = (SOA_TO_STATUS as Record<string, string>)[source.searchPropertyStatus];
 	if (status) {
 		query['propertyStatus[]'] = status;
 	}
@@ -211,7 +211,7 @@ export function getQueryByFilter(filter = {}) {
  * @param {Record<string, unknown>} [filter]
  * @returns {string}
  */
-export function getQueryStringByFilter(filter = {}) {
+export function getQueryStringByFilter(filter: Record<string, any> = {}) {
 	const query = getQueryByFilter(filter);
 	const params = new URLSearchParams();
 	for (const [key, value] of Object.entries(query)) {

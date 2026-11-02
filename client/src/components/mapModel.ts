@@ -1,3 +1,5 @@
+import { articleMock, type ArticleUiModel } from './articleModel';
+
 export type MapType = 'roadmap' | 'satellite' | 'hybrid' | 'terrain';
 
 export interface MapLatLng {
@@ -9,18 +11,22 @@ export interface MapLatLng {
 export interface MapMarker {
 	id: string;
 	position: MapLatLng;
-	/** Tooltip on hover, and the heading of the info window. */
+	/** Tooltip on hover, and the heading of the popover when there is no `article`. */
 	title?: string;
-	/** Body of the info window, as plain text. Empty means no info window. */
+	/** Body of the popover as plain text, used when there is no `article`. */
 	desc?: string;
+	/** Detail card shown in the popover when this pin is selected. Wins over `title` and `desc`. */
+	article?: ArticleUiModel;
 	/** Font icon class inside the pin, e.g. `icon-home`. */
 	icon?: string;
 	/** Short text inside the pin, e.g. a price like `$450k`. */
 	label?: string;
 	/** Image inside the pin. */
 	imgSrc?: string;
-	/** Fully custom pin element. Wins over `icon`, `label` and `imgSrc`. The component never writes it with `innerHTML`; pass trusted markup only. */
-	html?: HTMLElement | (() => HTMLElement);
+	/** Fully custom pin element, or a function that builds one for this marker. Wins over `icon`, `label` and `imgSrc`. The component never writes it with `innerHTML`; pass trusted markup only. */
+	html?: HTMLElement | ((marker: MapMarker) => HTMLElement);
+	/** Which point of the pin sits on the position. `center` suits round pins, `bottom` suits pins with a tail. Default `center`. */
+	anchor?: 'center' | 'bottom';
 	/** CSS color of the pin background. Empty keeps the theme color. */
 	color?: string;
 	/** Extra classes on the pin. */
@@ -42,9 +48,13 @@ export interface MapUiModel {
 	center?: MapLatLng;
 	zoom?: number;
 	mapType?: MapType;
-	/** Zoom and pan to show every marker whenever the marker list changes. */
+	/** Zoom and pan to show every marker whenever pins are added or removed. Several changes in a row fit once. */
 	fitMarkers?: boolean;
-	/** Id of the highlighted marker. Its info window opens when it has a title or desc. */
+	/** Space in px kept free around the pins when fitting. Default 48. */
+	fitPadding?: number;
+	/** Highest zoom a fit may reach, so pins close together are not shown at street level. Default 16. */
+	fitMaxZoom?: number;
+	/** Id of the highlighted marker. Its popover opens when it has an article, title or desc. */
 	selectedId?: string;
 	/** Show Google's own controls. */
 	controls?: {
@@ -72,6 +82,7 @@ export const mapMock: MapUiModel = {
 			title: '1200 Main St, Austin, TX 78701',
 			desc: '3 bd · 2 ba · 1,850 sqft',
 			label: '$450k',
+			article: { ...articleMock, id: 'a', title: '1200 Main St, Austin, TX 78701', img: 'https://picsum.photos/800/600?random=11' },
 		},
 		{
 			id: 'b',
@@ -80,6 +91,17 @@ export const mapMock: MapUiModel = {
 			desc: '2 bd · 1 ba · 1,100 sqft',
 			icon: 'icon-home',
 			color: 'var(--color-safe, #2e9e5b)',
+			article: {
+				...articleMock,
+				id: 'b',
+				title: '88 Oak Ave, Austin, TX 78705',
+				img: 'https://picsum.photos/800/600?random=12',
+				attrs: [
+					{ key: 'Est', value: '$389,000', desc: 'Estimate Price' },
+					{ key: 'Bd', value: '2', desc: 'Bedrooms' },
+					{ key: 'Ba', value: '1', desc: 'Bathrooms' },
+				],
+			},
 		},
 		{
 			id: 'c',
@@ -87,6 +109,18 @@ export const mapMock: MapUiModel = {
 			title: '9 Pine Ct, Austin, TX 78704',
 			label: '$720k',
 			color: 'var(--color-danger, #e0245e)',
+			article: {
+				...articleMock,
+				id: 'c',
+				title: '9 Pine Ct, Austin, TX 78704',
+				img: 'https://picsum.photos/800/600?random=13',
+				attrs: [
+					{ key: 'Est', value: '$720,000', desc: 'Estimate Price' },
+					{ key: 'Bd', value: '4', desc: 'Bedrooms' },
+					{ key: 'Ba', value: '3', desc: 'Bathrooms' },
+				],
+				tags: [{ className: 'major active', text: 'Pending' }],
+			},
 		},
 	],
 };

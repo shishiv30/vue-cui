@@ -5,7 +5,7 @@
  * @param {string} basePath - e.g. "/pure" (no trailing slash)
  * @returns {string}
  */
-export function prefixRootRelativeUrls(html, basePath) {
+export function prefixRootRelativeUrls(html: any, basePath: any) {
 	if (!html || !basePath) return html;
 	const base = (basePath.startsWith('/') ? basePath : `/${basePath}`).replace(/\/$/, '');
 	return html.replace(
@@ -19,7 +19,7 @@ export function prefixRootRelativeUrls(html, basePath) {
  * @param {string} hostUrl
  * @returns {string}
  */
-export function pathnameFromHostUrl(hostUrl) {
+export function pathnameFromHostUrl(hostUrl: any) {
 	if (!hostUrl || !/^https?:\/\//i.test(hostUrl)) return '';
 	try {
 		const { pathname } = new URL(hostUrl);
@@ -35,7 +35,7 @@ export function pathnameFromHostUrl(hostUrl) {
  * @param {string} publicPath
  * @returns {string}
  */
-export function appBaseFromPublicPath(publicPath) {
+export function appBaseFromPublicPath(publicPath: any) {
 	if (!publicPath || publicPath === '/') return '';
 	if (publicPath.startsWith('/')) {
 		const pathOnly = publicPath.replace(/\/$/, '');
@@ -51,7 +51,7 @@ export function appBaseFromPublicPath(publicPath) {
  * @param {string} base
  * @returns {string}
  */
-export function stripAppBase(pathname, base) {
+export function stripAppBase(pathname: any, base: any) {
 	if (!pathname || !base || base === '/') return pathname || '';
 	const normalized = (base.startsWith('/') ? base : `/${base}`).replace(/\/$/, '');
 	if (pathname === normalized) return '/';
@@ -68,7 +68,7 @@ export function stripAppBase(pathname, base) {
  * @param {string} base
  * @returns {string}
  */
-export function withAppBase(pathname, base) {
+export function withAppBase(pathname: any, base: any) {
 	if (!pathname || !base || base === '/') return pathname || '';
 	const normalized = (base.startsWith('/') ? base : `/${base}`).replace(/\/$/, '');
 	if (pathname === normalized || pathname.startsWith(`${normalized}/`)) {
