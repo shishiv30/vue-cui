@@ -4,9 +4,9 @@ import Checkbox from '../components/Checkbox.vue';
 import DropdownCheckbox from '../components/DropdownCheckbox.vue';
 import DropdownRadio from '../components/DropdownRadio.vue';
 import GroupDropdown from '../components/GroupDropdown.vue';
-import GoogleMap from '../components/GoogleMap.vue';
 import Header from '../components/Header.vue';
 import Layout from '../components/Layout.vue';
+import Map from '../components/Map.vue';
 import Player from '../components/Player.vue';
 import Radio from '../components/Radio.vue';
 import RangeSlider from '../components/RangeSlider.vue';
@@ -26,10 +26,10 @@ export {
 	Checkbox,
 	DropdownCheckbox,
 	DropdownRadio,
-	GoogleMap,
 	GroupDropdown,
 	Header,
 	Layout,
+	Map,
 	Player,
 	Radio,
 	RangeSlider,
@@ -47,7 +47,9 @@ export {
 
 export type { FormEnumOption } from '../components/formEnumOption';
 export type { ArticleUiModel, ArticleAttr, ArticleTag } from '../components/articleModel';
-export type { MapUiModel, MapMarker, MapLatLng, MapBounds, MapType } from '../components/mapModel';
+export type { MapUiModel, MapMarker, MapPinTheme, MapLatLng, MapBounds, MapType } from '../components/mapModel';
+export type { MapStyleName, MapStyleSetting, MapStyleOverlay } from '../components/mapStyles';
+export { mapStyleList, defaultMapStyle, mapStyleOverlay } from '../components/mapStyles';
 export type {
 	WelcomeUiModel,
 	WelcomeData,
@@ -63,10 +65,10 @@ const components = {
 	Checkbox,
 	DropdownCheckbox,
 	DropdownRadio,
-	GoogleMap,
 	GroupDropdown,
 	Header,
 	Layout,
+	Map,
 	Player,
 	Radio,
 	RangeSlider,

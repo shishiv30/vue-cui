@@ -119,8 +119,8 @@ function copyStatic() {
 		}
 	};
 }
-/** Browser Maps key from .env.local. Storybook asks for its own key instead, so it is never baked in there. */
-const googleMapsApiKey = process.env.STORYBOOK ? '' : loadEnv('development', root, 'GOOGLE_').GOOGLE_MAPS_API_KEY ?? '';
+/** Browser Maps key from .env.local (app and local Storybook). Absent in the lib build. */
+const googleMapsApiKey = loadEnv('development', root, 'GOOGLE_').GOOGLE_MAPS_API_KEY ?? '';
 const mpaInput = Object.fromEntries(pageConfig.pages.map(page => [page.name, path.resolve(root, `client/pages/${page.name}/index.html`)]));
 export default defineConfig({
 	define: {

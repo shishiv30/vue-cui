@@ -1,5 +1,5 @@
 declare const __APP_BASE__: string;
-/** GOOGLE_MAPS_API_KEY from .env.local, injected by the app build only (empty in Storybook, absent in the lib build). */
+/** GOOGLE_MAPS_API_KEY from .env.local, injected by the app and Storybook Vite builds (absent in the lib build). */
 declare const __GOOGLE_MAPS_API_KEY__: string | undefined;
 
 declare module '*.vue' {

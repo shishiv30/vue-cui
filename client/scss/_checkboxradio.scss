@@ -37,6 +37,7 @@
 			&::before {
 				@include icon();
 				margin-right: var(--g1);
+				width: var(--checkbox-font-size);
 			}
 		}
 
