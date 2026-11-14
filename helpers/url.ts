@@ -42,7 +42,7 @@ export const WELCOME_IMG = {
 /**
  * Build href for <a> from link/item.
  * Uses href if present, else appHost + path.
- * If item.id exists, append "?id=<id>" (or "&id=<id>" when query already present).
+ * If item.id exists, append /detail_<id> before any query string.
  * @param {object} item - { href?, path?, id? }
  * @param {string} appHost - Base app host (no trailing slash)
  * @returns {string}
@@ -57,8 +57,11 @@ export function getHref(item: any, appHost = '') {
 	}
 	if (!url) return '';
 	if (!item.id) return url;
-	const separator = url.includes('?') ? '&' : '?';
-	return `${url}${separator}id=${encodeURIComponent(item.id)}`;
+	const queryAt = url.indexOf('?');
+	const path = queryAt === -1 ? url : url.slice(0, queryAt);
+	const query = queryAt === -1 ? '' : url.slice(queryAt);
+	if (/\/detail_[^/]+\/?$/.test(path)) return url;
+	return `${path.replace(/\/$/, '')}/detail_${encodeURIComponent(item.id)}${query}`;
 }
 
 /**

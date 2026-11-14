@@ -28,13 +28,23 @@ export function createPropertyRouter(history: RouterHistory = createWebHistory()
 				component: PropertySitemap,
 			},
 			{
-				path: '/property/search/:pathMatch(.*)*',
+				path: '/property/detail/:state/:place/:propertyId',
+				redirect: (to) =>
+					`/property/${String(to.params.state).toLowerCase()}/${to.params.place}/detail_${encodeURIComponent(String(to.params.propertyId))}`,
+			},
+			{
+				path: '/property/detail/:propertyId',
+				redirect: (to) =>
+					`/property/detail_${encodeURIComponent(String(to.params.propertyId))}`,
+			},
+			{
+				path: '/property/search/:geoPath(.*)*',
 				name: 'property-search-page',
 				component: Property,
 			},
 			{
-				path: '/property/:pathMatch(.*)*',
-				name: 'property-search',
+				path: '/property/:geoPath(.*)*',
+				name: 'property-geo',
 				component: Property,
 			},
 			{

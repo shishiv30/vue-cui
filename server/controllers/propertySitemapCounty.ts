@@ -1,9 +1,7 @@
 // @ts-nocheck
 import { getCitiesForSitemap, getGeoByPath, getBreadcrumbByGeo } from '../../helpers/geo.js';
 import { getGeoData } from '../../data/index.js';
-import { createHeaderComponent } from '../ejs/comp_header.js';
-import { createFooterComponent } from '../ejs/comp_footer.js';
-import { createLinksComponent } from '../ejs/comp_links.js';
+import { sitemapUiData } from '../page/sitemapUi.js';
 
 const SITEMAP_BASE = '/property/sitemap';
 
@@ -21,8 +19,9 @@ export default {
 		return null;
 	},
 	seo: function (req, model) {
-		const countyName = model?.data?.countyName || 'County';
-		const stateName = model?.data?.stateName || 'State';
+		const page = model?.data?.data || model?.data || {};
+		const countyName = page.countyName || 'County';
+		const stateName = page.stateName || 'State';
 		return {
 			title: `${countyName}, ${stateName} Cities Sitemap`,
 			desc: `Browse all cities in ${countyName}, ${stateName}.`,
@@ -57,9 +56,6 @@ export default {
 		const stateName = geo?.state || stateCode;
 
 		const cityLinks = getCitiesForSitemap(countyName, stateCode, SITEMAP_BASE, geoData.city);
-		const linksComponent = createLinksComponent(cityLinks);
-		const headerComponent = createHeaderComponent();
-		const footerComponent = createFooterComponent();
 
 		// Build breadcrumb: Home > Sitemap > State > County
 		const countyGeo = { state: stateCode, county: countyName, type: 'county' };
@@ -75,15 +71,12 @@ export default {
 			}
 		}
 
-		return {
+		return sitemapUiData({
 			title: `${countyName} Cities`,
-			countyName,
-			stateName,
-			stateCode,
+			description: `Browse all cities in ${countyName}, ${stateName}.`,
 			breadcrumb,
-			headerComponent,
-			footerComponent,
-			linksComponent,
-		};
+			links: cityLinks,
+			extra: { countyName, stateName, stateCode },
+		});
 	},
 };

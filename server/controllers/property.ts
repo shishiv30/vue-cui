@@ -1,22 +1,17 @@
 // @ts-nocheck
 import {
 	getGeoDisplayText,
-	geoType,
 	getGeoByPath,
 } from '../../helpers/geo.js';
 import { getGeoCityByIp } from '../../helpers/ip.js';
-import {
-	buildDetailSeo,
-	mapPropertyDetailToArticle,
-	mapSOADataListToArticles,
-} from '../../helpers/article.js';
-import config from '../config.js';
+import { buildDetailSeo } from '../../helpers/article.js';
+import { apiDataToUiData, uiPayloadToPayload } from '../page/mapProperty.js';
+import { pageContext } from '../page/pageContext.js';
 import {
 	getPropertyHistoryById,
 	getPropertyListingInfoById,
 	searchHouse,
 } from '../routes/api.soa.property.js';
-import { createArticleComponent } from '../ejs/comp_article.js';
 import { createHeaderComponent } from '../ejs/comp_header.js';
 import { createFooterComponent } from '../ejs/comp_footer.js';
 import { getImgCdnUrl } from '../../helpers/url.js';
@@ -39,7 +34,7 @@ function getSeo(geo) {
 export default {
 	name: 'property',
 	seo: function (_req, model) {
-		const fromGet = model?.data?.seo;
+		const fromGet = model?.data?.seo ?? model?.data?.data?.seo;
 		if (fromGet && typeof fromGet === 'object') {
 			return {
 				title: fromGet.title || 'Property',
@@ -55,7 +50,7 @@ export default {
 	},
 	beforeGet: function (req, payload) {
 		let geo;
-		const prId = req.query.prId;
+		const prId = req.query.id || req.query.prId;
 
 		const geoPathRaw = String(req.query.geoPath || '')
 			.replace(/^\/+|\/+$/g, '');
@@ -74,15 +69,16 @@ export default {
 		};
 	},
 	preload: function (_req, model) {
-		const href = model?.data?.welcomeImage;
+		const href = model?.data?.metadata?.welcomeImage;
 		if (!href) {
 			return null;
 		}
 		return [{ as: 'image', href }];
 	},
 	get: async function (payload) {
-		const { geo, prId, filter } = payload || {};
-		const welcomeImage = getImgCdnUrl(config.cdnHost, '/welcome.webp');
+		const { geo, prId, filter } = uiPayloadToPayload(payload);
+		const context = pageContext(geo ?? null);
+		const welcomeImage = getImgCdnUrl(context.metadata.cdnHost, '/welcome.webp');
 
 		let [nearbyRaw, listingRaw, historiesRaw] = await Promise.all([
 			geo ? searchHouse(geo, filter) : Promise.resolve(null),
@@ -90,33 +86,42 @@ export default {
 			prId ? getPropertyHistoryById(prId) : Promise.resolve(null),
 		]);
 
-		const detail = mapPropertyDetailToArticle(listingRaw, historiesRaw);
+		const { detail, articles, articleTotalCount } = apiDataToUiData(
+			listingRaw,
+			historiesRaw,
+			nearbyRaw,
+		);
 
-		let articles = [];
-		let articleTotalCount = 0;
-		if (nearbyRaw && nearbyRaw.listings && nearbyRaw.listings.length > 0) {
-			articles = mapSOADataListToArticles(nearbyRaw.listings);
-			articleTotalCount = nearbyRaw.articleTotalCount ?? nearbyRaw.totalCount ?? 0;
-		}
-
-		const articleComponent = createArticleComponent(articles);
-		const filterComponent = createFilterComponent(filter);
-		const headerComponent = createHeaderComponent();
-		const footerComponent = createFooterComponent();
-		const seo = buildDetailSeo(detail) || getSeo(geo);
+		const filterFields = createFilterComponent(filter).data.fields;
+		const header = createHeaderComponent().data;
+		const footer = createFooterComponent().data;
+		const seoSource = buildDetailSeo(detail) || getSeo(geo);
+		const title = seoSource.title || 'Property';
+		const description = seoSource.description || seoSource.desc || '';
 
 		return {
-			seo,
-			geo,
-			articleComponent,
-			filterComponent,
-			articleTotalCount,
-			headerComponent,
-			footerComponent,
-			welcomeImage,
-			cdnHost: config.cdnHost,
-			appHost: config.appHost,
-			detail,
+			seo: {
+				title,
+				h1: title,
+				description,
+			},
+			httpHead: welcomeImage
+				? [{ rel: 'preload', as: 'image', href: welcomeImage }]
+				: [],
+			metadata: {
+				...context.metadata,
+				welcomeImage,
+			},
+			data: {
+				...context.data,
+				detail,
+				articles,
+				articleTotalCount,
+				filters: filterFields,
+				header,
+				footer,
+				breadcrumb: null,
+			},
 		};
 	},
 };

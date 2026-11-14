@@ -203,33 +203,11 @@
         grid-area: result;
     }
 
-    .menu {
-        grid-area: menu;
-        width: var(--menu-width);
-        background-color: var(--color);
-        color: var(--color-bg);
-        position: sticky;
-        height: calc(100dvh - var(--header-height) - var(--breadcrumb-height));
-        top: calc(var(--header-height) + var(--breadcrumb-height));
-        display: flex;
-        flex-direction: column;
-        gap: var(--g3);
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s ease-in-out;
+    .result-empty {
+        margin: var(--g3);
 
-        >a,
-        button {
-            font-size: var(--font-size-3);
-            transition: transform 0.2s ease-in-out;
-
-            &:hover {
-                transform: (scale(1.5));
-                color: var(--color-bg-l1);
-            }
+        a {
+            margin-left: var(--g1);
         }
     }
 
@@ -242,80 +220,28 @@
     // transition: grid-template-columns 0.5s ease-in-out;
 
     --result-width: auto;
-    --menu-width: 0px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--header-height) var(--breadcrumb-height) auto auto;
+    grid-template-areas:
+        "header"
+        "breadcrumb"
+        "result"
+        "footer";
 
     @media screen and (min-width: $screen-sm-min) {
         --result-width: calc(var(--item-width) * 2 + var(--g2));
-        grid-template-columns: minmax(0, 1fr) min(var(--result-width), var(--detail-max-width)) var(--menu-width);
-        grid-template-rows: var(--header-height) var(--breadcrumb-height) auto auto;
-        grid-template-areas:
-            "header header header"
-            "breadcrumb breadcrumb breadcrumb"
-            "result detail menu"
-            "footer detail menu";
     }
 
-    @media screen and (max-width: $screen-xs-max) {
-        grid-template-columns: minmax(0, 100%) var(--menu-width);
-        grid-template-rows: var(--header-height) var(--breadcrumb-height) auto auto auto;
-        grid-template-areas:
-            "header header"
-            "breadcrumb breadcrumb"
-            "detail menu"
-            "result menu"
-            "footer menu";
-    }
-
-
-
-    &.menu {
-        --menu-width: 50px !important;
-
-        .menu {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .open-menu {
-            display: none;
-        }
-    }
-
-    &:not(.menu) {
-
-        .close-menu {
-            display: none;
-        }
-    }
-
-    &.view-grid:not(.detail-leaving) {
-        @media screen and (max-width: $screen-xs-max) {
-            grid-template-rows: var(--header-height) var(--breadcrumb-height) auto auto;
-            grid-template-areas:
-                "header header"
-                "breadcrumb breadcrumb"
-                "result menu"
-                "footer menu";
-        }
-
-        @media screen and (min-width: $screen-sm-min) {
-            grid-template-columns: var(--item-width) var(--menu-width);
-            grid-template-rows: var(--header-height) var(--breadcrumb-height) auto auto;
-            grid-template-areas:
-                "header header"
-                "breadcrumb breadcrumb"
-                "result menu"
-                "footer menu";
-        }
-
-        .result > ul {
-            grid-template-columns: minmax(0, 1fr);
-        }
-    }
-
-    &.view-detail {
+    &.view-detail,
+    &.detail-leaving {
         @media screen and (max-width: $screen-xs-max) {
             grid-template-rows: var(--header-height) var(--breadcrumb-height) auto auto auto;
+            grid-template-areas:
+                "header"
+                "breadcrumb"
+                "detail"
+                "result"
+                "footer";
 
             .detail {
                 margin-left: var(--g2);
@@ -342,6 +268,13 @@
         }
 
         @media screen and (min-width: $screen-sm-min) {
+            grid-template-columns: minmax(0, 1fr) min(var(--result-width), var(--detail-max-width));
+            grid-template-areas:
+                "header header"
+                "breadcrumb breadcrumb"
+                "result detail"
+                "footer detail";
+
             .header-close {
                 transform: none;
             }
@@ -426,21 +359,6 @@
 .scroll-down {
     .listing-nav {
         transform: translateY(calc(var(--header-height) * -1));
-    }
-
-    .menu {
-        height: calc(100dvh - var(--header-height));
-        top: calc(var(--breadcrumb-height));
-    }
-}
-
-
-.page-property-sitemap,
-.page-property-sitemap-state,
-.page-property-sitemap-county,
-.page-property-sitemap-city {
-    .menu {
-        display: none;
     }
 }
 

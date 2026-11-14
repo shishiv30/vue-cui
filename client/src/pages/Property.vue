@@ -14,7 +14,7 @@
 				</ul>
 			</div>
 			<div v-if="filters.length" class="filter">
-				<GroupDropdown
+				<Filter
 					v-model="filterValue"
 					:data="filters"
 					@change="onFilterChange"
@@ -28,7 +28,7 @@
 			:placeholder="detailPlaceholder"
 			:reveal="detailReveal"
 		/>
-		<Result :articles="articles" />
+		<Result :articles="articles" :show-reset="filtersActive" />
 		<footer v-if="footer" class="footer">
 			<section class="section small major inline bg active">
 				<div class="fixed fixed-max-xs grid grid-xs-1">
@@ -89,59 +89,53 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { usePropertyStore } from '../store';
 import Detail from '../components/Detail.vue';
-import GroupDropdown from '../components/GroupDropdown.vue';
+import Filter from '../components/Filter.vue';
 import Header from '../components/Header.vue';
 import Result from '../components/Result.vue';
-import type { PropertyDetailModel } from '../components/detailModel';
 import type { ArticleUiModel } from '../components/articleModel';
+import type { PropertyDetailModel } from '../components/detailModel';
 import type { GroupDropdownField, GroupDropdownValue } from '../components/groupdropdownModel';
 import { getQueryStringByFilter } from '../../../helpers/filter.js';
-import { matchPropertySpaRoute } from '../../../helpers/routes/propertySpaRoutes.js';
+import { listingIdFromPath, matchPropertySpaRoute } from '../../../helpers/routes/propertySpaRoutes.js';
 import { headerMock } from '../components/headerModel';
-import type { PropertyState } from '../store';
-
-const store = useStore<PropertyState>();
+const store = usePropertyStore();
 const route = useRoute();
 const router = useRouter();
-const detail = computed(() => store.state.detail);
+const detail = computed(() => store.detail);
 const detailPlaceholder = ref(false);
 const detailReveal = ref(false);
 const header = headerMock;
-const footer = computed(() => store.state.footer);
-const articles = computed(() => store.state.articles);
-const filters = computed(() => store.state.filters);
-const breadcrumbLinks = computed(() => store.state.breadcrumb?.links ?? []);
+const footer = computed(() => store.footer);
+const articles = computed(() => store.articles);
+const filters = computed(() => store.filters);
+const breadcrumbLinks = computed(() => store.breadcrumb?.links ?? []);
 
 type PropertyView = 'grid' | 'detail' | 'map';
 
 const viewFlipMs = 500;
 
-function viewFromPath(path: string): PropertyView {
-	const match = matchPropertySpaRoute(path);
-	if (match?.id === 'detail' || match?.id === 'map') {
-		return match.id;
+function viewFromRoute(path: string): PropertyView {
+	if (listingIdFromPath(path)) {
+		return 'detail';
+	}
+	if (matchPropertySpaRoute(path)?.id === 'map') {
+		return 'map';
 	}
 	return 'grid';
 }
 
 const pageEl = ref<HTMLElement | null>(null);
-const view = ref<PropertyView>(viewFromPath(route.path));
+const view = ref<PropertyView>(viewFromRoute(route.path));
 const animating = ref(false);
 const leaving = ref(false);
-const lock = ref(false);
-const collapse = ref(false);
-const menu = ref(false);
 
 const pageClass = computed(() => ({
 	'page-property': true,
 	[`view-${view.value}`]: true,
 	'view-animating': animating.value,
 	'detail-leaving': leaving.value,
-	lock: lock.value,
-	collapse: collapse.value,
-	menu: menu.value,
 }));
 
 type ItemRect = {
@@ -370,24 +364,36 @@ function wait(ms: number) {
 	});
 }
 
+function detailFromArticle(article: ArticleUiModel): PropertyDetailModel {
+	return {
+		title: article.title,
+		tags: article.tags?.length ? { items: article.tags } : null,
+		album: article.img
+			? { images: [article.img], initialIndex: 0, alt: article.imgAlt || article.title || '' }
+			: null,
+		record: article.attrs?.length ? { heading: 'Facts', items: article.attrs } : null,
+	};
+}
+
 async function loadDetail(prId: string, animate: boolean) {
 	const requestId = ++detailRequest;
 	const fromGrid = view.value !== 'detail';
-	const switching = animate && !fromGrid && store.state.detail != null;
+	const switching = animate && !fromGrid && store.detail != null;
 	const skeletonAt = Date.now();
 	if (switching) {
 		detailReveal.value = false;
 		detailPlaceholder.value = true;
 	}
-	const response = await fetch(`/api/property/detail/${encodeURIComponent(prId)}`);
-	if (requestId !== detailRequest || !response.ok) {
+	let article = store.articles.find((item) => item.id === prId);
+	if (!article) {
+		const geo = route.path.replace(/^\/property\//, '').replace(/\/detail_[^/]+\/?$/, '');
+		await store.loadPage(`/api/property/search/${geo}`);
+		article = store.articles.find((item) => item.id === prId);
+	}
+	if (requestId !== detailRequest || !article) {
 		return;
 	}
-	const body = await response.json() as { data?: { detail?: PropertyDetailModel | null } };
-	if (requestId !== detailRequest) {
-		return;
-	}
-	const nextDetail = body.data?.detail ?? null;
+	const nextDetail = detailFromArticle(article);
 	if (switching) {
 		await wait(Math.max(0, 1500 - (Date.now() - skeletonAt)));
 		if (requestId !== detailRequest) {
@@ -395,11 +401,11 @@ async function loadDetail(prId: string, animate: boolean) {
 		}
 		detailPlaceholder.value = false;
 		detailReveal.value = true;
-		store.state.detail = nextDetail;
+		store.detail = nextDetail;
 		return;
 	}
 	detailPlaceholder.value = false;
-	store.state.detail = nextDetail;
+	store.detail = nextDetail;
 	if (animate && fromGrid) {
 		detailReveal.value = false;
 		await nextTick();
@@ -411,33 +417,31 @@ async function loadDetail(prId: string, animate: boolean) {
 }
 
 watch(() => route.path, (path) => {
-	const next = viewFromPath(path);
+	const next = viewFromRoute(path);
+	const id = listingIdFromPath(path);
 	if (next !== 'detail') {
 		detailPlaceholder.value = false;
 		detailReveal.value = false;
 		void applyView(next).then(() => {
 			window.setTimeout(() => {
 				if (view.value !== 'detail') {
-					store.state.detail = null;
+					store.detail = null;
 				}
 			}, viewFlipMs);
 		});
 		return;
 	}
-	const prId = matchPropertySpaRoute(path)?.params.prId;
-	if (prId) {
-		void loadDetail(prId, true);
+	if (id) {
+		void loadDetail(id, true);
 	}
 });
 
 onMounted(() => {
-	if (view.value !== 'detail' || store.state.detail) {
+	const id = listingIdFromPath(route.path);
+	if (!id || store.detail) {
 		return;
 	}
-	const prId = matchPropertySpaRoute(route.path)?.params.prId;
-	if (prId) {
-		void loadDetail(prId, false);
-	}
+	void loadDetail(id, false);
 });
 
 function modelFromFields(fields: GroupDropdownField[]): GroupDropdownValue {
@@ -456,7 +460,8 @@ function modelFromFields(fields: GroupDropdownField[]): GroupDropdownValue {
 	return value;
 }
 
-const filterValue = ref<GroupDropdownValue>(modelFromFields(store.state.filters));
+const filterValue = ref<GroupDropdownValue>(modelFromFields(store.filters));
+const filtersActive = computed(() => Object.keys(filterFromDropdown(filterValue.value)).length > 0);
 
 watch(filters, (fields) => {
 	filterValue.value = modelFromFields(fields);
@@ -548,13 +553,10 @@ watch(() => route.fullPath, async (fullPath, previous) => {
 	if (!isIpSearch && matchPropertySpaRoute(route.path)?.id !== 'geo') {
 		return;
 	}
-	const geo = isIpSearch ? '' : route.path.replace(/^\/property\//, '');
+	const geo = isIpSearch
+		? ''
+		: route.path.replace(/^\/property\//, '').replace(/\/detail_[^/]+\/?$/, '');
 	const search = route.fullPath.includes('?') ? route.fullPath.slice(route.fullPath.indexOf('?')) : '';
-	const response = await fetch(`/api/property/search${geo ? `/${geo}` : ''}${search}`);
-	if (!response.ok) {
-		return;
-	}
-	const body = await response.json() as { articles?: ArticleUiModel[] };
-	store.state.articles = body.articles ?? [];
+	await store.loadPage(`/api/property/search${geo ? `/${geo}` : ''}${search}`);
 });
 </script>

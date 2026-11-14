@@ -29,7 +29,7 @@ export interface ArticleUiModel {
 	href?: string;
 	/** Path used when href is omitted. */
 	path?: string;
-	/** Appended as ?id= when present. */
+	/** Appended as /detail_<id> when present. */
 	id?: string;
 	/** Photo URL. Empty or failed to load uses fallbackImg. */
 	img?: string;
@@ -49,7 +49,7 @@ export interface ArticleUiModel {
 
 export const articleMock: ArticleUiModel = {
 	title: '1200 Main St, Austin, TX 78701',
-	path: '/property/detail/tx/78701/1',
+	path: '/property/tx/78701/',
 	img: 'https://picsum.photos/800/600?random=1',
 	fallbackImg: assetUrl('/images/n_a.svg'),
 	imgAlt: '1200 Main St, Austin, TX 78701',

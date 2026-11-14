@@ -4,7 +4,7 @@ import { Router } from '../../js/core/router.js';
 import { emit } from '../../js/core/event.js';
 import {
 	createPropertySpaRegExp,
-	PROPERTY_SPA_ROUTES,
+	listingIdFromPath,
 	matchPropertySpaRoute,
 } from '../../../helpers/routes/propertySpaRoutes.js';
 import { buildPropertySpaInnerHtml } from './detailSpa.js';
@@ -700,33 +700,6 @@ let property = {
 		return new Router(
 			[
 				{
-					reg: createPropertySpaRegExp('detail'),
-					loading: async (to, from, method) => {
-						if (method === 'replace') {
-							return null;
-						}
-						const propertyId = to.params[PROPERTY_SPA_ROUTES.detail.prIdParamIndex];
-						const sameDetail =
-							from &&
-							from.params &&
-							from.params[PROPERTY_SPA_ROUTES.detail.prIdParamIndex] === propertyId;
-						if (!sameDetail) {
-							const detailLoaded = await exportObj.updateDetail(propertyId);
-							if (detailLoaded == null) {
-								return null;
-							}
-							if (detailLoaded) {
-								exportObj.switchToDetail();
-							} else {
-								restoreGridSnapshots();
-								exportObj.switchToGrid();
-							}
-						}
-						await refreshListing(to);
-						return null;
-					},
-				},
-				{
 					reg: createPropertySpaRegExp('map'),
 					loading: async (to, _from, method) => {
 						exportObj.switchToMap();
@@ -739,6 +712,23 @@ let property = {
 				{
 					reg: createPropertySpaRegExp('geo'),
 					loading: async (to, from, method) => {
+						const listingId = listingIdFromPath(window.location.pathname);
+						if (listingId) {
+							if (method !== 'replace') {
+								const detailLoaded = await exportObj.updateDetail(listingId);
+								if (detailLoaded == null) {
+									return null;
+								}
+								if (detailLoaded) {
+									exportObj.switchToDetail();
+								} else {
+									restoreGridSnapshots();
+									exportObj.switchToGrid();
+								}
+								await refreshListing(to);
+							}
+							return null;
+						}
 						if (method === 'replace') {
 							restoreGridSnapshots();
 							exportObj.switchToGrid();

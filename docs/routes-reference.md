@@ -35,11 +35,11 @@ Owned by `server/routes/api.soa.ts` and mounted children:
 
 ## Property routes (HTML + JSON parity)
 
-Sitemap HTML routes are defined in [`server/routes/propertySitemap.ts`](../server/routes/propertySitemap.ts).
+Property sitemap HTML is Vue SSR in `server/index.ts`. Patterns live in [`helpers/routes/propertySpaRoutes.ts`](../helpers/routes/propertySpaRoutes.ts).
 
 **SPA URL patterns** (detail, map, geo grid) are the single source of truth in [`helpers/routes/propertySpaRoutes.js`](../helpers/routes/propertySpaRoutes.js), used by:
 
-- [`server/routes/property.ts`](../server/routes/property.ts) — `detail` and `geo` handlers (map URLs use `geo` on the server)
+- [`helpers/routes/propertySpaRoutes.ts`](../helpers/routes/propertySpaRoutes.ts) — `detail`, `map`, and `geo` patterns (Vue SSR)
 - [`client/pages/property/index.js`](../client/pages/property/index.js) — client `Router` rules (`detail`, `map`, `geo`)
 - Client `Router` `push` / `replace` / `goto` contract: [`docs/client-js-lifecycle.md`](client-js-lifecycle.md#4-client-router-contract)
 
@@ -51,7 +51,7 @@ Handler: `BaseController(req, res, 'property')` → [`server/controllers/propert
 |---------------|---------|----------------|
 | `/property/sitemap` | State sitemap | — |
 | `/property/sitemap/:state` | City/county sitemap | `state` |
-| `/property/detail/:state/:zip/:prId` | Property detail (SSR) | Sets `req.query.geoPath`, `req.query.prId` |
+| `/property/:geoPath/detail_:propertyId` | Listing on the search page | Same geo path as search, with `/detail_<propertyId>` |
 | `/property/:state/:city/:id_school` | Homes inside that school boundary | School id is the `baseInfo` id (NCES id works). Search is `POST /listings/schools/v2` |
 | `/property/:state/:geoSlug/@lat,lng` | Map view (client SPA) | Server uses geo catch-all |
 | `/property/search` | IP-based listing search | `req.ip` / `?ip=`; no geo path |

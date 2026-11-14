@@ -74,12 +74,7 @@ Live URL `http://localhost:3000/property/tx` is **Express SSR** (`property.ejs`)
 Ordered path (no `beforeRequest` / `afterResponse` hooks):
 
 1. [`server/index.ts`](../server/index.ts) — swagger → compression → session → Referrer-Policy → CORS → SOA logs → Vue SSR (`loadPropertySearchPageState`) → `app.use('/', router)`
-2. [`server/routes/index.ts`](../server/routes/index.ts) — `registerPropertySitemap` then `registerProperty` among other registrars
-3. [`server/routes/property.ts`](../server/routes/property.ts) — geo catch-all `createPropertySpaRegExp('geo')` matches `/property/tx`
-   - `tail` → `"/tx"`
-   - `getCanonicalPropertyGeoRedirectPath(tail)` → **`null`** for bare `tx` (no 301)
-   - `req.query.geoPath = tail`
-   - `handlePropertyRoute(new BaseController(req, res, 'property'), res)`
+2. Vue SSR in `server/index.ts` classifies `/property/tx` with [`helpers/routes/propertySpaRoutes.ts`](../helpers/routes/propertySpaRoutes.ts) and renders `Property.vue`. The EJS property routes are removed.
 
 ### Controller hooks that exist (property config)
 
@@ -122,16 +117,9 @@ SOA helpers live in [`server/routes/api.soa.property.ts`](../server/routes/api.s
 4. `res.render('property.ejs', model)` → `res.send(html)`
 5. Optional `saveStaticHtml` → `dist/property/tx.html`
 
-### EJS include order ([`property.ejs`](../server/ejs/property.ejs))
+### HTML
 
-1. `html_above` — SEO, CSS/JS preload, theme
-2. Header (`comp_header` via component or fallback)
-3. `comp_breadcrumb`
-4. `comp_article_detail` — **skipped** (`detail` is null)
-5. `comp_property_nearby` → each `comp_article` (omitted if no cards)
-6. `html_menu`
-7. Footer
-8. `html_below` — `window.context = JSON.stringify(data)` + `<script src="<%= meta.js %>">`
+`/property/tx` is Vue SSR (`Property.vue`), not `property.ejs`. That template is removed.
 
 ### Status codes
 
@@ -183,7 +171,8 @@ After `toPage`, the render model also has top-level `meta`, `seo`, `breadcrumb`,
   metadata: /* mapSOADataToMetadata output */,
   img, imgTag, imgAlt,
   title,                    // display address
-  path: '/property/detail/{state}/{zip}/{prId}',
+  path: '/property/{geoPath}/',
+  id: '{propertyId}',
   tags: [{ text, className }],
   attrs: [{ key, value, desc, className }],
 }

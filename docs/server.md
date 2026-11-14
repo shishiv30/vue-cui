@@ -38,8 +38,6 @@ Router composition in `server/routes/index.ts`:
 
 - Page and HTML routes via:
   - `default.ts`
-  - `propertySitemap.ts`
-  - `property.ts`
   - `sitemap.ts`
   - `page.ts`
 - API routes:
@@ -145,6 +143,8 @@ npm run test
 ```
 
 No Playwright/e2e in repo; optional UI checks via `npm run test:lighthouse` (Docker + Lighthouse).
+
+The refactor plan (uiData, step logs, Pinia) is [server-refactor.md](server-refactor.md).
 
 ## Known Risks to Track
 

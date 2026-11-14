@@ -1,6 +1,6 @@
 /**
  * Shared property SPA URL patterns for server routes and client Router.
- * Sitemap routes stay in server/routes/propertySitemap.ts; update patterns here for detail/map/grid.
+ * Sitemap, detail, map, and geo HTML are Vue SSR. These patterns classify those URLs.
  */
 
 export const PROPERTY_SEG = {
@@ -13,15 +13,10 @@ export const PROPERTY_SEG = {
 	GEO_TAIL: '[/0-9a-zA-Z_@.,\\-]+',
 };
 
-const { STATE, ZIP_OR_SLUG, GUID, GEO_SLUG, MAP_COORD, GEO_TAIL } = PROPERTY_SEG;
+const { STATE, GEO_SLUG, MAP_COORD, GEO_TAIL } = PROPERTY_SEG;
 
-/** @type {Record<string, { source: string, paramNames: string[], prIdParamIndex?: number }>} */
+/** Search is `/property/<geoPath>/`. A listing is `/property/<geoPath>/detail_<propertyId>`. */
 export const PROPERTY_SPA_ROUTES = {
-	detail: {
-		source: `^/property/detail/(${STATE})/(${ZIP_OR_SLUG})/(${GUID})/?$`,
-		paramNames: ['state', 'zip', 'prId'],
-		prIdParamIndex: 2,
-	},
 	map: {
 		source: `^/property/(${STATE})/(${GEO_SLUG})/(${MAP_COORD})/?$`,
 		paramNames: ['state', 'geoSlug', 'coords'],
@@ -32,8 +27,8 @@ export const PROPERTY_SPA_ROUTES = {
 	},
 };
 
-/** Match order: most specific first (detail → map → geo). */
-export const PROPERTY_SPA_ROUTE_ORDER = ['detail', 'map', 'geo'];
+/** Match order: map, then geo. Listing id is the `id` query, not a path segment. */
+export const PROPERTY_SPA_ROUTE_ORDER = ['map', 'geo'];
 
 const DEFAULT_FLAGS = 'i';
 
@@ -84,10 +79,46 @@ export function matchPropertySpaRoute(pathname: any, flags = DEFAULT_FLAGS) {
  * @returns {'detail' | 'geo' | null}
  */
 export function matchPropertySpaServerRoute(pathname: any, flags = DEFAULT_FLAGS) {
-	for (const id of ['detail', 'geo']) {
-		if (createPropertySpaRegExp(id, flags).test(pathname)) {
-			return id;
-		}
+	if (createPropertySpaRegExp('geo', flags).test(pathname)) {
+		return 'geo';
 	}
 	return null;
+}
+
+export function listingIdFromPath(pathname: string) {
+	const match = String(pathname || '').match(/\/detail_([^/]+)\/?$/i);
+	return match ? decodeURIComponent(match[1]) : '';
+}
+
+/** Old detail URLs become `/property/<geoPath>/detail_<propertyId>`. */
+export function canonicalPropertyUrl(url: string) {
+	const [path, search = ''] = String(url || '').split('?');
+	const params = new URLSearchParams(search);
+	const queryId = params.get('id');
+	const legacy = path.match(/^\/property\/detail\/([a-z]{2})\/([^/]+)\/([^/]+)\/?$/i);
+	if (legacy) {
+		const id = encodeURIComponent(legacy[3]);
+		return `/property/${legacy[1].toLowerCase()}/${legacy[2]}/detail_${id}`;
+	}
+	const short = path.match(/^\/property\/detail\/([^/]+)\/?$/i);
+	if (short && !path.includes('/detail_')) {
+		return `/property/detail_${encodeURIComponent(short[1])}`;
+	}
+	if (queryId && !listingIdFromPath(path)) {
+		params.delete('id');
+		const rest = params.toString();
+		const base = path.replace(/\/+$/, '');
+		return `${base}/detail_${encodeURIComponent(queryId)}${rest ? `?${rest}` : ''}`;
+	}
+	return search ? `${path}?${search}` : path;
+}
+
+/** `/property/<geoPath>/detail_<propertyId>` */
+export function propertyListingHref(geoPath: string, propertyId: string) {
+	const trimmed = String(geoPath || '').replace(/^\/+|\/+$/g, '');
+	const path = trimmed ? `/property/${trimmed}` : '/property';
+	if (!propertyId) {
+		return `${path}/`;
+	}
+	return `${path}/detail_${encodeURIComponent(propertyId)}`;
 }

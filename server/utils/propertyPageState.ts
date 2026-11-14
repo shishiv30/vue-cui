@@ -1,4 +1,5 @@
 import type { Request } from 'express';
+import { logStep } from '../controllers/realestate.js';
 import property from '../controllers/property.js';
 import propertySitemap from '../controllers/propertySitemap.js';
 import propertySitemapState from '../controllers/propertySitemapState.js';
@@ -113,13 +114,22 @@ function toPageState(classified: ClassifiedSitemap | ClassifiedSearch, data: Rec
 	const zipcodes = data?.zipcodesComponent as { data?: { href?: string; text?: string }[] } | undefined;
 	const neighborhoods = data?.neighborhoodsComponent as { data?: { href?: string; text?: string }[] } | undefined;
 	const links = data?.linksComponent as { data?: { href?: string; text?: string }[] } | undefined;
+	const uiLinks = (data?.data as { links?: { href?: string; text?: string }[] } | undefined)?.links;
 	if (zipcodes) {
 		groups.push({ title: 'Zipcodes', links: linkRows(zipcodes) });
 	}
 	if (neighborhoods) {
 		groups.push({ title: 'Neighborhoods', links: linkRows(neighborhoods) });
 	}
-	if (links) {
+	if (Array.isArray(uiLinks)) {
+		groups.push({
+			title: classified.heading,
+			links: uiLinks.map((link) => ({
+				href: link?.href || '',
+				text: link?.text || '',
+			})),
+		});
+	} else if (links) {
 		groups.push({ title: classified.heading, links: linkRows(links) });
 	}
 
@@ -127,34 +137,106 @@ function toPageState(classified: ClassifiedSitemap | ClassifiedSearch, data: Rec
 	const footerComponent = data?.footerComponent as { data?: unknown } | undefined;
 	const articleComponent = data?.articleComponent as { data?: unknown[] } | undefined;
 	const filterComponent = data?.filterComponent as { data?: { fields?: Record<string, unknown>[] } } | undefined;
+	const ui = data?.seo && data?.metadata && data?.data
+		? data as {
+			seo: { title?: string; h1?: string; description?: string };
+			httpHead?: unknown[];
+			metadata: Record<string, unknown>;
+			data: Record<string, unknown>;
+		}
+		: null;
 
-	return {
-		title: (data?.title as string) || 'Property',
+	const seoTitle = (data?.seo as { title?: string } | undefined)?.title;
+	const title = ui?.seo?.title || (data?.title as string) || seoTitle || 'Property';
+	const kind = classified.action === 'search' ? 'search' : 'sitemap';
+	const pageData = ui?.data;
+	const page = {
+		title,
 		marker: 'vue-property',
-		kind: classified.action === 'search' ? 'search' : 'sitemap',
-		header: headerComponent?.data ?? null,
-		footer: footerComponent?.data ?? null,
-		breadcrumb: data?.breadcrumb ?? null,
+		kind,
+		header: pageData?.header ?? headerComponent?.data ?? null,
+		footer: pageData?.footer ?? footerComponent?.data ?? null,
+		breadcrumb: pageData?.breadcrumb ?? data?.breadcrumb ?? null,
 		groups: classified.action === 'sitemap' ? groups : [],
-		articles: classified.action === 'search' ? (articleComponent?.data ?? []) : [],
-		filters: classified.action === 'search' ? filterFields(filterComponent) : [],
-		detail: classified.action === 'search' && classified.spa?.id === 'detail'
-			? (data?.detail ?? null)
+		articles: classified.action === 'search'
+			? ((pageData?.articles as unknown[]) ?? articleComponent?.data ?? [])
+			: [],
+		filters: classified.action === 'search'
+			? filterFields({
+				data: {
+					fields: (pageData?.filters as Record<string, unknown>[])
+						?? filterComponent?.data?.fields,
+				},
+			})
+			: [],
+		detail: classified.action === 'search'
+			? (pageData?.detail ?? data?.detail ?? null)
 			: null,
+	};
+	const description = ui?.seo?.description
+		|| (data?.seo as { desc?: string; description?: string } | undefined)?.description
+		|| (data?.seo as { desc?: string } | undefined)?.desc
+		|| '';
+	const uiData = ui
+		? {
+			...ui,
+			data: {
+				...ui.data,
+				groups: page.groups,
+				articles: page.articles,
+				filters: page.filters,
+				detail: page.detail,
+				header: page.header,
+				footer: page.footer,
+				breadcrumb: page.breadcrumb,
+			},
+		}
+		: null;
+	return {
+		...page,
+		uiData: uiData ?? {
+			seo: {
+				title,
+				h1: title,
+				description,
+			},
+			httpHead: [],
+			metadata: {
+				appHost: data?.appHost ?? '',
+				cdnHost: data?.cdnHost ?? '',
+			},
+			data: {
+				geo: data?.geo ?? null,
+				kind: page.kind,
+				header: page.header,
+				footer: page.footer,
+				breadcrumb: page.breadcrumb,
+				groups: page.groups,
+				articles: page.articles,
+				filters: page.filters,
+				detail: page.detail,
+			},
+		},
 	};
 }
 
 async function loadClassified(req: Request, classified: ClassifiedSitemap | ClassifiedSearch) {
 	if (classified.action === 'search') {
 		if (classified.spa.id === 'geo') {
-			req.query.geoPath = classified.spa.params.tail;
+			const tail = String(classified.spa.params.tail || '');
+			const listing = tail.match(/^(.*)\/detail_([^/]+)\/?$/i);
+			if (listing) {
+				req.query.geoPath = listing[1];
+				req.query.prId = decodeURIComponent(listing[2]);
+			} else {
+				req.query.geoPath = tail;
+			}
 		} else if (classified.spa.id === 'map') {
 			const { state, geoSlug, coords } = classified.spa.params;
 			req.query.geoPath = `${state}/${geoSlug}/${coords}`;
-		} else if (classified.spa.id === 'detail') {
-			const { state, zip, prId } = classified.spa.params;
-			req.query.geoPath = `${state}/${zip}`;
-			req.query.prId = prId;
+		}
+		if (req.query.id && !req.query.prId) {
+			req.query.prId = req.query.id;
 		}
 	}
 
@@ -162,8 +244,20 @@ async function loadClassified(req: Request, classified: ClassifiedSitemap | Clas
 	if (classified.config.beforeGet) {
 		payload = classified.config.beforeGet(req, payload);
 	}
+	logStep('property.payload', {
+		path: req.path,
+		action: classified.action,
+		geoPath: payload.geoPath,
+		prId: payload.prId,
+	});
 	const data = await classified.config.get(payload);
-	return { action: 'page' as const, state: toPageState(classified, data) };
+	logStep('property.get', { keys: data ? Object.keys(data) : [] });
+	const state = toPageState(classified, data);
+	logStep('property.page', {
+		kind: state.kind,
+		title: state.title,
+	});
+	return { action: 'page' as const, state };
 }
 
 export async function loadPropertySitemapPageState(req: Request) {

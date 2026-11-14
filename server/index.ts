@@ -16,23 +16,15 @@ import {
 	loadPropertySearchPageState,
 	loadPropertySitemapPageState,
 } from './utils/propertyPageState.js';
-import { matchPropertySpaRoute } from '../helpers/routes/propertySpaRoutes.js';
-
+import { canonicalPropertyUrl } from '../helpers/routes/propertySpaRoutes.js';
 type ListingPreloadState = {
 	kind?: string;
 	articles?: { img?: string }[];
 	detail?: { album?: { images?: string[] } | null } | null;
 };
 
-function listingPreload(url: string, state: ListingPreloadState) {
-	const id = matchPropertySpaRoute(url)?.id;
-	if (id === 'detail') {
-		return state.detail?.album?.images?.[0] || '';
-	}
-	if (id === 'geo' || id === 'map') {
-		return state.articles?.[0]?.img || '';
-	}
-	return '';
+function listingPreload(state: ListingPreloadState) {
+	return state.detail?.album?.images?.[0] || state.articles?.[0]?.img || '';
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -88,6 +80,11 @@ app.get('/document.html', (_req, res) => {
 });
 
 app.use(async (req, res, next) => {
+	const canonical = canonicalPropertyUrl(req.originalUrl || req.url);
+	if (canonical !== (req.originalUrl || req.url)) {
+		res.redirect(301, canonical);
+		return;
+	}
 	const pagePath = req.path.replace(/\/+$/, '') || '/';
 	const isDocument = pagePath === '/' || pagePath === '/document';
 	const propertyPage = pagePath === '/property' || pagePath.startsWith('/property/sitemap')
@@ -104,7 +101,7 @@ app.use(async (req, res, next) => {
 		return;
 	}
 	try {
-		const url = req.path;
+		const url = req.originalUrl || req.url;
 		const templatePath = path.join(root, 'client/src/index.html');
 		let template = fs.readFileSync(templatePath, 'utf8');
 		let render: (
@@ -130,7 +127,7 @@ app.use(async (req, res, next) => {
 			|| (isDocument ? 'Document' : 'Property');
 		template = template.replace('<title>Property</title>', `<title>${title}</title>`);
 		const rendered = await render(url, pageState);
-		const preloadImage = listingPreload(url, rendered.state as ListingPreloadState);
+		const preloadImage = listingPreload(rendered.state as ListingPreloadState);
 		if (preloadImage) {
 			const href = preloadImage.replace(/"/g, '%22');
 			template = template.replace(

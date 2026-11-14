@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { defineStore } from 'pinia';
 import type { ArticleUiModel } from './components/articleModel';
 import type { PropertyDetailModel } from './components/detailModel';
 import type { GroupDropdownField } from './components/groupdropdownModel';
@@ -56,19 +56,73 @@ export type PropertyState = {
 	detail: PropertyDetailModel | null;
 };
 
-export function createPropertyStore() {
-	return createStore<PropertyState>({
-		state: {
-			title: 'Property',
-			marker: 'vue-property',
-			kind: '',
-			header: null,
-			footer: null,
-			breadcrumb: null,
-			groups: [],
-			articles: [],
-			filters: [],
-			detail: null,
+export type UiData = {
+	seo?: { title?: string; h1?: string; description?: string };
+	data?: Partial<PropertyState>;
+};
+
+const emptyState = (): PropertyState => ({
+	title: 'Property',
+	marker: 'vue-property',
+	kind: '',
+	header: null,
+	footer: null,
+	breadcrumb: null,
+	groups: [],
+	articles: [],
+	filters: [],
+	detail: null,
+});
+
+export const usePropertyStore = defineStore('property', {
+	state: emptyState,
+	actions: {
+		hydrate(next: Partial<PropertyState>) {
+			const current = emptyState();
+			(Object.keys(current) as (keyof PropertyState)[]).forEach((key) => {
+				if (key in next) {
+					this[key] = next[key] as never;
+				}
+			});
 		},
-	});
-}
+		applyUi(ui: UiData) {
+			if (ui.seo?.title) {
+				this.title = ui.seo.title;
+			}
+			const data = ui.data;
+			if (!data) {
+				return;
+			}
+			if (Array.isArray(data.articles)) {
+				this.articles = data.articles;
+			}
+			if (Array.isArray(data.groups)) {
+				this.groups = data.groups;
+			}
+			if (data.footer) {
+				this.footer = data.footer;
+			}
+			if (data.header) {
+				this.header = data.header;
+			}
+			if (data.breadcrumb) {
+				this.breadcrumb = data.breadcrumb;
+			}
+			if (data.detail) {
+				this.detail = data.detail;
+			}
+			if (data.kind) {
+				this.kind = data.kind;
+			}
+		},
+		async loadPage(url: string) {
+			const response = await fetch(url);
+			if (!response.ok) {
+				return null;
+			}
+			const ui = await response.json() as UiData;
+			this.applyUi(ui);
+			return ui;
+		},
+	},
+});

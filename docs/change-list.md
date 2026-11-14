@@ -6,7 +6,7 @@ Work that is still unfinished after the TypeScript, Vite, and Vue SSR slice. Don
 | --- | --- | --- | --- |
 | open | client/js/plugins/ | Plugins other than header are still JavaScript `data-role` widgets. | Header is the first Vue component in Storybook (`client/src/components/Header.vue`). Convert the next plugin, add a `*.stories.ts`, and mark it `vue` in `pluginCatalog.ts`. |
 | done | server/ | Controllers, routes, middleware, and utils are TypeScript. EJS templates stay `.ejs`. | Process entry is `server/index.ts`. |
-| open | server/routes/property.ts | Listing detail (`/property/detail/...`) still has an EJS `toPage` fallback. | Vue SSR in `index.ts` renders `Property.vue` / `PropertySitemap.vue` first. |
+| done | server/index.ts | Listing detail HTML is Vue SSR only. The EJS property routes and `property*.ejs` templates are removed. | `Property.vue` / `PropertySitemap.vue` |
 | done | client/src/pages/Document.vue | Document catalog is Vue SSR (`/document`). Modal, dialog, sharelink, list-dict, and scrollto stay hardcoded HTML. | No Storybook Vue for those plugins yet. |
 | done | client/src/pages/Property.vue | Geo search and detail. | Sitemap lives in `PropertySitemap.vue`. |
 | done | client/src/pages/PropertySitemap.vue | `/property/sitemap` Vue SSR. | Split from `Property.vue`. |

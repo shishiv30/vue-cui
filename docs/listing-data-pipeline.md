@@ -47,7 +47,7 @@ Example: [`server/controllers/property.ts`](../server/controllers/property.ts).
 
 | Path | Purpose | Key files |
 |------|---------|-----------|
-| **SSR HTML** | Full property pages | `server/routes/property.ts` → `BaseController('property')` → `server/controllers/property.ts` |
+| **SSR HTML** | Full property pages | `server/index.ts` Vue SSR → `server/controllers/property.ts` |
 | **JSON API** | SPA detail fetch | `GET /api/property/detail/:prId` in `server/routes/api.ts` → same `property.get()` → `toData()` |
 | **HTTP proxy** | External/tools call SOA verbatim | `/api/soa/property/*` → `server/routes/api.soa.property.ts` → `fetchFromSoa()` in `server/controllers/realestate.ts` |
 
@@ -161,7 +161,7 @@ Builds fact rows (`Est`, `Bd`, `Ba`, sqft, price/sqft, year). When `allAttrs ===
 
 Guard each include; pass `getSrc` / `getHref` from `BaseController.toPage()` model.
 
-List grid: [`property.ejs`](../server/ejs/property.ejs) loops `articleComponent.data` and includes `comp_article`. List cards use the shared `.article` markup: `dl.dict` for `attrs` (`dt` = key/`abbr`, `dd` = value/`span`), `figure`/`figcaption` for photo credit, and overlay tags as `.tags`.
+List cards use the shared `.article` markup: `dl.dict` for `attrs` (`dt` = key/`abbr`, `dd` = value/`span`), `figure`/`figcaption` for photo credit, and overlay tags as `.tags`.
 
 ---
 
@@ -252,7 +252,7 @@ No Playwright/e2e in repo; optional Lighthouse via `npm run test:lighthouse`.
 
 ### Route patterns
 
-- Server: regexes in `server/routes/property.ts`.
+- Server: regexes in `helpers/routes/propertySpaRoutes.ts`, rendered by Vue SSR in `server/index.ts`.
 - Client: regexes in `client/pages/property/index.js`.
 - **Direction:** shared route manifest (e.g. `data/routes/property.json`) consumed by both sides.
 
@@ -261,7 +261,7 @@ No Playwright/e2e in repo; optional Lighthouse via `npm run test:lighthouse`.
 ```json
 {
   "detail": {
-    "pattern": "^/property/detail/([a-z]{2})/([0-9a-z-]+)/([0-9a-z-]+)/?$",
+    "pattern": "^/property/<geoPath>/detail_<propertyId>",
     "params": ["state", "zip", "prId"],
     "query": { "geoPath": "{state}/{zip}", "prId": 2 }
   }

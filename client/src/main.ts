@@ -5,7 +5,7 @@ import { installLinkInterceptor } from './linkInterceptor';
 const { app, router, store } = createApp(createWebHistory());
 const stateEl = document.getElementById('__INITIAL_STATE__');
 if (stateEl?.textContent) {
-	store.replaceState(JSON.parse(stateEl.textContent));
+	store.hydrate(JSON.parse(stateEl.textContent));
 }
 router.isReady().then(() => {
 	installLinkInterceptor(router);

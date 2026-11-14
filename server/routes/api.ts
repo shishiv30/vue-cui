@@ -2,11 +2,7 @@
 import express from 'express';
 const router = express.Router();
 import BaseController from '../controllers/index.js';
-import { getGeoByPath } from '../../helpers/geo.js';
-import { getGeoCityByIp } from '../../helpers/ip.js';
-import { getFilterByQuery } from '../../helpers/filter.js';
-import { mapSOADataListToArticles } from '../../helpers/article.js';
-import { searchHouse } from './api.soa.property.js';
+import propertyConfig from '../controllers/property.js';
 import { loadPropertySitemapPageState } from '../utils/propertyPageState.js';
 
 /**
@@ -114,7 +110,7 @@ router.get('/geo', async (req, res) => {
  *         schema:
  *           type: string
  *           example: "45a6f0ff-21ec-45f6-8a35-69de1bc9368d"
- *         description: MLS public record id (`mlsPublicRecordAssociation.id`; same as third segment of /property/detail/{state}/{zip}/{prId})
+ *         description: Property id. The page URL is /property/{geoPath}/detail_{propertyId}
  *     responses:
  *       200:
  *         description: BaseController JSON envelope
@@ -214,7 +210,7 @@ router.get('/property/detail/:prId', async (req, res) => {
  *                       path:
  *                         type: string
  *                         description: Property SPA detail route
- *                         example: "/property/detail/tx/79567/45a6f0ff-21ec-45f6-8a35-69de1bc9368d"
+ *                         example: "/property/tx/79567/detail_45a6f0ff-21ec-45f6-8a35-69de1bc9368d"
  *                       tags:
  *                         type: array
  *                         description: Status and price-change badges (className/text)
@@ -271,19 +267,19 @@ router.get('/property/detail/:prId', async (req, res) => {
  *     tags:
  *       - Property
  */
-async function sendPropertySearch(res, geo, query) {
-	if (!geo) {
-		res.status(400).json({ error: 'Invalid geo path' });
-		return;
+export async function propertySearchUi(req) {
+	const payload = propertyConfig.beforeGet
+		? propertyConfig.beforeGet(req, req.query)
+		: req.query;
+	if (!payload?.geo && !payload?.prId) {
+		return { status: 400, body: { error: 'Invalid geo path' } };
 	}
-	const nearbyProperties = await searchHouse(geo, getFilterByQuery(query));
-	let articles = [];
-	let totalCount = 0;
-	if (nearbyProperties && nearbyProperties.listings && nearbyProperties.listings.length > 0) {
-		articles = mapSOADataListToArticles(nearbyProperties.listings);
-		totalCount = nearbyProperties.totalCount;
-	}
-	res.json({ articles, totalCount });
+	return { status: 200, body: await propertyConfig.get(payload) };
+}
+
+async function sendPropertySearch(req, res) {
+	const result = await propertySearchUi(req);
+	res.status(result.status).json(result.body);
 }
 
 /**
@@ -301,7 +297,7 @@ router.get(/^\/property\/sitemap(?:\/.*)?$/, async (req, res) => {
 			res.status(404).json({ error: 'Not found' });
 			return;
 		}
-		res.json(result.state);
+		res.json(result.state.uiData);
 	} catch (error) {
 		console.error('Error fetching sitemap:', error);
 		res.status(500).json({ error: 'Internal server error' });
@@ -310,8 +306,7 @@ router.get(/^\/property\/sitemap(?:\/.*)?$/, async (req, res) => {
 
 router.get('/property/search', async (req, res) => {
 	try {
-		const ip = req.query.ip || req.ip;
-		await sendPropertySearch(res, getGeoCityByIp(ip), req.query);
+		await sendPropertySearch(req, res);
 	} catch (error) {
 		console.error('Error fetching properties:', error);
 		res.status(500).json({ error: 'Internal server error' });
@@ -321,12 +316,10 @@ router.get('/property/search', async (req, res) => {
 router.get('/property/search/:path(*)', async (req, res) => {
 	try {
 		const { path } = req.params;
-		if (!path || path === 'search') {
-			const ip = req.query.ip || req.ip;
-			await sendPropertySearch(res, getGeoCityByIp(ip), req.query);
-			return;
+		if (path && path !== 'search') {
+			req.query.geoPath = path;
 		}
-		await sendPropertySearch(res, getGeoByPath(path), req.query);
+		await sendPropertySearch(req, res);
 	} catch (error) {
 		console.error('Error fetching properties:', error);
 		res.status(500).json({ error: 'Internal server error' });
@@ -363,7 +356,7 @@ router.get('/property/search/:path(*)', async (req, res) => {
  *             value: tx/williamson_county
  *     responses:
  *       200:
- *         description: BaseController JSON envelope (seo, geo, articleComponent, detail, etc.)
+ *         description: BaseController JSON envelope whose data is uiData (seo, httpHead, metadata, data)
  *         content:
  *           application/json:
  *             schema:

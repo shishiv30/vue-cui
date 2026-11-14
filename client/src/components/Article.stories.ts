@@ -59,7 +59,7 @@ const meta = {
 		},
 		id: {
 			control: 'text',
-			description: 'Appended to the link as ?id= when set.',
+			description: 'Appended to the link as /detail_<id> when set.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
 		img: {

@@ -104,8 +104,8 @@ const href = computed(() => {
 	if (!url || !item.id) {
 		return url;
 	}
-	const separator = url.includes('?') ? '&' : '?';
-	return `${url}${separator}id=${encodeURIComponent(item.id)}`;
+	const base = url.replace(/\/$/, '');
+	return `${base}/detail_${encodeURIComponent(item.id)}`;
 });
 
 onMounted(() => {

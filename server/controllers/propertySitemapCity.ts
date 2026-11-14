@@ -1,9 +1,7 @@
 // @ts-nocheck
 import { getZipcodesForSitemap, getGeoByPath, getBreadcrumbByGeo } from '../../helpers/geo.js';
 import { getGeoData } from '../../data/index.js';
-import { createHeaderComponent } from '../ejs/comp_header.js';
-import { createFooterComponent } from '../ejs/comp_footer.js';
-import { createLinksComponent } from '../ejs/comp_links.js';
+import { sitemapUiData } from '../page/sitemapUi.js';
 
 const SITEMAP_BASE = '/property/sitemap';
 
@@ -21,8 +19,9 @@ export default {
 		return null;
 	},
 	seo: function (req, model) {
-		const cityName = model?.data?.cityName || 'City';
-		const stateName = model?.data?.stateName || 'State';
+		const page = model?.data?.data || model?.data || {};
+		const cityName = page.cityName || 'City';
+		const stateName = page.stateName || 'State';
 		return {
 			title: `${cityName}, ${stateName} Zipcodes Sitemap`,
 			desc: `Browse all zipcodes in ${cityName}, ${stateName}.`,
@@ -53,9 +52,6 @@ export default {
 		const stateName = geo?.state || stateCode;
 
 		const zipcodeLinks = getZipcodesForSitemap(cityName, stateCode, '/property', geoData.zipcode);
-		const linksComponent = createLinksComponent(zipcodeLinks);
-		const headerComponent = createHeaderComponent();
-		const footerComponent = createFooterComponent();
 
 		// Build breadcrumb: Home > Sitemap > State > City
 		const cityGeo = { state: stateCode, city: cityName, type: 'city' };
@@ -71,15 +67,12 @@ export default {
 			}
 		}
 
-		return {
+		return sitemapUiData({
 			title: `${cityName} Zipcodes`,
-			cityName,
-			stateName,
-			stateCode,
+			description: `Browse all zipcodes in ${cityName}, ${stateName}.`,
 			breadcrumb,
-			headerComponent,
-			footerComponent,
-			linksComponent,
-		};
+			links: zipcodeLinks,
+			extra: { cityName, stateName, stateCode },
+		});
 	},
 };

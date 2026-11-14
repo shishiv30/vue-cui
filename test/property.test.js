@@ -195,12 +195,13 @@ describe('mapPropertyToArticle', () => {
 	test('builds article card from SOA metadata', () => {
 		const meta = mapSOADataToMetadata(soaPureListing);
 		const article = mapPropertyToArticle(meta);
+		assert.equal(article.id, soaPureListing.id);
 		assert.equal(article.metadata.propertyId, soaPureListing.id);
 		assert.equal(article.metadata.prId, soaPureListing.mlsPublicRecordAssociation.id);
 		assert.equal(article.img, meta.photos[0]);
 		assert.equal(
 			article.path,
-			`/property/detail/${meta.geo.state.toLowerCase()}/${meta.geo.zipcode}/${meta.prId}`,
+			`/property/${meta.geo.state.toLowerCase()}/${meta.geo.zipcode}/`,
 		);
 		assert.equal(
 			article.title,

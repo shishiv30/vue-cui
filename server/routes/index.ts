@@ -1,8 +1,6 @@
 // @ts-nocheck
 import { Router } from 'express';
 import registerDefault from './default.js';
-import registerPropertySitemap from './propertySitemap.js';
-import registerProperty from './property.js';
 import registerPage from './page.js';
 import registerSitemap from './sitemap.js';
 import apiRouter from './api.js';
@@ -10,8 +8,6 @@ import apiSoaRouter from './api.soa.js';
 
 const router = Router();
 registerDefault(router);
-registerPropertySitemap(router);
-registerProperty(router);
 registerSitemap(router);
 registerPage(router);
 router.use('/api', apiRouter);

@@ -1,5 +1,5 @@
 import { formatPrice, formatNumber } from '../client/js/core/format.js';
-import { getGeoDisplayText } from './geo.js';
+import { getCityPath, getGeoDisplayText, getZipcodePath } from './geo.js';
 import {
 	mapHistoryRowsToTimelineComp,
 	mapOpenHousesToComp,
@@ -182,14 +182,20 @@ export function mapPropertyToArticle(property: any, isFull = false) {
 
 	const geo = property.geo;
 	const displayAddress = getGeoDisplayText(geo);
+	const geoPath = geo?.zipcode && geo?.state
+		? getZipcodePath(geo.zipcode, geo.state)
+		: geo?.city && geo?.state
+			? getCityPath(geo.city, geo.state)
+			: '';
 
 	return {
 		metadata: property,
+		id: property.propertyId,
 		img: Array.isArray(property.photos) ? property.photos[0] : undefined,
 		imgTag: officeListName,
 		imgAlt: displayAddress,
 		title: displayAddress,
-		path: `/property/detail/${geo?.state?.toLowerCase()}/${geo.zipcode}/${property.prId}`,
+		path: geoPath ? `/property/${geoPath}/` : '/property/',
 		tags,
 		attrs,
 	};

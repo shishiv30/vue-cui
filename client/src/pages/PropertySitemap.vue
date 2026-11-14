@@ -74,31 +74,28 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
+import { usePropertyStore } from '../store';
 import Header from '../components/Header.vue';
 import Sitemap from '../components/Sitemap.vue';
 import { headerMock } from '../components/headerModel';
-import type { PropertyState } from '../store';
 
-const store = useStore<PropertyState>();
+const store = usePropertyStore();
 const route = useRoute();
-const title = computed(() => store.state.title);
+const title = computed(() => store.title);
 const header = headerMock;
-const footer = computed(() => store.state.footer);
-const groups = computed(() => store.state.groups);
-const breadcrumbLinks = computed(() => store.state.breadcrumb?.links ?? []);
+const footer = computed(() => store.footer);
+const groups = computed(() => store.groups);
+const breadcrumbLinks = computed(() => store.breadcrumb?.links ?? []);
 watch(() => route.path, async (path, previous) => {
 	if (path === previous) {
 		return;
 	}
 	const pagePath = path.replace(/\/+$/, '') || '/';
 	const apiPath = pagePath === '/property' ? '/property/sitemap' : pagePath;
-	const response = await fetch(`/api${apiPath}`);
-	if (!response.ok || route.path !== path) {
+	const ui = await store.loadPage(`/api${apiPath}`);
+	if (!ui || route.path !== path) {
 		return;
 	}
-	const next = await response.json() as Partial<PropertyState>;
-	store.replaceState({ ...store.state, ...next });
-	document.title = next.title ?? document.title;
+	document.title = ui.seo?.title ?? document.title;
 });
 </script>

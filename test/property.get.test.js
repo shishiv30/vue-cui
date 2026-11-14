@@ -4,6 +4,7 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import propertyConfig from '../server/controllers/property.js';
+import propertySitemap from '../server/controllers/propertySitemap.js';
 import { mapPropertyDetailToArticle } from '../helpers/article.js';
 
 try {
@@ -46,13 +47,23 @@ describe('property.get', () => {
 	test('returns page model keys without prId (detail null)', async () => {
 		const model = await propertyConfig.get({ geo: undefined, prId: undefined });
 
-		assert.equal(model.detail, null);
+		assert.equal(model.data.detail, null);
 		assert.ok(model.seo && typeof model.seo.title === 'string');
-		assert.ok(model.articleComponent);
-		assert.ok(model.headerComponent);
-		assert.ok(model.footerComponent);
-		assert.ok(model.welcomeImage);
-		assert.equal(typeof model.articleTotalCount, 'number');
+		assert.equal(model.seo.h1, model.seo.title);
+		assert.ok(Array.isArray(model.data.articles));
+		assert.ok(model.data.header);
+		assert.ok(model.data.footer);
+		assert.ok(model.metadata.welcomeImage);
+		assert.equal(typeof model.data.articleTotalCount, 'number');
+	});
+
+	test('sitemap get returns uiData', async () => {
+		const model = await propertySitemap.get();
+		assert.equal(typeof model.seo.title, 'string');
+		assert.ok(model.metadata.appHost);
+		assert.ok(Array.isArray(model.data.links));
+		assert.ok(model.data.header);
+		assert.ok(model.data.footer);
 	});
 
 	test('mapPropertyDetailToArticle keys align with comp_article_detail sections', () => {

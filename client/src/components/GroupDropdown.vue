@@ -568,5 +568,6 @@ onBeforeUnmount(() => {
 defineExpose({
 	open,
 	close,
+	resetAll,
 });
 </script>

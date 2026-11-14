@@ -127,7 +127,7 @@ Example (detail skip only on SSR boot):
 
 ```javascript
 {
-  reg: createPropertySpaRegExp('detail'),
+  reg: createPropertySpaRegExp('geo'),
   loading: async (to, from, method) => {
     if (method === 'replace') {
       return null; // SSR already painted this page

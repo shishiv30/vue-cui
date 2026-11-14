@@ -1,11 +1,25 @@
 // @ts-nocheck
 import { AsyncLocalStorage } from 'node:async_hooks';
+import { randomUUID } from 'node:crypto';
 import config from '../config.js';
 
 const soaRequestStore = new AsyncLocalStorage();
 
 export function runWithSoaLogs(next) {
-	soaRequestStore.run({ curls: [] }, next);
+	soaRequestStore.run({ curls: [], requestId: randomUUID(), steps: [] }, next);
+}
+
+export function logStep(name, detail) {
+	const store = soaRequestStore.getStore();
+	const requestId = store?.requestId || '-';
+	if (store) {
+		store.steps.push({ name, at: new Date().toISOString() });
+	}
+	const quiet = config.mode === 'production' || config.mode === 'stage';
+	const line = quiet
+		? { requestId, step: name }
+		: { requestId, step: name, detail };
+	console.log(JSON.stringify(line));
 }
 
 export function getSoaLogs() {
