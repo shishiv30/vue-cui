@@ -253,7 +253,7 @@ export function mapHistoriesToDatelist(historiesRaw: any) {
 }
 
 /**
- * Map sorted history rows to `comp_timeline` data shape.
+ * Map sorted history rows to the `DetailBodyTimeline.vue` data shape.
  * @param {Array<{ date: string, title: string, subtitle: string }>} rows
  * @returns {{ heading: string, intro: string, entries: object[] }|null}
  */
@@ -273,7 +273,7 @@ export function mapHistoryRowsToTimelineComp(rows: any) {
 }
 
 /**
- * Map SOA `currentOpenHouses` rows to `comp_open_houses` shape.
+ * Map SOA `currentOpenHouses` rows to the `DetailBodyOpenHouses.vue` shape.
  * @param {unknown} openHouses
  * @returns {{ heading: string, items: object[] }|null}
  */

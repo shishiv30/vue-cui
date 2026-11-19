@@ -253,7 +253,7 @@ export function mapRecordToComp(attrs: any, heading = 'Facts') {
 }
 
 /**
- * Map SOA listing (+ optional histories) to comp render models for `comp_article_detail`.
+ * Map SOA listing (+ optional histories) to the detail models rendered by `Detail.vue`.
  *
  * @see docs/listing-data-pipeline.md (map: listing-pipeline)
  * @param {object|null|undefined} soaListing — raw SOA listing

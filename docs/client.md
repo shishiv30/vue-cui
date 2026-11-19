@@ -104,8 +104,7 @@ Responsive definition list for property facts and similar data.
 ```
 
 - **Columns:** `repeat(auto-fill, minmax(calc(var(--list-dict-item-width) - var(--g2) * 2), 1fr))` — same idea as `.result > ul` in `property.scss`. Default `--list-dict-item-width: 320px`; override with `data-item-width` on the root.
-- **Server:** `server/ejs/comp_record.ejs` renders the same structure for property detail SSR.
-- **SPA:** property detail uses the same `server/ejs/comp_record.ejs` as SSR (via `renderEjsTemplate`); no hand-built record HTML.
+- **Vue:** property detail renders this structure in `client/src/components/DetailBodyFacts.vue`.
 
 ## CSS and Theme System
 
@@ -121,16 +120,12 @@ Token names, `:root` vs `body` alias rules, and the token audit live in **[`docs
 
 - Core visual tokens are CSS custom properties.
 - Base theme defaults live in SCSS.
-- Runtime theme values can be injected server-side from theme comps (`data/comps/theme*.js` + `server/ejs/comp_theme.js`).
+- Runtime theme values can be injected server-side from `data/comps/theme.js` + `server/ejs/comp_theme.ts`.
 - Dark mode behavior is controlled with theme variable overrides.
 
-## Router and property SPA
+## Router and property pages
 
-[`client/js/core/router.js`](client/js/core/router.js) matches URL paths to handlers. The property page ([`client/pages/property/index.js`](client/pages/property/index.js)) uses `linkScope: 'property'` for grid, detail, and map views.
-
-Detail navigation fetches `GET /api/property/detail/:prId` (same model as SSR `property.get()`), renders [`server/ejs/comp_article_detail.ejs`](server/ejs/comp_article_detail.ejs) and [`comp_property_nearby.ejs`](server/ejs/comp_property_nearby.ejs) in [`client/pages/property/detailSpa.js`](client/pages/property/detailSpa.js) via [`client/js/core/renderEjs.js`](client/js/core/renderEjs.js), replaces `#detail` / nearby `section.result` `outerHTML`, then `emit('dom.load')` so plugins re-bind.
-
-EJS comps define `data-role` (e.g. `comp_album.ejs` → `slider`); client reuse keeps SSR and SPA markup aligned. See [`docs/listing-data-pipeline.md`](docs/listing-data-pipeline.md).
+`/property*` is Vue SSR (`client/src/pages/Property.vue`, `PropertySitemap.vue`, routes in `client/src/router.ts`). The old EJS property SPA (`client/pages/property/*.js`, `renderEjs.js`) was removed in `chore/ejs-retire`. [`client/js/core/router.js`](client/js/core/router.js) remains for the legacy runtime.
 
 ## Page Entry Structure
 

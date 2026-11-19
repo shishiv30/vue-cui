@@ -8,11 +8,6 @@ import propertySitemap from './propertySitemap.js';
 import propertySitemapState from './propertySitemapState.js';
 import propertySitemapCounty from './propertySitemapCounty.js';
 import propertySitemapCity from './propertySitemapCity.js';
-import sitemap from './sitemap.js';
-import sitemapState from './sitemapState.js';
-import sitemapCounty from './sitemapCounty.js';
-import sitemapCity from './sitemapCity.js';
-import pageConfig from './page.js';
 import { getBreadcrumbByGeo } from '../../helpers/geo.js';
 import { getThemeInlineCss } from '../ejs/comp_theme.js';
 import { getHref, getSrc } from '../../helpers/url.js';
@@ -33,11 +28,6 @@ const routeConfigs = [
 	propertySitemapState,
 	propertySitemapCounty,
 	propertySitemapCity,
-	sitemap,
-	sitemapState,
-	sitemapCounty,
-	sitemapCity,
-	pageConfig,
 ];
 
 export default class BaseController {

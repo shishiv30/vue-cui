@@ -70,4 +70,4 @@ Each step (payload, each API call, each mapper, SSR) writes a log line with a re
 1. Done: this plan, `uiData` on the property SSR state, step logs on the property page load.
 2. Done: property and property-sitemap `get` return `uiData`. `/api/property/:geoPath`, `/api/property/search`, and `/api/property/sitemap/*` return that object. `uiPayloadToPayload`, `apiDataToUiData`, and `pageContext` live under `server/page/`.
 3. Done: Pinia store in `client/src/store.ts`. `loadPage` fetches `/api/property...` and writes `uiData` into the store. Vuex is removed.
-4. Property HTML templates `property.ejs` and `property-sitemap*.ejs` are removed. `/page/:key` and `/sitemap*` still render EJS. Detail partials stay because `test/ejsClientRender.test.js` and `client/pages/property/detailSpa.js` still import them.
+4. Property HTML templates `property.ejs` and `property-sitemap*.ejs` are removed. `/page/:key` is retired, `/sitemap*` 301-redirects to `/property/sitemap*`, and the EJS detail partials and client EJS loader are deleted. Only the HTML shell (`html_*.ejs`, `comp_theme.ejs`) is left.

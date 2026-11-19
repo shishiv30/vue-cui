@@ -1,6 +1,6 @@
 # Server Architecture
 
-Process entry is `server/index.ts`. It serves `dist/`, renders `/property` (search) and `/property/sitemap` with Vue, and mounts TypeScript routers. Page content is read from `data/` through `server/utils/localData.ts`.
+Process entry is `server/index.ts`. It serves `dist/`, renders `/property` (search) and `/property/sitemap` with Vue, and mounts TypeScript routers. `/sitemap/*` 301-redirects to `/property/sitemap/*`.
 
 
 
@@ -103,7 +103,7 @@ Listing SOA → metadata → comp models: [`docs/listing-data-pipeline.md`](docs
 
 ## Data Source Strategy
 
-Page and comp content is loaded from local `data/` modules by `server/utils/localData.ts`.
+Comp seeds (footer, theme) and geo data are imported from local `data/` modules. The EJS `/page/:key` route and its `data/page/` sections were retired.
 
 ## Dev and Environment Behavior
 

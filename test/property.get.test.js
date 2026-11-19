@@ -66,7 +66,7 @@ describe('property.get', () => {
 		assert.ok(model.data.footer);
 	});
 
-	test('mapPropertyDetailToArticle keys align with comp_article_detail sections', () => {
+	test('mapPropertyDetailToArticle keys align with Detail.vue sections', () => {
 		const detail = mapPropertyDetailToArticle(soaPureListing, { histories: [] });
 		assert.ok(detail);
 

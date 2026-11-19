@@ -4,7 +4,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import { renderEjsClientModule } from './helpers/ejs-client-loader.js';
 import { pageConfig } from './client/pages.config.js';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
@@ -31,20 +30,6 @@ function includeHtml() {
 				next = next.replace(/<\/body>/i, '<script type="module" src="./index.js"></script>\n</body>');
 			}
 			return next;
-		}
-	};
-}
-function ejsClient() {
-	return {
-		name: 'ejs-client',
-		transform(_code: string, id: string) {
-			if (!id.endsWith('.ejs') || !id.includes(`${path.sep}server${path.sep}ejs${path.sep}`)) {
-				return null;
-			}
-			return {
-				code: renderEjsClientModule(id.split('?')[0]),
-				map: null
-			};
 		}
 	};
 }
@@ -127,7 +112,7 @@ export default defineConfig({
 		__APP_BASE__: JSON.stringify(''),
 		__GOOGLE_MAPS_API_KEY__: JSON.stringify(googleMapsApiKey)
 	},
-	plugins: [vue(), includeHtml(), ejsClient(), devSwStub(), devImages(), copyStatic()],
+	plugins: [vue(), includeHtml(), devSwStub(), devImages(), copyStatic()],
 	build: {
 		outDir: 'dist',
 		emptyOutDir: true,
