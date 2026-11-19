@@ -14,7 +14,8 @@ Work that is still unfinished after the TypeScript, Vite, and Vue SSR slice. Don
 | open | sw.js | Service worker file is copied, but Workbox packages are not installed. | Dependency list keeps only packages the app imports. |
 | open | scripts/run-lighthouse.js | `npm run test:lighthouse` removed. | Lighthouse was a webpack-and-Docker perf check, not part of `test/`. |
 | done | server/app.js | Removed. Startup is `server/index.ts`. | Swagger and SOA logs moved to `index.ts`. S3 HTML upload was dropped. |
-| done | server/utils/localData.ts | Page and comp loads read `data/` only. | Host config and the old data loader are removed. |
+| done | server/utils/localData.ts | Removed with `/page/:key`. | Only that route loaded `data/page/` and `data/comps/` by key. |
+| done | server/ejs/ | All `comp_*.ejs` templates, the `sitemap*.ejs` and `page.ejs` pages, and the client EJS loader are removed. `/sitemap/*` 301s to `/property/sitemap/*`. | Vue already covered them. Left: the HTML shell and `toPage` (REQ-migration-end-cleanup). |
 | open | docs/ | Several moved guides still describe EJS `/property/tx` or AWS. | They are marked historical instead of being rewritten in this slice. |
 | done | .claude/ | AI agent setup: CLAUDE.md, `.claude/` (team charter, rules, agents, skills, hooks) and the `notes/` memory. `.cursor/` now points to `.claude/`. | One maintained copy of the rules for every agent. |
 | done | notes/requirements/ | A trackable requirement per change: `_template.md`, an index, and the `doc-requirement` skill. | `docs-maintainer` writes it before a change and closes it after release. |

@@ -304,7 +304,7 @@ describe('mapOpenHousesToComp', () => {
 });
 
 describe('mapHistoryRowsToTimelineComp', () => {
-	test('maps sorted history rows to comp_timeline entries', () => {
+	test('maps sorted history rows to timeline entries', () => {
 		const comp = mapHistoryRowsToTimelineComp([
 			{ date: '2024-01-15', title: 'Sold', subtitle: '$128,000' },
 		]);

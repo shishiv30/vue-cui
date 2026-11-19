@@ -19,7 +19,7 @@ export interface ArticleTag {
 }
 
 /**
- * Card shape used by comp_article.ejs.
+ * Card shape rendered by Article.vue.
  * Same fields mapPropertyToArticle returns for the template.
  */
 export interface ArticleUiModel {

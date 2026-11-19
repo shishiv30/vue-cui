@@ -1,5 +1,7 @@
 # Client-side JS lifetime (Pure)
 
+> **Historical.** The property SPA described here (`client/pages/property/*.js`, `renderEjs.js`, client-side EJS) was removed. `/property*` is Vue SSR now. The `Page` / plugin / `dom.load` sections still describe the legacy runtime.
+
 Canonical reference for how webpack page bundles boot, run the Page/plugin pipeline, wire the property Router, and refresh `[data-role]` components. Use this when debugging duplicate `init`, double fetches, or missing plugin binding after SPA HTML inject. **Router `push` / `replace` / `goto` contract:** [§4](#4-client-router-contract).
 
 For the full `/property/tx` path (build + Express SSR + APIs + client), see [`property-tx-lifecycle.md`](property-tx-lifecycle.md).

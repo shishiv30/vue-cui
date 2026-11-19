@@ -6,7 +6,7 @@ export interface SliderImageMeta {
 	description: string;
 }
 
-/** Markup from `server/ejs/comp_album.ejs`, options from `client/js/plugins/_slider.js`. */
+/** Markup from the old EJS album, options from `client/js/plugins/_slider.js`. */
 export interface SliderUiModel {
 	/** Image URLs. The mock list matches `data-images` in `client/pages/document/index.html`. */
 	images: string[];
