@@ -1,0 +1,15 @@
+---
+description: Project rules live in CLAUDE.md and .claude/. Read them first.
+alwaysApply: true
+---
+
+# The canonical guidance is in `.claude/`
+
+This repo's AI guidance is maintained once, for Claude Code, and Cursor uses the same files:
+
+- `CLAUDE.md`
+- every file in `.claude/rules/` (start with `team-charter.md`; the others say which paths they apply to)
+- the workflows in `.claude/skills/`
+- the team memory in `notes/`
+
+Do not add rules or skills under `.cursor/`. Edit `.claude/` instead (team charter §9).
