@@ -70,7 +70,7 @@
 	--color-root-border-saturation-l1: 4%;
 
 	--color-root-major-hue: 216;
-	--color-root-major-lightness: 43%;
+	--color-root-major-lightness: 38%;
 	--color-root-major-lightness-hover: 31%;
 	--color-root-major-lightness-l1: 98%;
 	--color-root-major-lightness-l1-hover: 95%;
@@ -266,8 +266,8 @@ body {
 	--color-tip-hover: var(--color-root-tip-hover);
 	--color-tip-l1-hover: var(--color-root-tip-l1-hover);
 
-	--color-link: var(--color-minor);
-	--color-link-hover: var(--color-major);
+	--color-link: var(--color-major);
+	--color-link-hover: var(--color-minor);
 
 	--color-0: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-0-lightness));
 	--color-1: hsl(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-1-lightness));

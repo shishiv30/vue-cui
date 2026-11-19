@@ -34,10 +34,8 @@
 			}
 		}
 	}
-
-	ul a {
+	ul span, ul a {
 		padding: var(--g1) var(--g2);
-		border-bottom: 2px solid transparent;
 		font-size: var(--font-size-5);
 		color: var(--breadcrumb-color);
 		background-color: var(--breadcrumb-color-bg);
@@ -45,7 +43,8 @@
 		display: inline-block;
 		height: var(--comp-height);
 		line-height: var(--comp-line-height);
-
+	}
+	ul a {
 		@include hover() {
 			opacity: 1;
 		}
