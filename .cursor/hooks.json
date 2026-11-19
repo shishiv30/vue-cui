@@ -3,7 +3,7 @@
 	"hooks": {
 		"beforeShellExecution": [
 			{
-				"command": ".cursor/hooks/run-tests-before-push.sh",
+				"command": ".claude/hooks/run-tests-before-push.sh cursor",
 				"matcher": "^git\\s+push(\\s|$)",
 				"failClosed": true,
 				"timeout": 1800
@@ -11,13 +11,8 @@
 		],
 		"postToolUse": [
 			{
-				"command": "node .cursor/hooks/remind-update-background.mjs postToolUse",
+				"command": "node .claude/hooks/post-bash.mjs cursor",
 				"matcher": "Shell",
-				"timeout": 5
-			},
-			{
-				"command": "node .cursor/hooks/remind-update-background.mjs postToolUse",
-				"matcher": "Delete",
 				"timeout": 5
 			}
 		]

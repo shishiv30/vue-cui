@@ -1,7 +1,9 @@
 ---
-description: Semantic HTML page blueprint — header/nav, main/section, article with header/time/footer
-globs: client/pages/**/*.html, server/ejs/**/*.ejs, client/components/**/*.html
-alwaysApply: true
+paths:
+  - "server/ejs/**"
+  - "client/pages/**"
+  - "client/components/**"
+  - "client/src/**/*.vue"
 ---
 
 # Semantic HTML page blueprint

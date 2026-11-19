@@ -6,4 +6,4 @@
 
 **Do not put here:** Mapping/transform logic (`helpers/`), Express handlers, client plugins.
 
-**Canonical docs:** [docs/folder-ownership.md](../docs/folder-ownership.md), `.cursor/background.json` (`data_folder`), [docs/index.md](../docs/index.md).
+**Canonical docs:** [docs/folder-ownership.md](../docs/folder-ownership.md), [`.claude/rules/server-data.md`](../.claude/rules/server-data.md), [docs/index.md](../docs/index.md).

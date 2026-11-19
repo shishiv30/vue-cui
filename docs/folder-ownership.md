@@ -1,6 +1,6 @@
 # Folder ownership
 
-What each top-level area may contain. Normative coding rules: [`.cursor/rules/project-standards.mdc`](../.cursor/rules/project-standards.mdc). Map catalog: [index.md](index.md).
+What each top-level area may contain. Normative coding rules: [`.claude/rules/project-standards.md`](../.claude/rules/project-standards.md). Map catalog: [index.md](index.md).
 
 | Folder | Owns | Must not contain |
 |--------|------|------------------|
