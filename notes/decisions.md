@@ -13,6 +13,13 @@ Entry format:
 - Approvals: docs-maintainer ☐  component-developer ☐  application-developer ☐  user ☐ (optional)
 ```
 
+## 2026-11-19: Remove EJS from the server
+- Status: approved (requested by the user: "Yes, remove EJS")
+- What: delete `server/ejs/` (all `.ejs` files, the `comp_theme` inline theme, `comp_article`), `toPage`, `staticHtml.ts`, the configs' `seo` hooks, the view engine and the `ejs` dependency. Move the header, footer, filter and links model builders to `server/page/`. Update the rules, skills and agents that named those paths. The `data-role` plugin runtime and `convert-ejs-to-vue` stay until the plugins are converted.
+- Why: every HTML page is already Vue SSR with client-side routes; the EJS render path had no callers.
+- Files: `CLAUDE.md`, `.claude/rules/global-css.md`, `.claude/rules/html-page-blueprint.md`, `.claude/rules/server-data.md`, `.claude/skills/perf-audit/SKILL.md`, `.claude/agents/application-developer.md`
+- Approvals: user ☑
+
 ## 2026-11-19: /simplify cleanup of the team config
 - Status: approved (the user ran /simplify, which applies the fixes)
 - What: remove repeated text (the charter summary in CLAUDE.md, agent boilerplate, restated §2/§9/§10/§11, skill copies of `docs/component-conversion.md`), scope server-only rules by path, trim skill preloads, merge the two PostToolUse Bash hooks with a shared input helper, drop the hardcoded counts.

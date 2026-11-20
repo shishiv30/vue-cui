@@ -32,8 +32,6 @@ const root = path.resolve(__dirname, '..');
 const isProd = config.mode === 'production' || config.mode === 'stage';
 
 const app = express();
-app.set('views', path.join(__dirname, 'ejs'));
-app.set('view engine', 'ejs');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(compression());
 session(app);

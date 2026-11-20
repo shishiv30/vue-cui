@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | draft (it waits until every plugin in `pluginCatalog.ts` is `vue`) |
+| Status | in progress (step 3 done on `chore/remove-ejs`; steps 1, 2 and 4–7 wait until every plugin in `pluginCatalog.ts` is `vue`) |
 | Owner (dev) | component-developer + application-developer |
 | Requested by | the user |
 | Related docs | `CLAUDE.md`, `docs/folder-ownership.md`, `docs/component-conversion.md`, `docs/change-list.md` |
@@ -23,7 +23,7 @@ Run this only when the migration is finished. Do it as one change on a `chore/re
    - the rest of `client/js/core/`, including `renderEjs.js`
    - `client/js/index.js`
    - the `data-role` boot in `client/pages/*`
-3. **Remove EJS from the server:**
+3. **Remove EJS from the server:** ✅ done 2026-11-19 (`chore/remove-ejs`). The model builders moved to `server/page/`; the HTML shell is `client/src/index.html`.
    - the `server/ejs/comp_*.ejs` and `comp_*.ts` files
    - `helpers/ejs-client-loader.ts` and `helpers/ejsRenderContext.ts`
    - the EJS paths in `server/controllers/` (`configbase.ts`, `index.ts`, `page.ts`, the `sitemap*` controllers) and `server/page/sitemapUi.ts`
@@ -41,3 +41,4 @@ Run this only when the migration is finished. Do it as one change on a `chore/re
 ## Changelog
 
 - 2026-11-19: created; moved here from `docs/change-list.md` (docs-maintainer)
+- 2026-11-19: step 3 done. `server/ejs/`, `toPage`, `staticHtml.ts`, the `seo` hooks, the unused inline theme and the `ejs` dependency removed (application-developer)

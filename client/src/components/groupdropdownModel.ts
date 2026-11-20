@@ -76,7 +76,7 @@ function typeLabel(value: string) {
 		.join(' ');
 }
 
-/** Listing filter from an empty `createFilterComponent()`. */
+/** Listing filter from an empty `filterFields()` (server/page/filter.ts). */
 export const groupdropdownMock: GroupDropdownField[] = [
 	{
 		id: 'price',

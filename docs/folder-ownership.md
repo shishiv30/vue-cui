@@ -12,8 +12,8 @@ What each top-level area may contain. Normative coding rules: [`.claude/rules/pr
 | `helpers/routes/` | Shared route manifests (e.g. `propertySpaRoutes.js`) | HTTP handlers |
 | `data/` | Seed/mock/default payloads only | Mapping logic |
 | `server/routes/` | HTTP registration + thin adapters | Listing field mapping (`helpers/`), seed data (`data/`) |
-| `server/controllers/` | `beforeGet` / `get` / `seo` / `preload` page configs | Raw SOA field parsing (use helpers) |
-| `server/ejs/` | HTML only; consume mapped models | SOA parsing |
+| `server/controllers/` | `beforeGet` / `get` / `preload` page configs | Raw SOA field parsing (use helpers) |
+| `server/page/` | Page models for Vue SSR (header, footer, filter, links, sitemap) | SOA parsing |
 | `docs/` | Narrative maps | Executable logic |
 
 When unsure: transforms → `helpers/`; seed shapes → `data/`; HTTP → `server/routes/`; page data assembly → `server/controllers/`; interactive DOM → `client/js/plugins/` or `client/pages/<page>/`.

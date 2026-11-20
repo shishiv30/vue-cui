@@ -28,7 +28,6 @@ At startup it wires:
 - CORS and headers
 - SOA request log context
 - Vue SSR for `/`, `/document`, and `/property*`
-- EJS view engine for remaining HTML routes
 - Main router (`server/routes/index.ts`)
 - Geo Fuse warmup
 
@@ -37,9 +36,8 @@ At startup it wires:
 Router composition in `server/routes/index.ts`:
 
 - Page and HTML routes via:
-  - `default.ts`
-  - `sitemap.ts`
-  - `page.ts`
+  - `default.ts` (static `dist` pages from `client/pages.config.js`)
+  - `sitemap.ts` (`/sitemap*` 301 to `/property/sitemap*`)
 - API routes:
   - `/api` -> `server/routes/api.ts`
   - `/api/soa` -> `server/routes/api.soa.ts`
@@ -53,39 +51,34 @@ SOA prefixes currently mounted in `server/routes/api.soa.ts`:
 
 ## Request Lifecycle (Page Rendering)
 
+Every HTML page is Vue SSR in `server/index.ts`. There is no server template engine.
+
 ```mermaid
 flowchart TD
-  request["Incoming request"] --> routeMatch["Route handler (server/routes/*)"]
-  routeMatch --> baseController["BaseController(req,res,configName)"]
-  baseController --> beforeGet["config.beforeGet(payload) optional"]
-  beforeGet --> getData["config.get(payload)"]
-  getData --> toPage["controller.toPage(model)"]
-  toPage --> render["EJS render + staticHtml write"]
+  request["Incoming request"] --> classify["server/index.ts: / , /document or /property*"]
+  classify --> state["server/utils/propertyPageState.ts (config.get)"]
+  state --> render["client/src/entry-server.ts render(url, state)"]
+  render --> shell["client/src/index.html shell + __INITIAL_STATE__"]
 ```
+
+JSON routes in `server/routes/api.ts` use `BaseController(req, res, configName)` → `config.beforeGet` → `config.get` → `toData`.
 
 ## Controller and Config Contract
 
 `server/controllers/index.ts` (`BaseController`) orchestrates config-driven behavior and registers route configs.
 
-Other modules in `server/controllers/*` (route configs, e.g. `property.js`, `page.js`) commonly define:
+Other modules in `server/controllers/*` (route configs, e.g. `property.ts`) commonly define:
 
 - `name`
 - `beforeGet(payload)` (optional)
-- `get(payload)` (required)
-- `seo(payload)` (optional)
+- `get(payload)` (required; page SEO is part of the returned model)
 - `preload(payload)` (optional)
 
 `server/controllers/configbase.ts` contains the contract reference used by this architecture.
 
-### `toPage` vs `toData`
+### `toData`
 
-| | `toPage` | `toData` |
-|---|----------|----------|
-| Output | HTML (`${config.name}.ejs`) | JSON `{ code, data, error, cost }` |
-| SEO / breadcrumb / theme | yes | no |
-| `getHref` / `getSrc` on model | yes | no |
-
-Both call the same `config.get()`. Example: property SSR and `GET /api/property/detail/:prId` share [`server/controllers/property.ts`](server/controllers/property.ts).
+`toData` sends JSON `{ code, data, error, cost }` with `data.meta` from `initialMeta`. Vue SSR and the JSON API call the same `config.get()`. Example: property SSR and `GET /api/property/detail/:prId` share [`server/controllers/property.ts`](server/controllers/property.ts).
 
 Listing SOA → metadata → comp models: [`docs/listing-data-pipeline.md`](docs/listing-data-pipeline.md).
 
@@ -103,7 +96,7 @@ Listing SOA → metadata → comp models: [`docs/listing-data-pipeline.md`](docs
 
 ## Data Source Strategy
 
-Comp seeds (footer, theme) and geo data are imported from local `data/` modules. The EJS `/page/:key` route and its `data/page/` sections were retired.
+Comp seeds (footer) and geo data are imported from local `data/` modules. The EJS `/page/:key` route and its `data/page/` sections were retired.
 
 ## Dev and Environment Behavior
 
@@ -122,7 +115,7 @@ Defaults:
 
 Included in `npm run test`:
 
-- `test/basecontroller.config.test.js` — BaseController / `toPage` contract
+- `test/basecontroller.config.test.js` — BaseController / config contract
 - `test/property.get.test.js` — property `get()` return shape (no SOA when no `prId`)
 - `test/propertyGeoRedirect.test.js` — property geo canonical redirect
 - `helpers/__tests__/property.test.js` — SOA metadata and detail comp mappers

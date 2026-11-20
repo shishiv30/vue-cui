@@ -16,7 +16,7 @@ export interface HeaderSearch {
 	spellcheck: boolean;
 }
 
-/** Same shape as `createHeaderComponent().data` in server/ejs/comp_header.ts. */
+/** Same shape as `headerData()` in server/page/header.ts. */
 export interface HeaderUiModel {
 	name: string;
 	sticky: 'true' | 'false';

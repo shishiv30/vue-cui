@@ -8,11 +8,7 @@ import propertySitemap from './propertySitemap.js';
 import propertySitemapState from './propertySitemapState.js';
 import propertySitemapCounty from './propertySitemapCounty.js';
 import propertySitemapCity from './propertySitemapCity.js';
-import { getBreadcrumbByGeo } from '../../helpers/geo.js';
-import { getThemeInlineCss } from '../ejs/comp_theme.js';
-import { getHref, getSrc } from '../../helpers/url.js';
 import { getSoaLogs } from './realestate.js';
-import { getStaticHtmlPath, saveStaticHtml } from '../utils/staticHtml.js';
 import fs from 'fs';
 import mime from 'mime';
 import path from 'path';
@@ -134,27 +130,6 @@ export default class BaseController {
 		};
 		return meta;
 	}
-	initialBreadcrumb(model) {
-		if (model?.data?.breadcrumb) {
-			return model.data.breadcrumb;
-		}
-		if (model?.data?.geo) {
-			return getBreadcrumbByGeo(model.data.geo, `/${this.config.name}`);
-		}
-		return null;
-	}
-
-	async initialSeo(model) {
-		if (this.config.seo) {
-			const result = this.config.seo(this.req, model);
-			return typeof result?.then === 'function' ? await result : result;
-		}
-		return {
-			title: '',
-			desc: '',
-			keywords: '',
-		};
-	}
 
 	async post() {
 		if (this.config.post) {
@@ -227,43 +202,6 @@ export default class BaseController {
 			cost: new Date() - this.date,
 		});
 	}
-	async toPage(model) {
-		if (!this.config.name) {
-			throw new Error('View Template is required');
-		}
-		model.data.meta = model.meta = this.initialMeta(model);
-		model.seo = await this.initialSeo(model);
-		model.breadcrumb = this.initialBreadcrumb(model);
-		// Generate theme CSS and add to meta.inlineCss
-		try {
-			const themeOverride = (model.data && model.data.theme) || null;
-			const cdnHost = model.meta.cdnHost || '';
-			const inlineCss = getThemeInlineCss(themeOverride, cdnHost);
-			if (inlineCss) {
-				model.meta.inlineCss = inlineCss;
-			}
-		} catch (error) {
-			console.error('Failed to generate theme CSS:', error);
-		}
-		model.appHost = model.meta?.appHost || '';
-		model.cdnHost = model.meta?.cdnHost || '';
-		if (model.data && typeof model.data === 'object' && !Array.isArray(model.data)) {
-			model.data.logs = getSoaLogs();
-		}
-		model.getHref = (item) => getHref(item, model.appHost);
-		model.getSrc = (img) => getSrc(img, model.cdnHost);
-		this.res.render(`${this.config.name}.ejs`, model, (err, html) => {
-			if (err) {
-				console.error('Render error:', err);
-				this.res.status(500).send('Unable to load this page. Please try again later.');
-				return;
-			}
-			this.res.send(html);
-			const staticPath = getStaticHtmlPath(this.req);
-			saveStaticHtml(staticPath, html);
-		});
-	}
-
 	static async dist(res, fileName) {
 		//get file from dist folder
 		try {

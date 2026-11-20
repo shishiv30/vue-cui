@@ -33,7 +33,7 @@ Measure first, change second, then measure again. Report the numbers before and 
 
 ## 4. Resource hints
 
-- `preload` entries come from the controller `preload(req, model)` (`server/controllers/configbase.ts`) and are rendered in `server/ejs/html_above.ejs`.
+- The SSR shell gets its LCP image preload in `server/index.ts` (`listingPreload`). The controller `preload(req, model)` hook (`server/controllers/configbase.ts`) only feeds `meta.preload` in JSON responses.
 - Each `href` must be an absolute URL with a host, built once in `get()`.
 - Preload only the LCP image, critical fonts and the critical CSS. Use `prefetch` for likely next navigations, and `preconnect` for the CDN and SOA hosts.
 

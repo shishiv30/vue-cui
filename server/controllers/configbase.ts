@@ -8,7 +8,7 @@
  * `routeConfigs.find((e) => e.name === name)` and invokes hooks on that object.
  *
  * ### Identity and assets
- * - **`name`** (string, required for `toPage`) — Unique id for lookup; also the EJS template basename (`${name}.ejs`).
+ * - **`name`** (string, required) — Unique id for lookup.
  * - **`assetName`** (string, optional) — Overrides bundle basename for `meta.css`, `meta.js`, and `meta.role`; defaults to `name`.
  *
  * ### GET / read
@@ -23,8 +23,7 @@
  *
  * If `post` / `update` / `delete` is missing, the matching controller method returns `undefined`.
  *
- * ### HTML page (`toPage`)
- * - **`seo(req, model)`** (optional) — `{ title, desc, keywords }` or Promise thereof.
+ * ### JSON meta (`toData`)
  * - **`preload(req, model)`** (optional) — Array of `{ as?, href }` merged into `meta.preload`.
  *   **`href` must be an absolute URL with host** (not a path). Build it in `get()` (e.g. via `getImgCdnUrl`) and pass the same URL here; do not pass path-only values.
  *
@@ -44,7 +43,6 @@
  * @property {(payload: object) => unknown | Promise<unknown>} [update]
  * @property {(req: import('express').Request, payload: object) => object} [beforeDelete]
  * @property {(payload: object) => unknown | Promise<unknown>} [delete]
- * @property {(req: import('express').Request, model: object) => object | Promise<object>} [seo]
  * @property {(req: import('express').Request, model: object) => Array<{as?: string, href: string}> | null | undefined} [preload] href = absolute URL with host
  * @property {(error: Error, payload: object) => {message?: string, data?: unknown, code?: number}} [onError]
  */

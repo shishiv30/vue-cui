@@ -21,7 +21,7 @@
 
 ## Architecture in one screen
 
-- **Server** (`server/`, TypeScript, Express): `index.ts` is the entry. The request goes through middleware (`middleware/`), then routes (`routes/`), then config-driven controllers (`controllers/`, `BaseController` + `configbase.ts`: `beforeGet` / `get` / `seo` / `preload`), then page models (`page/`). Vue SSR (`client/src/entry-server.ts`) renders inside the EJS shell (`ejs/html_above.ejs`, `html_below.ejs`). SOA upstreams are proxied in `routes/api.soa.*.ts`.
+- **Server** (`server/`, TypeScript, Express): `index.ts` is the entry. The request goes through middleware (`middleware/`), then routes (`routes/`), then config-driven controllers (`controllers/`, `BaseController` + `configbase.ts`: `beforeGet` / `get` / `preload`), then page models (`page/`: header, footer, filter and links models). Vue SSR (`client/src/entry-server.ts`) renders into the HTML shell `client/src/index.html`. SOA upstreams are proxied in `routes/api.soa.*.ts`.
 - **Mapping** (`helpers/`): pure transforms from upstream data to UI models. Seed and mock payloads live in `data/`.
 - **Vue app and library** (`client/src/`): `components/` (`<Name>.vue`, `<name>Model.ts`, `<Name>.stories.ts`), `directives/`, `pages/`, `router.ts`, `store.ts` (Pinia), and `lib/index.ts` (the public exports).
 - **Legacy runtime** (`client/js/`): the `data-role` plugin system. It is being converted to Vue, and `client/src/components/pluginCatalog.ts` tracks progress. This is temporary; see `notes/requirements/REQ-migration-end-cleanup.md`.
@@ -38,8 +38,8 @@
 | `helpers/` | Pure transforms and shared contracts | Express handlers, seed payloads |
 | `data/` | Seed, mock and default payloads | Mapping logic |
 | `server/routes/` | HTTP registration and thin adapters | Field mapping, seed data |
-| `server/controllers/` | Page configs (`beforeGet`/`get`/`seo`/`preload`) | Raw SOA field parsing |
-| `server/ejs/` | HTML only, reading mapped models | SOA parsing |
+| `server/controllers/` | Page configs (`beforeGet`/`get`/`preload`) | Raw SOA field parsing |
+| `server/page/` | Page models for Vue SSR (header, footer, filter, links, sitemap) | SOA parsing |
 | `docs/` | Product docs: how things work | Tracking notes |
 | `notes/` | Team memory: requirements, decisions, open questions, lessons | Product docs |
 

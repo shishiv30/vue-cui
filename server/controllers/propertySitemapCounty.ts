@@ -18,16 +18,6 @@ export default {
 		}
 		return null;
 	},
-	seo: function (req, model) {
-		const page = model?.data?.data || model?.data || {};
-		const countyName = page.countyName || 'County';
-		const stateName = page.stateName || 'State';
-		return {
-			title: `${countyName}, ${stateName} Cities Sitemap`,
-			desc: `Browse all cities in ${countyName}, ${stateName}.`,
-			keywords: `sitemap, cities, ${countyName}, ${stateName}`,
-		};
-	},
 	get: async function (payload) {
 		if (!payload?.stateCode || !payload?.countyCode) {
 			throw new Error('State code and county code are required');

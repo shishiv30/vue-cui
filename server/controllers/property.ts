@@ -12,11 +12,11 @@ import {
 	getPropertyListingInfoById,
 	searchHouse,
 } from '../routes/api.soa.property.js';
-import { createHeaderComponent } from '../ejs/comp_header.js';
-import { createFooterComponent } from '../ejs/comp_footer.js';
+import { headerData } from '../page/header.js';
+import { footerData } from '../page/footer.js';
 import { getImgCdnUrl } from '../../helpers/url.js';
 import { getFilterByQuery } from '../../helpers/filter.js';
-import { createFilterComponent } from '../ejs/comp_filter.js';
+import { filterFields as buildFilterFields } from '../page/filter.js';
 
 function getSeo(geo) {
 	const label = geo ? getGeoDisplayText(geo).trim() : '';
@@ -33,21 +33,6 @@ function getSeo(geo) {
 
 export default {
 	name: 'property',
-	seo: function (_req, model) {
-		const fromGet = model?.data?.seo ?? model?.data?.data?.seo;
-		if (fromGet && typeof fromGet === 'object') {
-			return {
-				title: fromGet.title || 'Property',
-				desc: fromGet.desc || fromGet.description || '',
-				keywords: fromGet.keywords || '',
-			};
-		}
-		return {
-			title: 'Property',
-			desc: '',
-			keywords: 'property',
-		};
-	},
 	beforeGet: function (req, payload) {
 		let geo;
 		const prId = req.query.id || req.query.prId;
@@ -92,9 +77,9 @@ export default {
 			nearbyRaw,
 		);
 
-		const filterFields = createFilterComponent(filter).data.fields;
-		const header = createHeaderComponent().data;
-		const footer = createFooterComponent().data;
+		const filterFields = buildFilterFields(filter);
+		const header = headerData();
+		const footer = footerData();
 		const seoSource = buildDetailSeo(detail) || getSeo(geo);
 		const title = seoSource.title || 'Property';
 		const description = seoSource.description || seoSource.desc || '';

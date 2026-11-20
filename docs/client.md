@@ -120,7 +120,6 @@ Token names, `:root` vs `body` alias rules, and the token audit live in **[`docs
 
 - Core visual tokens are CSS custom properties.
 - Base theme defaults live in SCSS.
-- Runtime theme values can be injected server-side from `data/comps/theme.js` + `server/ejs/comp_theme.ts`.
 - Dark mode behavior is controlled with theme variable overrides.
 
 ## Router and property pages

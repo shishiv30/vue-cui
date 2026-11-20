@@ -120,7 +120,7 @@ export function mapPropertyToAttrs(property: any, allAttrs = false) {
 }
 
 /**
- * Map normalized property metadata to the article card shape used by `comp_article`.
+ * Map normalized property metadata to the article card shape used by the `Article` component.
  *
  * @param {object} property — metadata from `mapSOADataToMetadata`
  * @returns {object}

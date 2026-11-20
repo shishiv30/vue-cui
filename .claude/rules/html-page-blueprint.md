@@ -1,6 +1,5 @@
 ---
 paths:
-  - "server/ejs/**"
   - "client/pages/**"
   - "client/components/**"
   - "client/src/**/*.vue"

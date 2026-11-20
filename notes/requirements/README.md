@@ -6,4 +6,4 @@ To start one, copy [_template.md](_template.md) to `REQ-YYYYMMDD-<slug>.md`.
 
 | ID | Title | Owner | Status | Release |
 | --- | --- | --- | --- | --- |
-| [REQ-migration-end-cleanup](REQ-migration-end-cleanup.md) | Remove EJS and the legacy plugin runtime | component-developer + application-developer | draft | |
+| [REQ-migration-end-cleanup](REQ-migration-end-cleanup.md) | Remove EJS and the legacy plugin runtime | component-developer + application-developer | in progress (server EJS removed) | |

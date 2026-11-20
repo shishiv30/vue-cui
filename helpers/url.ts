@@ -1,6 +1,6 @@
 /**
  * URL helpers: attach hosts to path-only values (no path-format conversion).
- * Use appHost/cdnHost + stored path to build href/src for EJS and components.
+ * Use appHost/cdnHost + stored path to build href/src for components.
  * For converting between path formats (e.g. geo slug vs SOA), use helpers/path.js.
  *
  * Definitions (DB + data files use path; render time builds href/src):
@@ -31,7 +31,7 @@ export function getImgCdnUrl(cdnHost: any, imagePath: any) {
 	return imagePath ? `${base}${imagePath}` : '';
 }
 
-/** Known welcome images: basename → path starting with "/" (used by EJS comps and callers of getImgCdnUrl) */
+/** Known welcome images: basename → path starting with "/" (used by callers of getImgCdnUrl) */
 export const WELCOME_IMG = {
 	point0: '/welcome/point0.jpeg',
 	point1: '/welcome/point1.jpeg',

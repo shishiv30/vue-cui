@@ -184,7 +184,7 @@ router.get('/property/detail/:prId', async (req, res) => {
  *               properties:
  *                 articles:
  *                   type: array
- *                   description: Property listings mapped to `comp_article` card shape
+ *                   description: Property listings mapped to the `Article` card shape
  *                   items:
  *                     type: object
  *                     properties:

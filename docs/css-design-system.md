@@ -45,17 +45,7 @@ Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS）
 );
 ```
 
-直接收益：换肤只需改一个 `--color-root-major-hue`。`data/comps/theme*.js` 正是这么做的——四套主题（default/blue/pink/yellow）各自只声明 4～6 个通道值，由服务端 `server/ejs/comp_theme.js` 生成内联 `<style>` 注入 `body`：
-
-```js
-// data/comps/theme.js
-default: {
-  '--color-root-major-hue': '216',
-  '--color-root-major-saturation': '100%',
-  '--color-root-major-lightness': '50%',
-  '--color-root-major-lightness-l1': '96%',
-}
-```
+直接收益：换肤只需改一个 `--color-root-major-hue`（在 `client/scss/` 的主题 SCSS 中声明）。服务端内联主题（`data/comps/theme.js` + `comp_theme`）已随 EJS 一起移除。
 
 暗色模式同理，只翻转明度通道，不重写任何色值。
 
@@ -468,8 +458,6 @@ index.scss
 | `client/scss/_color.scss` | 117 | 颜色工具类 |
 | `client/scss/_typograph.scss` | 60+ | 排版工具类 |
 | `client/scss/_responsive.scss` | 30 | 显隐工具类 |
-| `data/comps/theme*.js` | 17-25 | 运行期主题 token（4 套） |
-| `server/ejs/comp_theme.js` | 48 | 主题内联 CSS 生成 |
 
 ---
 
@@ -501,7 +489,7 @@ body.theme-dark { --color-root-major-lightness: 50%; }                 /* 改的
 | `--color-tip` | `hsl(321, 100%, 24%)` | `hsl(321, 100%, 50%)` |
 | `--color-major-l1` | `hsl(165, 58%, 99%)` | `hsl(165, 58%, 10%)` |
 
-亮色模式取值逐一比对，无变化。`data/comps/theme*.js` 的运行期覆盖层级不受影响（内联 `<style>` 位于外链 CSS 之后，同特异性下仍然胜出）。
+亮色模式取值逐一比对，无变化。
 
 ### 2. 新增的 token
 

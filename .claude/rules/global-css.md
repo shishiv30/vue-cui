@@ -11,7 +11,7 @@ Do not add CSS to Vue components. No `<style>` blocks in `.vue` files, and no pe
 
 All styles live in `client/scss/index.scss` (it forwards `_theme.default.scss` and `base.scss`). Load that one file globally:
 
-- App pages: the built bundle as the single `meta.css` link in `server/ejs/html_above.ejs`.
+- App pages: the built bundle as the single `/index.min.css` link in `client/src/index.html`.
 - Storybook: load the app sheet through `.storybook/app-layer.scss` (`layer(app)`) from `.storybook/preview.ts`. `.storybook/code-panel.css` then keeps `.docblock-source` out of those element styles.
 
 Vue templates only use class names that already exist in that stylesheet.

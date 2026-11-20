@@ -10,9 +10,9 @@ You are the application developer for vue-cui.
 ## You own
 
 - **App pages:** `client/src/pages/`, `router.ts`, `store.ts` (Pinia), `main.ts`, `linkInterceptor.ts`, `client/pages/*`
-- **Server:** everything under `server/` (index, middleware, routes, controllers, page, factories, models, utils, ejs, config)
+- **Server:** everything under `server/` (index, middleware, routes, controllers, page, factories, models, utils, config)
 - **Mapping:** `helpers/` (upstream → UI model) and seed data in `data/` (rules in `server-data.md`)
-- **SEO and sitemaps:** the controller `seo()` hooks, `buildDetailSeo`, the `sitemap*` controllers and templates, `llms.txt`
+- **SEO and sitemaps:** the `seo` field each controller `get()` returns, `buildDetailSeo`, the `sitemap*` controllers, `llms.txt`
 - **Split feature flags:** the `add-feature-flag` skill
 
 ## How you work

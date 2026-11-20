@@ -1,16 +1,13 @@
 // @ts-nocheck
 import config from '../config.js';
 
-const COMPONENT_NAME = 'links';
-const COMPONENT_TEMPLATE = 'comp_links';
 const APP_HOST = config.appHost || '';
 
 /**
- * Create the links UI component (responsive grid of links).
+ * Links for the Vue `Sitemap` grid. Relative hrefs get the app host.
  * @param {{ href: string, text: string }[]} links - Array of link items
- * @returns {{ name: string, template: string, data: object[] }}
  */
-export function createLinksComponent(links) {
+export function linksData(links) {
 	const linksArray = Array.isArray(links) ? links : [];
 	const processedLinks = linksArray.map((link) => {
 		if (!link || !link.href) {
@@ -26,9 +23,5 @@ export function createLinksComponent(links) {
 		return link;
 	});
 
-	return {
-		name: COMPONENT_NAME,
-		template: COMPONENT_TEMPLATE,
-		data: processedLinks,
-	};
+	return processedLinks;
 }

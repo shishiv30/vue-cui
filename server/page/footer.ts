@@ -5,12 +5,9 @@ import footerTable from '../../data/comps/footer.js';
 const APP_HOST = config.appHost || '';
 const APP_NAME = process.env.APP_NAME || 'Pure';
 
-const COMPONENT_NAME = 'footer';
-const COMPONENT_TEMPLATE = 'html_footer';
-
 function toHref(path) {
 	if (!path || path.startsWith('http') || path.startsWith('#')) return path || '#';
-		return `${APP_HOST}${path.startsWith('/') ? '' : '/'}${path}`;
+	return `${APP_HOST}${path.startsWith('/') ? '' : '/'}${path}`;
 }
 
 function buildFooterFromTable(rows) {
@@ -39,41 +36,37 @@ function buildFooterFromTable(rows) {
 					.map((c) => ({
 						icon: c.icon,
 						ariaLabel: c.key || c.text,
-						href: toHref(c.path)
+						href: toHref(c.path),
 					}));
 			} else if (hasMenuLinks && (row.text == null || row.text === '')) {
 				menuItems.push(
 					...children
 						.filter((c) => c.type === 'link')
 						.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-						.map((c) => ({ order: c.order, text: c.text || c.key, href: toHref(c.path) }))
+						.map((c) => ({ order: c.order, text: c.text || c.key, href: toHref(c.path) })),
 				);
 			}
 		}
 	}
 
-	const menu = menuItems.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((m) => ({ text: m.text, href: m.href }));
+	const menu = menuItems
+		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+		.map((m) => ({ text: m.text, href: m.href }));
 
 	return {
 		contact,
 		social,
 		menu,
 		appName: APP_NAME,
-		year: new Date().getFullYear()
+		year: new Date().getFullYear(),
 	};
 }
 
 /**
- * Create the footer UI component config.
+ * Footer model for the Vue page footer.
  * @param {Array|null} [footerTableOverride] - Optional footer rows. If null/undefined, uses data/comps/footer.js.
- * @returns {{ name: string, template: string, data: object }}
  */
-export function createFooterComponent(footerTableOverride) {
+export function footerData(footerTableOverride) {
 	const rows = footerTableOverride != null ? footerTableOverride : footerTable;
-	return {
-		name: COMPONENT_NAME,
-		template: COMPONENT_TEMPLATE,
-		data: Array.isArray(rows) ? buildFooterFromTable(rows) : buildFooterFromTable(footerTable),
-	};
+	return buildFooterFromTable(Array.isArray(rows) ? rows : footerTable);
 }
-

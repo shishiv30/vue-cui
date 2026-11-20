@@ -14,7 +14,7 @@ paths:
 | Need | Put it in |
 | --- | --- |
 | Page section array (hero, points, gallery, …) | `data/page/<page-key>.js`, default export, ordered. See `data/page/README.md`. |
-| Reusable comp seed (header, footer, theme) | `data/comps/<name>.js`. Themes are `data/comps/theme-<name>.js` with default and dark CSS vars. |
+| Reusable comp seed (footer) | `data/comps/<name>.js`. The model builders that read them live in `server/page/`. Themes live in `client/scss/`. |
 | Mock API or list payload | `data/mock/<name>.js`, shaped like the real mapped model. |
 | Geo source data | `data/csv/*.csv`. `data/index.js` turns it into `dist/*.json` and caches it (`getGeoData()`). |
 
@@ -23,7 +23,7 @@ Pages and comps are read through `server/utils/localData.ts`.
 ## Preload (`meta.preload` / route `preload` hook)
 
 - Each entry must use **`href` as an absolute URL with host** (e.g. `https://cdn.example.com/images/foo.webp`).
-- **Do not** pass path-only values (`/images/foo.webp`) or rely on EJS/`html_above.ejs` to add the domain.
+- **Do not** pass path-only values (`/images/foo.webp`) or rely on the HTML shell to add the domain.
 - Build the full URL once in config `get()` (e.g. `getImgCdnUrl(cdnHost, path)`), reuse the same string for preload and template `src`.
 
 ## Listing data pipeline

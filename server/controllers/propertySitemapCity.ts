@@ -18,16 +18,6 @@ export default {
 		}
 		return null;
 	},
-	seo: function (req, model) {
-		const page = model?.data?.data || model?.data || {};
-		const cityName = page.cityName || 'City';
-		const stateName = page.stateName || 'State';
-		return {
-			title: `${cityName}, ${stateName} Zipcodes Sitemap`,
-			desc: `Browse all zipcodes in ${cityName}, ${stateName}.`,
-			keywords: `sitemap, zipcodes, ${cityName}, ${stateName}`,
-		};
-	},
 	get: async function (payload) {
 		if (!payload?.stateCode || !payload?.cityCode) {
 			throw new Error('State code and city code are required');

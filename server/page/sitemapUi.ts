@@ -1,6 +1,6 @@
-import { createFooterComponent } from '../ejs/comp_footer.js';
-import { createHeaderComponent } from '../ejs/comp_header.js';
-import { createLinksComponent } from '../ejs/comp_links.js';
+import { footerData } from './footer.js';
+import { headerData } from './header.js';
+import { linksData } from './links.js';
 import { pageContext } from './pageContext.js';
 
 type LinkRow = { href?: string; text?: string };
@@ -13,7 +13,7 @@ export function sitemapUiData(input: {
 	extra?: Record<string, unknown>;
 }) {
 	const context = pageContext(null);
-	const links = createLinksComponent(input.links).data as LinkRow[];
+	const links = linksData(input.links) as LinkRow[];
 	return {
 		seo: {
 			title: input.title,
@@ -27,8 +27,8 @@ export function sitemapUiData(input: {
 			...(input.extra || {}),
 			title: input.title,
 			breadcrumb: input.breadcrumb,
-			header: createHeaderComponent().data,
-			footer: createFooterComponent().data,
+			header: headerData(),
+			footer: footerData(),
 			links,
 		},
 	};

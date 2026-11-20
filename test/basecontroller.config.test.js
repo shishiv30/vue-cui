@@ -2,17 +2,9 @@
  * Unit tests for BaseController config/hook behavior.
  * Uses a synthetic config via TestBaseController (getConfig override) so production configs stay unchanged.
  */
-import { test, describe, afterEach } from 'node:test';
+import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import BaseController from '../server/controllers/index.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DIST_DIR = path.resolve(__dirname, '../dist');
-const STATIC_UT_REL = '__basecontroller_ut__.html';
-const STATIC_UT_ABS = path.join(DIST_DIR, STATIC_UT_REL);
 
 /** @param {Record<string, unknown>} [overrides] */
 function createMockReq(overrides = {}) {
@@ -34,8 +26,8 @@ function createMockReq(overrides = {}) {
 }
 
 function createMockRes() {
-	/** @type {{ statusCode?: number, jsonBody?: unknown, sent?: string, renderCalls: Array<{ template: string, model: object }> }} */
-	const state = { renderCalls: [] };
+	/** @type {{ statusCode?: number, jsonBody?: unknown }} */
+	const state = {};
 	return {
 		state,
 		status(code) {
@@ -44,15 +36,6 @@ function createMockRes() {
 		},
 		json(body) {
 			state.jsonBody = body;
-		},
-		send(html) {
-			state.sent = html;
-		},
-		render(template, model, cb) {
-			state.renderCalls.push({ template, model });
-			if (typeof cb === 'function') {
-				cb(null, '<html data-ut="1"></html>');
-			}
 		},
 	};
 }
@@ -76,7 +59,6 @@ function buildComprehensiveTestConfig() {
 					title: 'T',
 					preload: [{ as: 'image', href: '/page-hero.png' }],
 				},
-				theme: null,
 				breadcrumb: { links: [{ text: 'Home', href: '/' }] },
 				foo: 'bar',
 			};
@@ -101,14 +83,6 @@ function buildComprehensiveTestConfig() {
 		async delete(payload) {
 			assert.equal(payload.seenDelete, true);
 			return { deleted: true };
-		},
-		seo(req, model) {
-			assert.ok(model?.data);
-			return Promise.resolve({
-				title: 'SEO Title',
-				desc: 'SEO Desc',
-				keywords: 'k1,k2',
-			});
 		},
 		preload(req, model) {
 			assert.ok(model?.data);
@@ -142,16 +116,6 @@ class TestBaseController extends BaseController {
 		return super.getConfig(_name);
 	}
 }
-
-afterEach(() => {
-	try {
-		if (fs.existsSync(STATIC_UT_ABS)) {
-			fs.unlinkSync(STATIC_UT_ABS);
-		}
-	} catch {
-		// ignore
-	}
-});
 
 describe('BaseController + route config', () => {
 	test('getConfig resolves real route config entries', () => {
@@ -273,60 +237,5 @@ describe('BaseController + route config', () => {
 		const hrefs = meta.preload.map((p) => p.href);
 		assert.ok(hrefs.some((h) => String(h).includes('f.woff2')));
 		assert.ok(hrefs.some((h) => String(h).includes('extra.png')));
-	});
-
-	test('initialBreadcrumb prefers model.data.breadcrumb over geo', async () => {
-		const cfg = { name: 'bc', get: async () => ({}) };
-		const c = new TestBaseController(
-			createMockReq(),
-			createMockRes(),
-			cfg,
-		);
-		const explicit = { links: [{ text: 'X', href: '/x' }] };
-		assert.deepEqual(
-			c.initialBreadcrumb({ data: { breadcrumb: explicit, geo: { state: 'CA' } } }),
-			explicit,
-		);
-	});
-
-	test('initialBreadcrumb falls back to geo when no breadcrumb', async () => {
-		const cfg = { name: 'property', get: async () => ({}) };
-		const c = new TestBaseController(createMockReq(), createMockRes(), cfg);
-		const bc = c.initialBreadcrumb({
-			data: { geo: { state: 'TX' } },
-		});
-		assert.ok(bc?.links);
-		assert.ok(bc.links.length >= 1);
-	});
-
-	test('initialSeo returns defaults when seo hook absent', async () => {
-		const cfg = { name: 'noseo', get: async () => ({}) };
-		const c = new TestBaseController(createMockReq(), createMockRes(), cfg);
-		const seo = await c.initialSeo({ data: {} });
-		assert.deepEqual(seo, { title: '', desc: '', keywords: '' });
-	});
-
-	test('toPage throws when config.name is falsy', async () => {
-		const cfg = { name: '', get: async () => ({}) };
-		const c = new TestBaseController(createMockReq(), createMockRes(), cfg);
-		await assert.rejects(() => c.toPage({ data: {} }), /View Template is required/);
-	});
-
-	test('toPage sets meta, async seo, helpers, render template, and saves static html', async () => {
-		const cfg = buildComprehensiveTestConfig();
-		const req = createMockReq({ path: '/__basecontroller_ut__' });
-		const res = createMockRes();
-		const c = new TestBaseController(req, res, cfg);
-		const model = { data: { sections: [] } };
-		await c.toPage(model);
-
-		assert.equal(res.state.renderCalls.length, 1);
-		assert.equal(res.state.renderCalls[0].template, 'test-contract.ejs');
-		assert.equal(model.seo.title, 'SEO Title');
-		assert.ok(typeof model.getHref === 'function');
-		assert.ok(typeof model.getSrc === 'function');
-		assert.ok(model.meta.inlineCss === undefined || typeof model.meta.inlineCss === 'string');
-		assert.equal(res.state.sent?.includes('html'), true);
-		assert.ok(fs.existsSync(STATIC_UT_ABS), 'static HTML should be written under dist/');
 	});
 });

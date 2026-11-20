@@ -20,15 +20,6 @@ export default {
 		}
 		return null;
 	},
-	seo: function (req, model) {
-		const page = model?.data?.data || model?.data || {};
-		const stateName = page.stateName || 'State';
-		return {
-			title: `${stateName} Counties Sitemap`,
-			desc: `Browse all counties in ${stateName}.`,
-			keywords: `sitemap, counties, ${stateName}`,
-		};
-	},
 	get: async function (payload) {
 		if (!payload?.stateCode) {
 			throw new Error('State code is required');

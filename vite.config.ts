@@ -120,7 +120,9 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				...mpaInput,
-				property: path.resolve(root, 'client/src/main.ts')
+				property: path.resolve(root, 'client/src/main.ts'),
+				/** CSS-only entry: emits dist/index.min.css, linked by client/src/index.html. */
+				index: path.resolve(root, 'client/scss/index.scss')
 			},
 			output: {
 				entryFileNames: '[name].min.js',
