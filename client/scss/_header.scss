@@ -3,6 +3,8 @@
 
 @include comp-color('header');
 
+$header-height: 56px;
+
 .header {
 	&.sticky {
 		position: sticky;
@@ -12,7 +14,7 @@
 		box-shadow: 0 0 5px 0 hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.2);
 	}
 
-	--header-height: 56px;
+	--header-height: #{$header-height};
 	height: var(--header-height);
 	background-color: var(--header-color-bg);
 	color: var(--header-color);
@@ -429,5 +431,27 @@ body:not(.body-expand-header) {
 		.header-switch-link {
 			display: none;
 		}
+	}
+}
+
+// Header search suggestions (v-autocomplete, listClass `header-autocomplete`).
+// On phones the list fills the screen below the header.
+@media (max-width: $screen-xs-max) {
+	.autocomplete-list.header-autocomplete {
+		--header-height: #{$header-height};
+		top: var(--header-height);
+		bottom: auto;
+		left: 0;
+		width: 100%;
+		height: calc(100vh - var(--header-height));
+		height: calc(100svh - var(--header-height));
+		max-height: none;
+		border-width: 1px 0 0;
+		border-radius: 0;
+	}
+
+	// The list is not attached to the input here, so the input keeps its round corners.
+	.header .input > input.autocomplete-bottom {
+		border-radius: var(--input-radius);
 	}
 }

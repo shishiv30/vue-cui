@@ -17,11 +17,8 @@
 					:autocomplete="model.search.autocomplete"
 					:autocorrect="model.search.autocorrect"
 					:spellcheck="model.search.spellcheck"
-					data-role="autocomplete"
-					:data-method="model.search.method"
-					:data-url="model.search.url"
-					:data-keys="model.search.keys"
-					:data-type="model.search.type"
+					v-autocomplete="searchSource"
+					@autocomplete-select="goToGeo"
 				/>
 				<a href="javascript:;" aria-label="Do Search" class="btn">
 					<i class="icon-search" role="img" aria-label="Search"></i>
@@ -66,11 +63,33 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { HeaderUiModel } from './headerModel';
 import { emitPhase } from './emitPhase';
+import vAutocomplete from '../directives/autocomplete';
+import type { AutocompleteOptions } from '../directives/autocomplete';
+import { getPathByGeo } from '../../../helpers/geo';
 
-defineProps<{ model: HeaderUiModel }>();
+const props = defineProps<{ model: HeaderUiModel }>();
+
+type GeoItem = Record<string, string>;
+
+const searchSource = computed<AutocompleteOptions>(() => ({
+	source: props.model.search?.url || [],
+	params: { type: props.model.search?.type || '' },
+	listClass: 'header-autocomplete',
+	label: (item) => {
+		const geo = item as GeoItem;
+		return [...new Set([geo[geo.type], geo.state].filter(Boolean))].join(', ');
+	},
+}));
+
+function goToGeo(e: Event) {
+	const path = getPathByGeo((e as CustomEvent<GeoItem>).detail);
+	if (path) {
+		window.location.assign(`/property/${path}`);
+	}
+}
 
 const rootEl = ref<HTMLElement | null>(null);
 const closed = ref(false);

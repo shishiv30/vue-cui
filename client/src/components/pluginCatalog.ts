@@ -6,7 +6,7 @@ export const pluginCatalog = [
 	{ name: 'Modal', status: 'plugin' },
 	{ name: 'Dialog', status: 'plugin' },
 	{ name: 'Form', status: 'vue' },
-	{ name: 'Autocomplete', status: 'plugin' },
+	{ name: 'Autocomplete', status: 'vue' },
 	{ name: 'Lazyload', status: 'vue' },
 	{ name: 'ScrollTo', status: 'plugin' },
 	{ name: 'Tab', status: 'vue' },

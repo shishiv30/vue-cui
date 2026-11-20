@@ -38,7 +38,7 @@ If a value can change per page or per story, it is a field.
 Leave off the model:
 
 - Runtime state (menu open, scroll lock, `header-close`, the current slide index after the user moves it).
-- Hooks for a different component (`data-role="autocomplete"`, `data-role="theme"` on the logo).
+- Hooks for a different component (for example `data-role="theme"` on the logo). Converted behavior uses its directive instead, as the Header search does with `v-autocomplete`.
 
 ## CSS
 

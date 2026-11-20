@@ -49,3 +49,183 @@
     background: var(--color-bg-l1);
   }
 }
+
+// v-autocomplete (client/src/directives/autocomplete.ts)
+// One shared list under <body>. States: .in (open), .top / .bottom (placement),
+// .selected on an item (keyboard or hover). JS only sets position and toggles classes.
+// The list sits flush on the input and copies its color, background, border and radius
+// (the --autocomplete-list-* values set by the directive), so both read as one box.
+@include comp-color('autocomplete-list');
+@include comp-size('autocomplete-list');
+
+.autocomplete-list {
+	--autocomplete-space: 320px;
+	--autocomplete-list-border-width: 1px;
+	--autocomplete-list-divider: color-mix(in srgb, var(--autocomplete-list-color) 15%, transparent);
+	position: fixed;
+	top: var(--autocomplete-top, auto);
+	bottom: var(--autocomplete-bottom, auto);
+	left: var(--autocomplete-left, 0);
+	width: var(--autocomplete-width, auto);
+	z-index: var(--ui-gautocomplete-index);
+	max-height: min(320px, var(--autocomplete-space));
+	overflow-y: auto;
+	overflow-x: hidden;
+	@include hidden-scrollbar();
+	font-size: var(--autocomplete-list-font-size);
+	line-height: var(--autocomplete-list-line-height);
+	color: var(--autocomplete-list-color);
+	background-color: var(--autocomplete-list-color-bg);
+	border: var(--autocomplete-list-border-width) solid var(--autocomplete-list-color-border);
+	border-radius: var(--autocomplete-list-radius);
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition:
+		opacity calc(var(--animation-time) * 2) ease-out,
+		transform calc(var(--animation-time) * 2) ease-out,
+		visibility 0s linear calc(var(--animation-time) * 2);
+
+	// Unfolds from the edge it shares with the input.
+	&.bottom {
+		transform-origin: top center;
+		transform: scaleY(0.9);
+		border-top: 1px solid var(--autocomplete-list-divider);
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	&.top {
+		transform-origin: bottom center;
+		transform: scaleY(0.9);
+		border-bottom: 1px solid var(--autocomplete-list-divider);
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	&.in {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: none;
+		transition:
+			opacity calc(var(--animation-time) * 2) ease-out,
+			transform calc(var(--animation-time) * 2) ease-out,
+			visibility 0s;
+	}
+}
+
+.autocomplete-item {
+	min-height: 44px;
+	padding: var(--g1) var(--g2);
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition:
+		background-color var(--animation-time) ease-out,
+		box-shadow var(--animation-time) ease-out;
+
+	& + & {
+		border-top: 1px solid var(--autocomplete-list-divider);
+	}
+
+	.autocomplete-list.in & {
+		animation: autocomplete-item-in calc(var(--animation-time) * 2) ease-out both;
+	}
+
+	// Mixed from the list's own colors, so it shows on light and dark inputs.
+	&.selected {
+		background-color: color-mix(in srgb, var(--autocomplete-list-color) 10%, var(--autocomplete-list-color-bg));
+		box-shadow: inset var(--gxs) 0 0 var(--autocomplete-list-color);
+	}
+}
+
+.autocomplete-match {
+	font-weight: var(--font-weight-bold);
+}
+
+@keyframes autocomplete-item-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.autocomplete-list,
+	.autocomplete-list.in,
+	.autocomplete-item {
+		transition: none;
+		animation: none;
+	}
+
+	.autocomplete-list.top,
+	.autocomplete-list.bottom {
+		transform: none;
+	}
+
+	.autocomplete-list.in .autocomplete-item {
+		animation: none;
+	}
+}
+
+// The input squares the corners where the list joins it.
+.autocomplete-bottom,
+.input > input.autocomplete-bottom {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.autocomplete-top,
+.input > input.autocomplete-top {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+// Focus mode while the list is open: no page scrolling, and a dimmed overlay with a
+// hole over the input (the directive sets the --autocomplete-hole-* box).
+html.autocomplete-open {
+	overflow: hidden !important;
+}
+
+.autocomplete-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--ui-gautocomplete-index) - 1);
+	background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.3);
+	clip-path: polygon(
+		evenodd,
+		0 0,
+		100% 0,
+		100% 100%,
+		0 100%,
+		0 0,
+		var(--autocomplete-hole-left, 0) var(--autocomplete-hole-top, 0),
+		var(--autocomplete-hole-right, 0) var(--autocomplete-hole-top, 0),
+		var(--autocomplete-hole-right, 0) var(--autocomplete-hole-bottom, 0),
+		var(--autocomplete-hole-left, 0) var(--autocomplete-hole-bottom, 0),
+		var(--autocomplete-hole-left, 0) var(--autocomplete-hole-top, 0)
+	);
+	overscroll-behavior: contain;
+	touch-action: none;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity calc(var(--animation-time) * 2) ease-out,
+		visibility 0s linear calc(var(--animation-time) * 2);
+
+	&.in {
+		opacity: 1;
+		visibility: visible;
+		transition:
+			opacity calc(var(--animation-time) * 2) ease-out,
+			visibility 0s;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.autocomplete-overlay,
+	.autocomplete-overlay.in {
+		transition: none;
+	}
+}

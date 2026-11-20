@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { computed } from 'vue';
 import Header from './Header.vue';
 import {
@@ -18,6 +18,35 @@ type HeaderStoryArgs = {
 	model?: HeaderUiModel;
 };
 
+/** Sample answers for `/api/geo`, which only the Express app serves. */
+const geoSample = [
+	{ type: 'city', city: 'Dallas', state: 'TX', path: 'tx/dallas' },
+	{ type: 'city', city: 'Glendale', state: 'AZ', path: 'az/glendale' },
+	{ type: 'city', city: 'Scottsdale', state: 'AZ', path: 'az/scottsdale' },
+	{ type: 'city', city: 'San Diego', state: 'CA', path: 'ca/san-diego' },
+	{ type: 'city', city: 'San Jose', state: 'CA', path: 'ca/san-jose' },
+	{ type: 'city', city: 'Austin', state: 'TX', path: 'tx/austin' },
+];
+
+/** Answers `/api/geo` in Storybook so the header search shows suggestions. */
+function mockGeoApi() {
+	const realFetch = window.fetch;
+	window.fetch = async (input, init) => {
+		const url = new URL(String(input), window.location.href);
+		if (!url.pathname.endsWith('/api/geo')) {
+			return realFetch(input, init);
+		}
+		const text = (url.searchParams.get('text') || '').toLowerCase();
+		const data = geoSample.filter((geo) => geo.city.toLowerCase().includes(text));
+		return new Response(JSON.stringify({ code: 200, data }), {
+			headers: { 'Content-Type': 'application/json' },
+		});
+	};
+	return () => {
+		window.fetch = realFetch;
+	};
+}
+
 const meta = {
 	title: 'Components/Header',
 	component: Header,
@@ -26,10 +55,13 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Site header. Each Controls row is one field of the model. Omit search and the search field is not rendered.',
+					'Site header. Each Controls row is one field of the model. Omit search and the search field is not rendered. '
+					+ 'The search field uses `v-autocomplete` against `search.url` with `type`; picking a result opens `/property/<geo path>`. '
+					+ 'In Storybook `/api/geo` answers with a few sample cities (try "dal" or "san"). On phones the list fills the screen below the header.',
 			},
 		},
 	},
+	beforeEach: mockGeoApi,
 	argTypes: {
 		model: {
 			control: false,
@@ -89,7 +121,7 @@ export const Default: Story = {
 		},
 		template: '<Header :model="model" />',
 	}),
-	play: async ({ canvas }) => {
+	play: async ({ canvas, userEvent }) => {
 		await expect(canvas.getByRole('link', { name: 'Document' })).toHaveAttribute('href', '/');
 		await expect(canvas.getByRole('link', { name: 'Sitemap' })).toHaveAttribute(
 			'href',
@@ -99,5 +131,18 @@ export const Default: Story = {
 			'href',
 			'/property/search',
 		);
+		const input = canvas.getByRole('combobox');
+		await userEvent.click(input);
+		await userEvent.type(input, 'dal');
+		const list = await within(document.body).findByRole('listbox');
+		await waitFor(() => expect(list).toHaveClass('in'));
+		await expect(within(list).getAllByRole('option').map((o) => o.textContent)).toEqual([
+			'Dallas, TX',
+			'Glendale, AZ',
+			'Scottsdale, AZ',
+		]);
+		await expect(list).toHaveClass('header-autocomplete');
+		await userEvent.keyboard('{Escape}');
+		await expect(list).not.toHaveClass('in');
 	},
 };

@@ -4,6 +4,7 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 import { createPropertyRouter } from './router';
 import { usePropertyStore } from './store';
+import autocomplete from './directives/autocomplete';
 import collapse from './directives/collapse';
 import lazyload from './directives/lazyload';
 import form from './directives/form';
@@ -18,6 +19,7 @@ export function createApp(history: RouterHistory) {
 	app.use(pinia);
 	app.use(router);
 	const store = usePropertyStore(pinia);
+	app.directive('autocomplete', autocomplete);
 	app.directive('collapse', collapse);
 	app.directive('lazyload', lazyload);
 	app.directive('form', form);

@@ -7,9 +7,9 @@ export interface HeaderMenuItem {
 export interface HeaderSearch {
 	inputId: string;
 	placeholder: string;
-	method: string;
+	/** Geo API used by `v-autocomplete`; called as GET `url?text=…&type=…`. */
 	url: string;
-	keys: string;
+	/** Geo type to search, for example `city`. */
 	type: string;
 	autocomplete: string;
 	autocorrect: string;
@@ -32,9 +32,7 @@ export const headerMock: HeaderUiModel = {
 	search: {
 		inputId: 'headerInput',
 		placeholder: 'Search for ...',
-		method: 'GET',
 		url: '/api/geo',
-		keys: 'type',
 		type: 'city',
 		autocomplete: 'off',
 		autocorrect: 'off',

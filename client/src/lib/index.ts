@@ -16,6 +16,7 @@ import Slider from '../components/Slider.vue';
 import Textbox from '../components/Textbox.vue';
 import ValueSlider from '../components/ValueSlider.vue';
 import Welcome from '../components/Welcome.vue';
+import autocomplete from '../directives/autocomplete';
 import collapse from '../directives/collapse';
 import lazyload from '../directives/lazyload';
 import tab from '../directives/tab';
@@ -39,6 +40,7 @@ export {
 	Textbox,
 	ValueSlider,
 	Welcome,
+	autocomplete,
 	collapse,
 	lazyload,
 	tab,
@@ -58,6 +60,13 @@ export type {
 	WelcomeAnimation,
 	WelcomeAnimationMode,
 } from '../components/welcomeModel';
+export type {
+	AutocompleteItem,
+	AutocompleteFetcher,
+	AutocompleteSource,
+	AutocompleteOptions,
+	AutocompleteValue,
+} from '../directives/autocomplete';
 export type { HeaderUiModel, HeaderMenuItem, HeaderSearch } from '../components/headerModel';
 
 const components = {
@@ -80,7 +89,7 @@ const components = {
 	Welcome,
 };
 
-const directives: Record<string, Directive> = { collapse, lazyload, tab, tooltip } as Record<string, Directive>;
+const directives: Record<string, Directive> = { autocomplete, collapse, lazyload, tab, tooltip } as Record<string, Directive>;
 
 export default {
 	install(app: App) {
