@@ -6,4 +6,6 @@ Entry format: `- [ ] YYYY-MM-DD, to <who>, from <who>: <question>? A (recommende
 
 ## Open
 
+- [ ] 2026-11-20, to component-developer, from docs-maintainer: keep the new bus events `show` / `hide` / `select.autocomplete`, which the legacy plugin never fired? Yes, add an exception line to `docs/component-conversion.md` (recommended) / No, remove them and keep only the DOM event `autocomplete-select`. Context: [REQ-20261120-autocomplete-directive](requirements/REQ-20261120-autocomplete-directive.md)
+
 ## Answered

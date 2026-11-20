@@ -6,4 +6,5 @@ To start one, copy [_template.md](_template.md) to `REQ-YYYYMMDD-<slug>.md`.
 
 | ID | Title | Owner | Status | Release |
 | --- | --- | --- | --- | --- |
+| [REQ-20261120-autocomplete-directive](REQ-20261120-autocomplete-directive.md) | v-autocomplete directive and Header search suggestions | component-developer | docs-updated (one developer question open) | commit 533865d, no tag |
 | [REQ-migration-end-cleanup](REQ-migration-end-cleanup.md) | Remove EJS and the legacy plugin runtime | component-developer + application-developer | in progress (server EJS removed) | |

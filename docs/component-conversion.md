@@ -156,7 +156,7 @@ A directive is for behavior on markup that already exists. No `*Model.ts`, no `.
 
 Leave out a slot that is unused. Do not add an Argument row when `binding.arg` is unused. Do not put every modifier in one cell. Group related flags on one row (`modifier trigger`, `modifier placement`) and list each example (`v-tooltip.hover`, `v-tooltip.click`, `v-tooltip.focus`).
 
-Only Tooltip creates one shared node under `body`. Collapse and Tab do not. Pages keep the old plugins until a later swap. Layout and LayoutToggle stay plugins.
+Only Tooltip and Autocomplete create one shared node under `body`. Collapse and Tab do not. Pages keep the old plugins until a later swap. Layout and LayoutToggle stay plugins.
 
 ## Collapse
 
@@ -193,6 +193,38 @@ Component. Source: `client/js/plugins/_textbox.js`. Styles: `.textbox` in `clien
 Directive with one shared `div.tooltip` under `body`. Source: `client/js/plugins/_tooltip.js`.
 
 `v-tooltip.once.[hover|click|focus].[top|bottom|left|right]="content"`. The value is the tip content. `once` shows and hides one time, then that trigger stops listening. Omit `once` to keep listening. One trigger modifier (`hover` default). One placement modifier (`top` default). Events: `show` / `shown` and `hide` / `hidden`. The payload is the trigger element. There is no second tip node.
+
+## Autocomplete
+
+Directive with one shared `div.autocomplete-list` and one `div.autocomplete-overlay` under `body`. Source: `client/js/plugins/_autocomplete.js`. Code: `client/src/directives/autocomplete.ts`. Styles: `client/scss/_autocomplete.scss`. Story: `client/src/directives/autocomplete.stories.ts`.
+
+`v-autocomplete="source"` or `v-autocomplete="{ source, label, param, params, minLength, delay, limit, listClass }"` on an `input`.
+
+| Option | What it does | Default |
+| --- | --- | --- |
+| `source` | An array (filtered locally by label), a GET url (`url?text=<query>` plus `params`; reads an array or `{ data: [] }`), or `(query, signal) => items \| Promise<items>`. | `[]` |
+| `label` | Item field name or `(item) => string`. The text shown and written to the input. | `label`, `text` or `name` field, else the item |
+| `param` | Query parameter name for a url source. | `text` |
+| `params` | Extra query parameters for a url source. | none |
+| `minLength` | Characters needed before searching. | `1` |
+| `delay` | Debounce for url and function sources, in ms. | `300` |
+| `limit` | Most items shown. | `10` |
+| `listClass` | Extra class on the shared list while this input owns it. | none |
+
+- Keys: Up / Down move, Enter picks, Esc closes. Blur closes.
+- A pick writes the label to the input, fires `input` (so `v-model` updates), then the DOM event `autocomplete-select` with the item in `event.detail`.
+- Bus events: `show.autocomplete` and `hide.autocomplete` (payload `[input]`), `select.autocomplete` (payload `[input, item]`). The legacy plugin fired none; see the open question in [REQ-20261120-autocomplete-directive](../notes/requirements/REQ-20261120-autocomplete-directive.md).
+- States are CSS classes: `.autocomplete-list.in` (open), `.top` / `.bottom` (placement), `.autocomplete-item.selected`. The input gets `autocomplete-bottom` or `autocomplete-top` while open.
+- While open, `html.autocomplete-open` locks page scrolling. Lock on `html`, not `body`: `html` is the scrolling element in this app.
+- The list copies the input's color, background, border and radius into `--autocomplete-list-*` variables, so the two read as one box. Its position comes from `--autocomplete-top`, `--autocomplete-bottom`, `--autocomplete-left` and `--autocomplete-width`, so a `listClass` can replace the layout.
+
+Worked example, the Header search (`client/src/components/Header.vue`):
+
+```vue
+<input v-autocomplete="searchSource" @autocomplete-select="goToGeo" />
+```
+
+`searchSource` is `{ source: model.search.url, params: { type: model.search.type }, listClass: 'header-autocomplete', label }`. The url is `/api/geo`. A pick opens `/property/<getPathByGeo(item)>`. On phones (`max-width: $screen-xs-max`), `.autocomplete-list.header-autocomplete` in `client/scss/_header.scss` fills the screen below the header (`$header-height`).
 
 ## Player
 
@@ -260,4 +292,4 @@ Each of the six gets a model file only for the shared option type and a mock, a 
 
 Run `npm run storybook`. Header: open and close the menu, expand one submenu, scroll so `header-close` appears. Slider: change a Controls field, then change the `next` and `prev` controls more than once. Shifter: prev arrow hidden at the start; click next; change the `next` and `prev` controls more than once. Docs Show code is `<Name :model="{ ... }" />` or a `v-model` tag for components, and the story template for directives.
 
-Collapse and Tab: click the real markup. Textbox: focus, type, and blur. Tooltip: hover, click, and `once`. Player: Controls plus `goNext` / `play` more than once. Each form enum input: change `data`, then change the selection so `v-model` updates. RangeSlider: drag, release, and `get()`.
+Collapse and Tab: click the real markup. Textbox: focus, type, and blur. Tooltip: hover, click, and `once`. Autocomplete: type, pick with the keyboard and the mouse, Esc, and click the overlay; Header search at phone width. Player: Controls plus `goNext` / `play` more than once. Each form enum input: change `data`, then change the selection so `v-model` updates. RangeSlider: drag, release, and `get()`.
