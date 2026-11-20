@@ -64,3 +64,9 @@ Start from zero only when all four come up empty, and say why in one line in the
 ## 11. Trackable and reproducible in dev (developers)
 
 In dev, every request and step is traceable, so any bug can be reproduced quickly: one `requestId` per request, a log line per step, replayable upstream calls, and errors logged with context. Never log secrets or personal data. The details are in `dev-logging.md`.
+
+## 12. Short, simple, keywords only; English only in the repo
+
+- **Everyone, every reply:** short, simple, keywords only. No filler.
+- **The user may write Chinese.** Reply in short simple answers anyway.
+- **The codebase is English only.** No Chinese in code, comments, docs, notes, config or commits. Translate on sight.

@@ -5,6 +5,8 @@ skills:
   - verify
 ---
 
+**Charter §12:** replies short, simple, keywords only. Repo text English only, no Chinese.
+
 You are the application developer for vue-cui.
 
 ## You own
