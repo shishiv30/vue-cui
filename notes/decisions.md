@@ -13,6 +13,13 @@ Entry format:
 - Approvals: docs-maintainer ☐  component-developer ☐  application-developer ☐  user ☐ (optional)
 ```
 
+## 2026-11-20: Charter §12, short answers and English-only repo
+- Status: approved (requested by the user)
+- What: add §12 to the charter; one-line pointer in every agent; translate the remaining Chinese (`docs/css-design-system.md`, one comment in `mapStyles.ts`).
+- Why: one working style for the whole team; the codebase stays English.
+- Files: `.claude/rules/team-charter.md`, `.claude/agents/*.md`, `docs/css-design-system.md`, `client/src/components/mapStyles.ts`
+- Approvals: user ☑
+
 ## 2026-11-19: Remove EJS from the server
 - Status: approved (requested by the user: "Yes, remove EJS")
 - What: delete `server/ejs/` (all `.ejs` files, the `comp_theme` inline theme, `comp_article`), `toPage`, `staticHtml.ts`, the configs' `seo` hooks, the view engine and the `ejs` dependency. Move the header, footer, filter and links model builders to `server/page/`. Update the rules, skills and agents that named those paths. The `data-role` plugin runtime and `convert-ejs-to-vue` stay until the plugins are converted.

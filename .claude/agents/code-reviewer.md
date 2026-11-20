@@ -6,6 +6,8 @@ skills:
   - verify
 ---
 
+**Charter §12:** replies short, simple, keywords only. Repo text English only, no Chinese.
+
 You review changes in vue-cui. You do not edit files. Review the diff (`git diff`, `git diff --staged`, or `git diff master...HEAD`). Read only the path-scoped rules in `.claude/rules/` whose `paths:` match the changed files.
 
 ## Scope

@@ -1,41 +1,41 @@
-# Pure CSS 设计体系：变量定义规则与设计原则
+# Pure CSS Design System: Variable Rules and Design Principles
 
-> 版本：基于 `client/scss/` 当前代码（2026-08）审阅
-> 目的：说明本项目 CSS 自定义属性（CSS var）的分层规则、命名约定、基础 token 清单，并标注现存缺口——为后续引入"普遍适应性响应式方案"提供基线。
-
----
-
-## 摘要
-
-Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS），由 Dart Sass 经 Vite 编译，产出 `[name].min.css`。
-
-其核心不是"写样式"，而是**用 CSS 自定义属性构建一条可被任意祖先节点改道的值传递链**。SCSS 只承担两件编译期必需的工作：媒体查询断点（`$screen-*`）和图标码点（`$icon-*`）；其余全部是运行期可覆盖的 `--*` 变量。
-
-全项目共 **493 行** 自定义属性声明，分布在 26 个源文件中；权威定义文件是 `client/scss/_theme.default.scss`（263 行）。
+> Version: reviewed against the current `client/scss/` code (2026-08)
+> Purpose: the layering rules, naming conventions and base token list for the project's CSS custom properties (CSS vars), plus the known gaps. A baseline for a future "universally adaptive responsive approach".
 
 ---
 
-## 一、架构：三层 Token 模型
+## Summary
 
-系统实际存在三层，越往下越"语义化"、越接近组件：
+Pure's styles use no CSS framework (no Tailwind, no CSS-in-JS). Dart Sass compiles them through Vite into `[name].min.css`.
+
+The core idea is not "writing styles". It is **a value-passing chain built from CSS custom properties, which any ancestor can re-route**. SCSS does only two compile-time jobs: media-query breakpoints (`$screen-*`) and icon code points (`$icon-*`). Everything else is a `--*` variable that can be overridden at runtime.
+
+The project has **493 lines** of custom-property declarations in 26 source files. The authoritative file is `client/scss/_theme.default.scss` (263 lines).
+
+---
+
+## 1. Architecture: three token layers
+
+Three layers exist. The lower the layer, the more semantic and the closer to the component:
 
 ```
-第 1 层  原始通道（Channel primitives）      :root
+Layer 1  Channel primitives          :root
          --color-root-major-hue: 165
          --color-root-major-saturation: 58%
          --color-root-major-lightness: 23%
-                        ↓ hsl() 组装
-第 2 层  语义角色（Semantic roles）          body
+                        ↓ assembled by hsl()
+Layer 2  Semantic roles              body
          --color-major: hsl(hue, sat, light)
-         --color / --color-bg / --color-border   ← 上下文别名
-                        ↓ comp-color() / comp-size() 批量派生
-第 3 层  组件契约（Component contract）      .btn / .input / ...
+         --color / --color-bg / --color-border   ← context aliases
+                        ↓ derived in bulk by comp-color() / comp-size()
+Layer 3  Component contract          .btn / .input / ...
          --btn-color / --btn-color-bg / --btn-size / --btn-font-size
 ```
 
-### 设计原则 1：颜色以 HSL 通道为原子，而非色值
+### Principle 1: the atom of color is the HSL channel, not the color value
 
-项目**不存储颜色，只存储色相/饱和度/明度三个通道**，最终颜色由 `hsl()` 在第 2 层组装：
+The project **stores no colors, only hue / saturation / lightness channels**. `hsl()` assembles the final color in layer 2:
 
 ```scss
 --color-major: hsl(
@@ -45,13 +45,13 @@ Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS）
 );
 ```
 
-直接收益：换肤只需改一个 `--color-root-major-hue`（在 `client/scss/` 的主题 SCSS 中声明）。服务端内联主题（`data/comps/theme.js` + `comp_theme`）已随 EJS 一起移除。
+Benefit: re-theming means changing one `--color-root-major-hue` (declared in the theme SCSS under `client/scss/`). The server-side inline theme (`data/comps/theme.js` + `comp_theme`) was removed together with EJS.
 
-暗色模式同理，只翻转明度通道，不重写任何色值。
+Dark mode works the same way: it flips only the lightness channel and rewrites no color value.
 
-### 设计原则 2：变量沿 DOM 继承改道，而非靠选择器叠加
+### Principle 2: variables re-route through DOM inheritance, not selector stacking
 
-组件永不直接读全局 token，而是读自己的 `--<comp>-*`；而 `--<comp>-*` 又指向上下文别名 `--color` / `--color-bg`。于是任何祖先元素改写 `--color` 就能整片改道，无需增加选择器特异性。
+A component never reads a global token directly. It reads its own `--<comp>-*`, and `--<comp>-*` points to the context aliases `--color` / `--color-bg`. Any ancestor that rewrites `--color` re-routes the whole subtree, with no extra selector specificity.
 
 `comp-color($name)` keeps one set of `--<comp>-color*` tokens. `.active` points that same set at the active palette, so components do not restyle color, background, or border inside `&.active`.
 
@@ -79,14 +79,14 @@ Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS）
 }
 ```
 
-配套的 `color()` mixin（`_mixins.scss:62-141`）定义 7 个语义类 `.default .gray .major .minor .danger .safe .tip`，每个类重写 `--color` 系别名，并用 `color-mix()` 自动派生 hover 态：
+The companion `color()` mixin (`_mixins.scss:62-141`) defines 7 semantic classes `.default .gray .major .minor .danger .safe .tip`. Each class rewrites the `--color` alias family and derives the hover state with `color-mix()`:
 
 ```scss
 --color-hover: color-mix(in srgb, var(--color) 90%, var(--color-root));
 --color-bg-hover: color-mix(in srgb, var(--color-bg) 90%, var(--color-root-bg));
 ```
 
-`_header.scss:28-72` 是该原则最完整的示范——深色 header 直接把子组件 token 接到自己的 token 上，输入框与按钮自动反色：
+`_header.scss:28-72` is the fullest example of this principle. The dark header wires child-component tokens to its own tokens, so inputs and buttons invert automatically:
 
 ```scss
 --input-color: var(--header-color);
@@ -95,9 +95,9 @@ Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS）
 --btn-color-bg: var(--header-color-bg);
 ```
 
-### 设计原则 3：尺寸走 T-shirt 档位，而非逐属性微调
+### Principle 3: sizes use T-shirt steps, not per-property tweaks
 
-`comp-size($name, $width)`（`_mixins.scss:26-60`）为每个组件提供 `tiny / small / normal / large` 四档，一次性重写 gap、font-size、size、line-height：
+`comp-size($name, $width)` (`_mixins.scss:26-60`) gives every component four steps, `tiny / small / normal / large`, and rewrites gap, font-size, size and line-height at once:
 
 ```scss
 &, &.normal {
@@ -111,7 +111,7 @@ Pure 的样式系统不依赖任何 CSS 框架（无 Tailwind、无 CSS-in-JS）
 &.large  { --gap: var(--g1);  --font-size: var(--font-size-4); --size: var(--comp-size-4); --border-weight: 2px; }
 ```
 
-组件本体只消费 token，不含任何硬编码尺寸（`_button.scss:48-59`）：
+The component itself only consumes tokens, with no hard-coded sizes (`_button.scss:48-59`):
 
 ```scss
 font-size: var(--btn-font-size);
@@ -121,9 +121,9 @@ border-radius: calc(var(--btn-size) / 2);
 box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 ```
 
-### 设计原则 4：响应式改的是"变量的值"，不是"属性的值"
+### Principle 4: responsive design changes the variable's value, not the property's value
 
-**这是本项目最值得保留的响应式思路。** 媒体查询内不写 `width` / `font-size`，只重新赋值 token，声明本身保持唯一：
+**This is the responsive idea most worth keeping.** Media queries never write `width` / `font-size`. They only reassign tokens, so each declaration stays unique:
 
 ```scss
 // client/scss/property.scss:9-43
@@ -140,7 +140,7 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 }
 ```
 
-`_grid.scss:4-16` 用同一模式把栅格轨道抽成 token：
+`_grid.scss:4-16` uses the same pattern to turn grid tracks into tokens:
 
 ```scss
 --grid-col-1: repeat(1, minmax(80%, 1fr));
@@ -155,24 +155,24 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 --grid-xl: var(--grid-col-5);
 ```
 
-`_layout.scss:338/477` 同理（`--record-xs/sm/md`、`--market-overview-xs/sm/md/lg`）。
+`_layout.scss:338/477` does the same (`--record-xs/sm/md`, `--market-overview-xs/sm/md/lg`).
 
-### 设计原则 5：间距与字号是同一套数列的两个投影
+### Principle 5: spacing and font size are two projections of one sequence
 
-`--g*` 的每一档都在注释里声明了它与字号的关系——间距不是随便挑的，是字号的一半或前两项之和（斐波那契式累加）：
+Each `--g*` step states its relation to font size in a comment. Spacing is not picked at random. It is half a font size, or the sum of the previous two steps (Fibonacci-style accumulation):
 
 ```scss
 --gxs: 0.125rem;  // half of gs
 --g0:  0.25rem;   // half of f7
 --g1:  0.5rem;    // half of f5
---g2:  0.75rem;   // half of f3 或 g0 + g1
+--g2:  0.75rem;   // half of f3 or g0 + g1
 --g3:  1rem;      // g1 + g2
 --g4:  1.75rem;   // g2 + g3
 --g5:  2.75rem;   // g3 + g4
 --g6:  4.5rem;    // g4 + g5
 ```
 
-`--comp-size-*` 同样标注了推导过程（黄金比例 1.618）：
+`--comp-size-*` also documents its derivation (golden ratio 1.618):
 
 ```scss
 --comp-size-1: 1.75rem;  // f3 (f5 × 1.618)
@@ -183,36 +183,36 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 
 ---
 
-## 二、基础 Token 完整清单
+## 2. Base token list
 
-### 2.1 排版 Typography
+### 2.1 Typography
 
-| Token | 值 | 说明 |
+| Token | Value | Note |
 |---|---|---|
-| `--cui-font` | `'Roboto'` | 唯一带厂商前缀的 token |
-| `--font-size-1` | `2rem` | 注意：**编号越小字号越大**（倒序） |
+| `--cui-font` | `'Roboto'` | The only token with a vendor prefix |
+| `--font-size-1` | `2rem` | Note: **a smaller number is a larger size** (reverse order) |
 | `--font-size-2` | `1.75rem` | |
 | `--font-size-3` | `1.5rem` | |
 | `--font-size-4` | `1.25rem` | |
-| `--font-size-5` | `1rem` | 基准正文 |
+| `--font-size-5` | `1rem` | Base body size |
 | `--font-size-6` | `0.875rem` | |
 | `--font-size-7` | `0.75rem` | |
 | `--line-height-1` | `1` | |
-| `--line-height-2` | `1.25` | `_reset.scss` 全局默认 |
-| `--line-height-3` | `1.75` | 组件默认 |
+| `--line-height-2` | `1.25` | Global default in `_reset.scss` |
+| `--line-height-3` | `1.75` | Component default |
 | `--font-weight-regular` | `400` | |
-| `--font-weight-medium` | `400` | ⚠ 与 regular 同值 |
+| `--font-weight-medium` | `400` | ⚠ Same value as regular |
 | `--font-weight-bold` | `700` | |
 
-根字号在 `_reset.scss:49` 被**硬编码为 `16px`**，未 token 化——这是后续 fluid typography 最关键的一处阻碍。
+The root font size is **hard-coded to `16px`** in `_reset.scss:49` and is not a token. This is the biggest blocker for fluid typography.
 
-别名：mixin `f1`…`f7`（`_mixins.scss:484-510`）、工具类 `.h1/.f1` … `.h7/.f7`（`_typograph.scss:5-50`）。
+Aliases: mixins `f1`…`f7` (`_mixins.scss:484-510`) and utility classes `.h1/.f1` … `.h7/.f7` (`_typograph.scss:5-50`).
 
-### 2.2 间距 Spacing
+### 2.2 Spacing
 
-原子：`--gxs --g0 --g1 --g2 --g3 --g4 --g5 --g6`（见上）
+Atoms: `--gxs --g0 --g1 --g2 --g3 --g4 --g5 --g6` (see above)
 
-布局语义层（`_theme.default.scss:193-197`，作用域为 `body`）：
+Layout semantic layer (`_theme.default.scss:193-197`, scoped to `body`):
 
 ```scss
 --section-gap-x: var(--g3);
@@ -221,25 +221,25 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 --panel-gap-y: var(--g3);
 ```
 
-`gap-size()` mixin（`_mixins.scss:452-482`）按 `tiny/small/normal/large` 重映射这四个值。
+The `gap-size()` mixin (`_mixins.scss:452-482`) remaps these four values per `tiny/small/normal/large`.
 
-工具类（`_gap.scss`，330 行）：`.m-{x,y,t,b,l,r}-{0,xs,1,2,3,4}` 与 `.p-…` 同构。
+Utility classes (`_gap.scss`, 330 lines): `.m-{x,y,t,b,l,r}-{0,xs,1,2,3,4}`, with `.p-…` built the same way.
 
-### 2.3 圆角 Radius
+### 2.3 Radius
 
 ```scss
 --radius-0: 0.25rem;
---radius-1: 0.5rem;   // --comp-border-radius 默认值
+--radius-1: 0.5rem;   // default of --comp-border-radius
 --radius-2: 1rem;
 --radius-3: 1.5rem;
 --radius-4: 2rem;
 ```
 
-工具类 `.corner-0..3`（`_utilities.scss:51-65`，无 `.corner-4`）。
+Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
 
-### 2.4 颜色 Color
+### 2.4 Color
 
-**全局通道**
+**Global channels**
 
 ```scss
 --color-root-lightness: 23%;
@@ -250,18 +250,18 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 --color-root-lightness: 30%;
 ```
 
-**语义角色（5 个）** — 每个角色 5 个通道 token + 4 个组装 token
+**Semantic roles (5)**: each role has 5 channel tokens + 4 assembled tokens
 
-| 角色 | hue | saturation | lightness | l1 |
+| Role | hue | saturation | lightness | l1 |
 |---|---|---|---|---|
 | major | 165 | 58% | 23% | 99% |
 | minor | 169 | 100% | 31% | 99% |
 | safe | 179 | `--color-root-bg-saturation` | 25% | 99% |
-| danger | 10 | 同上 | 48% | 99% |
-| tip | 321 | 同上 | 24% | 99% |
+| danger | 10 | same as above | 48% | 99% |
+| tip | 321 | same as above | 24% | 99% |
 
 
-**上下文别名（组件真正读取的层）**
+**Context aliases (the layer components actually read)**
 
 ```scss
 --color:               var(--color-root);
@@ -277,16 +277,16 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 --color-disabled:      var(--color-root-l1);
 ```
 
-**中性阶** `--color-0..9`（明度 100% → 10%，步长 10%）+ 彩虹阶 `--color-r0..r9`（10 个固定色相）。二者当前均**无消费者**。
+**Neutral scale** `--color-0..9` (lightness 100% → 10%, step 10%) + **rainbow scale** `--color-r0..r9` (10 fixed hues). Neither has a consumer today.
 
-**选区**
+**Selection**
 
 ```scss
 --selection-background: color-mix(in srgb, var(--color-major) 40%, var(--color-bg));
 --selection-color: var(--color-root);
 ```
 
-### 2.5 组件尺寸 Component
+### 2.5 Component size
 
 ```scss
 --comp-size-1: 1.75rem;
@@ -301,9 +301,9 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 --comp-line-height:   var(--line-height-3);
 ```
 
-### 2.6 层级 Z-index
+### 2.6 Z-index
 
-体系中**唯一被完整 token 化的维度**（`_reset.scss:52-66`，注意作用域是 `html` 而非 `:root`）：
+**The only dimension fully tokenized** (`_reset.scss:52-66`; note the scope is `html`, not `:root`):
 
 ```scss
 --ui-tooltip-index:       1000;
@@ -322,33 +322,33 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 --ui-modal-index:        10010;
 ```
 
-### 2.7 动效 Motion
+### 2.7 Motion
 
-仅一个：`--animation-time: 0.1s`，且**只被 `_button.scss:14` 一处消费**。其余 transition 全为魔法数字（0.15s / 0.2s / 0.3s / 0.5s / 1s 散落 20+ 处）。无缓动 token，无 `prefers-reduced-motion`。
+Only one token: `--animation-time: 0.1s`, and **only `_button.scss:14` uses it**. All other transitions are magic numbers (0.15s / 0.2s / 0.3s / 0.5s / 1s, scattered across 20+ places). No easing token, no `prefers-reduced-motion`.
 
-`_section-animation.scss` 已使用现代 `animation-timeline: scroll() / view()` 滚动驱动动画（8 处），但同样无 token。
+`_section-animation.scss` already uses modern scroll-driven animation, `animation-timeline: scroll() / view()` (8 places), also without tokens.
 
-### 2.8 断点 Breakpoints
+### 2.8 Breakpoints
 
-`:root` 现镜像了一份 CSS 变量（`--screen-xs-min` … `--screen-lg-max`），供 `var()` 与 JS 读取；`@media` 条件仍必须使用下面的编译期 `$` 变量，**两处需手工同步**。
+`:root` now mirrors them as CSS variables (`--screen-xs-min` … `--screen-lg-max`), for `var()` and JS. `@media` conditions must still use the compile-time `$` variables below, so **the two places must be kept in sync by hand**.
 
 
 
 ```scss
 // client/scss/_var.screen.scss
-$screen-xs-min: 320px;   // phone
-$screen-sm-min: 640px;   // tablet
-$screen-md-min: 960px;   // desktop
-$screen-lg-min: 1600px;  // wide desktop
-$screen-xl-min: 2561px;  // HD+
+$screen-xs-min: 340px;   // phone
+$screen-sm-min: 459px;   // tablet
+$screen-md-min: 1279px;   // desktop
+$screen-lg-min: 1919px;  // wide desktop
+$screen-xl-min: 2559px;  // HD+
 
-$screen-xs-max: $screen-sm-min - 1;   // 639px
-$screen-sm-max: $screen-md-min - 1;   // 959px
-$screen-md-max: $screen-lg-min - 1;   // 1599px
+$screen-xs-max: $screen-sm-min - 1;   // 640px
+$screen-sm-max: $screen-md-min - 1;   // 1280px
+$screen-md-max: $screen-lg-min - 1;   // 1920px
 $screen-lg-max: $screen-xl-min - 1;   // 2560px
 ```
 
-策略为**区间型（min + max 成对）**，非移动优先级联。规范写法（`_grid.scss:23-41`）：
+The strategy is **range-based (min + max in pairs)**, not a mobile-first cascade. The canonical form (`_grid.scss:23-41`):
 
 ```scss
 @media (max-width: $screen-xs-max)                                  { … }
@@ -358,129 +358,129 @@ $screen-lg-max: $screen-xl-min - 1;   // 2560px
 @media (min-width: $screen-xl-min)                                  { … }
 ```
 
-区间型的代价：五个分支必须**全部**声明，漏一个就是"该宽度下无值"，而移动优先只需声明变化点。这是当前样板代码量的主要来源。
+The cost of ranges: all five branches must be declared. Miss one and that width has no value. Mobile-first only declares the change points. This is the main source of today's boilerplate.
 
-### 2.9 加载顺序
+### 2.9 Load order
 
 ```
 index.scss
-├── _theme.default.scss        ← 全部 token 定义
+├── _theme.default.scss        ← all token definitions
 └── base.scss
-    ├── _font.roboto.scss      字体
-    ├── _icon.scss             图标
-    ├── _reset.scss            重置 + z-index token
+    ├── _font.roboto.scss      fonts
+    ├── _icon.scss             icons
+    ├── _reset.scss            reset + z-index tokens
     ├── _responsive.scss       .hidden-xs/sm/md/lg
     ├── _text.scss / _typograph.scss / _color.scss / _gap.scss / _utilities.scss
     ├── _grid.scss / _flex.scss
-    └── 30+ 组件 partial
+    └── 30+ component partials
 ```
 
-无 `@layer`；级联通过 `#body` id 选择器前缀（`_typograph.scss` / `_color.scss` / `_gap.scss` / `_utilities.scss`）强行提权。
+No `@layer`. The cascade is forced by a `#body` id-selector prefix (`_typograph.scss` / `_color.scss` / `_gap.scss` / `_utilities.scss`).
 
 ---
 
-## 三、现存缺口（对响应式方案的直接影响）
+## 3. Known gaps (direct impact on the responsive approach)
 
-### 3.1 阻碍"普遍适应性"的四个结构性缺口
+### 3.1 Four structural gaps blocking "universal adaptivity"
 
-1. **零 fluid typography。** 整个 SCSS 树 `clamp()` 出现 **0 次**。字号在 320px 与 2561px 完全相同。全部依赖固定 `rem` + 硬编码 `16px` 根字号，320px 手机与 4K 显示器共用同一套字号。
-2. ~~**断点无 CSS 变量对应物。**~~ **已修复** —— `:root` 现镜像了全部 9 个断点为 `--screen-*`，`var()` 与 `getComputedStyle()` 均可读。原先 4 处静默失效的引用（`_popover` `_layout` `_dialog` `_modal`）现已生效。**注意 `@media` 仍只能用编译期 `$screen-*`**，两者需手工保持同步。
-3. **零容器查询。** 无 `@container` / `container-type`。所有响应式基于视口宽度，同一组件放进侧栏和主区无法自适应。
-4. **间距不随断点缩放。** `--g*` 全局恒定；只有 `gap-size()` 的手动档位可换，无视口维度的自动收缩。
+1. **No fluid typography.** `clamp()` appears **0 times** in the whole SCSS tree. Font size is identical at 320px and 2561px. Everything relies on fixed `rem` and a hard-coded `16px` root, so a 320px phone and a 4K display share one type scale.
+2. ~~**Breakpoints have no CSS-variable counterpart.**~~ **Fixed.** `:root` now mirrors all 9 breakpoints as `--screen-*`, readable by `var()` and `getComputedStyle()`. The 4 references that silently failed (`_popover` `_layout` `_dialog` `_modal`) now work. **`@media` still only accepts the compile-time `$screen-*`**, so keep the two in sync by hand.
+3. **No container queries.** No `@container` / `container-type`. All responsiveness is viewport-based, so the same component cannot adapt between a sidebar and the main area.
+4. **Spacing does not scale with breakpoints.** `--g*` is constant globally. Only the manual steps of `gap-size()` can change it. There is no automatic shrink by viewport.
 
-### 3.2 缺失的 token 类别
+### 3.2 Missing token categories
 
-| 类别 | 现状 |
+| Category | Status |
 |---|---|
-| 阴影 | 无 `--shadow-*`。3 个 mixin + 10 处硬编码 `box-shadow` |
-| 动效 | 仅 `--animation-time`（用 1 次）。无 duration 阶、无 easing |
-| 字距 | 无 token，全项目仅 `_autoscroller.scss:69` 一处 `0.08em` |
-| 边框 | 无宽度/样式 token，仅组件级 `--<comp>-border-weight` |
-| 透明度 / 模糊 | 无 |
-| 焦点环 | 无。`_reset.scss:118` 对所有表单控件 `outline: none` 且无替代 —— 无障碍缺陷 |
+| Shadow | No `--shadow-*`. 3 mixins + 10 hard-coded `box-shadow` |
+| Motion | Only `--animation-time` (used once). No duration scale, no easing |
+| Letter spacing | No token. Only one `0.08em` in `_autoscroller.scss:69` |
+| Border | No width/style token, only component-level `--<comp>-border-weight` |
+| Opacity / blur | None |
+| Focus ring | None. `_reset.scss:118` sets `outline: none` on all form controls with no replacement: an accessibility defect |
 
-### 3.3 已确认的 Bug —— 已全部修复
+### 3.3 Confirmed bugs: all fixed
 
-修复详情见文末「附二：修复记录」。
+See "Appendix 2: Fix log" at the end.
 
-| 位置 | 问题 | 状态 |
+| Location | Problem | Status |
 |---|---|---|
-| `_theme.default.scss` | `--color-root-lightness: 750%` —— 应为 `75%` | ✅ |
-| `_theme.default.scss` | 暗色模式重写 `--color-root-major-lightness`，但 `--color-major-lightness` 的别名已在 `:root` 解析完毕，**major/minor/safe/danger/tip 五个语义色在暗色下实际不变暗** | ✅ |
-| `_button.scss` `_input.scss` 等 7 处 | 消费 `var(--<comp>-font-weight)`，但 `comp-size()` 从不产出该 token | ✅ |
-| `_typograph.scss` `_mixins.scss` | 消费 `--font-weight-light`，从未定义 → `.text-light` 为空操作 | ✅ |
-| `_font.roboto.scss` | `font-weight: 700` 指向 `Roboto-Regular.woff2`，浏览器视其为真粗体并**跳过合成** → 粗体与常规完全同形 | ✅ |
-| `_layout.scss` ×4 | 消费未定义的 `var(--color-f)` | ✅ |
-| `_layout.scss` ×3 | 消费未定义的 `var(--color-link-default)` | ✅ |
-| `_header.scss` | `var(--head--color-active-border)` —— 双横线拼写错误 | ✅ |
-| `_popover.scss` `_layout.scss` `_dialog.scss` `_modal.scss` | `var(--screen-xs-min/max)` 静默失效 | ✅ |
-| `_layout.scss` `_dropdownmenu.scss` `_tooltip.scss` `_animation.scss` 共 7 处 | `content: var(--icon-*)` —— 图标是 SCSS `$icon-*`，不是自定义属性，图标完全不显示 | ✅ |
-| `_slider.scss` `_shifter.scss` | 消费未定义的 `--line-height-normal` | ✅ |
-| `_autoscroller.scss` ×4 | 消费臆造 token `--g0-5` `--g1-5` `--color-bg-l2` `--color-fg-2` `--color-text-2` | ✅ |
-| `_sharelink.scss` | `var(--radius, …)` 无此 token；且 `var(--g1, 0.25rem)` 回退值与 `--g1`(0.5rem) 不符 | ✅ |
-| `_theme.default.scss` vs `_mixins.scss` | `--section-gap-y` 默认值不一致（`--g4` / `--g5`） | ✅ |
+| `_theme.default.scss` | `--color-root-lightness: 750%` should be `75%` | ✅ |
+| `_theme.default.scss` | Dark mode rewrites `--color-root-major-lightness`, but the `--color-major-lightness` alias was already resolved on `:root`, so **the 5 semantic colors major/minor/safe/danger/tip did not darken in dark mode** | ✅ |
+| `_button.scss` `_input.scss` and 5 more | Consume `var(--<comp>-font-weight)`, but `comp-size()` never produces that token | ✅ |
+| `_typograph.scss` `_mixins.scss` | Consume `--font-weight-light`, never defined → `.text-light` was a no-op | ✅ |
+| `_font.roboto.scss` | `font-weight: 700` pointed at `Roboto-Regular.woff2`; the browser saw a real bold and **skipped synthesis** → bold looked identical to regular | ✅ |
+| `_layout.scss` ×4 | Consume the undefined `var(--color-f)` | ✅ |
+| `_layout.scss` ×3 | Consume the undefined `var(--color-link-default)` | ✅ |
+| `_header.scss` | `var(--head--color-active-border)`: double-dash typo | ✅ |
+| `_popover.scss` `_layout.scss` `_dialog.scss` `_modal.scss` | `var(--screen-xs-min/max)` silently failed | ✅ |
+| `_layout.scss` `_dropdownmenu.scss` `_tooltip.scss` `_animation.scss`, 7 places | `content: var(--icon-*)`: icons are SCSS `$icon-*`, not custom properties, so icons never showed | ✅ |
+| `_slider.scss` `_shifter.scss` | Consume the undefined `--line-height-normal` | ✅ |
+| `_autoscroller.scss` ×4 | Consume invented tokens `--g0-5` `--g1-5` `--color-bg-l2` `--color-fg-2` `--color-text-2` | ✅ |
+| `_sharelink.scss` | `var(--radius, …)` has no such token; and the fallback in `var(--g1, 0.25rem)` does not match `--g1` (0.5rem) | ✅ |
+| `_theme.default.scss` vs `_mixins.scss` | `--section-gap-y` default differs (`--g4` / `--g5`) | ✅ |
 
-### 3.4 一致性问题
+### 3.4 Consistency issues
 
-- **Token 分散在三个根作用域且无规则**：`:root`（原始通道）、`html`（z-index）、`body`（组装色 + 间距 + 组件尺寸）。后果：`::backdrop`、`html` 滚动条等 `<body>` 外的上下文**取不到任何颜色 token**。（注意：语义色的 `-lightness` 别名**必须**留在 `body`，见 3.3 的暗色 bug；统一作用域时要把 `-root-` 源一起搬，不能只搬别名。）
-- `_goldenratio.scss` 用硬编码 `992px / 640px / 639px`，与 `_var.screen.scss` 无关。
-- `--logo` 在 SCSS 指向 `../assets/img/`，在 JS 主题指向 `/assets/images/` —— 两套目录。
-- 死 token：`--color-r0..r9`（20 条声明，0 消费）、`--color-0..9`（20 条，0 消费）、`--line-height-1`、`--comp-font-size`、`--comp-max-width`、`--color-disabled`、`--color-root-bg-l1-lightness`、`--color-root-l1-lightness`。
-- `.csscomb.json` 要求 4 空格缩进 + 双引号，实际代码为 tab + 单引号 —— 配置已失效。
+- **Tokens are spread over three root scopes with no rule**: `:root` (raw channels), `html` (z-index), `body` (assembled colors + spacing + component sizes). Result: contexts outside `<body>`, such as `::backdrop` and the `html` scrollbar, **cannot read any color token**. (Note: the semantic colors' `-lightness` aliases **must** stay on `body`, see the dark-mode bug in 3.3. When unifying scopes, move the `-root-` sources together with them, not just the aliases.)
+- `_goldenratio.scss` hard-codes `992px / 640px / 639px`, unrelated to `_var.screen.scss`.
+- `--logo` points to `../assets/img/` in SCSS but `/assets/images/` in the JS theme: two directories.
+- Dead tokens: `--color-r0..r9` (20 declarations, 0 consumers), `--color-0..9` (20, 0 consumers), `--line-height-1`, `--comp-font-size`, `--comp-max-width`, `--color-disabled`, `--color-root-bg-l1-lightness`, `--color-root-l1-lightness`.
+- `.csscomb.json` requires 4-space indent + double quotes, but the code uses tabs + single quotes: the config is dead.
 
 ---
 
-## 四、结论
+## 4. Conclusion
 
-**本体系已经具备的：** 一条纪律良好的三层值传递链；HSL 通道化让换肤成本降到几个数字；`comp-color()` / `comp-size()` 保证组件契约统一；以及最关键的——**"媒体查询只改变量、不改声明"** 这一响应式范式，已经在 `_grid.scss`、`property.scss`、`_layout.scss` 中反复验证。
+**What the system already has:** a well-disciplined three-layer value chain; HSL channels that cut re-theming to a few numbers; `comp-color()` / `comp-size()` that keep the component contract uniform; and, most important, the responsive pattern **"media queries change variables, never declarations"**, proven repeatedly in `_grid.scss`, `property.scss` and `_layout.scss`.
 
-**尚未打通的：** 这条链在"尺寸随视口连续变化"这一维度上是断的。字号、间距、根字号三者全部是断点无关的常量，响应式只体现在栅格列数与个别宽度上。要达到"在不同设备上都有不错的显示效果"，缺的不是更多断点，而是：
+**What is not connected yet:** the chain is broken on one axis, "size changes continuously with the viewport". Font size, spacing and root font size are all breakpoint-independent constants. Responsiveness shows up only in grid column counts and a few widths. To look good on every device, the missing piece is not more breakpoints but:
 
-1. 把 `--font-size-*` 与 `--g*` 从常量升级为 `clamp()` 表达式（或让它们跟随一个流式根字号）；
-2. 为断点补一层 CSS 变量镜像，顺手修掉 4 处静默失效的 `var(--screen-*)`；
-3. 对"同一组件在不同容器"的场景引入 `@container`，替代部分视口断点；
-4. 统一 token 作用域到 `:root`，让 `::backdrop` 等上下文可用。
+1. Upgrade `--font-size-*` and `--g*` from constants to `clamp()` expressions (or make them follow a fluid root font size);
+2. Add a CSS-variable mirror of the breakpoints, and fix the 4 silent `var(--screen-*)` failures on the way;
+3. Add `@container` for "same component in different containers", replacing some viewport breakpoints;
+4. Unify token scope on `:root`, so contexts like `::backdrop` can use them.
 
-前三条都可以在**不改动任何组件 SCSS**的前提下落地——因为组件从不直接读字号与间距原子，只读 `--<comp>-font-size` 与 `--<comp>-gap`。这正是当前架构留下的最大余地。
+The first three can land **without touching any component SCSS**, because components never read the font-size and spacing atoms directly, only `--<comp>-font-size` and `--<comp>-gap`. This is the biggest room the current architecture leaves.
 
 ---
 
-## 附：文件索引
+## Appendix: File index
 
-| 文件 | 行数 | 职责 |
+| File | Lines | Role |
 |---|---|---|
-| `client/scss/_theme.default.scss` | 263 | 全部 token 权威定义 + 暗色覆盖 |
+| `client/scss/_theme.default.scss` | 263 | Authoritative token definitions + dark overrides |
 | `client/scss/_mixins.scss` | 500+ | `comp-color()` `comp-size()` `color()` `gap-size()` `f1..f7` |
-| `client/scss/_var.screen.scss` | 32 | 断点 SCSS 变量 |
-| `client/scss/_reset.scss` | 120+ | 重置 + z-index token + `color-scheme` |
-| `client/scss/_grid.scss` | 227 | 栅格 token + `.grid-{xs..xl}-{1..6}` 矩阵 |
-| `client/scss/_gap.scss` | 330 | 间距工具类 |
-| `client/scss/_color.scss` | 117 | 颜色工具类 |
-| `client/scss/_typograph.scss` | 60+ | 排版工具类 |
-| `client/scss/_responsive.scss` | 30 | 显隐工具类 |
+| `client/scss/_var.screen.scss` | 32 | Breakpoint SCSS variables |
+| `client/scss/_reset.scss` | 120+ | Reset + z-index tokens + `color-scheme` |
+| `client/scss/_grid.scss` | 227 | Grid tokens + `.grid-{xs..xl}-{1..6}` matrix |
+| `client/scss/_gap.scss` | 330 | Spacing utility classes |
+| `client/scss/_color.scss` | 117 | Color utility classes |
+| `client/scss/_typograph.scss` | 60+ | Typography utility classes |
+| `client/scss/_responsive.scss` | 30 | Show/hide utility classes |
 
 ---
 
-## 附二：修复记录（2026-08-29）
+## Appendix 2: Fix log (2026-08-29)
 
-共改动 13 个 SCSS 文件，**未改动任何组件的样式声明**——全部是 token 定义与引用修正。
+13 SCSS files changed. **No component style declaration was touched**: only token definitions and references were corrected.
 
-### 1. 暗色语义色不生效（最严重）
+### 1. Dark semantic colors not applied (most severe)
 
-根因是 CSS 自定义属性的一条规则：`var()` 在自定义属性中的替换发生在**声明它的那个元素**上、级联结束之后。原代码把别名放在 `:root`：
+Root cause is a CSS custom-property rule: `var()` substitution inside a custom property happens **on the element that declares it**, after the cascade ends. The old code put the alias on `:root`:
 
 ```scss
-:root { --color-major-lightness: var(--color-root-major-lightness); }  /* 在 html 上就冻结成亮色 23% */
-body.theme-dark { --color-root-major-lightness: 50%; }                 /* 改的是 body，已经晚了 */
+:root { --color-major-lightness: var(--color-root-major-lightness); }  /* frozen to light 23% on html */
+body.theme-dark { --color-root-major-lightness: 50%; }                 /* changes body, too late */
 ```
 
-`body` 继承到的是 html 算好的 `23%`，暗色覆盖对 major/minor/safe/danger/tip **全部无效**。
+`body` inherits the `23%` already computed on html, so the dark override had **no effect on any of major/minor/safe/danger/tip**.
 
-修复：把 10 条 `--color-<role>-lightness` / `-lightness-l1` 别名从 `:root` 移到 `body`，与 `-root-` 源同处一个元素，级联后别名才会重新解析。`:root` 与 `body` 两处都留了注释说明原因。
+Fix: move the 10 `--color-<role>-lightness` / `-lightness-l1` aliases from `:root` to `body`, onto the same element as the `-root-` sources, so the aliases re-resolve after the cascade. Comments at both `:root` and `body` explain why.
 
-模拟解析验证（`body.theme-dark`）：
+Resolution check (`body.theme-dark`):
 
-| token | 修复前 | 修复后 |
+| token | before | after |
 |---|---|---|
 | `--color-major` | `hsl(165, 58%, 23%)` | `hsl(165, 58%, 50%)` |
 | `--color-minor` | `hsl(169, 100%, 31%)` | `hsl(169, 100%, 50%)` |
@@ -489,21 +489,21 @@ body.theme-dark { --color-root-major-lightness: 50%; }                 /* 改的
 | `--color-tip` | `hsl(321, 100%, 24%)` | `hsl(321, 100%, 50%)` |
 | `--color-major-l1` | `hsl(165, 58%, 99%)` | `hsl(165, 58%, 10%)` |
 
-亮色模式取值逐一比对，无变化。
+Light-mode values were compared one by one: no change.
 
-### 2. 新增的 token
+### 2. New tokens
 
 ```scss
---font-weight-light: 300;      /* 原先未定义，.text-light 是空操作 */
---font-weight-medium: 500;     /* 原为 400，与 regular 同值 */
---screen-xs-min … --screen-lg-max;   /* 9 个断点的 CSS 变量镜像 */
+--font-weight-light: 300;      /* was undefined, .text-light was a no-op */
+--font-weight-medium: 500;     /* was 400, same as regular */
+--screen-xs-min … --screen-lg-max;   /* CSS-variable mirror of the 9 breakpoints */
 ```
 
-`comp-size()` 的 `.normal` 分支补上 `--#{$name}-font-weight: var(--font-weight-regular)`，一次修好 7 个组件（btn / input / checkbox / radio / selectbox / tab / group-btn）读取未定义 font-weight 的问题。
+The `.normal` branch of `comp-size()` now adds `--#{$name}-font-weight: var(--font-weight-regular)`. This fixes 7 components at once (btn / input / checkbox / radio / selectbox / tab / group-btn) that read an undefined font-weight.
 
-### 3. 引用修正
+### 3. Reference fixes
 
-| 原引用 | 改为 | 处数 |
+| Old reference | Changed to | Count |
 |---|---|---|
 | `var(--color-f)` | `var(--color-root-bg)` | 4 |
 | `var(--color-link-default)` | `var(--color-link)` | 3 |
@@ -514,22 +514,21 @@ body.theme-dark { --color-root-major-lightness: 50%; }                 /* 改的
 | `var(--color-text-2, var(--color-fg-2))` | `var(--color-l1)` | 1 |
 | `var(--color-border, var(--color-bg-l2))` | `var(--color-border)` | 1 |
 | `var(--radius, 0.25rem)` | `var(--radius-0)` | 1 |
-| `var(--g1, 0.25rem)` / `var(--g2, 0.5rem)`（回退值与真实 token 不符） | `var(--g1)` / `var(--g2)` | 4 |
+| `var(--g1, 0.25rem)` / `var(--g2, 0.5rem)` (fallbacks do not match the real token) | `var(--g1)` / `var(--g2)` | 4 |
 | `var(--input-size, 2.5rem)` | `var(--input-size)` | 1 |
 
-那 7 处图标是隐性最广的一个：`$icon-*` 是 SCSS 编译期变量，写成 `var(--icon-*)` 后 `content` 直接失效，分页箭头、下拉箭头、tooltip 的 info/warning/error 图标、loading 转圈图标**全部不显示**。注意要写 `content: $icon-x`（保留引号，产出 `"\f104"`），不能写 `content: #{$icon-x}`（插值会剥掉引号，产出非法标识符）。
+The 7 icon references were the widest hidden bug: `$icon-*` is a SCSS compile-time variable, so writing `var(--icon-*)` made `content` invalid. Pagination arrows, dropdown arrows, tooltip info/warning/error icons and loading spinner icons **all failed to show**. Write `content: $icon-x` (keeps the quotes, outputs `"\f104"`), not `content: #{$icon-x}` (interpolation strips the quotes and outputs an invalid identifier).
 
-### 4. 字体
+### 4. Fonts
 
-删掉了指向 `Roboto-Regular.woff2` 的 700 字重 `@font-face`。声明一个「真」粗体会让浏览器跳过合成、直接用常规字形，粗体因此与常规完全同形；留空 700 则由引擎从 400 合成假粗体。仓库里确实没有 `Roboto-Bold.woff2`（只有 Regular 与 Thin），已在文件内留注释说明补字体文件时该怎么改回。
+Removed the weight-700 `@font-face` that pointed at `Roboto-Regular.woff2`. Declaring a "real" bold makes the browser skip synthesis and use the regular glyphs, so bold looked identical to regular. With 700 left undeclared, the engine synthesizes a faux bold from 400. The repo has no `Roboto-Bold.woff2` (only Regular and Thin). A comment in the file explains how to restore it when the font file is added.
 
-### 5. 一致性
+### 5. Consistency
 
-`--section-gap-y` 的 body 级默认值 `--g4` → `--g5`，与 `gap-size()` 的 `.normal` 分支对齐（`.section` `.panel` `.grid` `.flex` 都会 include 它，`.normal` 才是实际生效值）。
+The body-level default of `--section-gap-y` changed `--g4` → `--g5`, matching the `.normal` branch of `gap-size()` (`.section` `.panel` `.grid` `.flex` all include it, and `.normal` is the effective value).
 
-### 验证
+### Verification
 
-- 5 个 SCSS 入口（`index` `base` `property` `property.article` `animation`）全部编译通过。
-- 全量 token 审计：**未定义却被消费的自定义属性从 27 个降到 0 个**。
-- 自定义属性解析模拟：亮色 / 暗色两种状态下 `body` 上均无 `INVALID` 解析结果。
-
+- All 5 SCSS entries (`index` `base` `property` `property.article` `animation`) compile.
+- Full token audit: **custom properties consumed but undefined dropped from 27 to 0**.
+- Custom-property resolution simulation: no `INVALID` result on `body` in light or dark.

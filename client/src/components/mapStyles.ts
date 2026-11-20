@@ -183,7 +183,7 @@ export const activeMapStyle: google.maps.MapTypeStyle[] = [
 	},
 ];
 
-/** Cool 高级灰 night palette. Hue ~216, low chroma; parks and water stay slightly tinted. */
+/** Cool premium-gray night palette. Hue ~216, low chroma; parks and water stay slightly tinted. */
 export const activeMapStyleDark: google.maps.MapTypeStyle[] = [
 	{
 		elementType: 'geometry',
