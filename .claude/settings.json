@@ -58,6 +58,16 @@
 				"hooks": [
 					{
 						"type": "command",
+						"command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/fix-on-edit.mjs",
+						"timeout": 30
+					}
+				]
+			},
+			{
+				"matcher": "Edit|Write|MultiEdit",
+				"hooks": [
+					{
+						"type": "command",
 						"command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-vue-no-style.mjs",
 						"timeout": 10
 					}

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Format and auto-fix staged files, then re-stage them. Same script as the Claude hook.
+files=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$files" ] && exit 0
+node scripts/fix-files.mjs $files || exit 1
+git add $files

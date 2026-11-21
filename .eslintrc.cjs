@@ -13,11 +13,7 @@ module.exports = {
 		workbox: true,
 		importScripts: true,
 	},
-	extends: 'eslint:recommended',
-	rules: {
-		semi: ['error', 'always'],
-		quotes: ['error', 'single'],
-	},
+	extends: ['eslint:recommended', 'prettier'],
 	parserOptions: {
 		ecmaVersion: 2022,
 		sourceType: 'module',

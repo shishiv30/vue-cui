@@ -6,6 +6,8 @@ The normative coding standards. If a skill or doc says otherwise, follow this fi
 
 `.prettierrc` and `.eslintrc.cjs` are the source of truth: tabs, single quotes, semicolons, trailing commas, 100-column lines. TypeScript is preferred for new or heavily changed modules.
 
+Prettier formats, ESLint corrects (js only). `scripts/fix-files.mjs` (`npm run fix -- <files>`) runs both; the Claude `fix-on-edit` hook and `.githooks/pre-commit` call it, so humans and AI get the same output. Enable the git hook once: `git config core.hooksPath .githooks`.
+
 ## Naming Conventions
 
 | Type | Pattern | Example |
