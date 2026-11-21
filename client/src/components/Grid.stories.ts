@@ -71,7 +71,8 @@ const meta = {
 		xs: {
 			control: { type: 'inline-radio', labels: columnLabels('grid-xs') },
 			options: columns,
-			description: 'Columns at every width. `grid-xs-1` through `grid-xs-6`. Empty leaves the default.',
+			description:
+				'Columns at every width. `grid-xs-1` through `grid-xs-6`. Empty leaves the default.',
 			table: { category: 'props' },
 		},
 		sm: {

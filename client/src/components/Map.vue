@@ -3,7 +3,13 @@
 		<div ref="canvasEl" class="map-canvas"></div>
 		<div ref="popEl" class="map-pop" :class="{ glide }" :data-placement="placement">
 			<Transition name="map-pop">
-				<div v-if="popMarker" ref="cardEl" class="map-pop-card" role="dialog" :aria-label="popMarker.title || 'Details'">
+				<div
+					v-if="popMarker"
+					ref="cardEl"
+					class="map-pop-card"
+					role="dialog"
+					:aria-label="popMarker.title || 'Details'"
+				>
 					<div class="map-pop-body">
 						<slot name="popover" :marker="popMarker">
 							<Article v-if="popMarker.article" :model="popMarker.article" />
@@ -13,7 +19,9 @@
 							</div>
 						</slot>
 					</div>
-					<button type="button" class="map-pop-close" aria-label="Close" @click="closePopover">&times;</button>
+					<button type="button" class="map-pop-close" aria-label="Close" @click="closePopover">
+						&times;
+					</button>
 					<span class="map-pop-arrow"></span>
 				</div>
 			</Transition>
@@ -23,7 +31,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useSlots, watch } from 'vue';
+import {
+	computed,
+	nextTick,
+	onBeforeUnmount,
+	onMounted,
+	ref,
+	shallowRef,
+	useSlots,
+	watch,
+} from 'vue';
 import Article from './Article.vue';
 import type { MapBounds, MapLatLng, MapMarker, MapUiModel } from './mapModel';
 import { decodePolylines } from './mapPolyline';
@@ -45,7 +62,7 @@ const emit = defineEmits<{
 	/** Pan or zoom finished. */
 	'bounds-change': [bounds: MapBounds, zoom: number];
 	/** A pin was picked, or the popover was closed (close button, Escape or a click on the map). `null` means nothing is selected. */
-	'select': [id: string | null];
+	select: [id: string | null];
 	/** Street View overlay could not be opened for the current center. */
 	'streetview-error': [];
 }>();
@@ -166,9 +183,7 @@ function closedRing(ring: MapLatLng[]) {
 }
 
 function boundaryRings(): MapLatLng[][] {
-	const decoded = props.model.boundaryEncoded
-		? decodePolylines(props.model.boundaryEncoded)
-		: [];
+	const decoded = props.model.boundaryEncoded ? decodePolylines(props.model.boundaryEncoded) : [];
 	return [...decoded, ...(props.model.boundary ?? [])].filter((ring) => ring.length >= 3);
 }
 
@@ -439,9 +454,8 @@ function syncSelected() {
 	const id = props.model.selectedId;
 	for (const [key, entry] of pins) {
 		entry.el.classList.toggle('on', key === id);
-		entry.el.style.zIndex = key === id
-			? '2147483646'
-			: (entry.data.zIndex != null ? String(entry.data.zIndex) : '');
+		entry.el.style.zIndex =
+			key === id ? '2147483646' : entry.data.zIndex != null ? String(entry.data.zIndex) : '';
 	}
 }
 
@@ -454,7 +468,11 @@ function placePopover() {
 	const card = cardEl.value;
 	const canvas = canvasEl.value;
 	const entry = popMarker.value ? pins.get(popMarker.value.id) : undefined;
-	const point = entry && overlay?.getProjection()?.fromLatLngToContainerPixel(new google.maps.LatLng(entry.data.position));
+	const point =
+		entry &&
+		overlay
+			?.getProjection()
+			?.fromLatLngToContainerPixel(new google.maps.LatLng(entry.data.position));
 	if (!outer || !card || !canvas || !entry || !point) {
 		return null;
 	}
@@ -469,7 +487,10 @@ function placePopover() {
 	const roomBelow = height - pinBottom - POP_GAP - POP_MARGIN;
 	const above = roomAbove >= h || (roomBelow < h && roomAbove >= roomBelow);
 	const y = above ? pinTop - POP_GAP - h : pinBottom + POP_GAP;
-	const x = Math.min(Math.max(point.x - w / 2, POP_MARGIN), Math.max(width - w - POP_MARGIN, POP_MARGIN));
+	const x = Math.min(
+		Math.max(point.x - w / 2, POP_MARGIN),
+		Math.max(width - w - POP_MARGIN, POP_MARGIN),
+	);
 	const arrow = Math.min(Math.max(point.x - x, 16), Math.max(w - 16, 16));
 	outer.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
 	outer.style.setProperty('--arrow-x', `${Math.round(arrow)}px`);
@@ -594,11 +615,7 @@ function mapOptions(): google.maps.MapOptions {
 	if (m.mapId) {
 		options.mapId = m.mapId;
 	} else {
-		options.styles = mapStyleRules(
-			m.mapStyle ?? defaultMapStyle,
-			isDarkUi(),
-			m.hidePoi !== false,
-		);
+		options.styles = mapStyleRules(m.mapStyle ?? defaultMapStyle, isDarkUi(), m.hidePoi !== false);
 	}
 	return options;
 }
@@ -716,7 +733,7 @@ watch(popMarker, async (current, previous) => {
 });
 watch(
 	() => props.model.fitMarkers,
-	(on) => on && scheduleFit(0)
+	(on) => on && scheduleFit(0),
 );
 watch(
 	() => [props.model.mapStyle ?? defaultMapStyle, props.model.hidePoi !== false],
@@ -741,7 +758,7 @@ watch(
 				m.setZoom(props.model.zoom);
 			}
 		}
-	}
+	},
 );
 
 onBeforeUnmount(() => {

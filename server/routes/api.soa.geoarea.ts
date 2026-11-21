@@ -62,7 +62,10 @@ export async function getCountiesByStateCode(stateCode, query = {}) {
 
 async function getCountiesByStateCodeHandler(req, res) {
 	try {
-		sendJson(res, mapSoaCountiesResponse(await getCountiesByStateCode(req.params.stateCode, req.query)));
+		sendJson(
+			res,
+			mapSoaCountiesResponse(await getCountiesByStateCode(req.params.stateCode, req.query)),
+		);
 	} catch (error) {
 		handleSoaError(res, error);
 	}
@@ -148,7 +151,10 @@ export async function getNearbyCitiesByCityId(cityId, query = {}) {
 
 async function getNearbyCitiesByCityIdHandler(req, res) {
 	try {
-		sendJson(res, mapSoaCitiesResponse(await getNearbyCitiesByCityId(req.params.cityId, req.query)));
+		sendJson(
+			res,
+			mapSoaCitiesResponse(await getNearbyCitiesByCityId(req.params.cityId, req.query)),
+		);
 	} catch (error) {
 		handleSoaError(res, error);
 	}
@@ -245,7 +251,10 @@ async function getZipcodesByCityIdHandler(req, res) {
 // Explicit routes (order matters: specific before catch-all)
 router.get('/states', getStatesHandler);
 router.get('/state/:stateCode/counties', getCountiesByStateCodeHandler);
-router.get('/statecode/:stateCode/countyid/:countyId/nearcounties', getNearbyCountiesByCountyIdHandler);
+router.get(
+	'/statecode/:stateCode/countyid/:countyId/nearcounties',
+	getNearbyCountiesByCountyIdHandler,
+);
 router.get('/state/:stateCode/cities', getCitiesByStateHandler);
 router.get('/county/:countyId/cities', getCitiesByCountyIdHandler);
 router.get('/city/:cityId/nearbycities', getNearbyCitiesByCityIdHandler);

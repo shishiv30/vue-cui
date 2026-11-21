@@ -8,10 +8,7 @@
 export function prefixRootRelativeUrls(html: any, basePath: any) {
 	if (!html || !basePath) return html;
 	const base = (basePath.startsWith('/') ? basePath : `/${basePath}`).replace(/\/$/, '');
-	return html.replace(
-		/(\s(?:href|src|content|action)=["'])\/(?!\/)/gi,
-		`$1${base}/`,
-	);
+	return html.replace(/(\s(?:href|src|content|action)=["'])\/(?!\/)/gi, `$1${base}/`);
 }
 
 /**

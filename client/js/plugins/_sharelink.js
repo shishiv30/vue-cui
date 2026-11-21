@@ -7,9 +7,7 @@
 const SHARE_WINDOW_OPTS = 'toolbar=0,status=0,width=626,height=436';
 
 function hasNativeShare() {
-	return (
-		typeof navigator !== 'undefined' && typeof navigator.share === 'function'
-	);
+	return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 }
 
 const NATIVE_SHARE_ITEM = {
@@ -42,12 +40,7 @@ function getShareUrl(platformId, url, text, subject) {
 		case 'whatsapp':
 			return 'https://wa.me/?text=' + encodedUrl;
 		case 'email':
-			return (
-				'mailto:?subject=' +
-				encodeURIComponent(subject || '') +
-				'&body=' +
-				encodedUrl
-			);
+			return 'mailto:?subject=' + encodeURIComponent(subject || '') + '&body=' + encodedUrl;
 		default:
 			return '#';
 	}
@@ -80,9 +73,7 @@ function buildBar(opt) {
 		opt.platforms && Array.isArray(opt.platforms) && opt.platforms.length
 			? PLATFORMS.filter((p) => opt.platforms.includes(p.id))
 			: PLATFORMS;
-	const withNative = hasNativeShare()
-		? [NATIVE_SHARE_ITEM].concat(platforms)
-		: platforms;
+	const withNative = hasNativeShare() ? [NATIVE_SHARE_ITEM].concat(platforms) : platforms;
 
 	const items = withNative
 		.map(
@@ -97,13 +88,11 @@ function buildBar(opt) {
 				'" aria-hidden="true"></i>' +
 				'<span class="sharelink-label">' +
 				p.label +
-				'</span></a>'
+				'</span></a>',
 		)
 		.join('');
 
-	return (
-		'<div class="sharelink-bar" role="group" aria-label="Share">' + items + '</div>'
-	);
+	return '<div class="sharelink-bar" role="group" aria-label="Share">' + items + '</div>';
 }
 
 export default {

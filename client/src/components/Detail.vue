@@ -14,11 +14,7 @@
 				<h1 v-if="model?.title && shown >= 0" class="h4 m-t-3" :class="revealClass">
 					{{ model.title }}
 				</h1>
-				<DetailBodyTags
-					v-if="model?.tags && shown >= 1"
-					:model="model.tags"
-					:class="revealClass"
-				/>
+				<DetailBodyTags v-if="model?.tags && shown >= 1" :model="model.tags" :class="revealClass" />
 				<DetailBodySlider
 					v-if="model?.album && shown >= 2"
 					:model="model.album"
@@ -69,15 +65,18 @@ const shown = ref(6);
 const revealClass = computed(() => (props.reveal ? 'detail-reveal' : undefined));
 let revealTimer = 0;
 
-watch(() => props.reveal, (reveal, previous) => {
-	clearTimeout(revealTimer);
-	if (!reveal || previous === undefined) {
-		shown.value = 6;
-		return;
-	}
-	shown.value = -1;
-	stepReveal(0);
-});
+watch(
+	() => props.reveal,
+	(reveal, previous) => {
+		clearTimeout(revealTimer);
+		if (!reveal || previous === undefined) {
+			shown.value = 6;
+			return;
+		}
+		shown.value = -1;
+		stepReveal(0);
+	},
+);
 
 function stepReveal(step: number) {
 	if (!props.reveal) {

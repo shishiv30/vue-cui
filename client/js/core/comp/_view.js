@@ -82,10 +82,10 @@ export default {
 			var animateFrame = opt.horizontal
 				? {
 						transform: 'translateX(' + offset + 'px)',
-				  }
+					}
 				: {
 						transform: 'translateY(' + offset + 'px)',
-				  };
+					};
 			if (animation) {
 				isAnimating = true;
 				$wrapper.classList.add('animating');
@@ -220,8 +220,7 @@ export default {
 			}
 			_scroll(currPos, true)
 				.then(function () {
-					opt.onchange &&
-						emit(opt.onchange, $this, opt, exportObj, currPos, prePos, info);
+					opt.onchange && emit(opt.onchange, $this, opt, exportObj, currPos, prePos, info);
 					prePos = currPos;
 				})
 				.always(function () {

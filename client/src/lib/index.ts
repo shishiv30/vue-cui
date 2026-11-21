@@ -49,7 +49,14 @@ export {
 
 export type { FormEnumOption } from '../components/formEnumOption';
 export type { ArticleUiModel, ArticleAttr, ArticleTag } from '../components/articleModel';
-export type { MapUiModel, MapMarker, MapPinTheme, MapLatLng, MapBounds, MapType } from '../components/mapModel';
+export type {
+	MapUiModel,
+	MapMarker,
+	MapPinTheme,
+	MapLatLng,
+	MapBounds,
+	MapType,
+} from '../components/mapModel';
 export type { MapStyleName, MapStyleSetting, MapStyleOverlay } from '../components/mapStyles';
 export { mapStyleList, defaultMapStyle, mapStyleOverlay } from '../components/mapStyles';
 export type {
@@ -89,7 +96,13 @@ const components = {
 	Welcome,
 };
 
-const directives: Record<string, Directive> = { autocomplete, collapse, lazyload, tab, tooltip } as Record<string, Directive>;
+const directives: Record<string, Directive> = {
+	autocomplete,
+	collapse,
+	lazyload,
+	tab,
+	tooltip,
+} as Record<string, Directive>;
 
 export default {
 	install(app: App) {

@@ -9,7 +9,10 @@ export function normalizeClientIp(ip: any) {
 	if (!ip) {
 		return '';
 	}
-	return String(ip).replace(/^::ffff:/i, '').split(',')[0].trim();
+	return String(ip)
+		.replace(/^::ffff:/i, '')
+		.split(',')[0]
+		.trim();
 }
 
 /**

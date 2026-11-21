@@ -12,11 +12,11 @@ export function scaleStops(
 	const end = Number(max);
 	const size = Number(step);
 	if (
-		!Number.isFinite(start)
-		|| !Number.isFinite(end)
-		|| !Number.isFinite(size)
-		|| size <= 0
-		|| end < start
+		!Number.isFinite(start) ||
+		!Number.isFinite(end) ||
+		!Number.isFinite(size) ||
+		size <= 0 ||
+		end < start
 	) {
 		return [];
 	}

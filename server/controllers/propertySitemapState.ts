@@ -1,9 +1,5 @@
 // @ts-nocheck
-import {
-	getBreadcrumbByGeo,
-	getCountiesForSitemap,
-	getStateFullName,
-} from '../../helpers/geo.js';
+import { getBreadcrumbByGeo, getCountiesForSitemap, getStateFullName } from '../../helpers/geo.js';
 import { getGeoData } from '../../data/index.js';
 import { sitemapUiData } from '../page/sitemapUi.js';
 

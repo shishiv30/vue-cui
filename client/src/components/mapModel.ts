@@ -5,7 +5,8 @@ import { defaultMapStyle, type MapStyleName } from './mapStyles';
 export type MapType = 'roadmap' | 'satellite' | 'hybrid' | 'terrain';
 export type { MapStyleName };
 /** Palette class on a pin. `primary` is the same as `major`. */
-export type MapPinTheme = 'default' | 'gray' | 'primary' | 'major' | 'minor' | 'danger' | 'safe' | 'tip';
+export type MapPinTheme =
+	'default' | 'gray' | 'primary' | 'major' | 'minor' | 'danger' | 'safe' | 'tip';
 
 export interface MapLatLng {
 	lat: number;

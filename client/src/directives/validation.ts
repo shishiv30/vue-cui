@@ -14,7 +14,7 @@ const stateMap = new WeakMap<Field, ValidationState>();
 function readValue(el: Field) {
 	if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio')) {
 		const value = el.getAttribute('value');
-		return el.checked ? (value || 'on') : '';
+		return el.checked ? value || 'on' : '';
 	}
 	return el.value;
 }
@@ -106,7 +106,10 @@ function parseRules(value: unknown) {
 	if (typeof value !== 'string' || !value) {
 		return [];
 	}
-	return value.split('|').map((rule) => rule.trim()).filter(Boolean);
+	return value
+		.split('|')
+		.map((rule) => rule.trim())
+		.filter(Boolean);
 }
 
 const validation: Directive<Field, string> = {

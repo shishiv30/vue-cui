@@ -37,9 +37,9 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Article layout. model is default, horizontal, grid, or ring. '
-					+ 'data is the article list. Grid switches articleMode between card and thumbnail. '
-					+ 'Other models keep articleMode at default. setModel calls that method.',
+					'Article layout. model is default, horizontal, grid, or ring. ' +
+					'data is the article list. Grid switches articleMode between card and thumbnail. ' +
+					'Other models keep articleMode at default. setModel calls that method.',
 			},
 		},
 	},
@@ -67,7 +67,8 @@ const meta = {
 			control: 'inline-radio',
 			options: ['card', 'thumbnail'],
 			if: { arg: 'model', eq: 'grid' },
-			description: 'Grid only. card adds article-card. thumbnail adds article-thumbnail. Other layout models use default.',
+			description:
+				'Grid only. card adds article-card. thumbnail adds article-thumbnail. Other layout models use default.',
 			table: { category: 'props', type: { summary: "'default' | 'card' | 'thumbnail'" } },
 		},
 		imageRatio: {
@@ -79,8 +80,8 @@ const meta = {
 			control: 'inline-radio',
 			options: modes,
 			description:
-				'default is a waterfall. horizontal is a sideways strip. '
-				+ 'grid shares one card height. ring is a draggable carousel.',
+				'default is a waterfall. horizontal is a sideways strip. ' +
+				'grid shares one card height. ring is a draggable carousel.',
 			table: {
 				category: 'props',
 				type: { summary: "'default' | 'horizontal' | 'grid' | 'ring'" },

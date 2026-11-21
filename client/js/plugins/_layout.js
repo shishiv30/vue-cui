@@ -24,9 +24,8 @@ function gridColumnCount(main) {
 	const style = getComputedStyle(main);
 	const gap = parseFloat(style.columnGap) || 0;
 	const min = parseFloat(style.getPropertyValue('--layout-grid-min')) || 260;
-	const width = main.clientWidth
-		- (parseFloat(style.paddingLeft) || 0)
-		- (parseFloat(style.paddingRight) || 0);
+	const width =
+		main.clientWidth - (parseFloat(style.paddingLeft) || 0) - (parseFloat(style.paddingRight) || 0);
 	if (min + gap <= 0) {
 		return 1;
 	}
@@ -39,7 +38,7 @@ function bindGrid(main) {
 	}
 	const firstCount = main.classList.contains('layout-grid')
 		? gridColumnCount(main)
-		: (parseInt(getComputedStyle(main).columnCount, 10) || 1);
+		: parseInt(getComputedStyle(main).columnCount, 10) || 1;
 	let lastCols = firstCount;
 	let lastRects = [...main.querySelectorAll(':scope > .article')].map((article) => {
 		return article.getBoundingClientRect();
@@ -51,7 +50,7 @@ function bindGrid(main) {
 		}
 		const cols = main.classList.contains('layout-grid')
 			? gridColumnCount(main)
-			: (parseInt(getComputedStyle(main).columnCount, 10) || 1);
+			: parseInt(getComputedStyle(main).columnCount, 10) || 1;
 		const articles = [...main.querySelectorAll(':scope > .article')];
 		if (cols === lastCols || articles.length !== lastRects.length) {
 			lastCols = cols;
@@ -145,9 +144,7 @@ function mountRing(main) {
 	const step = 360 / count;
 	const cardWidth = 300;
 	const theta = Math.tan(Math.PI / count);
-	const radius = theta > 0.01
-		? Math.round((cardWidth / 2) / theta)
-		: cardWidth;
+	const radius = theta > 0.01 ? Math.round(cardWidth / 2 / theta) : cardWidth;
 	frame.style.setProperty('--ring-radius', radius + 'px');
 	articles.forEach((article, index) => {
 		article.style.setProperty('--ring-angle', index * step + 'deg');
@@ -224,7 +221,12 @@ function bindRingDrag(stage, radius, articles, step) {
 		}
 	});
 	function resetPointer(reason, event) {
-		if (event && event.pointerId !== undefined && pointerId !== null && event.pointerId !== pointerId) {
+		if (
+			event &&
+			event.pointerId !== undefined &&
+			pointerId !== null &&
+			event.pointerId !== pointerId
+		) {
 			return;
 		}
 		const id = pointerId;
@@ -243,16 +245,20 @@ function bindRingDrag(stage, radius, articles, step) {
 	stage.addEventListener('pointercancel', (event) => resetPointer(event.type, event));
 	stage.addEventListener('lostpointercapture', (event) => resetPointer(event.type, event));
 	window.addEventListener('blur', () => resetPointer('blur', null));
-	stage.addEventListener('wheel', (event) => {
-		if (Math.abs(event.deltaY) >= Math.abs(event.deltaX)) {
-			return;
-		}
-		event.preventDefault();
-		spin -= (event.deltaX / radius) * radians;
-		if (!frame) {
-			frame = requestAnimationFrame(paint);
-		}
-	}, { passive: false });
+	stage.addEventListener(
+		'wheel',
+		(event) => {
+			if (Math.abs(event.deltaY) >= Math.abs(event.deltaX)) {
+				return;
+			}
+			event.preventDefault();
+			spin -= (event.deltaX / radius) * radians;
+			if (!frame) {
+				frame = requestAnimationFrame(paint);
+			}
+		},
+		{ passive: false },
+	);
 }
 
 function playLayoutMove(main, apply) {
@@ -270,8 +276,8 @@ function playLayoutMove(main, apply) {
 	articles.forEach((article, index) => {
 		const next = article.getBoundingClientRect();
 		const prev = from[index];
-		const dx = (prev.left + prev.width / 2) - (next.left + next.width / 2);
-		const dy = (prev.top + prev.height / 2) - (next.top + next.height / 2);
+		const dx = prev.left + prev.width / 2 - (next.left + next.width / 2);
+		const dy = prev.top + prev.height / 2 - (next.top + next.height / 2);
 		article.style.transition = 'none';
 		article.style.transform = `translate(${dx}px, ${dy}px) ${destinations[index]}`;
 	});
@@ -300,8 +306,8 @@ export default {
 		if ($el.classList.contains('layout-grid')) {
 			exportObj.model = 'grid';
 		} else if (
-			$el.classList.contains('layout-horizontal')
-			|| $el.classList.contains('layout-ring')
+			$el.classList.contains('layout-horizontal') ||
+			$el.classList.contains('layout-ring')
 		) {
 			exportObj.model = 'horizontal';
 		} else {

@@ -54,15 +54,13 @@ export default {
 			if (opt.data && opt.data.length) {
 				if (isDesc) {
 					opt.data = opt.data.sort(function (a, b) {
-						return _getRawValue(a[column.key], column) >
-							_getRawValue(b[column.key], column)
+						return _getRawValue(a[column.key], column) > _getRawValue(b[column.key], column)
 							? 1
 							: -1;
 					});
 				} else {
 					opt.data = opt.data.sort(function (a, b) {
-						return _getRawValue(a[column.key], column) <
-							_getRawValue(b[column.key], column)
+						return _getRawValue(a[column.key], column) < _getRawValue(b[column.key], column)
 							? 1
 							: -1;
 					});
@@ -85,9 +83,7 @@ export default {
 					let $td = $('<th></th>');
 					if (column.sortable) {
 						let $link = $(
-							'<button type="button:;" class="datatable-sort">' +
-								display +
-								'</button>',
+							'<button type="button:;" class="datatable-sort">' + display + '</button>',
 						);
 						$link.data('column', column);
 						$link.addEventListener('click', function () {

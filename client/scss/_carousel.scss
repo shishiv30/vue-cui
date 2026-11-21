@@ -41,12 +41,16 @@
 
 		&.prev {
 			left: 15px;
-			transition: opacity, left 0.5s linear;
+			transition:
+				opacity,
+				left 0.5s linear;
 		}
 
 		&.next {
 			right: 15px;
-			transition: opacity, right 0.5s linear;
+			transition:
+				opacity,
+				right 0.5s linear;
 		}
 	}
 
@@ -74,7 +78,7 @@
 }
 
 [data-role*='scrollbar']:not(.moving) {
-	>* {
+	> * {
 		scroll-snap-align: start;
 	}
 }
@@ -91,7 +95,7 @@
 
 		&:not(.center) {
 			[data-role*='scrollbar'] {
-				>* {
+				> * {
 					scroll-snap-align: start;
 				}
 			}
@@ -99,7 +103,7 @@
 
 		&.center {
 			[data-role*='scrollbar'] {
-				>* {
+				> * {
 					scroll-snap-align: center;
 				}
 			}
@@ -119,43 +123,43 @@
 	@include hidden-scrollbar();
 	max-height: 30vh;
 
-	>* {
+	> * {
 		flex-shrink: 0;
 	}
 
 	&[count] {
-		>* {
+		> * {
 			height: 100% !important;
 			width: 100% !important;
 		}
 	}
 
 	&[count='1'] {
-		>* {
+		> * {
 			flex: 0 0 100%;
 		}
 	}
 
 	&[count='2'] {
-		>* {
+		> * {
 			flex: 0 0 50%;
 		}
 	}
 
 	&[count='3'] {
-		>* {
+		> * {
 			flex: 0 0 33.333333%;
 		}
 	}
 
 	&[count='4'] {
-		>* {
+		> * {
 			flex: 0 0 25%;
 		}
 	}
 
 	&[count='5'] {
-		>* {
+		> * {
 			flex: 0 0 20%;
 		}
 	}

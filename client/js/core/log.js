@@ -1,7 +1,6 @@
 // script lib - console log (dev-only; production uses no-op exports)
 
-const DEV =
-	typeof window !== 'undefined' && window.location.protocol === 'http:';
+const DEV = typeof window !== 'undefined' && window.location.protocol === 'http:';
 
 const noop = () => {};
 
@@ -115,9 +114,7 @@ export const logPluginPhase = DEV
 	? function logPluginPhase(pluginName, phase, $el, options, exportObj) {
 			logInfoImpl(`[Plugin] ${phase}`, {
 				plugin: pluginName,
-				...(options?.role && options.role !== pluginName
-					? { dataRole: options.role }
-					: {}),
+				...(options?.role && options.role !== pluginName ? { dataRole: options.role } : {}),
 				...buildPluginTarget($el),
 				...(exportObj?._pid && { pid: exportObj._pid }),
 			});

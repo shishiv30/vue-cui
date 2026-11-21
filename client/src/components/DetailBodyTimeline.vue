@@ -4,11 +4,7 @@
 			<h2 v-if="model.heading" class="f4">{{ model.heading }}</h2>
 			<div v-if="model.intro">{{ model.intro }}</div>
 			<ul class="section-timeline">
-				<li
-					v-for="(entry, index) in model.entries"
-					:key="index"
-					:class="entry.type"
-				>
+				<li v-for="(entry, index) in model.entries" :key="index" :class="entry.type">
 					<template v-if="entry.type === 'title'">
 						<b>{{ entry.label }}</b>
 						<div></div>

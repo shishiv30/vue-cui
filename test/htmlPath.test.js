@@ -25,7 +25,10 @@ describe('htmlPath', () => {
 
 	test('stripAppBase and withAppBase round-trip a deploy prefix', () => {
 		assert.equal(stripAppBase('/pure/property/tx/houston', '/pure'), '/property/tx/houston');
-		assert.equal(stripAppBase('/subdomain/property/detail/tx/a/b', '/subdomain'), '/property/detail/tx/a/b');
+		assert.equal(
+			stripAppBase('/subdomain/property/detail/tx/a/b', '/subdomain'),
+			'/property/detail/tx/a/b',
+		);
 		assert.equal(stripAppBase('/property/tx', '/pure'), '/property/tx');
 		assert.equal(stripAppBase('/purely/property', '/pure'), '/purely/property');
 		assert.equal(withAppBase('/property/tx', '/pure'), '/pure/property/tx');

@@ -29,7 +29,12 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.8);
+		background-color: hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.8
+		);
 		z-index: var(--ui-modal-overlay);
 	}
 
@@ -83,7 +88,7 @@
 		.modal-body {
 			padding: 0;
 
-			>div {
+			> div {
 				padding: var(--g2);
 				color: var(--color-l1);
 			}
@@ -92,14 +97,14 @@
 		ul {
 			z-index: 10;
 
-			>li {
+			> li {
 				margin: 0;
 				padding: 0;
 				text-align: left;
 				font-size: var(--font-size-4);
 
 				a {
-					>i {
+					> i {
 						float: left;
 						font-size: var(--font-size-3);
 					}

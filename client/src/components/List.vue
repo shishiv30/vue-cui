@@ -1,20 +1,15 @@
 <template>
-	<ul
-		v-if="model.items.length"
-		ref="rootEl"
-		class="list"
-		:class="[model.size, model.className]"
-	>
+	<ul v-if="model.items.length" ref="rootEl" class="list" :class="[model.size, model.className]">
 		<li v-for="(item, index) in model.items" :key="index">
-			<button
-				type="button"
-				class="list-item"
-				:class="item.className"
-				@click="onClick(item, index)"
-			>
+			<button type="button" class="list-item" :class="item.className" @click="onClick(item, index)">
 				<span class="list-icon" :class="[item.theme, { 'list-icon-image': item.image }]">
 					<img v-if="item.image" :src="item.image" :alt="item.imageAlt ?? ''" />
-					<i v-else-if="item.icon" :class="item.icon" role="img" :aria-label="iconLabel(item.icon)"></i>
+					<i
+						v-else-if="item.icon"
+						:class="item.icon"
+						role="img"
+						:aria-label="iconLabel(item.icon)"
+					></i>
 				</span>
 				<span class="list-body">
 					<span v-if="item.sub" class="list-sub">{{ item.sub }}</span>
@@ -47,7 +42,10 @@ const rootEl = ref<HTMLElement | null>(null);
 /** Readable name of the glyph itself, e.g. `icon-folder-o` becomes "folder". */
 function iconLabel(icon = '') {
 	const name = icon.split(/\s+/).find((cls) => cls.startsWith('icon-')) ?? '';
-	return name.replace(/^icon-/, '').replace(/-o$/, '').replace(/-/g, ' ');
+	return name
+		.replace(/^icon-/, '')
+		.replace(/-o$/, '')
+		.replace(/-/g, ' ');
 }
 
 function onClick(item: ListItem, index: number) {

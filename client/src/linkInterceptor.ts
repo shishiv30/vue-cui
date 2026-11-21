@@ -7,22 +7,15 @@ import type { Router } from 'vue-router';
 export function installLinkInterceptor(router: Router, root: Document | HTMLElement = document) {
 	const onClick = (event: Event) => {
 		const e = event as MouseEvent;
-		if (
-			e.defaultPrevented
-			|| e.button !== 0
-			|| e.metaKey
-			|| e.ctrlKey
-			|| e.shiftKey
-			|| e.altKey
-		) {
+		if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
 			return;
 		}
 		const anchor = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
 		if (
-			!anchor
-			|| (anchor.target && anchor.target !== '_self')
-			|| anchor.hasAttribute('download')
-			|| anchor.origin !== window.location.origin
+			!anchor ||
+			(anchor.target && anchor.target !== '_self') ||
+			anchor.hasAttribute('download') ||
+			anchor.origin !== window.location.origin
 		) {
 			return;
 		}

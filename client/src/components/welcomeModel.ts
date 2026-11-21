@@ -8,7 +8,13 @@ export type WelcomePanelPosition = 'ne' | 'nw' | 'se' | 'sw';
 
 export const welcomePositions: WelcomePanelPosition[] = ['nw', 'ne', 'sw', 'se'];
 
-export const welcomeAnimations: WelcomeAnimation[] = ['fadein', 'flyin', 'jumpin', 'rotatein', 'zoomin'];
+export const welcomeAnimations: WelcomeAnimation[] = [
+	'fadein',
+	'flyin',
+	'jumpin',
+	'rotatein',
+	'zoomin',
+];
 
 export interface WelcomePanel {
 	/** Main line, for example the value. */

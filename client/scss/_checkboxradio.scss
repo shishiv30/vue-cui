@@ -26,11 +26,11 @@
 		margin-right: var(--g3);
 		user-select: none;
 
-		>input {
+		> input {
 			display: none;
 		}
 
-		>span {
+		> span {
 			display: inline-flex;
 			align-items: center;
 
@@ -41,7 +41,7 @@
 			}
 		}
 
-		input:disabled+span {
+		input:disabled + span {
 			color: var(--color-l1);
 		}
 
@@ -52,11 +52,11 @@
 }
 
 .checkbox {
-	input+span::before {
+	input + span::before {
 		content: $icon-square-o;
 	}
 
-	input:checked+span::before {
+	input:checked + span::before {
 		content: $icon-check-square;
 	}
 
@@ -66,11 +66,11 @@
 }
 
 .radio {
-	input+span::before {
+	input + span::before {
 		content: $icon-circle-thin;
 	}
 
-	input:checked+span::before {
+	input:checked + span::before {
 		content: $icon-check-circle;
 	}
 }

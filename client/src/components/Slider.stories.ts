@@ -95,13 +95,11 @@ const meta = {
 			table: { category: 'exposed', type: { summary: '() => number' } },
 		},
 		change: {
-			description:
-				'Fires before the frame updates. The argument is the index being shown.',
+			description: 'Fires before the frame updates. The argument is the index being shown.',
 			table: { category: 'events', type: { summary: 'index: number' } },
 		},
 		changed: {
-			description:
-				'Fires after the frame updates. The argument is the current index.',
+			description: 'Fires after the frame updates. The argument is the current index.',
 			table: { category: 'events', type: { summary: 'index: number' } },
 		},
 	},

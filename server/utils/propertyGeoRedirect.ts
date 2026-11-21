@@ -55,7 +55,7 @@ export function getCanonicalPropertyGeoRedirectPath(propertyTail) {
 
 	const segments = raw.split('/').filter(Boolean);
 	let hasTrimmed = false;
-	if(segments[0] === 'detail') {
+	if (segments[0] === 'detail') {
 		segments.shift();
 		hasTrimmed = true;
 	}
@@ -73,7 +73,7 @@ export function getCanonicalPropertyGeoRedirectPath(propertyTail) {
 		if (isValidStateCode(b) && !isValidStateCode(a) && !parseSoaCityStateSegment(a)) {
 			return `/property/${bLower}/${aLower}`;
 		}
-		if(hasTrimmed) {
+		if (hasTrimmed) {
 			return `/property/${segments[0]}/${segments[1]}`;
 		}
 		return null;
@@ -93,7 +93,7 @@ export function getCanonicalPropertyGeoRedirectPath(propertyTail) {
 			const citySlug = city[1].toLowerCase();
 			return `/property/${state}/${citySlug}`;
 		}
-		if(hasTrimmed) {
+		if (hasTrimmed) {
 			return `/property/${segments[0]}`;
 		}
 		return null;

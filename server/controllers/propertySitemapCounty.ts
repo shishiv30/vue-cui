@@ -37,7 +37,10 @@ export default {
 			(c) =>
 				c.state === stateCode &&
 				(c.countyCode?.toLowerCase().trim() === countyCode.toLowerCase().trim() ||
-					c.county?.replace(/\s+County$/i, '').toLowerCase().trim() === countyCode.toLowerCase().trim()),
+					c.county
+						?.replace(/\s+County$/i, '')
+						.toLowerCase()
+						.trim() === countyCode.toLowerCase().trim()),
 		);
 		const countyName = county?.county || `${countyCode} County`;
 

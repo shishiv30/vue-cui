@@ -120,7 +120,7 @@ export const usePropertyStore = defineStore('property', {
 			if (!response.ok) {
 				return null;
 			}
-			const ui = await response.json() as UiData;
+			const ui = (await response.json()) as UiData;
 			this.applyUi(ui);
 			return ui;
 		},

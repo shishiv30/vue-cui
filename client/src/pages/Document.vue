@@ -6,28 +6,26 @@
 				<div class="flex vertical">
 					<h1 class="f3">Welcome to pure UI:</h1>
 					<div>
-						This is a lightweight UI framework that focuses solely on client-side
-						rendering for user experience. The framework itself is dedicated to
-						enhancing user experience. The core idea is to define interface states
-						purely with CSS and to use pure JavaScript for interaction and state
-						switching.
+						This is a lightweight UI framework that focuses solely on client-side rendering for user
+						experience. The framework itself is dedicated to enhancing user experience. The core
+						idea is to define interface states purely with CSS and to use pure JavaScript for
+						interaction and state switching.
 					</div>
 				</div>
 				<div class="flex vertical">
 					<h2 class="f4">Why pure UI</h2>
 					<div>
-						This framework succinctly encapsulates the core concepts of UI design,
-						compressing most important concepts into less than 20 keywords. This ensures
-						that anyone using the framework, as long as they understand its core
-						concepts, can easily grasp any knowledge point within the system and apply
-						it elsewhere.
+						This framework succinctly encapsulates the core concepts of UI design, compressing most
+						important concepts into less than 20 keywords. This ensures that anyone using the
+						framework, as long as they understand its core concepts, can easily grasp any knowledge
+						point within the system and apply it elsewhere.
 					</div>
 				</div>
 				<div class="flex vertical">
 					<h2 class="f4">What need Learn before use it</h2>
 					<div>
-						If you are familiar with and understand the meanings of the following words,
-						then you have mastered the core concepts of this framework:
+						If you are familiar with and understand the meanings of the following words, then you
+						have mastered the core concepts of this framework:
 					</div>
 					<ul class="grid grid-xs-1">
 						<li v-for="item in keywords" :key="item.term" class="flex middle">
@@ -44,10 +42,8 @@
 					<h3 class="f5">{{ group.title }}</h3>
 					<ul class="grid">
 						<li v-for="token in group.tokens" :key="token" class="flex middle">
-							<span
-								class="circle tiny"
-								:style="{ backgroundColor: 'var(' + token + ')' }"
-							></span>{{ token }}
+							<span class="circle tiny" :style="{ backgroundColor: 'var(' + token + ')' }"></span
+							>{{ token }}
 						</li>
 					</ul>
 					<div v-if="group.button" class="flex wrap">
@@ -65,47 +61,23 @@
 			<div class="fixed fixed-max-xs panel large inline corner-1 grid grid-xs-1">
 				<h2 class="f3">Button</h2>
 				<div class="flex wrap">
-					<button type="button" class="btn default">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn gray">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn danger">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn minor">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn major">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn safe">
-						<i class="icon-plus"></i> Apply
-					</button>
+					<button type="button" class="btn default"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn gray"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn danger"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn minor"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn major"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn safe"><i class="icon-plus"></i> Apply</button>
 					<button type="button" class="btn tip">
 						<i class="icon-plus"></i> The long text button Apply will be truncated
 					</button>
 				</div>
 				<div class="flex wrap">
-					<button type="button" class="btn default active">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn gray active">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn danger active">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn minor active">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn major active">
-						<i class="icon-plus"></i> Apply
-					</button>
-					<button type="button" class="btn safe active">
-						<i class="icon-plus"></i> Apply
-					</button>
+					<button type="button" class="btn default active"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn gray active"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn danger active"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn minor active"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn major active"><i class="icon-plus"></i> Apply</button>
+					<button type="button" class="btn safe active"><i class="icon-plus"></i> Apply</button>
 					<button type="button" class="btn tip active">
 						<i class="icon-plus"></i> The long text button Apply will be truncated
 					</button>
@@ -213,18 +185,16 @@
 						<i class="icon-angle-left"></i>
 					</button>
 					<div id="caretPanel1" class="collapse-panel">
-						This is a lightweight UI framework, the goal is to create a UI solution that
-						simplifies the memory extension markup. The principle of code writing is to
-						achieve as many UI components as possible through html standards so as to
-						reduce unnecessary dependencies.
+						This is a lightweight UI framework, the goal is to create a UI solution that simplifies
+						the memory extension markup. The principle of code writing is to achieve as many UI
+						components as possible through html standards so as to reduce unnecessary dependencies.
 					</div>
 				</div>
 				<div>
 					<div id="caretPanel2" class="collapse-line multiline-2">
-						This is a lightweight UI framework, the goal is to create a UI solution that
-						simplifies the memory extension markup. The principle of code writing is to
-						achieve as many UI components as possible through html standards so as to
-						reduce unnecessary dependencies.
+						This is a lightweight UI framework, the goal is to create a UI solution that simplifies
+						the memory extension markup. The principle of code writing is to achieve as many UI
+						components as possible through html standards so as to reduce unnecessary dependencies.
 					</div>
 					<button class="link" type="button" v-collapse="'#caretPanel2'">
 						<span>show more</span>
@@ -236,37 +206,63 @@
 			<div class="fixed fixed-max-xs grid grid-xs-3">
 				<h2 class="f3 wrap">Tips</h2>
 				<div class="text-left">
-					<a href="javascript:;" class="link"
-						v-tooltip="'show on top side, not enough space focus left'">top left</a>
+					<a
+						href="javascript:;"
+						class="link"
+						v-tooltip="'show on top side, not enough space focus left'"
+						>top left</a
+					>
 				</div>
 				<div class="text-center">
-					<a href="javascript:;" class="link"
-						v-tooltip="'show on top side, enough space align center'">top center</a>
+					<a
+						href="javascript:;"
+						class="link"
+						v-tooltip="'show on top side, enough space align center'"
+						>top center</a
+					>
 				</div>
 				<div class="text-right">
-					<a href="javascript:;" class="link"
-						v-tooltip="'show on top side, not enough space focus right'">top right</a>
+					<a
+						href="javascript:;"
+						class="link"
+						v-tooltip="'show on top side, not enough space focus right'"
+						>top right</a
+					>
 				</div>
 				<div class="text-left">
-					<a href="javascript:;" class="link"
-						v-tooltip.bottom="'show on bottom side, not enough space focus left'">bottom left</a>
+					<a
+						href="javascript:;"
+						class="link"
+						v-tooltip.bottom="'show on bottom side, not enough space focus left'"
+						>bottom left</a
+					>
 				</div>
 				<div class="text-center">
-					<a href="javascript:;" class="link"
-						v-tooltip.bottom="'show on bottom side, enough space align center'">bottom center</a>
+					<a
+						href="javascript:;"
+						class="link"
+						v-tooltip.bottom="'show on bottom side, enough space align center'"
+						>bottom center</a
+					>
 				</div>
 				<div class="text-right">
-					<a href="javascript:;" class="link"
-						v-tooltip.bottom="'show on bottom side, not enough space focus right'">bottom right</a>
+					<a
+						href="javascript:;"
+						class="link"
+						v-tooltip.bottom="'show on bottom side, not enough space focus right'"
+						>bottom right</a
+					>
 				</div>
 				<div class="text-left">
-					<a href="javascript:;" class="link"
-						v-tooltip.click.right="'show on right side'">right (click)</a>
+					<a href="javascript:;" class="link" v-tooltip.click.right="'show on right side'"
+						>right (click)</a
+					>
 				</div>
 				<div></div>
 				<div class="text-right">
-					<a href="javascript:;" class="link"
-						v-tooltip.click.left="'show on left side'">left (click)</a>
+					<a href="javascript:;" class="link" v-tooltip.click.left="'show on left side'"
+						>left (click)</a
+					>
 				</div>
 			</div>
 		</section>
@@ -275,9 +271,7 @@
 				<h2 class="f3">Tab</h2>
 				<div>
 					<div v-tab="0">
-						<button type="button" class="tab default active" data-target="tab1">
-							Tab1
-						</button>
+						<button type="button" class="tab default active" data-target="tab1">Tab1</button>
 						<button type="button" class="tab default" data-target="tab2">Tab2</button>
 						<button type="button" class="tab default" data-target="tab3">Tab3</button>
 					</div>
@@ -319,33 +313,48 @@
 					<h2 class="h3">Modal</h2>
 					<p class="small text-muted">Template-based overlay (<code>data-role="modal"</code>).</p>
 				</div>
-				<a class="btn default small" href="javascript:;" data-role="modal" data-target="#popupPanel1">
+				<a
+					class="btn default small"
+					href="javascript:;"
+					data-role="modal"
+					data-target="#popupPanel1"
+				>
 					<span class="hidden-xs">Modal </span>Default
 				</a>
 				<div id="popupPanel1" hidden>
 					<div class="grid grid-xs-1 large">
 						<div class="h4">Welcome to CUI!</div>
 						<div>
-							A modal dialog is a window that forces the user to interact with it
-							before they can go back to using the parent application.
+							A modal dialog is a window that forces the user to interact with it before they can go
+							back to using the parent application.
 						</div>
 					</div>
 				</div>
-				<a class="btn default small" href="javascript:;" data-role="modal" data-target="#popupPanel0"
-					data-theme="fullscreen">
+				<a
+					class="btn default small"
+					href="javascript:;"
+					data-role="modal"
+					data-target="#popupPanel0"
+					data-theme="fullscreen"
+				>
 					<span class="hidden-xs">Modal </span>Fullscreen
 				</a>
 				<div id="popupPanel0" hidden>
 					<div data-modal="close">
 						<div class="text-white">Welcome to CUI!</div>
 						<div class="text-white">
-							A modal dialog is a window that forces the user to interact with it
-							before they can go back to using the parent application.
+							A modal dialog is a window that forces the user to interact with it before they can go
+							back to using the parent application.
 						</div>
 					</div>
 				</div>
-				<a class="btn default small" href="javascript:;" data-role="modal" data-target="#popupPanel"
-					data-theme="dropdown">
+				<a
+					class="btn default small"
+					href="javascript:;"
+					data-role="modal"
+					data-target="#popupPanel"
+					data-theme="dropdown"
+				>
 					<span class="hidden-xs">Modal </span>Dropdown
 				</a>
 				<div id="popupPanel" hidden>
@@ -367,7 +376,12 @@
 						(<code>data-role="dialog"</code>).
 					</p>
 				</div>
-				<button type="button" class="btn default small" data-role="dialog" data-target="#htmlDialogDemo">
+				<button
+					type="button"
+					class="btn default small"
+					data-role="dialog"
+					data-target="#htmlDialogDemo"
+				>
 					Open dialog
 				</button>
 				<dialog id="htmlDialogDemo" class="dialog" aria-labelledby="htmlDialogTitle">
@@ -377,8 +391,8 @@
 						</button>
 						<div id="htmlDialogTitle" class="h4">Dialog</div>
 						<p>
-							Uses the HTML <code>dialog</code> element. Backdrop click closes when
-							autoclose is enabled.
+							Uses the HTML <code>dialog</code> element. Backdrop click closes when autoclose is
+							enabled.
 						</p>
 					</div>
 				</dialog>
@@ -400,24 +414,14 @@
 					<label for="txtReq">Name (Required)</label>
 					<div class="input left">
 						<i class="icon-user-circle-o"></i>
-						<input
-							id="txtReq"
-							name="username"
-							placeholder="name"
-							v-validation="'required'"
-						/>
+						<input id="txtReq" name="username" placeholder="name" v-validation="'required'" />
 					</div>
 				</div>
 				<div>
 					<label for="txtMail">Mail</label>
 					<div class="input left">
 						<i class="icon-envelope"></i>
-						<input
-							id="txtMail"
-							name="email"
-							placeholder="email"
-							v-validation="'email'"
-						/>
+						<input id="txtMail" name="email" placeholder="email" v-validation="'email'" />
 					</div>
 				</div>
 				<div>
@@ -439,11 +443,7 @@
 						<i class="icon-ellipsis-v"></i>
 						<select id="ddlFequence" name="fequence" v-validation="'required'">
 							<option value="" selected disabled>select a fequence</option>
-							<option
-								v-for="option in selectMock"
-								:key="option.value"
-								:value="option.value"
-							>
+							<option v-for="option in selectMock" :key="option.value" :value="option.value">
 								{{ option.text }}
 							</option>
 						</select>
@@ -633,15 +633,27 @@ const colorGroups = [
 	{
 		title: 'Role',
 		tokens: [
-			'--color-r0', '--color-r1', '--color-r2', '--color-r3', '--color-r4',
-			'--color-r5', '--color-r6', '--color-r7', '--color-r8', '--color-r9',
+			'--color-r0',
+			'--color-r1',
+			'--color-r2',
+			'--color-r3',
+			'--color-r4',
+			'--color-r5',
+			'--color-r6',
+			'--color-r7',
+			'--color-r8',
+			'--color-r9',
 		],
 	},
 	{
 		title: 'Base',
 		tokens: [
-			'--color', '--color-border', '--color-bg', '--color-hover',
-			'--color-border-hover', '--color-bg-hover',
+			'--color',
+			'--color-border',
+			'--color-bg',
+			'--color-hover',
+			'--color-border-hover',
+			'--color-bg-hover',
 		],
 	},
 	{
@@ -652,51 +664,54 @@ const colorGroups = [
 	{
 		title: 'Level 1',
 		tokens: [
-			'--color-l1', '--color-border-l1', '--color-bg-l1', '--color-l1-hover',
-			'--color-border-l1-hover', '--color-bg-l1-hover',
+			'--color-l1',
+			'--color-border-l1',
+			'--color-bg-l1',
+			'--color-l1-hover',
+			'--color-border-l1-hover',
+			'--color-bg-l1-hover',
 		],
 	},
 	{
 		title: 'Active',
 		tokens: [
-			'--color-active', '--color-active-border', '--color-active-bg',
-			'--color-active-hover', '--color-active-bg-hover', '--color-active-border-hover',
+			'--color-active',
+			'--color-active-border',
+			'--color-active-bg',
+			'--color-active-hover',
+			'--color-active-bg-hover',
+			'--color-active-border-hover',
 			'--color-disabled',
 		],
 	},
 	{
 		title: 'Major',
-		tokens: [
-			'--color-major', '--color-major-l1', '--color-major-hover', '--color-major-l1-hover',
-		],
+		tokens: ['--color-major', '--color-major-l1', '--color-major-hover', '--color-major-l1-hover'],
 		button: 'major',
 	},
 	{
 		title: 'Minor',
-		tokens: [
-			'--color-minor', '--color-minor-l1', '--color-minor-hover', '--color-minor-l1-hover',
-		],
+		tokens: ['--color-minor', '--color-minor-l1', '--color-minor-hover', '--color-minor-l1-hover'],
 		button: 'minor',
 	},
 	{
 		title: 'Safe',
-		tokens: [
-			'--color-safe', '--color-safe-l1', '--color-safe-hover', '--color-safe-l1-hover',
-		],
+		tokens: ['--color-safe', '--color-safe-l1', '--color-safe-hover', '--color-safe-l1-hover'],
 		button: 'safe',
 	},
 	{
 		title: 'Danger',
 		tokens: [
-			'--color-danger', '--color-danger-l1', '--color-danger-hover', '--color-danger-l1-hover',
+			'--color-danger',
+			'--color-danger-l1',
+			'--color-danger-hover',
+			'--color-danger-l1-hover',
 		],
 		button: 'danger',
 	},
 	{
 		title: 'Tip',
-		tokens: [
-			'--color-tip', '--color-tip-l1', '--color-tip-hover', '--color-tip-l1-hover',
-		],
+		tokens: ['--color-tip', '--color-tip-l1', '--color-tip-hover', '--color-tip-l1-hover'],
 		button: 'tip',
 	},
 	{
@@ -706,8 +721,16 @@ const colorGroups = [
 	{
 		title: 'Scale',
 		tokens: [
-			'--color-0', '--color-1', '--color-2', '--color-3', '--color-4',
-			'--color-5', '--color-6', '--color-7', '--color-8', '--color-9',
+			'--color-0',
+			'--color-1',
+			'--color-2',
+			'--color-3',
+			'--color-4',
+			'--color-5',
+			'--color-6',
+			'--color-7',
+			'--color-8',
+			'--color-9',
 		],
 	},
 ];

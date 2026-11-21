@@ -7,7 +7,9 @@
 					:aria-expanded="open"
 					:aria-controls="`${name}-list`"
 					@click="open = !open"
-				>{{ buttonText }}</button>
+				>
+					{{ buttonText }}
+				</button>
 			</li>
 		</ul>
 		<div :id="`${name}-list`" class="group-dropdown-list">

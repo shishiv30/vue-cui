@@ -34,8 +34,7 @@ export function createPropertyRouter(history: RouterHistory = createWebHistory()
 			},
 			{
 				path: '/property/detail/:propertyId',
-				redirect: (to) =>
-					`/property/detail_${encodeURIComponent(String(to.params.propertyId))}`,
+				redirect: (to) => `/property/detail_${encodeURIComponent(String(to.params.propertyId))}`,
 			},
 			{
 				path: '/property/search/:geoPath(.*)*',

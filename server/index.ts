@@ -56,13 +56,14 @@ if (!isProd) {
 	});
 	app.use((req, res, next) => {
 		const pagePath = req.path;
-		const handledByApp = pagePath === '/'
-			|| pagePath === '/property'
-			|| pagePath.startsWith('/property/')
-			|| pagePath === '/document'
-			|| pagePath === '/document.html'
-			|| pagePath.startsWith('/api')
-			|| pagePath === '/llms.txt';
+		const handledByApp =
+			pagePath === '/' ||
+			pagePath === '/property' ||
+			pagePath.startsWith('/property/') ||
+			pagePath === '/document' ||
+			pagePath === '/document.html' ||
+			pagePath.startsWith('/api') ||
+			pagePath === '/llms.txt';
 		if (handledByApp) {
 			next();
 			return;
@@ -85,11 +86,12 @@ app.use(async (req, res, next) => {
 	}
 	const pagePath = req.path.replace(/\/+$/, '') || '/';
 	const isDocument = pagePath === '/' || pagePath === '/document';
-	const propertyPage = pagePath === '/property' || pagePath.startsWith('/property/sitemap')
-		? await loadPropertySitemapPageState(req)
-		: pagePath.startsWith('/property')
-			? await loadPropertySearchPageState(req)
-			: null;
+	const propertyPage =
+		pagePath === '/property' || pagePath.startsWith('/property/sitemap')
+			? await loadPropertySitemapPageState(req)
+			: pagePath.startsWith('/property')
+				? await loadPropertySearchPageState(req)
+				: null;
 	if (!isDocument && !propertyPage) {
 		next();
 		return;
@@ -102,10 +104,7 @@ app.use(async (req, res, next) => {
 		const url = req.originalUrl || req.url;
 		const templatePath = path.join(root, 'client/src/index.html');
 		let template = fs.readFileSync(templatePath, 'utf8');
-		let render: (
-			pageUrl: string,
-			pageState?: unknown,
-		) => Promise<{ html: string; state: unknown }>;
+		let render: (pageUrl: string, pageState?: unknown) => Promise<{ html: string; state: unknown }>;
 		if (!isProd && vite) {
 			template = await vite.transformIndexHtml(url, template);
 			template = template.replaceAll('/index.min.css', '/client/scss/index.scss');
@@ -113,16 +112,13 @@ app.use(async (req, res, next) => {
 		} else {
 			const serverEntry = pathToFileURL(path.join(root, 'dist/server/entry-server.js')).href;
 			render = (await import(serverEntry)).render;
-			template = template.replace(
-				'/client/src/main.ts',
-				'/property.min.js',
-			);
+			template = template.replace('/client/src/main.ts', '/property.min.js');
 		}
-		const pageState = propertyPage && propertyPage.action === 'page'
-			? propertyPage.state as { title?: string }
-			: undefined;
-		const title = pageState?.title
-			|| (isDocument ? 'Document' : 'Property');
+		const pageState =
+			propertyPage && propertyPage.action === 'page'
+				? (propertyPage.state as { title?: string })
+				: undefined;
+		const title = pageState?.title || (isDocument ? 'Document' : 'Property');
 		template = template.replace('<title>Property</title>', `<title>${title}</title>`);
 		const rendered = await render(url, pageState);
 		const preloadImage = listingPreload(rendered.state as ListingPreloadState);
@@ -135,10 +131,7 @@ app.use(async (req, res, next) => {
 		}
 		const page = template
 			.replace('<!--app-html-->', rendered.html)
-			.replace(
-				'<!--app-state-->',
-				JSON.stringify(rendered.state).replace(/</g, '\\u003c'),
-			);
+			.replace('<!--app-state-->', JSON.stringify(rendered.state).replace(/</g, '\\u003c'));
 		res.status(200).set({ 'Content-Type': 'text/html' }).end(page);
 	} catch (error) {
 		const err = error instanceof Error ? error : new Error(String(error));

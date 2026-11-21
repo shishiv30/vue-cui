@@ -119,21 +119,13 @@ function renderStops(args: RangeSliderStoryArgs) {
 	watch(
 		() => [args.min, args.max, args.step] as const,
 		([nextMin, nextMax, nextStep]) => {
-			if (
-				nextMin === opened.min
-				&& nextMax === opened.max
-				&& nextStep === opened.step
-			) {
+			if (nextMin === opened.min && nextMax === opened.max && nextStep === opened.step) {
 				return;
 			}
 			opened.min = nextMin;
 			opened.max = nextMax;
 			opened.step = nextStep;
-			if (
-				!Number.isFinite(nextMin)
-				|| !Number.isFinite(nextMax)
-				|| !Number.isFinite(nextStep)
-			) {
+			if (!Number.isFinite(nextMin) || !Number.isFinite(nextMax) || !Number.isFinite(nextStep)) {
 				return;
 			}
 			args.data = scaleStops(nextMin, nextMax, nextStep);

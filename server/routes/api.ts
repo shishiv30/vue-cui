@@ -268,9 +268,7 @@ router.get('/property/detail/:prId', async (req, res) => {
  *       - Property
  */
 export async function propertySearchUi(req) {
-	const payload = propertyConfig.beforeGet
-		? propertyConfig.beforeGet(req, req.query)
-		: req.query;
+	const payload = propertyConfig.beforeGet ? propertyConfig.beforeGet(req, req.query) : req.query;
 	if (!payload?.geo && !payload?.prId) {
 		return { status: 400, body: { error: 'Invalid geo path' } };
 	}

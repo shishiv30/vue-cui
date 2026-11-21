@@ -147,8 +147,20 @@ export const WithSubAndSup: Story = {
 export const IconWithSup: Story = {
 	args: {
 		items: [
-			{ icon: 'icon-folder-o', theme: 'major', title: 'Documents', desc: 'Contracts and disclosures', sup: 'Open folder' },
-			{ icon: 'icon-user', sub: 'Account', title: 'Profile', desc: 'Update your details', sup: 'Edit profile' },
+			{
+				icon: 'icon-folder-o',
+				theme: 'major',
+				title: 'Documents',
+				desc: 'Contracts and disclosures',
+				sup: 'Open folder',
+			},
+			{
+				icon: 'icon-user',
+				sub: 'Account',
+				title: 'Profile',
+				desc: 'Update your details',
+				sup: 'Edit profile',
+			},
 		],
 	},
 	render: Default.render,

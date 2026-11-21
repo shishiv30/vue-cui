@@ -9,7 +9,7 @@
 	--article-font-weight: var(--font-weight-regular);
 	--article-line-height: var(--line-height-3);
 	--article-gap: var(--g2);
-	--article-animation-time: .4s;
+	--article-animation-time: 0.4s;
 	// matches the icon mark, so the top-left badge never covers the title
 	--article-padding: var(--article-icon-size);
 	--article-color-muted: color-mix(in hsl, currentColor 70%, transparent);
@@ -60,32 +60,50 @@
 			border-radius: var(--radius-2) var(--radius-2) 0 0;
 		}
 
-		>i {
+		> i {
 			border-radius: var(--radius-2) 0 var(--radius-1) 0;
 		}
 	}
 
 	// shadow: drop shadow
 	&.shadow {
-		box-shadow: 0 var(--g0) var(--g3) hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.12);
+		box-shadow: 0 var(--g0) var(--g3)
+			hsla(
+				var(--color-root-major-hue),
+				var(--color-root-saturation),
+				var(--color-root-lightness),
+				0.12
+			);
 
 		&.outline {
 			box-shadow:
 				inset 0 0 0 var(--article-border-weight) var(--article-color-border),
-				0 var(--g0) var(--g3) hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.12);
+				0 var(--g0) var(--g3)
+					hsla(
+						var(--color-root-major-hue),
+						var(--color-root-saturation),
+						var(--color-root-lightness),
+						0.12
+					);
 		}
 
 		&.active {
 			box-shadow:
 				inset 0 0 0 var(--article-border-weight) var(--article-color-border),
-				0 var(--g0) var(--g3) hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.15);
+				0 var(--g0) var(--g3)
+					hsla(
+						var(--color-root-major-hue),
+						var(--color-root-saturation),
+						var(--color-root-lightness),
+						0.15
+					);
 		}
 	}
 
 	// inner elements
 
 	// icon mark — pinned to the top-left corner with inverted colors
-	>i {
+	> i {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -101,7 +119,7 @@
 	}
 
 	// toggle (heart/star/bookmark) — pinned to the top-right corner
-	>.article-toggle {
+	> .article-toggle {
 		position: absolute;
 		top: var(--g3);
 		right: var(--g1);
@@ -117,44 +135,61 @@
 		font-size: var(--article-icon-font-size);
 		cursor: pointer;
 		color: var(--color-root);
-		background-color: hsla(var(--color-root-major-hue), var(--color-root-bg-saturation), var(--color-root-bg-lightness), 0.8);
+		background-color: hsla(
+			var(--color-root-major-hue),
+			var(--color-root-bg-saturation),
+			var(--color-root-bg-lightness),
+			0.8
+		);
 
 		&.on {
 			color: var(--color-danger, #e0245e);
 		}
 
 		// the glyph is picked here: <i class="heart on">, <i class="star off">, ...
-		>i {
+		> i {
 			@include icon();
 
-			&.heart.on::before { content: $icon-heart; }
-			&.heart.off::before { content: $icon-heart-o; }
-			&.star.on::before { content: $icon-star; }
-			&.star.off::before { content: $icon-star-o; }
-			&.bookmark.on::before { content: $icon-bookmark; }
-			&.bookmark.off::before { content: $icon-bookmark-o; }
+			&.heart.on::before {
+				content: $icon-heart;
+			}
+			&.heart.off::before {
+				content: $icon-heart-o;
+			}
+			&.star.on::before {
+				content: $icon-star;
+			}
+			&.star.off::before {
+				content: $icon-star-o;
+			}
+			&.bookmark.on::before {
+				content: $icon-bookmark;
+			}
+			&.bookmark.off::before {
+				content: $icon-bookmark-o;
+			}
 		}
 	}
 
 	// frame: bleeds past the card padding, clips the loaded image
-	>figure {
+	> figure {
 		overflow: hidden;
 		position: relative;
 
-		>img {
+		> img {
 			width: 100%;
 			object-fit: cover;
 			display: block;
 			height: auto;
 			transition:
 				transform var(--article-animation-time),
-				height .5s ease-in-out;
+				height 0.5s ease-in-out;
 			transform: scale(1.25) translateY(0px);
 		}
 
 		// Placeholder until the image has loaded. Native <img> has no data-src, so key on the loaded flag too.
-		>img[data-src],
-		>img:not([data-src-loaded]) {
+		> img[data-src],
+		> img:not([data-src-loaded]) {
 			border: none;
 			height: auto;
 			aspect-ratio: var(--image-ratio, 4 / 3);
@@ -169,7 +204,7 @@
 			animation: lazyload-shimmer 8s ease-in-out infinite;
 		}
 
-		>figcaption {
+		> figcaption {
 			position: absolute;
 			font-size: var(--font-size-7);
 			bottom: 0;
@@ -177,17 +212,21 @@
 			z-index: 2;
 			color: var(--color-bg);
 			padding: var(--g0);
-			background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.8);
+			background-color: hsla(
+				var(--color-root-major-hue),
+				var(--color-root-saturation),
+				var(--color-root-lightness),
+				0.8
+			);
 			border-radius: var(--radius-0) 0 0 0;
 		}
 
-
-		>img[data-src-loaded] {
+		> img[data-src-loaded] {
 			transform: scale(1.25) translateY(-5px);
 		}
 
-		>img[data-src-loaded].img-load-error,
-		>img.img-load-error {
+		> img[data-src-loaded].img-load-error,
+		> img.img-load-error {
 			background-color: var(--color-bg-l1);
 			background-image: none;
 			background-size: contain;
@@ -196,27 +235,27 @@
 		}
 	}
 
-	>div:not(.tags){
+	> div:not(.tags) {
 		font-size: var(--article-icon-font-size);
 		line-height: var(--line-height-3);
 	}
 
-	>header,
-	>h3 {
+	> header,
+	> h3 {
 		margin: 0;
 		font-size: var(--font-size-3);
 		font-weight: var(--font-weight-bold);
 		line-height: var(--line-height-2);
 	}
 
-	>sub,
-	>sup {
+	> sub,
+	> sup {
 		font-size: var(--font-size-6);
 		color: var(--article-color-muted);
 		line-height: var(--line-height-2);
 	}
 
-	>.tags {
+	> .tags {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--g0);
@@ -227,12 +266,12 @@
 		transition: opacity var(--article-animation-time);
 	}
 
-	>footer {
+	> footer {
 		font-size: var(--font-size-7);
 		color: var(--article-color-muted);
 	}
 	&:not(.article-card) {
-		>figure {
+		> figure {
 			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) 0;
 		}
 	}
@@ -255,7 +294,7 @@
 			background-color: var(--color-bg-l1);
 		}
 
-		> :not(.tags):not(figure):not(header):not(footer):not(.dict):not(a):not(.article-toggle){
+		> :not(.tags):not(figure):not(header):not(footer):not(.dict):not(a):not(.article-toggle) {
 			display: none;
 		}
 
@@ -263,7 +302,8 @@
 			flex: none;
 			overflow: hidden;
 			aspect-ratio: var(--image-ratio);
-			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1) var(--article-padding) calc(var(--article-padding) * -1);
+			margin: calc(var(--article-padding) * -1) calc(var(--article-padding) * -1)
+				var(--article-padding) calc(var(--article-padding) * -1);
 		}
 
 		.tags {
@@ -271,50 +311,50 @@
 			top: var(--g3);
 			left: var(--g1);
 			z-index: 3;
-			>*:nth-child(n+3) {
+			> *:nth-child(n + 3) {
 				display: none;
 			}
 		}
 
-		>figure {
+		> figure {
 			order: 1;
 			flex: 1;
-			>img {
-				height: 100%!important;
+			> img {
+				height: 100% !important;
 				filter: saturate(0.5);
 			}
 		}
-	
 
-		>header{
-			font-size: var(--font-size-6)!important;
+		> header {
+			font-size: var(--font-size-6) !important;
 			order: 3;
 		}
 
-		>.dict {
+		> .dict {
 			order: 5;
 		}
-		>a {
+		> a {
 			order: 6;
 		}
-		>footer {
+		> footer {
 			order: 10;
 		}
 
-		>.dict,
-		>footer,
-		>header,
-		>a {
+		> .dict,
+		> footer,
+		> header,
+		> a {
 			display: block;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			overflow: hidden;
-			>* {
+			> * {
 				display: inline;
 			}
 		}
-		>.dict, >a {
-			>*:nth-child(even) {
+		> .dict,
+		> a {
+			> *:nth-child(even) {
 				padding-left: var(--g0);
 				padding-right: var(--article-gap);
 			}
@@ -323,8 +363,8 @@
 		&:hover,
 		&.selected,
 		&:focus-within {
-			>figure {
-				>img[data-src-loaded] {
+			> figure {
+				> img[data-src-loaded] {
 					filter: saturate(1);
 					transform: scale(1) translateY(0px);
 				}
@@ -356,7 +396,7 @@
 }
 
 .article-frame {
-	position:absolute;
+	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -365,7 +405,7 @@
 	justify-content: center;
 	align-items: center;
 
-	>.article {
+	> .article {
 		width: 100%;
 		max-width: 360px;
 		height: fit-content;
@@ -373,6 +413,10 @@
 }
 
 @keyframes lazyload-shimmer {
-	0%   { background-position: 200% 0; }
-	100% { background-position: -200% 0; }
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
 }

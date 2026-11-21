@@ -1,7 +1,4 @@
-import {
-	mapPropertyDetailToArticle,
-	mapSOADataListToArticles,
-} from '../../helpers/article.js';
+import { mapPropertyDetailToArticle, mapSOADataListToArticles } from '../../helpers/article.js';
 
 type NearbyRaw = {
 	listings?: unknown[];
@@ -9,11 +6,16 @@ type NearbyRaw = {
 	totalCount?: number;
 } | null;
 
-export function uiPayloadToPayload(payload: {
-	geo?: unknown;
-	prId?: unknown;
-	filter?: unknown;
-} | null | undefined) {
+export function uiPayloadToPayload(
+	payload:
+		| {
+				geo?: unknown;
+				prId?: unknown;
+				filter?: unknown;
+		  }
+		| null
+		| undefined,
+) {
 	const source = payload || {};
 	return {
 		geo: source.geo,
@@ -22,11 +24,7 @@ export function uiPayloadToPayload(payload: {
 	};
 }
 
-export function apiDataToUiData(
-	listingRaw: unknown,
-	historiesRaw: unknown,
-	nearbyRaw: NearbyRaw,
-) {
+export function apiDataToUiData(listingRaw: unknown, historiesRaw: unknown, nearbyRaw: NearbyRaw) {
 	const detail = mapPropertyDetailToArticle(listingRaw, historiesRaw);
 	let articles: unknown[] = [];
 	let articleTotalCount = 0;

@@ -19,24 +19,9 @@
 			@animationiteration="onLastIteration"
 		/>
 		<div v-if="model.showControl !== false" class="buttons">
-			<button
-				type="button"
-				aria-label="prev"
-				class="player-prev"
-				@click="goPrev(true)"
-			></button>
-			<button
-				type="button"
-				aria-label="pause/play"
-				class="player-toggle"
-				@click="toggle"
-			></button>
-			<button
-				type="button"
-				aria-label="next"
-				class="player-next"
-				@click="goNext(true)"
-			></button>
+			<button type="button" aria-label="prev" class="player-prev" @click="goPrev(true)"></button>
+			<button type="button" aria-label="pause/play" class="player-toggle" @click="toggle"></button>
+			<button type="button" aria-label="next" class="player-next" @click="goNext(true)"></button>
 		</div>
 		<div v-if="model.showProcess !== false" class="player-processing">
 			<button

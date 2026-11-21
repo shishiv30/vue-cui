@@ -77,8 +77,6 @@ export const Default: Story = {
 	}),
 	play: async ({ canvas, userEvent }) => {
 		await userEvent.hover(canvas.getByRole('link', { name: 'top center' }));
-		await expect(document.body).toHaveTextContent(
-			'show on top side, enough space align center',
-		);
+		await expect(document.body).toHaveTextContent('show on top side, enough space align center');
 	},
 };

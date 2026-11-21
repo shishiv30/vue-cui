@@ -305,9 +305,7 @@ function search(el: HTMLInputElement, state: AutocompleteState) {
 	}
 	if (Array.isArray(source)) {
 		const q = query.toLowerCase();
-		const matches = source.filter((item) =>
-			getLabel(item, state.opts).toLowerCase().includes(q),
-		);
+		const matches = source.filter((item) => getLabel(item, state.opts).toLowerCase().includes(q));
 		show(el, state, matches.slice(0, limit));
 		return;
 	}

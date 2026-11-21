@@ -1,11 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import {
-	stringToDate,
-	dateToString,
-	timeToString,
-	timeDiff,
-} from '../helpers/datetime.js';
+import { stringToDate, dateToString, timeToString, timeDiff } from '../helpers/datetime.js';
 
 describe('datetime', () => {
 	test('stringToDate parses ISO and US date strings', () => {
@@ -94,10 +89,7 @@ describe('datetime', () => {
 		const base = new Date('2024-01-15T12:00:00.000Z');
 
 		assert.equal(timeDiff(new Date(base.getTime() - 2 * 60 * 1000), base), 'Just Now');
-		assert.equal(
-			timeDiff(new Date(base.getTime() - 5 * 60 * 1000), base),
-			'5 min ago',
-		);
+		assert.equal(timeDiff(new Date(base.getTime() - 5 * 60 * 1000), base), '5 min ago');
 		assert.equal(timeDiff(new Date(base.getTime() - 20 * 60 * 1000), base), '20 min ago');
 		assert.equal(timeDiff(new Date(base.getTime() + 5 * 60 * 60 * 1000), base), '5 hr soon');
 		assert.equal(
@@ -124,18 +116,12 @@ describe('datetime', () => {
 
 	test('timeDiff monthes soon and invalid compareDate', () => {
 		const base = new Date('2024-06-01T12:00:00.000Z');
-		assert.equal(
-			timeDiff(new Date('2024-08-01T12:00:00.000Z'), base),
-			'2 monthes soon',
-		);
+		assert.equal(timeDiff(new Date('2024-08-01T12:00:00.000Z'), base), '2 monthes soon');
 		assert.equal(timeDiff(base, 'not valid'), '');
 	});
 
 	test('timeDiff accepts ISO strings for both arguments', () => {
-		assert.equal(
-			timeDiff('2024-01-20T12:00:00.000Z', '2024-01-15T12:00:00.000Z'),
-			'5 days soon',
-		);
+		assert.equal(timeDiff('2024-01-20T12:00:00.000Z', '2024-01-15T12:00:00.000Z'), '5 days soon');
 	});
 
 	test('timeDiff empty when primary date is invalid', () => {

@@ -192,7 +192,9 @@ export default {
 				if (active) {
 					active.classList.remove('active');
 				}
-				let current = $el.querySelector(`.slider-processing > button[data-index="${opt.imgIndex}"]`);
+				let current = $el.querySelector(
+					`.slider-processing > button[data-index="${opt.imgIndex}"]`,
+				);
 				if (current) {
 					current.classList.add('active');
 				}
@@ -321,100 +323,100 @@ export default {
 			window.ontouchstart !== undefined && window.matchMedia('(hover: hover)').matches === false;
 		let onStart = isOnlyTouchScreen
 			? (e) => {
-				let touch = e.touches[0];
-				clearTimeout(timer);
-				width = $list.clientWidth;
-				touchStart = touch.clientX;
-				touchStartY = touch.clientY;
-				if (e.touches.length > 1) {
-					return;
+					let touch = e.touches[0];
+					clearTimeout(timer);
+					width = $list.clientWidth;
+					touchStart = touch.clientX;
+					touchStartY = touch.clientY;
+					if (e.touches.length > 1) {
+						return;
+					}
+					reset();
 				}
-				reset();
-			}
 			: (e) => {
-				clearTimeout(timer);
-				width = $list.clientWidth;
-				reset();
-				touchStart = e.clientX;
-				touchStartY = e.clientY;
-			};
+					clearTimeout(timer);
+					width = $list.clientWidth;
+					reset();
+					touchStart = e.clientX;
+					touchStartY = e.clientY;
+				};
 		let onMove = isOnlyTouchScreen
 			? (e) => {
-				if ($list.style.transition) {
-					$list.style.transition = 'none';
-				}
+					if ($list.style.transition) {
+						$list.style.transition = 'none';
+					}
 
-				cancelAnimationFrame(timer);
-				timer = requestAnimationFrame(() => {
-					let touch = e.touches[0];
-					deltaX = touch.clientX - touchStart;
-					//base on deltaX, to get a percentage of the animation
-					let percentage = (deltaX / width) * 100;
-					$list.style.transform = `translateX(${width * -1 + deltaX}px)`;
-				});
-			}
+					cancelAnimationFrame(timer);
+					timer = requestAnimationFrame(() => {
+						let touch = e.touches[0];
+						deltaX = touch.clientX - touchStart;
+						//base on deltaX, to get a percentage of the animation
+						let percentage = (deltaX / width) * 100;
+						$list.style.transform = `translateX(${width * -1 + deltaX}px)`;
+					});
+				}
 			: (e) => {
-				if (!touchStart) {
-					return;
-				}
-				if ($list.style.transition) {
-					$list.style.transition = 'none';
-				}
+					if (!touchStart) {
+						return;
+					}
+					if ($list.style.transition) {
+						$list.style.transition = 'none';
+					}
 
-				cancelAnimationFrame(timer);
-				timer = requestAnimationFrame(() => {
-					deltaX = e.clientX - touchStart;
-					$list.style.transform = `translateX(${width * -1 + deltaX}px)`;
-				});
-			};
+					cancelAnimationFrame(timer);
+					timer = requestAnimationFrame(() => {
+						deltaX = e.clientX - touchStart;
+						$list.style.transform = `translateX(${width * -1 + deltaX}px)`;
+					});
+				};
 		let onEnd = isOnlyTouchScreen
 			? (e) => {
-				if (!touchStart) {
-					return;
-				}
-				touchStart = null;
-				if (e.touches.length > 0) {
-					return;
-				}
-				cancelAnimationFrame(timer);
-				width = $list.clientWidth;
-				$list.style.transition = `transform ${opt.duration}s`;
+					if (!touchStart) {
+						return;
+					}
+					touchStart = null;
+					if (e.touches.length > 0) {
+						return;
+					}
+					cancelAnimationFrame(timer);
+					width = $list.clientWidth;
+					$list.style.transition = `transform ${opt.duration}s`;
 
-				if (deltaX > 0 && deltaX > opt.throttle) {
-					//snap to left with animation next
-					$list.style.transform = 'translateX(0px)';
-				} else if (deltaX < 0 && deltaX < opt.throttle * -1) {
-					//snap to right with animation prev
-					$list.style.transform = `translateX(${width * -2}px)`;
-				} else {
-					$list.style.transform = `translateX(${width * -1}px)`;
+					if (deltaX > 0 && deltaX > opt.throttle) {
+						//snap to left with animation next
+						$list.style.transform = 'translateX(0px)';
+					} else if (deltaX < 0 && deltaX < opt.throttle * -1) {
+						//snap to right with animation prev
+						$list.style.transform = `translateX(${width * -2}px)`;
+					} else {
+						$list.style.transform = `translateX(${width * -1}px)`;
+					}
+					timer = setTimeout(() => {
+						reset();
+					}, opt.duration * 1100);
 				}
-				timer = setTimeout(() => {
-					reset();
-				}, opt.duration * 1100);
-			}
 			: (e) => {
-				if (!touchStart) {
-					return;
-				}
-				touchStart = null;
-				cancelAnimationFrame(timer);
-				width = $list.clientWidth;
-				$list.style.transition = `transform ${opt.duration}s`;
+					if (!touchStart) {
+						return;
+					}
+					touchStart = null;
+					cancelAnimationFrame(timer);
+					width = $list.clientWidth;
+					$list.style.transition = `transform ${opt.duration}s`;
 
-				if (deltaX > 0 && deltaX > opt.throttle) {
-					//snap to left with animation next
-					$list.style.transform = 'translateX(0px)';
-				} else if (deltaX < 0 && deltaX < opt.throttle * -1) {
-					//snap to right with animation prev
-					$list.style.transform = `translateX(${width * -2}px)`;
-				} else {
-					$list.style.transform = `translateX(${width * -1}px)`;
-				}
-				timer = setTimeout(() => {
-					reset();
-				}, opt.duration * 1100);
-			};
+					if (deltaX > 0 && deltaX > opt.throttle) {
+						//snap to left with animation next
+						$list.style.transform = 'translateX(0px)';
+					} else if (deltaX < 0 && deltaX < opt.throttle * -1) {
+						//snap to right with animation prev
+						$list.style.transform = `translateX(${width * -2}px)`;
+					} else {
+						$list.style.transform = `translateX(${width * -1}px)`;
+					}
+					timer = setTimeout(() => {
+						reset();
+					}, opt.duration * 1100);
+				};
 		if (isOnlyTouchScreen) {
 			$list.addEventListener('touchstart', (e) => {
 				onStart(e);

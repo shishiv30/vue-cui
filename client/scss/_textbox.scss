@@ -30,7 +30,7 @@
 
 	.input,
 	.textarea {
-		>label {
+		> label {
 			padding: 0;
 			pointer-events: none;
 			margin: 0;
@@ -47,7 +47,7 @@
 	}
 
 	.input {
-		>label {
+		> label {
 			left: var(--g2);
 			right: auto;
 			top: 50%;
@@ -55,30 +55,30 @@
 			color: var(--input-placeholder-color);
 		}
 
-		>input {
+		> input {
 			padding-top: var(--font-size-5);
 			padding-bottom: var(--g0);
 		}
 
 		&.small {
 			&.input {
-				>input {
+				> input {
 					padding-top: var(--font-size-6);
 					padding-bottom: 0;
 				}
 
 				&.right {
-					>input {
+					> input {
 						padding-right: var(--comp-size-3);
 					}
 				}
 
 				&.left {
-					>label {
+					> label {
 						left: var(--comp-size-3);
 					}
 
-					>input {
+					> input {
 						padding-left: var(--comp-size-3);
 					}
 				}
@@ -87,29 +87,29 @@
 
 		&.left,
 		&.right {
-			>label {
+			> label {
 				width: calc(100% - var(--comp-size-4));
 			}
 		}
 
 		&.right.left {
-			>label {
+			> label {
 				width: calc(100% - var(--comp-size-4) * 2);
 			}
 		}
 
 		&.right {
-			>input {
+			> input {
 				padding-right: var(--comp-size-4);
 			}
 		}
 
 		&.left {
-			>label {
+			> label {
 				left: var(--comp-size-4);
 			}
 
-			>input {
+			> input {
 				padding-left: var(--comp-size-4);
 			}
 		}
@@ -138,10 +138,9 @@
 	}
 
 	&.focus {
-
 		.input,
 		.textarea {
-			>label {
+			> label {
 				top: var(--gxs);
 				right: auto;
 				transform: translateY(0);
@@ -150,7 +149,7 @@
 			}
 
 			&.large {
-				>label {
+				> label {
 					top: var(--g0);
 				}
 			}

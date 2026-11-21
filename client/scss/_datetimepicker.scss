@@ -18,7 +18,13 @@
 	background-color: var(--color-bg);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-1);
-	box-shadow: 0 0 2px 4px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.02);
+	box-shadow: 0 0 2px 4px
+		hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.02
+		);
 	background-clip: padding-box;
 	padding: var(--g2);
 	margin-top: 1px;
@@ -39,7 +45,7 @@
 		}
 	}
 
-	&>div {
+	& > div {
 		display: none;
 	}
 
@@ -169,7 +175,12 @@
 	border-left: 7px solid transparent;
 	border-right: 7px solid transparent;
 	border-bottom: 7px solid #ccc;
-	border-bottom-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.2);
+	border-bottom-color: hsla(
+		var(--color-root-major-hue),
+		var(--color-root-saturation),
+		var(--color-root-lightness),
+		0.2
+	);
 
 	position: absolute;
 }
@@ -189,7 +200,12 @@
 	border-left: 7px solid transparent;
 	border-right: 7px solid transparent;
 	border-top: 7px solid #ccc;
-	border-top-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.2);
+	border-top-color: hsla(
+		var(--color-root-major-hue),
+		var(--color-root-saturation),
+		var(--color-root-lightness),
+		0.2
+	);
 	border-bottom: 0;
 }
 
@@ -441,7 +457,6 @@
 }
 
 .table-condensed {
-
 	th,
 	td {
 		padding: 4px 5px;

@@ -14,9 +14,9 @@ const meta = {
 					'| Slot | What you provide |',
 					'| --- | --- |',
 					'| Value | Pipe-separated rules: `required`, `email`, `phone`, `zipcode`, `price`. |',
-					'| Markup | Put `v-validation` on the `input`, `textarea`, or `select`. '
-						+ 'Error and success classes land on the closest `.input`, `.checkbox`, '
-						+ '`.radio`, `.textarea`, or `.selectbox`. |',
+					'| Markup | Put `v-validation` on the `input`, `textarea`, or `select`. ' +
+						'Error and success classes land on the closest `.input`, `.checkbox`, ' +
+						'`.radio`, `.textarea`, or `.selectbox`. |',
 				].join('\n'),
 			},
 		},

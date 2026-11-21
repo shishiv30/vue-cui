@@ -39,12 +39,9 @@
 			<figcaption>{{ model.imgTag }}</figcaption>
 		</figure>
 		<div v-if="tags.length" class="tags">
-			<span
-				v-for="(tag, index) in tags"
-				:key="index"
-				class="attr"
-				:class="tag.className"
-			>{{ tag.text }}</span>
+			<span v-for="(tag, index) in tags" :key="index" class="attr" :class="tag.className">{{
+				tag.text
+			}}</span>
 		</div>
 	</article>
 </template>
@@ -60,7 +57,7 @@ const props = withDefaults(
 		toggleStatus?: boolean | null;
 		toggleStyle?: 'heart' | 'star' | 'bookmark';
 	}>(),
-	{ toggleStatus: null, toggleStyle: 'heart' }
+	{ toggleStatus: null, toggleStyle: 'heart' },
 );
 
 const emit = defineEmits<{ (e: 'toggle', status: boolean): void }>();

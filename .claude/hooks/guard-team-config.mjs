@@ -11,7 +11,8 @@ import { readInput, filePath } from './_lib.mjs';
 
 const root = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const file = path.relative(root, filePath(readInput()));
-const GUARDED = /^(CLAUDE\.md$|\.claude\/(agents|hooks|rules|skills)\/|\.claude\/settings\.json$|\.cursor\/)/;
+const GUARDED =
+	/^(CLAUDE\.md$|\.claude\/(agents|hooks|rules|skills)\/|\.claude\/settings\.json$|\.cursor\/)/;
 if (!GUARDED.test(file)) process.exit(0);
 
 let newest = '';

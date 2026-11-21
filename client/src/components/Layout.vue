@@ -8,20 +8,50 @@
 			'layout-ring': mode === 'ring',
 		}"
 	>
-		<div
-			v-if="mode === 'ring'"
-			class="layout-ring-frame"
-			:style="ringStageStyle"
-		>
-		<div
-			ref="stageEl"
-			class="layout-ring-stage"
-		>
+		<div v-if="mode === 'ring'" class="layout-ring-frame" :style="ringStageStyle">
+			<div ref="stageEl" class="layout-ring-stage">
+				<article
+					v-for="(item, index) in data"
+					:key="index"
+					class="article"
+					:class="[
+						item.className,
+						articleClass,
+						articleClass === 'article-card' && !item.img ? 'no-image' : undefined,
+					]"
+					:style="cardStyle(index)"
+				>
+					<i v-if="item.icon" :class="item.icon"></i>
+					<figure v-if="item.img">
+						<img v-lazyload="item.img" alt="" />
+					</figure>
+					<header v-if="item.title" class="f3">{{ item.title }}</header>
+					<sub v-if="item.sub">{{ item.sub }}</sub>
+					<sup v-if="item.sup">{{ item.sup }}</sup>
+					<div v-for="(paragraph, bodyIndex) in item.body" :key="bodyIndex">{{ paragraph }}</div>
+					<div v-if="item.tags?.length" class="tags">
+						<span v-for="tag in item.tags" :key="tag" class="attr">{{ tag }}</span>
+					</div>
+					<dl v-if="item.dict?.length" class="dict">
+						<template v-for="fact in item.dict" :key="fact.key">
+							<dt>{{ fact.key }}</dt>
+							<dd>{{ fact.value }}</dd>
+						</template>
+					</dl>
+					<footer v-if="item.footer">{{ item.footer }}</footer>
+				</article>
+			</div>
+		</div>
+		<template v-else>
 			<article
 				v-for="(item, index) in data"
 				:key="index"
 				class="article"
-				:class="[item.className, articleClass, articleClass === 'article-card' && !item.img ? 'no-image' : undefined]"
+				:class="[
+					item.className,
+					articleClass,
+					articleClass === 'article-card' && !item.img ? 'no-image' : undefined,
+				]"
 				:style="cardStyle(index)"
 			>
 				<i v-if="item.icon" :class="item.icon"></i>
@@ -43,35 +73,6 @@
 				</dl>
 				<footer v-if="item.footer">{{ item.footer }}</footer>
 			</article>
-		</div>
-		</div>
-		<template v-else>
-		<article
-			v-for="(item, index) in data"
-			:key="index"
-			class="article"
-			:class="[item.className, articleClass, articleClass === 'article-card' && !item.img ? 'no-image' : undefined]"
-			:style="cardStyle(index)"
-		>
-			<i v-if="item.icon" :class="item.icon"></i>
-			<figure v-if="item.img">
-				<img v-lazyload="item.img" alt="" />
-			</figure>
-			<header v-if="item.title" class="f3">{{ item.title }}</header>
-			<sub v-if="item.sub">{{ item.sub }}</sub>
-			<sup v-if="item.sup">{{ item.sup }}</sup>
-			<div v-for="(paragraph, bodyIndex) in item.body" :key="bodyIndex">{{ paragraph }}</div>
-			<div v-if="item.tags?.length" class="tags">
-				<span v-for="tag in item.tags" :key="tag" class="attr">{{ tag }}</span>
-			</div>
-			<dl v-if="item.dict?.length" class="dict">
-				<template v-for="fact in item.dict" :key="fact.key">
-					<dt>{{ fact.key }}</dt>
-					<dd>{{ fact.value }}</dd>
-				</template>
-			</dl>
-			<footer v-if="item.footer">{{ item.footer }}</footer>
-		</article>
 		</template>
 	</main>
 </template>
@@ -120,12 +121,10 @@ const ringRadius = computed(() => {
 	if (theta <= 0.01) {
 		return cardWidth;
 	}
-	return Math.round((cardWidth / 2) / theta);
+	return Math.round(cardWidth / 2 / theta);
 });
 
-const ringStep = computed(() => (
-	props.data.length > 0 ? 360 / props.data.length : 0
-));
+const ringStep = computed(() => (props.data.length > 0 ? 360 / props.data.length : 0));
 
 const ringStageStyle = computed(() => ({
 	'--ring-radius': `${ringRadius.value}px`,
@@ -161,7 +160,7 @@ function normalizeMode(value: string): LayoutMode {
 function articlesIn(main: HTMLElement) {
 	if (mode.value === 'ring') {
 		const selector = ':scope > .layout-ring-frame > .layout-ring-stage > .article';
-	return [...main.querySelectorAll(selector)] as HTMLElement[];
+		return [...main.querySelectorAll(selector)] as HTMLElement[];
 	}
 	return [...main.querySelectorAll(':scope > .article')] as HTMLElement[];
 }
@@ -170,9 +169,8 @@ function gridColumnCount(main: HTMLElement) {
 	const style = getComputedStyle(main);
 	const gap = parseFloat(style.columnGap) || 0;
 	const min = parseFloat(style.getPropertyValue('--layout-grid-min')) || 260;
-	const width = main.clientWidth
-		- (parseFloat(style.paddingLeft) || 0)
-		- (parseFloat(style.paddingRight) || 0);
+	const width =
+		main.clientWidth - (parseFloat(style.paddingLeft) || 0) - (parseFloat(style.paddingRight) || 0);
 	if (min + gap <= 0) {
 		return 1;
 	}
@@ -265,10 +263,7 @@ function startGrid(main: HTMLElement) {
 	lastCols = columnCount(main);
 	lastRects = articles.map((article) => article.getBoundingClientRect());
 	gridObserver = new ResizeObserver(() => {
-		if (
-			main.classList.contains('layout-horizontal')
-			|| main.classList.contains('layout-ring')
-		) {
+		if (main.classList.contains('layout-horizontal') || main.classList.contains('layout-ring')) {
 			return;
 		}
 		const cols = columnCount(main);
@@ -362,10 +357,10 @@ function bindRingDrag(stage: HTMLElement, radius: number, articles: HTMLElement[
 	function resetPointer(reason: string, event: Event | null) {
 		const pointerEvent = event as PointerEvent | null;
 		if (
-			pointerEvent
-			&& pointerEvent.pointerId !== undefined
-			&& pointerId !== null
-			&& pointerEvent.pointerId !== pointerId
+			pointerEvent &&
+			pointerEvent.pointerId !== undefined &&
+			pointerId !== null &&
+			pointerEvent.pointerId !== pointerId
 		) {
 			return;
 		}
@@ -433,9 +428,7 @@ function bindRingDrag(stage: HTMLElement, radius: number, articles: HTMLElement[
 function startRing() {
 	clearRing();
 	const stage = stageEl.value;
-	const articles = stage
-		? [...stage.querySelectorAll(':scope > .article')] as HTMLElement[]
-		: [];
+	const articles = stage ? ([...stage.querySelectorAll(':scope > .article')] as HTMLElement[]) : [];
 	if (!stage || articles.length < 2) {
 		return;
 	}
@@ -463,8 +456,8 @@ function playMove(main: HTMLElement, apply: () => void) {
 		articles.forEach((article, index) => {
 			const next = article.getBoundingClientRect();
 			const prev = from[index];
-			const dx = (prev.left + prev.width / 2) - (next.left + next.width / 2);
-			const dy = (prev.top + prev.height / 2) - (next.top + next.height / 2);
+			const dx = prev.left + prev.width / 2 - (next.left + next.width / 2);
+			const dy = prev.top + prev.height / 2 - (next.top + next.height / 2);
 			article.style.transition = 'none';
 			article.style.transform = `translate(${dx}px, ${dy}px) ${destinations[index]}`;
 		});

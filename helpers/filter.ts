@@ -119,7 +119,9 @@ export function getFilterByQuery(query: Record<string, any> = {}) {
 		}
 	}
 
-	const propertyTypes = asList(source, 'propertyType').filter((value) => PROPERTY_TYPE_SET.has(value));
+	const propertyTypes = asList(source, 'propertyType').filter((value) =>
+		PROPERTY_TYPE_SET.has(value),
+	);
 	if (propertyTypes.length) {
 		filter.propertyTypes = propertyTypes.map((value) => value.toUpperCase());
 	}
@@ -163,8 +165,10 @@ export function getQueryByFilter(filter: Record<string, any> = {}) {
 	const offMarket = isOffMarket(source.searchPropertyStatus);
 
 	for (const field of RANGE_FIELDS) {
-		const hasMin = source[field.min] !== undefined && source[field.min] !== null && source[field.min] !== '';
-		const hasMax = source[field.max] !== undefined && source[field.max] !== null && source[field.max] !== '';
+		const hasMin =
+			source[field.min] !== undefined && source[field.min] !== null && source[field.min] !== '';
+		const hasMax =
+			source[field.max] !== undefined && source[field.max] !== null && source[field.max] !== '';
 		if (!hasMin && !hasMax) {
 			continue;
 		}
@@ -197,7 +201,11 @@ export function getQueryByFilter(filter: Record<string, any> = {}) {
 		}
 	}
 
-	if (source.maxCountPerPage !== undefined && source.maxCountPerPage !== null && source.maxCountPerPage !== '') {
+	if (
+		source.maxCountPerPage !== undefined &&
+		source.maxCountPerPage !== null &&
+		source.maxCountPerPage !== ''
+	) {
 		query.size = String(source.maxCountPerPage);
 	}
 	if (source.pageIndex !== undefined && source.pageIndex !== null && source.pageIndex !== '') {

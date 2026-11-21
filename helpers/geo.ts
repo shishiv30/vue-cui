@@ -110,7 +110,6 @@ export function getGeoCityByCityState(city: any, state: any) {
 	return null;
 }
 
-
 export function getGeoByPath(_path: any) {
 	let path = _path.replace(/^\//, '').replace(/\/$/, '');
 	let segments = path.split('/');
@@ -214,7 +213,6 @@ export function getNeighborhoodPath(neighborhood: any, city: any, state: any) {
 	return `${stateCode}/${cityCode}/${neighborhoodCode}_neighborhood`;
 }
 
-
 export function getPathByGeo(geo: any) {
 	if (geo.type === geoType.state) {
 		return getStatePath(geo.state);
@@ -233,7 +231,6 @@ export function getPathByGeo(geo: any) {
 	}
 	return null;
 }
-
 
 export function getStatesForSitemap(basePath: any) {
 	const codes = getAllStateCodes();
@@ -286,14 +283,22 @@ export function getCountiesForSitemap(stateCode: any, basePath: any, countiesDat
  * @param {Array} citiesData - Array of city data from geo cache
  * @returns {{ href: string, text: string }[]}
  */
-export function getCitiesForSitemap(countyName: any, stateCode: any, basePath: any, citiesData: any) {
+export function getCitiesForSitemap(
+	countyName: any,
+	stateCode: any,
+	basePath: any,
+	citiesData: any,
+) {
 	if (!countyName || !stateCode || !citiesData || !Array.isArray(citiesData)) {
 		return [];
 	}
 	const path = (basePath || '').replace(/\/$/, '');
 	const stateUpper = stateCode.toUpperCase();
 
-	const countyKey = countyName?.trim()?.replace(/\s+County$/i, '').trim();
+	const countyKey = countyName
+		?.trim()
+		?.replace(/\s+County$/i, '')
+		.trim();
 	const countyMatch = RegExp(`^${countyKey}`, 'i');
 
 	const cities = new Map();
@@ -324,7 +329,12 @@ export function getCitiesForSitemap(countyName: any, stateCode: any, basePath: a
  * @param {Array} zipcodesData - Array of zipcode data from geo cache
  * @returns {{ href: string, text: string }[]}
  */
-export function getZipcodesForSitemap(cityName: any, stateCode: any, basePath: any, zipcodesData: any) {
+export function getZipcodesForSitemap(
+	cityName: any,
+	stateCode: any,
+	basePath: any,
+	zipcodesData: any,
+) {
 	if (!cityName || !stateCode || !zipcodesData || !Array.isArray(zipcodesData)) {
 		return [];
 	}
@@ -402,7 +412,6 @@ export function getBreadcrumbByGeo(geo: any, _path: any) {
 	};
 }
 
-
 export function getGeoDisplayText(geo: any) {
 	if (!geo) {
 		return '';
@@ -454,9 +463,7 @@ export function mapAddressToGeo(address: any) {
 	const city = String(address.city ?? '').trim();
 	const county = String(address.county ?? '').trim();
 	const zipcode = String(address.zipCode ?? address.zipcode ?? '').trim();
-	const street = String(
-		address.addressInfo ?? address.street ?? address.addressLine1 ?? '',
-	).trim();
+	const street = String(address.addressInfo ?? address.street ?? address.addressLine1 ?? '').trim();
 	const geo: Record<string, any> = { state };
 	if (city) {
 		geo.city = city;
@@ -482,14 +489,14 @@ export function mapAddressToGeo(address: any) {
 	return geo;
 }
 
-
 /**
  * Maps our geo paths to SOA API format
  * Our format: tx/round-rock, tx/williamson_county, tx/78664, tx/round-rock/old-town_neighborhood
  * SOA format: round-rock-ca/, ca/, ca/95121/, round-rock-ca/central-san-jose/, santa-clara-county-ca/
  */
 const pathMappings = {
-	city: (city: any, state: any) => `${city.toLowerCase().replace(/\s+/g, '-')}-${state.toLowerCase()}/`,
+	city: (city: any, state: any) =>
+		`${city.toLowerCase().replace(/\s+/g, '-')}-${state.toLowerCase()}/`,
 	state: (state: any) => `${state.toLowerCase()}/`,
 	zipcode: (zipcode: any, state: any) => `${state.toLowerCase()}/${zipcode}/`,
 	neighborhood: (city: any, neighborhood: any, state: any) =>
@@ -587,9 +594,7 @@ export function mapSoaStateToGeo(item: any) {
 	const rawCode = pickStateCode(item).toString().trim();
 	const rawName = pickStateName(item).toString().trim();
 	const state =
-		rawCode.length === 2
-			? rawCode.toUpperCase()
-			: getStateCode(rawName) || rawCode || rawName;
+		rawCode.length === 2 ? rawCode.toUpperCase() : getStateCode(rawName) || rawCode || rawName;
 	const id = item.id ?? item.stateId ?? state;
 	const path = getStatePath(state);
 	return {
@@ -608,8 +613,7 @@ export function mapSoaStateToGeo(item: any) {
 export function mapSoaCityToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
-	const state =
-		rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
+	const state = rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
 	const city = pickCityName(item).toString().trim();
 	if (!state || !city) return null;
 	const id = item.id ?? item.cityId ?? null;
@@ -631,8 +635,7 @@ export function mapSoaCityToGeo(item: any) {
 export function mapSoaCountyToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
-	const state =
-		rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
+	const state = rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
 	const county = pickCountyName(item).toString().trim();
 	if (!state || !county) return null;
 	const id = item.id ?? item.countyId ?? null;
@@ -654,8 +657,7 @@ export function mapSoaCountyToGeo(item: any) {
 export function mapSoaZipcodeToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
-	const state =
-		rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
+	const state = rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
 	const zipcode = pickZipcode(item).toString().trim();
 	if (!state || !zipcode) return null;
 	const id = item.id ?? zipcode;
@@ -680,8 +682,7 @@ export function mapSoaZipcodeToGeo(item: any) {
 export function mapSoaNeighborhoodToGeo(item: any) {
 	if (!item) return null;
 	const rawState = (pickStateCode(item) || item.state || '').toString().trim();
-	const state =
-		rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
+	const state = rawState.length === 2 ? rawState.toUpperCase() : getStateCode(rawState) || rawState;
 	const city = pickCityName(item).toString().trim();
 	const neighborhood = pickNeighborhoodName(item).toString().trim();
 	if (!state || !city || !neighborhood) return null;

@@ -11,7 +11,13 @@ $header-height: 56px;
 		top: 0;
 		left: 0;
 		right: 0;
-		box-shadow: 0 0 5px 0 hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.2);
+		box-shadow: 0 0 5px 0
+			hsla(
+				var(--color-root-major-hue),
+				var(--color-root-saturation),
+				var(--color-root-lightness),
+				0.2
+			);
 	}
 
 	--header-height: #{$header-height};
@@ -35,7 +41,10 @@ $header-height: 56px;
 				box-shadow: none;
 				border: none;
 			}
-			>input, button, label, a {
+			> input,
+			button,
+			label,
+			a {
 				height: 100%;
 			}
 		}
@@ -56,7 +65,7 @@ $header-height: 56px;
 		}
 
 		.header-menu-list {
-			>li>ul {
+			> li > ul {
 				background-color: var(--header-color-bg);
 				@media screen and (max-width: $screen-xs-max) {
 					background-color: var(--header-color-hover);
@@ -96,7 +105,7 @@ $header-height: 56px;
 	max-width: 460px;
 	align-items: center;
 
-	&>div {
+	& > div {
 		width: 100%;
 		min-width: 1px;
 		flex-shrink: 1;
@@ -113,7 +122,12 @@ $header-height: 56px;
 	left: 0;
 	bottom: 0;
 	z-index: var(--ui-header-overlay);
-	background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.3);
+	background-color: hsla(
+		var(--color-root-major-hue),
+		var(--color-root-saturation),
+		var(--color-root-lightness),
+		0.3
+	);
 	backdrop-filter: blur(1px);
 }
 
@@ -131,7 +145,8 @@ $header-height: 56px;
 
 .header-menu-list {
 	position: relative;
-	a, button {
+	a,
+	button {
 		@include hover-scale(var(--color-bg-hover));
 	}
 
@@ -161,11 +176,10 @@ $header-height: 56px;
 		}
 	}
 
-	&>li {
+	& > li {
 		position: relative;
 
 		&.list {
-
 			.split {
 				border-bottom: 1px solid var(--header-color-border);
 			}
@@ -175,7 +189,7 @@ $header-height: 56px;
 			margin-left: auto;
 		}
 
-		>ul {
+		> ul {
 			background-color: var(--header-color-bg);
 			color: var(--header-color);
 			min-width: 100%;
@@ -186,12 +200,12 @@ $header-height: 56px;
 
 .header-expand {
 	width: var(--g4);
-	@media (max-width: $screen-xs-max) { 
+	@media (max-width: $screen-xs-max) {
 		width: var(--header-height);
 	}
 	height: var(--header-height);
 	line-height: var(--header-height);
-	position: absolute!important;
+	position: absolute !important;
 	padding: 0;
 	top: 0;
 	right: 0;
@@ -208,14 +222,13 @@ $header-height: 56px;
 
 body:not(.body-expand-header) {
 	.header-menu-list {
-
-		&>li {
-			>ul {
+		& > li {
+			> ul {
 				display: none;
 			}
 
 			@include hover() {
-				>ul {
+				> ul {
 					display: block;
 				}
 			}
@@ -227,7 +240,7 @@ body:not(.body-expand-header) {
 	.header-menu-list {
 		.list {
 			@media (min-width: $screen-sm-min) {
-				>a {
+				> a {
 					padding-right: var(--comp-size-2);
 				}
 
@@ -241,14 +254,12 @@ body:not(.body-expand-header) {
 			}
 
 			@media (max-width: $screen-xs-max) {
-
 				&.hover {
 					ul {
 						border-top: 0.5px solid var(--header-color-border);
 					}
 
 					.header-expand {
-
 						i {
 							transform: rotateZ(-90deg);
 						}
@@ -273,7 +284,7 @@ body:not(.body-expand-header) {
 				overflow: auto;
 				transform: translateX(0);
 
-				>.hover.list {
+				> .hover.list {
 					.header-expand {
 						i {
 							transform: rotateZ(-90deg);
@@ -309,7 +320,7 @@ body:not(.body-expand-header) {
 			transform: translateX(100%);
 			height: calc(100vh - var(--header-height));
 
-			&>li {
+			& > li {
 				width: 100%;
 				height: var(--header-height);
 				transition: height 0.5s;
@@ -323,7 +334,7 @@ body:not(.body-expand-header) {
 				}
 
 				&.list {
-					>a:first-of-type {
+					> a:first-of-type {
 						margin-right: var(--header-height);
 					}
 
@@ -353,11 +364,11 @@ body:not(.body-expand-header) {
 			margin-left: auto;
 			flex-wrap: nowrap;
 
-			&>li {
+			& > li {
 				flex-shrink: 0;
 				height: fit-content;
 
-				&>ul {
+				& > ul {
 					position: absolute;
 					top: var(--header-height);
 					transform: translateY(1px);
@@ -366,16 +377,22 @@ body:not(.body-expand-header) {
 					overflow: hidden;
 					min-width: 160px;
 					border-radius: var(--radius-1);
-					box-shadow: 0 1px 3px 1px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.2);
+					box-shadow: 0 1px 3px 1px
+						hsla(
+							var(--color-root-major-hue),
+							var(--color-root-saturation),
+							var(--color-root-lightness),
+							0.2
+						);
 
-					&>li {
+					& > li {
 						a {
 							text-align: left;
 						}
 					}
 				}
 
-				&.list>ul {
+				&.list > ul {
 					display: block;
 					visibility: hidden;
 					opacity: 0;
@@ -389,7 +406,7 @@ body:not(.body-expand-header) {
 
 				&.list {
 					@include hover() {
-						>ul {
+						> ul {
 							visibility: visible;
 							opacity: 1;
 							pointer-events: auto;
@@ -403,11 +420,11 @@ body:not(.body-expand-header) {
 				}
 
 				&.right {
-					&>ul {
+					& > ul {
 						left: auto;
 						right: 0;
 
-						&>li {
+						& > li {
 							a {
 								text-align: right;
 							}

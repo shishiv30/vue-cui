@@ -16,9 +16,7 @@ export function logStep(name, detail) {
 		store.steps.push({ name, at: new Date().toISOString() });
 	}
 	const quiet = config.mode === 'production' || config.mode === 'stage';
-	const line = quiet
-		? { requestId, step: name }
-		: { requestId, step: name, detail };
+	const line = quiet ? { requestId, step: name } : { requestId, step: name, detail };
 	console.log(JSON.stringify(line));
 }
 

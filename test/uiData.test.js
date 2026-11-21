@@ -34,10 +34,14 @@ describe('property uiData mappers', () => {
 	});
 
 	test('apiDataToUiData maps a listing and nearby rows without the network', () => {
-		const ui = apiDataToUiData(listing, { histories: [] }, {
-			listings: [listing],
-			totalCount: 1,
-		});
+		const ui = apiDataToUiData(
+			listing,
+			{ histories: [] },
+			{
+				listings: [listing],
+				totalCount: 1,
+			},
+		);
 		assert.ok(ui.detail);
 		assert.ok(ui.detail.metadata);
 		assert.equal(ui.articles.length, 1);

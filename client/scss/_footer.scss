@@ -1,13 +1,11 @@
 @use './_mixins.scss' as *;
 
 .footer {
-
 	.input {
 		input {
 			border: none;
 		}
 	}
-	
 }
 .footer-section {
 	display: flex;
@@ -22,12 +20,11 @@
 	}
 }
 
-
 .footer-social-link {
 	display: flex;
 	gap: var(--g1);
 	flex-wrap: wrap;
-	>a {
+	> a {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -37,7 +34,9 @@
 		background-color: color-mix(in hsl, currentColor 12%, transparent);
 		border-radius: var(--radius-1);
 		text-decoration: none;
-		transition: background-color 0.2s ease, transform 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			transform 0.2s ease;
 
 		&:hover {
 			background-color: color-mix(in hsl, currentColor 22%, transparent);
@@ -48,7 +47,6 @@
 			font-size: 1.25rem;
 		}
 	}
-
 }
 .footer-bottom {
 	padding-top: var(--g4);

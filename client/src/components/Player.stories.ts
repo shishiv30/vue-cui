@@ -78,14 +78,14 @@ const meta = {
 		},
 		animationDuration: {
 			control: 'number',
-			description:
-				'Sets --player-animation-duration. Values >= 100 are milliseconds.',
+			description: 'Sets --player-animation-duration. Values >= 100 are milliseconds.',
 			table: { category: 'props', type: { summary: 'number' } },
 		},
 		style: {
 			control: 'inline-radio',
 			options: ['slide', 'fly', 'zoom'],
-			description: 'slide is the default. fly moves in to cover. zoom fades and scales in to cover.',
+			description:
+				'slide is the default. fly moves in to cover. zoom fades and scales in to cover.',
 			table: { category: 'props', type: { summary: "'slide' | 'fly' | 'zoom'" } },
 		},
 		direction: {
@@ -106,14 +106,12 @@ const meta = {
 		},
 		goNext: {
 			control: 'number',
-			description:
-				'Advance one image. Changing the control calls goNext().',
+			description: 'Advance one image. Changing the control calls goNext().',
 			table: { category: 'exposed', type: { summary: '(force?: boolean) => void' } },
 		},
 		goPrev: {
 			control: 'number',
-			description:
-				'Return one image. Changing the control calls goPrev().',
+			description: 'Return one image. Changing the control calls goPrev().',
 			table: { category: 'exposed', type: { summary: '(force?: boolean) => void' } },
 		},
 		play: {
@@ -130,18 +128,15 @@ const meta = {
 		},
 		toggle: {
 			control: 'number',
-			description:
-				'Toggle between play and pause. Changing the control calls toggle().',
+			description: 'Toggle between play and pause. Changing the control calls toggle().',
 			table: { category: 'exposed', type: { summary: '() => void' } },
 		},
 		change: {
-			description:
-				'Fires before the frame updates. The argument is the index being shown.',
+			description: 'Fires before the frame updates. The argument is the index being shown.',
 			table: { category: 'events', type: { summary: 'index: number' } },
 		},
 		changed: {
-			description:
-				'Fires after the frame updates. The argument is the current index.',
+			description: 'Fires after the frame updates. The argument is the current index.',
 			table: { category: 'events', type: { summary: 'index: number' } },
 		},
 	},

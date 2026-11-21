@@ -1,9 +1,5 @@
 <template>
-	<div
-		ref="rootEl"
-		class="textbox"
-		:class="{ focus: focused || modelValue.length > 0 }"
-	>
+	<div ref="rootEl" class="textbox" :class="{ focus: focused || modelValue.length > 0 }">
 		<div v-if="type === 'textarea'" class="textarea">
 			<label v-if="label" :for="fieldId">{{ label }}</label>
 			<textarea
@@ -30,14 +26,17 @@
 <script setup lang="ts">
 import { onMounted, ref, useId } from 'vue';
 
-withDefaults(defineProps<{
-	/** `input` renders a single line. `textarea` renders a multiline field. */
-	type?: 'input' | 'textarea';
-	/** Floating label. Shown inside the field until it is focused or filled. */
-	label?: string;
-}>(), {
-	type: 'input',
-});
+withDefaults(
+	defineProps<{
+		/** `input` renders a single line. `textarea` renders a multiline field. */
+		type?: 'input' | 'textarea';
+		/** Floating label. Shown inside the field until it is focused or filled. */
+		label?: string;
+	}>(),
+	{
+		type: 'input',
+	},
+);
 
 const modelValue = defineModel<string>({ default: '' });
 const fieldId = useId();

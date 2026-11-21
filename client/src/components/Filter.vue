@@ -1,11 +1,5 @@
 <template>
-	<GroupDropdown
-		ref="dropdown"
-		v-model="model"
-		:data="data"
-		@change="onChange"
-		@input="onInput"
-	/>
+	<GroupDropdown ref="dropdown" v-model="model" :data="data" @change="onChange" @input="onInput" />
 </template>
 
 <script setup lang="ts">

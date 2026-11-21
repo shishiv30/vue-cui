@@ -173,16 +173,12 @@ let initialCustomMarker = function () {
 							},
 						);
 					} else {
-						window.google.maps.event.addDomListener(
-							$(div).children()[0],
-							'click',
-							function () {
-								if (self.onclick) {
-									self.onclick(div);
-								}
-								self.poppanel(div);
-							},
-						);
+						window.google.maps.event.addDomListener($(div).children()[0], 'click', function () {
+							if (self.onclick) {
+								self.onclick(div);
+							}
+							self.poppanel(div);
+						});
 					}
 				}
 			}

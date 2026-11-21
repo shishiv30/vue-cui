@@ -30,12 +30,10 @@ function scrollToElement(targetEl, container, offsetTop) {
 	if (container) {
 		const containerRect = container.getBoundingClientRect();
 		const targetRect = targetEl.getBoundingClientRect();
-		const top =
-			container.scrollTop + (targetRect.top - containerRect.top) - offset;
+		const top = container.scrollTop + (targetRect.top - containerRect.top) - offset;
 		container.scrollTo({ top, behavior: 'smooth' });
 	} else {
-		const top =
-			window.scrollY + targetEl.getBoundingClientRect().top - offset;
+		const top = window.scrollY + targetEl.getBoundingClientRect().top - offset;
 		window.scrollTo({ top, behavior: 'smooth' });
 	}
 }
@@ -56,9 +54,7 @@ export default {
 			}
 			const targetEl = getTargetElement($el, opt);
 			if (targetEl) {
-				const container = opt.container
-					? document.querySelector(opt.container)
-					: null;
+				const container = opt.container ? document.querySelector(opt.container) : null;
 				const offsetTop = Number(opt.offsetTop) || 0;
 				scrollToElement(targetEl, container, offsetTop);
 			}

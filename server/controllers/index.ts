@@ -95,10 +95,8 @@ export default class BaseController {
 		let lang = this.req.acceptsLanguages();
 		let origin = this.req.headers.origin || `${this.req.protocol}://${this.req.get('host')}`;
 		const cdnBase = serverConfig.cdnHost || '';
-		const assetPath = (path) => cdnBase ? `${cdnBase}${path}` : path;
-		const defaultPreload = [
-			{ as: 'image', href: assetPath('/images/logo-bg.svg') },
-		];
+		const assetPath = (path) => (cdnBase ? `${cdnBase}${path}` : path);
+		const defaultPreload = [{ as: 'image', href: assetPath('/images/logo-bg.svg') }];
 		const pagePreload =
 			Array.isArray(originMeta?.preload) && originMeta.preload.length
 				? originMeta.preload.map((p) => ({

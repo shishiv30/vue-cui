@@ -153,7 +153,7 @@ export const Default: Story = {
 				() => args.toggleStatus,
 				(value) => {
 					status.value = value;
-				}
+				},
 			);
 			// @toggle hands back the new status: 1 -> 0 or 0 -> 1
 			const onToggle = (next: boolean) => {

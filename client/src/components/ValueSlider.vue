@@ -1,18 +1,7 @@
 <template>
-	<div
-		v-if="stops.length >= 2"
-		ref="rootEl"
-		class="value-slider"
-	>
-		<div
-			ref="trackEl"
-			class="value-slider-track"
-			@pointerdown="onTrackDown"
-		>
-			<div
-				class="value-slider-fill"
-				:style="{ width: nodeLeft }"
-			></div>
+	<div v-if="stops.length >= 2" ref="rootEl" class="value-slider">
+		<div ref="trackEl" class="value-slider-track" @pointerdown="onTrackDown">
+			<div class="value-slider-fill" :style="{ width: nodeLeft }"></div>
 			<button
 				type="button"
 				class="value-slider-node"

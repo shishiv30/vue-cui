@@ -88,7 +88,12 @@ export default {
 			_highlightItem(opt.selectedIndex);
 		};
 		let _selectHighlighted = function () {
-			if (opt.selectedIndex !== undefined && opt.selectedIndex >= 0 && opt.data && opt.data[opt.selectedIndex]) {
+			if (
+				opt.selectedIndex !== undefined &&
+				opt.selectedIndex >= 0 &&
+				opt.data &&
+				opt.data[opt.selectedIndex]
+			) {
 				let item = opt.data[opt.selectedIndex];
 				_selectSuggestion(item);
 				_hide();

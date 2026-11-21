@@ -100,8 +100,7 @@ export default {
 		afterHide: null,
 		_timer: null,
 		parent: null,
-		template:
-			'<div class="tooltip-arrow"></div><div class="tooltip-inner"></div>',
+		template: '<div class="tooltip-arrow"></div><div class="tooltip-inner"></div>',
 	},
 	init: function ($this, opt, exportObj) {
 		exportObj.show = function () {
@@ -245,7 +244,7 @@ export default {
 			opt.content = $this.dataset.content;
 		}
 	},
-	setOptionsAfter: function ($this, opt, exportObj) { },
+	setOptionsAfter: function ($this, opt, exportObj) {},
 	initBefore: null,
 	initAfter: function ($this, opt, exportObj) {
 		// Store event handlers for cleanup
@@ -255,7 +254,10 @@ export default {
 			exportObj.show();
 			// Add one-time click listener to document to hide tooltip when clicking outside
 			const hideOnOutsideClick = function (e) {
-				if (!exportObj.$container || (!exportObj.$container.contains(e.target) && e.target !== $this)) {
+				if (
+					!exportObj.$container ||
+					(!exportObj.$container.contains(e.target) && e.target !== $this)
+				) {
 					exportObj.hide();
 					document.removeEventListener('click', hideOnOutsideClick);
 				}

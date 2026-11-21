@@ -216,8 +216,7 @@ export class Router {
 
 	init() {
 		this._onPopstate = (e) => {
-			const pathname =
-				(e.state && e.state.pathname) || window.location.pathname || '';
+			const pathname = (e.state && e.state.pathname) || window.location.pathname || '';
 			const search = window.location.search || '';
 			if (
 				this.currentRouter &&

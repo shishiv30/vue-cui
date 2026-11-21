@@ -74,7 +74,7 @@ export default {
 	listDict,
 	layout,
 	'layout-toggle': layoutToggle,
-	groupdropdown: 	groupDropdown,
+	groupdropdown: groupDropdown,
 	rangeSlider,
 	theme,
 	// view,

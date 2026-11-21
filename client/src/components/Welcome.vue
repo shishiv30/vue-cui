@@ -30,18 +30,27 @@
 			]"
 			:style="{ '--welcome-delay': `${slot.delay}ms` }"
 		>
-			<i v-if="slot.panel.icon" class="welcome-icon" :class="[slot.panel.icon, slot.panel.iconStyle]" aria-hidden="true"></i>
+			<i
+				v-if="slot.panel.icon"
+				class="welcome-icon"
+				:class="[slot.panel.icon, slot.panel.iconStyle]"
+				aria-hidden="true"
+			></i>
 			<div class="welcome-text">
 				<span v-if="slot.panel.sup" class="welcome-sup">{{ slot.panel.sup }}</span>
 				<div class="welcome-main">
 					<strong class="welcome-title">{{ slot.panel.title }}</strong>
-					<span v-if="slot.panel.label" class="attr welcome-label" :class="slot.panel.labelStyle">{{ slot.panel.label }}</span>
+					<span v-if="slot.panel.label" class="attr welcome-label" :class="slot.panel.labelStyle">{{
+						slot.panel.label
+					}}</span>
 				</div>
 				<span v-if="slot.panel.sub" class="welcome-sub">{{ slot.panel.sub }}</span>
 			</div>
 		</div>
 		<div v-if="model.data.title || model.data.subTitle" class="welcome-caption">
-			<address v-if="model.data.title" class="welcome-caption-title">{{ model.data.title }}</address>
+			<address v-if="model.data.title" class="welcome-caption-title">
+				{{ model.data.title }}
+			</address>
 			<span v-if="model.data.subTitle" class="welcome-caption-sub">{{ model.data.subTitle }}</span>
 		</div>
 	</div>
@@ -97,13 +106,17 @@ const ratioValue = computed(() => {
 	return w > 0 && h > 0 ? `${w} / ${h}` : '16 / 9';
 });
 const corners = computed(() => {
-	const list = (props.model.positions ?? welcomePositions).filter((p) => welcomePositions.includes(p));
+	const list = (props.model.positions ?? welcomePositions).filter((p) =>
+		welcomePositions.includes(p),
+	);
 	return list.length ? [...new Set(list)] : welcomePositions;
 });
 
 function pickAnimation(): WelcomeAnimation {
 	const mode = props.model.animation ?? 'random';
-	return mode === 'random' ? welcomeAnimations[Math.floor(Math.random() * welcomeAnimations.length)] : mode;
+	return mode === 'random'
+		? welcomeAnimations[Math.floor(Math.random() * welcomeAnimations.length)]
+		: mode;
 }
 
 function shuffle<T>(items: T[]): T[] {
@@ -184,7 +197,13 @@ function onError() {
 }
 
 watch(
-	() => [props.model.src, props.model.animation, props.model.data.list, props.model.positions, props.model.interval],
+	() => [
+		props.model.src,
+		props.model.animation,
+		props.model.data.list,
+		props.model.positions,
+		props.model.interval,
+	],
 	() => {
 		stopRotation();
 		slots.value = [];

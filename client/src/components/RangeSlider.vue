@@ -1,19 +1,7 @@
 <template>
-	<div
-		v-if="stops.length >= 2"
-		ref="rootEl"
-		class="range-slider"
-		@reset="onReset"
-	>
-		<div
-			ref="trackEl"
-			class="range-slider-track"
-			@pointerdown="onTrackDown"
-		>
-			<div
-				class="range-slider-fill"
-				:style="{ left: fillLeft, width: fillWidth }"
-			></div>
+	<div v-if="stops.length >= 2" ref="rootEl" class="range-slider" @reset="onReset">
+		<div ref="trackEl" class="range-slider-track" @pointerdown="onTrackDown">
+			<div class="range-slider-fill" :style="{ left: fillLeft, width: fillWidth }"></div>
 			<button
 				type="button"
 				class="range-slider-node"
@@ -225,8 +213,7 @@ function onTrackDown(event: PointerEvent) {
 		return;
 	}
 	const index = indexFromEvent(event);
-	const edge =
-		Math.abs(index - minIndex.value) <= Math.abs(index - maxIndex.value) ? 'min' : 'max';
+	const edge = Math.abs(index - minIndex.value) <= Math.abs(index - maxIndex.value) ? 'min' : 'max';
 	startDrag(edge, event);
 }
 

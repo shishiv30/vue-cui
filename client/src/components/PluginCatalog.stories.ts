@@ -10,7 +10,10 @@ const Catalog = defineComponent({
 				'ul',
 				{ style: 'padding: 24px; font: 16px/1.6 sans-serif;' },
 				pluginCatalog.map((item) =>
-					h('li', `${item.name}: ${item.status === 'vue' ? 'Vue component' : 'JS plugin, not in Storybook yet'}`),
+					h(
+						'li',
+						`${item.name}: ${item.status === 'vue' ? 'Vue component' : 'JS plugin, not in Storybook yet'}`,
+					),
 				),
 			);
 	},

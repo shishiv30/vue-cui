@@ -44,16 +44,13 @@ const config = {
 	webpackDevServerPort: parseInt(process.env.WEBPACK_DEV_SERVER_PORT || '', 10) || 3001,
 	webpackDevServerHost: process.env.WEBPACK_DEV_SERVER_HOST || 'localhost',
 	webpackHotReload: process.env.WEBPACK_HOT_RELOAD === 'true' || NODE_ENV === 'development',
-	dockerPort:
-		process.env.CDN_HOST ? (parseInt(process.env.DOCKER_PORT || '', 10) || 3002) : undefined,
+	dockerPort: process.env.CDN_HOST
+		? parseInt(process.env.DOCKER_PORT || '', 10) || 3002
+		: undefined,
 	webpackMinimize:
-		process.env.WEBPACK_MINIMIZE === 'true' ||
-		NODE_ENV === 'production' ||
-		NODE_ENV === 'stage',
+		process.env.WEBPACK_MINIMIZE === 'true' || NODE_ENV === 'production' || NODE_ENV === 'stage',
 	webpackOptimize:
-		process.env.WEBPACK_OPTIMIZE === 'true' ||
-		NODE_ENV === 'production' ||
-		NODE_ENV === 'stage',
+		process.env.WEBPACK_OPTIMIZE === 'true' || NODE_ENV === 'production' || NODE_ENV === 'stage',
 	corsOrigins: [] as string[],
 };
 

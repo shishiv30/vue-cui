@@ -13,13 +13,12 @@ function unwrapPropertyApiPayload(raw: any) {
 	if (raw == null || typeof raw !== 'object') {
 		return raw;
 	}
-	const o = /** @type {Record<string, unknown>} */ (raw);
+	const o = /** @type {Record<string, unknown>} */ raw;
 	if ('data' in o) {
 		return o.data;
 	}
 	return raw;
 }
-
 
 /**
  * Normalize SOA webp photo URL to preview size (`_p.webp`).
@@ -44,7 +43,7 @@ export function mapSoaPhotosToUrls(photos: any) {
 		if (typeof item === 'string' && item.trim()) {
 			out.push(toSoaPreviewPhotoUrl(item.trim()));
 		} else if (item && typeof item === 'object') {
-			const url = /** @type {Record<string, unknown>} */ (item).url;
+			const url = /** @type {Record<string, unknown>} */ item.url;
 			if (typeof url === 'string' && url.trim()) {
 				out.push(toSoaPreviewPhotoUrl(url.trim()));
 			}
@@ -72,7 +71,7 @@ export function normalizeGroupedFeatures(groupedFeatures: any) {
 	if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
 		return null;
 	}
-	return /** @type {Record<string, string[]>} */ (raw);
+	return /** @type {Record<string, string[]>} */ raw;
 }
 
 /**
@@ -80,7 +79,7 @@ export function normalizeGroupedFeatures(groupedFeatures: any) {
  * @returns {unknown}
  */
 function resolveSoaListingPrice(listing: any) {
-	if(listing.listingStatus.name === 'SOLD') {
+	if (listing.listingStatus.name === 'SOLD') {
 		return listing.soldPrice || listing.closePrice;
 	} else if (listing.listingStatus.name !== 'ACTIVE' && listing.listingStatus.name !== 'PENDING') {
 		return listing.closePrice || listing.soldPrice || listing.listPrice;
@@ -101,14 +100,14 @@ export function mapSOADataToMetadata(soaListing: any, historiesRaw: any = null) 
 	if (!soaListing || typeof soaListing !== 'object') {
 		return null;
 	}
-	const L = /** @type {Record<string, unknown>} */ (soaListing);
+	const L = /** @type {Record<string, unknown>} */ soaListing;
 	const propertyId = String(L.id || '').trim();
 	if (!propertyId) {
 		return null;
 	}
 	const address =
 		L.address && typeof L.address === 'object'
-			? /** @type {Record<string, unknown>} */ (L.address)
+			? /** @type {Record<string, unknown>} */ L.address
 			: null;
 
 	const sqftTotal = L.sqftTotal;
@@ -173,7 +172,7 @@ export function collectPhotoUrls(listing: any) {
 	if (!listing || typeof listing !== 'object') {
 		return [];
 	}
-	return mapSoaPhotosToUrls(/** @type {Record<string, unknown>} */ (listing).photos);
+	return mapSoaPhotosToUrls(/** @type {Record<string, unknown>} */ listing.photos);
 }
 
 /**
@@ -185,14 +184,8 @@ export function extractListingDescription(listing: any) {
 	if (!listing || typeof listing !== 'object') {
 		return '';
 	}
-	const L = /** @type {Record<string, unknown>} */ (listing);
-	const parts = [
-		L.publicRemarks,
-		L.remarks,
-		L.listingDescription,
-		L.description,
-		L.remark,
-	]
+	const L = /** @type {Record<string, unknown>} */ listing;
+	const parts = [L.publicRemarks, L.remarks, L.listingDescription, L.description, L.remark]
 		.filter((x) => typeof x === 'string' && x.trim())
 		.map((x) => String(x).trim());
 	return parts[0] || '';
@@ -209,7 +202,7 @@ export function normalizeHistoryList(raw: any) {
 		return data;
 	}
 	if (data && typeof data === 'object') {
-		const d = /** @type {Record<string, unknown>} */ (data);
+		const d = /** @type {Record<string, unknown>} */ data;
 		const list = d.histories || d.list || d.items || d.records;
 		if (Array.isArray(list)) {
 			return list;
@@ -226,7 +219,7 @@ export function mapHistoryRow(h: any) {
 	if (!h || typeof h !== 'object') {
 		return { date: '', title: '', subtitle: '' };
 	}
-	const o = /** @type {Record<string, unknown>} */ (h);
+	const o = /** @type {Record<string, unknown>} */ h;
 	const date = String(
 		o.eventDate || o.transactionDate || o.date || o.closeDate || o.recordedDate || '',
 	).trim();
@@ -308,4 +301,3 @@ export function buildDetailBreadcrumb(prop: any, basePath = '/property') {
 	links.push({ text: prop.fullAddress || prop.propertyId || 'Listing', href: '' });
 	return { links };
 }
-

@@ -3,51 +3,51 @@
 @include comp-color('suggestion-list');
 @include comp-size('suggestion-list');
 .suggestion-list {
-  display: none;
-  position: absolute;
-  width: 100%;
-  background-color: var(--suggestion-list-color-bg);
-  color: var(--suggestion-list-color);
+	display: none;
+	position: absolute;
+	width: 100%;
+	background-color: var(--suggestion-list-color-bg);
+	color: var(--suggestion-list-color);
 
-  line-height: 2;
-  overflow-y: auto;
-  overflow-x: hidden;
-  @include hidden-scrollbar();
-  border-radius: 0 0 var(--suggestion-list-radius) var(--suggestion-list-radius);
+	line-height: 2;
+	overflow-y: auto;
+	overflow-x: hidden;
+	@include hidden-scrollbar();
+	border-radius: 0 0 var(--suggestion-list-radius) var(--suggestion-list-radius);
 }
 
 .suggestion-list:empty {
-  display: none !important;
+	display: none !important;
 }
 
 .autocomplete-show {
-  .suggestion-list {
-    display: block;
-  }
-  &.input{
-    input {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-  }
+	.suggestion-list {
+		display: block;
+	}
+	&.input {
+		input {
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
 }
 
 .suggestion-item {
-  padding: var(--g1) var(--g2);
-  cursor: pointer;
-  border-top: var(--suggestion-list-color-border) 1px solid;
-  cursor: pointer;
+	padding: var(--g1) var(--g2);
+	cursor: pointer;
+	border-top: var(--suggestion-list-color-border) 1px solid;
+	cursor: pointer;
 
-  &:hover {
-    font-weight: var(--font-weight-bold);
-    color: var(--suggestion-list-color-hover);
-    background: var(--suggestion-list-color-bg-hover);
-  }
+	&:hover {
+		font-weight: var(--font-weight-bold);
+		color: var(--suggestion-list-color-hover);
+		background: var(--suggestion-list-color-bg-hover);
+	}
 
-  &.selected {
-    font-weight: var(--font-weight-bold);
-    background: var(--color-bg-l1);
-  }
+	&.selected {
+		font-weight: var(--font-weight-bold);
+		background: var(--color-bg-l1);
+	}
 }
 
 // v-autocomplete (client/src/directives/autocomplete.ts)
@@ -136,7 +136,11 @@
 
 	// Mixed from the list's own colors, so it shows on light and dark inputs.
 	&.selected {
-		background-color: color-mix(in srgb, var(--autocomplete-list-color) 10%, var(--autocomplete-list-color-bg));
+		background-color: color-mix(
+			in srgb,
+			var(--autocomplete-list-color) 10%,
+			var(--autocomplete-list-color-bg)
+		);
 		box-shadow: inset var(--gxs) 0 0 var(--autocomplete-list-color);
 	}
 }
@@ -192,7 +196,12 @@ html.autocomplete-open {
 	position: fixed;
 	inset: 0;
 	z-index: calc(var(--ui-gautocomplete-index) - 1);
-	background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.3);
+	background-color: hsla(
+		var(--color-root-major-hue),
+		var(--color-root-saturation),
+		var(--color-root-lightness),
+		0.3
+	);
 	clip-path: polygon(
 		evenodd,
 		0 0,

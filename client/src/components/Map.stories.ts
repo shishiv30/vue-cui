@@ -3,7 +3,13 @@ import { fn } from 'storybook/test';
 import { computed, ref } from 'vue';
 import Map from './Map.vue';
 import { defaultMapStyle, mapStyleList } from './mapStyles';
-import { mapMock, type MapMarker, type MapStyleName, type MapType, type MapUiModel } from './mapModel';
+import {
+	mapMock,
+	type MapMarker,
+	type MapStyleName,
+	type MapType,
+	type MapUiModel,
+} from './mapModel';
 
 type MapStoryArgs = {
 	apiKey?: string;
@@ -36,10 +42,23 @@ const meta = {
 		},
 	},
 	argTypes: {
-		apiKey: { control: 'text', description: 'Maps JavaScript API key. Falls back to GOOGLE_MAPS_API_KEY from .env.local.', table: { category: 'props' } },
-		markers: { control: 'object', description: 'Pins. Each has id, position, an optional look and an optional `article` for the popover.', table: { category: 'props', type: { summary: 'MapMarker[]' } } },
+		apiKey: {
+			control: 'text',
+			description: 'Maps JavaScript API key. Falls back to GOOGLE_MAPS_API_KEY from .env.local.',
+			table: { category: 'props' },
+		},
+		markers: {
+			control: 'object',
+			description:
+				'Pins. Each has id, position, an optional look and an optional `article` for the popover.',
+			table: { category: 'props', type: { summary: 'MapMarker[]' } },
+		},
 		zoom: { control: { type: 'range', min: 1, max: 20 }, table: { category: 'props' } },
-		mapType: { control: 'inline-radio', options: ['roadmap', 'satellite', 'hybrid', 'terrain'], table: { category: 'props' } },
+		mapType: {
+			control: 'inline-radio',
+			options: ['roadmap', 'satellite', 'hybrid', 'terrain'],
+			table: { category: 'props' },
+		},
 		mapStyle: {
 			control: 'inline-radio',
 			options: mapStyleList.map((item) => item.value),
@@ -47,7 +66,12 @@ const meta = {
 				'Look from `mapStyleList`. `streetview` is an overlay; switching away destroys and recycles it.',
 			table: { category: 'props' },
 		},
-		fitMarkers: { control: 'boolean', description: 'Zoom to show every pin after pins are added or removed. Several changes in a row fit once.', table: { category: 'props' } },
+		fitMarkers: {
+			control: 'boolean',
+			description:
+				'Zoom to show every pin after pins are added or removed. Several changes in a row fit once.',
+			table: { category: 'props' },
+		},
 		hidePoi: {
 			control: 'boolean',
 			description: 'Hide Google points of interest. Default true.',
@@ -60,8 +84,14 @@ const meta = {
 			table: { category: 'props' },
 		},
 		className: { control: 'text', table: { category: 'props' } },
-		markerClick: { description: 'A pin was clicked.', table: { category: 'events', type: { summary: 'marker: MapMarker' } } },
-		mapClick: { description: 'The empty map was clicked.', table: { category: 'events', type: { summary: 'position: { lat, lng }' } } },
+		markerClick: {
+			description: 'A pin was clicked.',
+			table: { category: 'events', type: { summary: 'marker: MapMarker' } },
+		},
+		mapClick: {
+			description: 'The empty map was clicked.',
+			table: { category: 'events', type: { summary: 'position: { lat, lng }' } },
+		},
 		streetviewError: {
 			description: 'Street View overlay had no coverage at the map center.',
 			table: { category: 'events' },

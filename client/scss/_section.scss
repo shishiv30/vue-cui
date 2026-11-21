@@ -8,7 +8,6 @@
 	margin-top: var(--section-gap-y);
 	margin-bottom: var(--section-gap-y);
 
-
 	&.inline {
 		margin-top: 0;
 		margin-bottom: 0;
@@ -32,7 +31,6 @@
 		font-size: 0;
 		overflow: hidden;
 
-
 		img {
 			display: block;
 			width: 100%;
@@ -42,7 +40,7 @@
 	}
 
 	.content {
-		>i {
+		> i {
 			font-size: min(200px, 30vw);
 		}
 
@@ -64,7 +62,12 @@
 		margin: 10vh auto;
 		max-width: max(80dvw, 320px);
 		padding: 10vh 5vw;
-		background-color: hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 0.5);
+		background-color: hsla(
+			var(--color-root-major-hue),
+			var(--color-root-major-saturation),
+			var(--color-root-major-lightness),
+			0.5
+		);
 		color: var(--color-major-l1);
 		border-radius: var(--radius-2);
 
@@ -82,22 +85,20 @@
 	justify-content: center;
 	padding: 0 var(--g2);
 
-	>div {
+	> div {
 		margin: 0 auto;
 		text-align: center;
 	}
-
 
 	ul {
 		display: flex;
 		flex-direction: column;
 		gap: var(--g5);
 
-
 		li {
 			position: relative;
 
-			>div {
+			> div {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
@@ -108,10 +109,9 @@
 				}
 			}
 
-			>img {
+			> img {
 				object-fit: cover;
 			}
-
 
 			@media screen and (min-width: $screen-sm-min) {
 				border-radius: var(--radius-4);
@@ -119,10 +119,10 @@
 				height: 470px;
 
 				.btn {
-					border: 1px solid var(--color-bg-l1)
+					border: 1px solid var(--color-bg-l1);
 				}
 
-				&>img {
+				& > img {
 					object-position: 85% center;
 					position: absolute;
 					left: 0;
@@ -132,7 +132,7 @@
 					z-index: 0;
 				}
 
-				&>div {
+				& > div {
 					position: absolute;
 					top: 0;
 					left: 0;
@@ -141,24 +141,56 @@
 					z-index: 1;
 					color: var(--color-bg);
 
-					>p {
+					> p {
 						max-width: 290px;
 					}
 				}
 
 				&:nth-child(odd) {
-					>div {
+					> div {
 						padding-right: var(--g4);
 						padding-left: var(--g4);
-						background: linear-gradient(to left, hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 0) 40%, hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 1) 80%);
+						background: linear-gradient(
+							to left,
+							hsla(
+									var(--color-root-major-hue),
+									var(--color-root-major-saturation),
+									var(--color-root-major-lightness),
+									0
+								)
+								40%,
+							hsla(
+									var(--color-root-major-hue),
+									var(--color-root-major-saturation),
+									var(--color-root-major-lightness),
+									1
+								)
+								80%
+						);
 					}
 				}
 
 				&:nth-child(even) {
-					>div {
+					> div {
 						padding-left: calc(100% - 380px);
 						padding-right: var(--g4);
-						background: linear-gradient(to right, hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 0) 40%, hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 1) 80%);
+						background: linear-gradient(
+							to right,
+							hsla(
+									var(--color-root-major-hue),
+									var(--color-root-major-saturation),
+									var(--color-root-major-lightness),
+									0
+								)
+								40%,
+							hsla(
+									var(--color-root-major-hue),
+									var(--color-root-major-saturation),
+									var(--color-root-major-lightness),
+									1
+								)
+								80%
+						);
 					}
 				}
 			}
@@ -166,7 +198,6 @@
 			@media screen and (max-width: $screen-xs-max) {
 				display: flex;
 				flex-direction: column;
-
 
 				.btn {
 					color: var(--color-major);
@@ -179,16 +210,32 @@
 					padding-top: var(--radius-4);
 					padding-bottom: var(--radius-4);
 					width: 100%;
-					background: linear-gradient(to bottom, hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 0) 0%, hsla(var(--color-root-major-hue), var(--color-root-major-saturation), var(--color-root-major-lightness), 1) 70%);
+					background: linear-gradient(
+						to bottom,
+						hsla(
+								var(--color-root-major-hue),
+								var(--color-root-major-saturation),
+								var(--color-root-major-lightness),
+								0
+							)
+							0%,
+						hsla(
+								var(--color-root-major-hue),
+								var(--color-root-major-saturation),
+								var(--color-root-major-lightness),
+								1
+							)
+							70%
+					);
 					border-radius: 0 0 var(--radius-4) var(--radius-4);
 				}
 
-				&>img {
+				& > img {
 					border-radius: var(--radius-4);
 					aspect-ratio: 5/3;
 				}
 
-				&>div {
+				& > div {
 					text-align: center;
 					z-index: 1;
 					order: 2;
@@ -206,9 +253,11 @@
 }
 
 .section-banner {
-	.picture {}
+	.picture {
+	}
 
-	.content {}
+	.content {
+	}
 }
 
 .section-gallery {

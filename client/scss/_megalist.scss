@@ -14,7 +14,6 @@
 	overflow: hidden;
 }
 
-
 .megalist ul {
 	position: absolute;
 	display: block;
@@ -32,7 +31,7 @@
 }
 
 .megalistItem {
-	opacity: 0.9
+	opacity: 0.9;
 }
 
 .megalistSelected {
@@ -42,11 +41,22 @@
 .megalist #scrollbar {
 	position: absolute;
 	background-color: black;
-	background-color: hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.5);
+	background-color: hsla(
+		var(--color-root-major-hue),
+		var(--color-root-saturation),
+		var(--color-root-lightness),
+		0.5
+	);
 	width: 5px;
 	border-radius: var(--radius-0);
 	top: 1px;
 	right: 1px;
 	height: 25px;
-	border: 1px solid hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.5);
+	border: 1px solid
+		hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.5
+		);
 }

@@ -46,7 +46,8 @@ const meta = {
 		},
 		data: {
 			control: 'object',
-			description: 'Panels. The default is the listing filter (price, bed, bath, type, status, tags).',
+			description:
+				'Panels. The default is the listing filter (price, bed, bath, type, status, tags).',
 			table: { category: 'props', type: { summary: 'GroupDropdownField[]' } },
 		},
 		open: {

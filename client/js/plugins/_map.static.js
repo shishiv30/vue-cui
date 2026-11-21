@@ -300,10 +300,7 @@ export default {
 			if (opt.fillcolor) {
 				if (opt.polylinedata) {
 					mapUrl += encodeURIComponent(
-						'&path=fillcolor:' +
-						opt.fillcolor +
-						'|color:0xFFFFFF00|enc:' +
-						opt.polylinedata,
+						'&path=fillcolor:' + opt.fillcolor + '|color:0xFFFFFF00|enc:' + opt.polylinedata,
 					);
 				} else {
 					mapUrl += '&path=fillcolor:' + opt.fillcolor;

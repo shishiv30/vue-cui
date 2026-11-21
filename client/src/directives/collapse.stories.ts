@@ -15,8 +15,8 @@ const meta = {
 					'| --- | --- |',
 					'| Value | Panel selector, for example `#panel`. |',
 					'| Argument | `shown` starts the button and panel open. Omit it to start closed. |',
-					'| Markup | A trigger element and a panel whose `id` matches the selector. '
-						+ 'A click toggles class `shown` on both. |',
+					'| Markup | A trigger element and a panel whose `id` matches the selector. ' +
+						'A click toggles class `shown` on both. |',
 				].join('\n'),
 			},
 		},

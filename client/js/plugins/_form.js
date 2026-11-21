@@ -4,7 +4,7 @@ import { Plugin } from '../core/plugin.js';
 export const getElementValue = function ($element) {
 	if ($element.type === 'checkbox' || $element.type === 'radio') {
 		const value = $element.attributes['value']?.value;
-		return $element.checked ? (value || 'on') : '';
+		return $element.checked ? value || 'on' : '';
 	}
 	return $element.value;
 };
@@ -103,7 +103,7 @@ export default {
 			});
 			return obj;
 		};
-		$el.addEventListener("submit", (event) => {
+		$el.addEventListener('submit', (event) => {
 			event.preventDefault();
 			let valide;
 			try {

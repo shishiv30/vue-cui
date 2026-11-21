@@ -6,12 +6,7 @@
 		:class="[{ 'hidden-prev': !hasPrev, 'hidden-next': !hasNext }, model.className]"
 		data-role="shifter"
 	>
-		<button
-			type="button"
-			class="arrow prev circle small"
-			aria-label="Previous"
-			@click="prev"
-		>
+		<button type="button" class="arrow prev circle small" aria-label="Previous" @click="prev">
 			<i class="icon-angle-left" role="img" aria-label="Previous items"></i>
 		</button>
 		<div
@@ -23,12 +18,7 @@
 		>
 			<div v-for="item in model.items" :key="item">{{ item }}</div>
 		</div>
-		<button
-			type="button"
-			class="arrow next circle small"
-			aria-label="Next"
-			@click="next"
-		>
+		<button type="button" class="arrow next circle small" aria-label="Next" @click="next">
 			<i class="icon-angle-right" role="img" aria-label="Next items"></i>
 		</button>
 	</div>

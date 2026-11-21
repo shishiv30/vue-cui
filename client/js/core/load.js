@@ -17,9 +17,7 @@ var resource = {
 						};
 					}
 					script.src = src;
-					document
-						.getElementsByTagName('head')[0]
-						.appendChild(script);
+					document.getElementsByTagName('head')[0].appendChild(script);
 				} catch (err) {
 					reject(err);
 				}

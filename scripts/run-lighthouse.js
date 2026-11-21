@@ -25,7 +25,9 @@ const ROOT = path.resolve(__dirname, '..');
 
 const OUTPUT_BASE = process.env.LIGHTHOUSE_OUTPUT || path.join(ROOT, 'dist', 'lighthouse-report');
 const OUTPUT_HTML = OUTPUT_BASE + (OUTPUT_BASE.endsWith('.html') ? '' : '.report.html');
-const OUTPUT_JSON = OUTPUT_BASE.replace(/\.html$/, '') + (OUTPUT_BASE.endsWith('.html') ? '.report.json' : '.report.json');
+const OUTPUT_JSON =
+	OUTPUT_BASE.replace(/\.html$/, '') +
+	(OUTPUT_BASE.endsWith('.html') ? '.report.json' : '.report.json');
 const WAIT_MS = 30000;
 const POLL_MS = 500;
 
@@ -91,7 +93,9 @@ function runLighthouse(targetUrl) {
 			cwd: ROOT,
 		});
 		let stderr = '';
-		child.stderr?.on('data', (chunk) => { stderr += chunk; });
+		child.stderr?.on('data', (chunk) => {
+			stderr += chunk;
+		});
 		child.on('close', (code) => {
 			if (code === 0) resolve();
 			else reject(new Error(stderr || `Lighthouse exited with code ${code}`));
@@ -177,7 +181,12 @@ function generateSummary(lhr) {
 	}
 
 	// Diagnostics (informational)
-	const diagIds = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift'];
+	const diagIds = [
+		'first-contentful-paint',
+		'largest-contentful-paint',
+		'total-blocking-time',
+		'cumulative-layout-shift',
+	];
 	lines.push('## Core Web Vitals');
 	lines.push('');
 	for (const id of diagIds) {
@@ -190,7 +199,9 @@ function generateSummary(lhr) {
 	lines.push('');
 
 	lines.push('---');
-	lines.push('*Run `npm run test:lighthouse` to regenerate. Set `LIGHTHOUSE_URL` to test other pages (e.g. `/page/index`).*');
+	lines.push(
+		'*Run `npm run test:lighthouse` to regenerate. Set `LIGHTHOUSE_URL` to test other pages (e.g. `/page/index`).*',
+	);
 	return lines.join('\n');
 }
 

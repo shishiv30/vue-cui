@@ -63,7 +63,9 @@ function applyFormat(date: any, formatString: any, tokenEntries: any) {
 			token === 'YYYY' ? String(value) : pad2(value),
 		]),
 	);
-	const tokens = tokenEntries.map(([token]: [string]) => token).sort((a: any, b: any) => b.length - a.length);
+	const tokens = tokenEntries
+		.map(([token]: [string]) => token)
+		.sort((a: any, b: any) => b.length - a.length);
 	let result = formatString;
 	for (const token of tokens) {
 		result = result.replaceAll(token, tokenMap[token]);
@@ -142,8 +144,7 @@ export function timeDiff(date: any, compareDate = null) {
 	if (!target) {
 		return '';
 	}
-	const reference =
-		compareDate == null ? new Date() : toDate(compareDate);
+	const reference = compareDate == null ? new Date() : toDate(compareDate);
 	if (!reference) {
 		return '';
 	}

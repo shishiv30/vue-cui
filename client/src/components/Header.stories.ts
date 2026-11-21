@@ -55,9 +55,9 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Site header. Each Controls row is one field of the model. Omit search and the search field is not rendered. '
-					+ 'The search field uses `v-autocomplete` against `search.url` with `type`; picking a result opens `/property/<geo path>`. '
-					+ 'In Storybook `/api/geo` answers with a few sample cities (try "dal" or "san"). On phones the list fills the screen below the header.',
+					'Site header. Each Controls row is one field of the model. Omit search and the search field is not rendered. ' +
+					'The search field uses `v-autocomplete` against `search.url` with `type`; picking a result opens `/property/<geo path>`. ' +
+					'In Storybook `/api/geo` answers with a few sample cities (try "dal" or "san"). On phones the list fills the screen below the header.',
 			},
 		},
 	},
@@ -136,11 +136,11 @@ export const Default: Story = {
 		await userEvent.type(input, 'dal');
 		const list = await within(document.body).findByRole('listbox');
 		await waitFor(() => expect(list).toHaveClass('in'));
-		await expect(within(list).getAllByRole('option').map((o) => o.textContent)).toEqual([
-			'Dallas, TX',
-			'Glendale, AZ',
-			'Scottsdale, AZ',
-		]);
+		await expect(
+			within(list)
+				.getAllByRole('option')
+				.map((o) => o.textContent),
+		).toEqual(['Dallas, TX', 'Glendale, AZ', 'Scottsdale, AZ']);
 		await expect(list).toHaveClass('header-autocomplete');
 		await userEvent.keyboard('{Escape}');
 		await expect(list).not.toHaveClass('in');

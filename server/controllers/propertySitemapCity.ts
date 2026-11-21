@@ -33,7 +33,9 @@ export default {
 
 		// Find the city to get its full name
 		const city = geoData.city.find(
-			(c) => c.state === stateCode && c.city?.toLowerCase().replace(/\s+/g, '-') === cityCode.toLowerCase().replace(/\s+/g, '-'),
+			(c) =>
+				c.state === stateCode &&
+				c.city?.toLowerCase().replace(/\s+/g, '-') === cityCode.toLowerCase().replace(/\s+/g, '-'),
 		);
 		const cityName = city?.city || cityCode;
 

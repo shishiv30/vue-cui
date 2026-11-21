@@ -7,7 +7,7 @@
 	@include hidden-scrollbar();
 
 	tbody {
-		>tr:nth-child(odd) {
+		> tr:nth-child(odd) {
 			background-color: var(--color-bg-l1);
 
 			td {
@@ -25,7 +25,6 @@ table {
 }
 
 table {
-
 	td,
 	th {
 		text-align: left;

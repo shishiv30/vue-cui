@@ -13,8 +13,7 @@ const loadMap = async function (googleMapKey) {
 				var config = {
 					callback: 'googlemapcallback',
 				};
-				var mapUrl =
-					'https://maps.googleapis.com/maps/api/js?' + googleMapKey;
+				var mapUrl = 'https://maps.googleapis.com/maps/api/js?' + googleMapKey;
 				Object.keys(config).forEach((key) => {
 					mapUrl += '&' + key + '=' + Object[key];
 				});

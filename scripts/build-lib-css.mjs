@@ -10,6 +10,8 @@ const { css } = sass.compile(path.join(root, 'client/scss/index.scss'), { style:
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, 'style.css'), css.replaceAll('../assets/', './assets/'));
 for (const dir of ['fonts', 'img']) {
-	fs.cpSync(path.join(root, 'client/assets', dir), path.join(out, 'assets', dir), { recursive: true });
+	fs.cpSync(path.join(root, 'client/assets', dir), path.join(out, 'assets', dir), {
+		recursive: true,
+	});
 }
 fs.rmSync(path.join(out, 'assets/fonts/selection.json'), { force: true });

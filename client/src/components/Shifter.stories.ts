@@ -53,14 +53,12 @@ const meta = {
 		},
 		next: {
 			control: 'number',
-			description:
-				'Scroll forward by step. Change this control to call next().',
+			description: 'Scroll forward by step. Change this control to call next().',
 			table: { category: 'exposed', type: { summary: '() => void' } },
 		},
 		prev: {
 			control: 'number',
-			description:
-				'Scroll backward by step. Change this control to call prev().',
+			description: 'Scroll backward by step. Change this control to call prev().',
 			table: { category: 'exposed', type: { summary: '() => void' } },
 		},
 	},

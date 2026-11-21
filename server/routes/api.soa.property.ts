@@ -24,8 +24,8 @@ function handleSoaError(res, error) {
 		error.message === 'PROPERTY_API_DOMAIN is not configured'
 			? 503
 			: error.message === 'propertyId is required' ||
-					error.message === 'prId is required' ||
-					error.message === 'Property API path required'
+				  error.message === 'prId is required' ||
+				  error.message === 'Property API path required'
 				? 400
 				: 500;
 	const match = error.message?.match(/: (\d{3}) /);
@@ -33,190 +33,189 @@ function handleSoaError(res, error) {
 	res.status(fallbackStatus).json({ error: error.message || 'Internal server error' });
 }
 
-
 export function getFilterByPayloadFilter(payload) {
 	//todo maapping
 	let filter = {
-			ojoAttribute: [],
-			coordinates: '',
-			minBed: 0,
-			maxBed: 0,
-			minBath: 0,
-			maxBath: 0,
-			soldDateRange: 0,
-			minPrice: 0,
-			maxPrice: 0,
-			propertyType: [],
-			minHouseSize: 0,
-			maxHouseSize: 0,
-			minLotSize: 0,
-			maxLotSize: 0,
-			minYearBuild: 0,
-			maxYearBuild: 0,
-			minDOM: 0,
-			maxDOM: 0,
-			minHoa: -1,
-			maxHoa: -1,
-			pool: 0,
-			fixerupper: 0,
-			isActive: 1,
-			updateNew: 0,
-			propertyCriteriaLuxuryHome: 0,
-			propertyCriteriaOpenHouse: 0,
-			updatePriceReduced: 0,
-			updateVirtualTour: 0,
-			updateNewConstruction: 0,
-			propertyCriteriaForeclosed: 0,
-			hidePending: 0,
-			photos: 0,
-			garage: 0,
-			sort: null,
-			schoolHigh: 0,
-			schoolMiddle: 0,
-			schoolElementary: 0,
-			schoolPre: 0,
-			schoolPublic: 0,
-			schoolCharter: 0,
-			schoolPrivate: 0,
-			schoolMinRate: 1,
-			schoolIncludeUnrated: 1,
-			schoolId: null,
-			rentals: 0,
+		ojoAttribute: [],
+		coordinates: '',
+		minBed: 0,
+		maxBed: 0,
+		minBath: 0,
+		maxBath: 0,
+		soldDateRange: 0,
+		minPrice: 0,
+		maxPrice: 0,
+		propertyType: [],
+		minHouseSize: 0,
+		maxHouseSize: 0,
+		minLotSize: 0,
+		maxLotSize: 0,
+		minYearBuild: 0,
+		maxYearBuild: 0,
+		minDOM: 0,
+		maxDOM: 0,
+		minHoa: -1,
+		maxHoa: -1,
+		pool: 0,
+		fixerupper: 0,
+		isActive: 1,
+		updateNew: 0,
+		propertyCriteriaLuxuryHome: 0,
+		propertyCriteriaOpenHouse: 0,
+		updatePriceReduced: 0,
+		updateVirtualTour: 0,
+		updateNewConstruction: 0,
+		propertyCriteriaForeclosed: 0,
+		hidePending: 0,
+		photos: 0,
+		garage: 0,
+		sort: null,
+		schoolHigh: 0,
+		schoolMiddle: 0,
+		schoolElementary: 0,
+		schoolPre: 0,
+		schoolPublic: 0,
+		schoolCharter: 0,
+		schoolPrivate: 0,
+		schoolMinRate: 1,
+		schoolIncludeUnrated: 1,
+		schoolId: null,
+		rentals: 0,
 	};
 	if (payload.minPrice !== undefined) {
-			filter.minPrice = payload.minPrice;
+		filter.minPrice = payload.minPrice;
 	}
 	if (payload.maxPrice !== undefined) {
-			filter.maxPrice = payload.maxPrice;
+		filter.maxPrice = payload.maxPrice;
 	}
 	if (payload.minBed !== undefined) {
-			filter.minBed = payload.minBed;
+		filter.minBed = payload.minBed;
 	}
 	if (payload.maxBed !== undefined) {
-			filter.maxBed = payload.maxBed;
+		filter.maxBed = payload.maxBed;
 	}
 	if (payload.minBath !== undefined) {
-			filter.minBath = payload.minBath;
+		filter.minBath = payload.minBath;
 	}
 	if (payload.maxBath !== undefined) {
-			filter.maxBath = payload.maxBath;
+		filter.maxBath = payload.maxBath;
 	}
 	if (payload.propertyTypes && payload.propertyTypes.length > 0) {
-			filter.propertyType = payload.propertyTypes.slice();
+		filter.propertyType = payload.propertyTypes.slice();
 	}
 	if (payload.minSqft !== undefined) {
-			filter.minHouseSize = payload.minSqft;
+		filter.minHouseSize = payload.minSqft;
 	}
 	if (payload.maxSqft !== undefined) {
-			filter.maxHouseSize = payload.maxSqft;
+		filter.maxHouseSize = payload.maxSqft;
 	}
 	if (payload.minLot !== undefined) {
-			filter.minLotSize = payload.minLot;
+		filter.minLotSize = payload.minLot;
 	}
 	if (payload.maxLot !== undefined) {
-			filter.maxLotSize = payload.maxLot;
+		filter.maxLotSize = payload.maxLot;
 	}
 	if (payload.minYear !== undefined) {
-			filter.minYearBuild = payload.minYear;
+		filter.minYearBuild = payload.minYear;
 	}
 	if (payload.maxYear !== undefined) {
-			filter.maxYearBuild = payload.maxYear;
+		filter.maxYearBuild = payload.maxYear;
 	}
 	if (payload.minDom !== undefined) {
-			filter.minDOM = payload.minDom;
+		filter.minDOM = payload.minDom;
 	}
 	if (payload.maxDom !== undefined) {
-			filter.maxDOM = payload.maxDom;
+		filter.maxDOM = payload.maxDom;
 	}
 	if (payload.minHoa !== undefined) {
-			filter.minHoa = payload.minHoa;
+		filter.minHoa = payload.minHoa;
 	}
 	if (payload.maxHoa !== undefined) {
-			filter.maxHoa = payload.maxHoa;
+		filter.maxHoa = payload.maxHoa;
 	}
 	if (payload.attributesTags && payload.attributesTags.length > 0) {
-			filter.ojoAttribute = payload.attributesTags;
-			if (payload.attributesTags.indexOf('pool') > -1) {
-					filter.pool = 1;
-			}
+		filter.ojoAttribute = payload.attributesTags;
+		if (payload.attributesTags.indexOf('pool') > -1) {
+			filter.pool = 1;
+		}
 
-			if (payload.attributesTags.indexOf('garage') > -1) {
-					filter.garage = 1;
-			}
+		if (payload.attributesTags.indexOf('garage') > -1) {
+			filter.garage = 1;
+		}
 	}
 	if (payload.isNewListingsOnly !== undefined) {
-			filter.updateNew = payload.isNewListingsOnly;
+		filter.updateNew = payload.isNewListingsOnly;
 	}
 	if (payload.isReducedPrice !== undefined) {
-			filter.updatePriceReduced = payload.isReducedPrice;
+		filter.updatePriceReduced = payload.isReducedPrice;
 	}
 	if (payload.isVirtualTourLinkOnly !== undefined) {
-			filter.updateVirtualTour = payload.isVirtualTourLinkOnly;
+		filter.updateVirtualTour = payload.isVirtualTourLinkOnly;
 	}
 
 	if (payload.hasVideo !== undefined) {
-			filter.hasVideo = payload.hasVideo;
+		filter.hasVideo = payload.hasVideo;
 	}
 
 	if (payload.isNewConstruction !== undefined) {
-			filter.updateNewConstruction = payload.isNewConstruction;
+		filter.updateNewConstruction = payload.isNewConstruction;
 	}
 	if (payload.isDistressed !== undefined) {
-			filter.propertyCriteriaForeclosed = payload.isDistressed;
+		filter.propertyCriteriaForeclosed = payload.isDistressed;
 	}
 	if (payload.isOpenHousesOnly !== undefined) {
-			filter.propertyCriteriaOpenHouse = payload.isOpenHousesOnly;
+		filter.propertyCriteriaOpenHouse = payload.isOpenHousesOnly;
 	}
 	if (payload.hasPhoto !== undefined) {
-			filter.photos = payload.hasPhoto;
+		filter.photos = payload.hasPhoto;
 	}
 
 	if (payload.sortColumn && payload.sortOrder) {
-			filter.sort = 'sortby-' + payload.sortColumn + '-' + payload.sortOrder;
+		filter.sort = 'sortby-' + payload.sortColumn + '-' + payload.sortOrder;
 	}
 
 	if (payload.searchPropertyStatus !== undefined) {
-			if (payload.searchPropertyStatus === 'FOR_RENT') {
-					filter.rentals = 1;
-			} else if (payload.searchPropertyStatus === 'INACTIVE') {
-					filter.isActive = 0;
-					if (payload.soldDateRange) {
-							filter.soldDateRange = payload.soldDateRange;
-					}
-			} else if (payload.searchPropertyStatus === 'ACTIVE') {
-					filter.hidePending = 1;
+		if (payload.searchPropertyStatus === 'FOR_RENT') {
+			filter.rentals = 1;
+		} else if (payload.searchPropertyStatus === 'INACTIVE') {
+			filter.isActive = 0;
+			if (payload.soldDateRange) {
+				filter.soldDateRange = payload.soldDateRange;
 			}
+		} else if (payload.searchPropertyStatus === 'ACTIVE') {
+			filter.hidePending = 1;
+		}
 	}
 	if (payload.schoolRequest && payload.schoolRequest.length > 0) {
-			let school = payload.schoolRequest[0];
-			filter.schoolId = school.schoolId;
-			filter.schoolHigh = school.schoolLevel === 'HIGH' ? 1 : 0;
-			filter.schoolMiddle = school.schoolLevel === 'MIDDLE' ? 1 : 0;
-			filter.schoolElementary = school.schoolLevel === 'ELEMENTARY' ? 1 : 0;
-			filter.schoolPre = school.schoolLevel === 'PRE_SCHOOL' ? 1 : 0;
-			filter.schoolPublic = school.schoolType === 'PUBLIC' ? 1 : 0;
-			filter.schoolCharter = school.schoolType === 'CHARTER' ? 1 : 0;
-			filter.schoolPrivate = school.schoolType === 'PRIVATE' ? 1 : 0;
-			filter.schoolMinRate = school.minRating;
-			filter.schoolIncludeUnrated = school.includeUnrated ? 1 : 0;
+		let school = payload.schoolRequest[0];
+		filter.schoolId = school.schoolId;
+		filter.schoolHigh = school.schoolLevel === 'HIGH' ? 1 : 0;
+		filter.schoolMiddle = school.schoolLevel === 'MIDDLE' ? 1 : 0;
+		filter.schoolElementary = school.schoolLevel === 'ELEMENTARY' ? 1 : 0;
+		filter.schoolPre = school.schoolLevel === 'PRE_SCHOOL' ? 1 : 0;
+		filter.schoolPublic = school.schoolType === 'PUBLIC' ? 1 : 0;
+		filter.schoolCharter = school.schoolType === 'CHARTER' ? 1 : 0;
+		filter.schoolPrivate = school.schoolType === 'PRIVATE' ? 1 : 0;
+		filter.schoolMinRate = school.minRating;
+		filter.schoolIncludeUnrated = school.includeUnrated ? 1 : 0;
 	}
 	if (payload.pageIndex !== undefined) {
-			filter.pageIndex = payload.pageIndex;
+		filter.pageIndex = payload.pageIndex;
 	}
 	if (payload.maxCountPerPage !== undefined) {
-			filter.pageSize = payload.maxCountPerPage;
+		filter.pageSize = payload.maxCountPerPage;
 	}
 	if (payload.maxLat && payload.minLat && payload.maxLng && payload.minLng) {
-			filter.coordinates = {
-					ne: {
-							lat: payload.maxLat,
-							lng: payload.maxLng,
-					},
-					sw: {
-							lat: payload.minLat,
-							lng: payload.minLng,
-					},
-			};
+		filter.coordinates = {
+			ne: {
+				lat: payload.maxLat,
+				lng: payload.maxLng,
+			},
+			sw: {
+				lat: payload.minLat,
+				lng: payload.minLng,
+			},
+		};
 	}
 	return filter;
 }
@@ -621,9 +620,8 @@ async function getPropertyListingInfoByIdHandler(req, res) {
 	}
 }
 
-
 function getSearchInputByGeo(geo = {}) {
-	if(!geo){
+	if (!geo) {
 		return '';
 	}
 	if (geo.zipcode && geo.state) {
@@ -654,7 +652,6 @@ function getSearchHousePayload(geo, filter = { pageSize: 50, pageIndex: 1 }) {
 	}
 	return body;
 }
-
 
 /**
  * @swagger

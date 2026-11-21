@@ -5,11 +5,7 @@
 			<a v-if="showReset" href="" @click.prevent="resetFilters">Reset filters</a>
 		</p>
 		<ul v-else>
-			<li
-				v-for="(article, index) in articles"
-				:key="article.id || index"
-				class="item"
-			>
+			<li v-for="(article, index) in articles" :key="article.id || index" class="item">
 				<Article :model="{ fallbackImg: '/images/n_a.svg', ...article }" />
 			</li>
 		</ul>

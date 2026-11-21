@@ -50,12 +50,16 @@ const meta = {
 			control: 'select',
 			options: [...welcomeAnimations, 'random'],
 			description: 'Entrance of each panel after the image loads. random picks one per panel.',
-			table: { category: 'props', type: { summary: "'fadein' | 'flyin' | 'jumpin' | 'rotatein' | 'zoomin' | 'random'" } },
+			table: {
+				category: 'props',
+				type: { summary: "'fadein' | 'flyin' | 'jumpin' | 'rotatein' | 'zoomin' | 'random'" },
+			},
 		},
 		positions: {
 			control: 'check',
 			options: welcomePositions,
-			description: 'Corners the panels may use: ne, nw, se, sw. With more panels than corners they take turns.',
+			description:
+				'Corners the panels may use: ne, nw, se, sw. With more panels than corners they take turns.',
 			table: { category: 'props', type: { summary: "('ne' | 'nw' | 'se' | 'sw')[]" } },
 		},
 		interval: {
@@ -70,7 +74,8 @@ const meta = {
 		},
 		src: {
 			control: 'object',
-			description: 'Image per breakpoint: xs (fallback), sm from 640px, md from 960px, lg from 1600px.',
+			description:
+				'Image per breakpoint: xs (fallback), sm from 640px, md from 960px, lg from 1600px.',
 			table: { category: 'props', type: { summary: 'WelcomeSrc' } },
 		},
 		alt: {
@@ -130,7 +135,9 @@ export const Default: Story = {
 			throw new Error('welcome root missing');
 		}
 		await waitFor(() => expect(root).toHaveClass('welcome-loaded'), { timeout: 5000 });
-		await expect(root.querySelectorAll('.welcome-panel')).toHaveLength(welcomeMock.data.list.length);
+		await expect(root.querySelectorAll('.welcome-panel')).toHaveLength(
+			welcomeMock.data.list.length,
+		);
 	},
 };
 

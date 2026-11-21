@@ -120,10 +120,7 @@ export default {
 				}
 				let offsetTop = $item.offset().top;
 				let offsetBottom = offsetTop + $item.outerHeight();
-				if (
-					offsetTop < positionInfo.scrollBottom &&
-					offsetBottom > positionInfo.scrollTop
-				) {
+				if (offsetTop < positionInfo.scrollBottom && offsetBottom > positionInfo.scrollTop) {
 					let $img = $item.querySelectorAll('img');
 					let src = $img.data('src');
 					if (src) {

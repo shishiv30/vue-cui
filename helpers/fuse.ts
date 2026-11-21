@@ -127,7 +127,14 @@ export function initialFuseNeighborhood(neighborhood: any) {
 	return (globalThis as any)[geoType.neighborhood];
 }
 
-export function initialFuseGeo({ state, city, county, zipcode, address, neighborhood }: Record<string, any>) {
+export function initialFuseGeo({
+	state,
+	city,
+	county,
+	zipcode,
+	address,
+	neighborhood,
+}: Record<string, any>) {
 	if (!(globalThis as any)[geoType.state] && state) {
 		initialFuseState(state);
 	}

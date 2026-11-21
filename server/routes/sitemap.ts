@@ -4,7 +4,9 @@ import type { Router } from 'express';
 export default function registerSitemap(router: Router) {
 	router.get(/^\/sitemap(\/.*)?$/i, (req, res) => {
 		const rest = req.path.replace(/^\/sitemap/i, '').replace(/\/+$/, '');
-		const query = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+		const query = req.originalUrl.includes('?')
+			? req.originalUrl.slice(req.originalUrl.indexOf('?'))
+			: '';
 		res.redirect(301, `/property/sitemap${rest}${query}`);
 	});
 }

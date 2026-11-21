@@ -47,7 +47,10 @@ export default {
 			if (!bar) {
 				return;
 			}
-			bar.classList.toggle('changed', buttons.some((button) => button.classList.contains('selected')));
+			bar.classList.toggle(
+				'changed',
+				buttons.some((button) => button.classList.contains('selected')),
+			);
 		}
 
 		const panelValue = new Map();
@@ -62,7 +65,7 @@ export default {
 		function choiceText(el) {
 			const label = el.closest('label');
 			const span = label && label.querySelector('span');
-			const text = span ? span.textContent : (label ? label.textContent : el.value);
+			const text = span ? span.textContent : label ? label.textContent : el.value;
 			return String(text || '').trim();
 		}
 
@@ -71,8 +74,9 @@ export default {
 			if (!choice || kindRoot(panel, 'icon-picker')) {
 				return '';
 			}
-			const checked = [...choice.querySelectorAll('input:checked')]
-				.find((el) => String(el.value || '').trim() === '');
+			const checked = [...choice.querySelectorAll('input:checked')].find(
+				(el) => String(el.value || '').trim() === '',
+			);
 			return checked ? choiceText(checked) : '';
 		}
 
@@ -112,14 +116,21 @@ export default {
 		function emitValueChange(panel) {
 			const next = readPanelValue(panel);
 			const prev = panelValue.get(panel);
-			if (prev && prev.value === next.value && prev.label === next.label && prev.html === next.html) {
+			if (
+				prev &&
+				prev.value === next.value &&
+				prev.label === next.label &&
+				prev.html === next.html
+			) {
 				return;
 			}
 			panelValue.set(panel, next);
-			panel.dispatchEvent(new CustomEvent('valuechange', {
-				bubbles: true,
-				detail: next,
-			}));
+			panel.dispatchEvent(
+				new CustomEvent('valuechange', {
+					bubbles: true,
+					detail: next,
+				}),
+			);
 		}
 
 		function syncSelected(id) {
@@ -131,7 +142,8 @@ export default {
 			}
 			const selected = panelHasValue(panel);
 			button.classList.toggle('selected', selected);
-			const reset = button.parentElement && button.parentElement.querySelector('.group-dropdown-reset');
+			const reset =
+				button.parentElement && button.parentElement.querySelector('.group-dropdown-reset');
 			if (reset) {
 				reset.hidden = !selected;
 			}
@@ -272,7 +284,9 @@ export default {
 				return;
 			}
 			const original = button.textContent;
-			const keyed = !!panel.querySelector('[data-role="rangeslider"], input[type="range"], input[type="number"]');
+			const keyed = !!panel.querySelector(
+				'[data-role="rangeslider"], input[type="range"], input[type="number"]',
+			);
 			panel.addEventListener('valuechange', (event) => {
 				const { value, label, html } = event.detail;
 				const shown = label || value;

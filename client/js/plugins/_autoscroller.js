@@ -19,13 +19,12 @@ export default {
 
 		const measure = function () {
 			const listHeight = $list.offsetHeight || 0;
-			const viewportH =
-				window.innerHeight || document.documentElement.clientHeight || 0;
+			const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
 			const half = viewportH * 0.5;
 
 			const halfPx = half;
 			minY = halfPx;
-			maxY = -(Math.max(listHeight - halfPx, 0));
+			maxY = -Math.max(listHeight - halfPx, 0);
 
 			if (pos < maxY) pos = maxY;
 			if (pos > minY) pos = minY;

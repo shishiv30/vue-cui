@@ -4,5 +4,5 @@ const hasInput = function ($input) {
 		return true;
 	}
 	return false;
-}
+};
 export { hasInput };

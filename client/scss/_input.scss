@@ -9,7 +9,7 @@
 	display: block;
 	width: 100%;
 
-	>select {
+	> select {
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		appearance: none;
@@ -25,13 +25,12 @@
 		color: var(--color-l1);
 	}
 
-	>input::placeholder {
+	> input::placeholder {
 		color: var(--input-placeholder-color);
 	}
 
-
-	>input,
-	>select {
+	> input,
+	> select {
 		width: 100%;
 		border: 1px solid var(--input-color-border);
 		font-size: var(--input-font-size);
@@ -46,11 +45,11 @@
 		border-radius: var(--input-radius);
 	}
 
-	>i,
-	>span,
-	>a,
-	>button,
-	>.btn {
+	> i,
+	> span,
+	> a,
+	> button,
+	> .btn {
 		color: var(--input-color);
 		position: absolute;
 		top: 0;
@@ -63,7 +62,7 @@
 		padding-bottom: 0;
 	}
 
-	>.btn {
+	> .btn {
 		background-color: var(--input-color-bg);
 		color: var(--input-color);
 		border-color: transparent;
@@ -72,33 +71,31 @@
 	}
 
 	&.left {
-
-		>input,
-		>select {
+		> input,
+		> select {
 			padding-left: var(--input-size);
 		}
 
-		>span,
-		>i,
-		>a,
-		>button,
-		>.btn {
+		> span,
+		> i,
+		> a,
+		> button,
+		> .btn {
 			left: 0;
 			right: auto;
 		}
 	}
 
 	&.right {
-
-		>input,
-		>select {
+		> input,
+		> select {
 			padding-right: var(--input-size);
 
-			~span,
-			~i,
-			~a,
-			~button,
-			~.btn {
+			~ span,
+			~ i,
+			~ a,
+			~ button,
+			~ .btn {
 				right: 0;
 				left: auto;
 			}
@@ -122,7 +119,7 @@
 			font-size: var(--font-size-6);
 			content: attr(data-tooltip);
 			line-height: 1.25;
-			z-index: 9
+			z-index: 9;
 		}
 	}
 }

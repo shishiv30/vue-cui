@@ -9,7 +9,7 @@
 	background: var(--color-l1);
 	height: 40px;
 
-	>.caret {
+	> .caret {
 		z-index: 1;
 		position: absolute;
 		display: block;
@@ -78,7 +78,7 @@
 			max-height: 350px;
 		}
 
-		>.caret {
+		> .caret {
 			i {
 				transform: rotate(-180deg);
 			}

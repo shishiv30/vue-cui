@@ -1,15 +1,6 @@
 <template>
-	<div
-		ref="rootEl"
-		class="group-dropdown"
-		:class="[phase, { compact }]"
-		@focusout="onFocusOut"
-	>
-		<ul
-			ref="barEl"
-			class="group-dropdown-button small"
-			:class="{ changed: barChanged }"
-		>
+	<div ref="rootEl" class="group-dropdown" :class="[phase, { compact }]" @focusout="onFocusOut">
+		<ul ref="barEl" class="group-dropdown-button small" :class="{ changed: barChanged }">
 			<li v-if="compact" class="group-dropdown-filter">
 				<button
 					type="button"
@@ -46,51 +37,48 @@
 			</li>
 		</ul>
 		<Teleport to="body" :disabled="!compact">
-		<div
-			ref="listEl"
-			class="group-dropdown-list"
-			:class="{ 'group-dropdown-sheet': compact && phase !== 'close' }"
-			:style="compact ? undefined : listStyle"
-			@mousedown="onListMouseDown"
-			@animationend="onFlyOut"
-		>
 			<div
-				v-for="field in data"
-				:key="field.id"
-				:data-id="field.id"
-				:hidden="sheetOpen ? false : shownId !== field.id"
+				ref="listEl"
+				class="group-dropdown-list"
+				:class="{ 'group-dropdown-sheet': compact && phase !== 'close' }"
+				:style="compact ? undefined : listStyle"
+				@mousedown="onListMouseDown"
+				@animationend="onFlyOut"
 			>
-				<div class="group-dropdown-title">{{ field.label }}</div>
-				<RangeSlider
-					v-if="field.type === 'range'"
-					:data="stopOptions(field)"
-					:format="field.format"
-					:model-value="sliderPair(field)"
-					@update:model-value="onRange(field, $event)"
-				/>
 				<div
-					v-else
-					:class="choiceClass(field)"
+					v-for="field in data"
+					:key="field.id"
+					:data-id="field.id"
+					:hidden="sheetOpen ? false : shownId !== field.id"
 				>
-					<label
-						v-for="(option, index) in field.options"
-						:key="`${field.id}-${index}`"
-						:for="optionId(field.id, index)"
-					>
-						<input
-							:id="optionId(field.id, index)"
-							:type="field.type === 'single' ? 'radio' : 'checkbox'"
-							:name="field.id"
-							:value="option.value"
-							:checked="isChecked(field, option.value)"
-							:disabled="optionDisabled(field, option)"
-							@change="onChoice(field, option.value, $event)"
-						/>
-						<span>{{ option.label }}</span>
-					</label>
+					<div class="group-dropdown-title">{{ field.label }}</div>
+					<RangeSlider
+						v-if="field.type === 'range'"
+						:data="stopOptions(field)"
+						:format="field.format"
+						:model-value="sliderPair(field)"
+						@update:model-value="onRange(field, $event)"
+					/>
+					<div v-else :class="choiceClass(field)">
+						<label
+							v-for="(option, index) in field.options"
+							:key="`${field.id}-${index}`"
+							:for="optionId(field.id, index)"
+						>
+							<input
+								:id="optionId(field.id, index)"
+								:type="field.type === 'single' ? 'radio' : 'checkbox'"
+								:name="field.id"
+								:value="option.value"
+								:checked="isChecked(field, option.value)"
+								:disabled="optionDisabled(field, option)"
+								@change="onChoice(field, option.value, $event)"
+							/>
+							<span>{{ option.label }}</span>
+						</label>
+					</div>
 				</div>
 			</div>
-		</div>
 		</Teleport>
 	</div>
 </template>
@@ -166,7 +154,10 @@ function isRange(field: GroupDropdownField): field is GroupDropdownRangeField {
 }
 
 function stopOptions(field: GroupDropdownRangeField): FormEnumOption[] {
-	return field.stops.split(',').filter(Boolean).map((value) => ({ value, text: value }));
+	return field.stops
+		.split(',')
+		.filter(Boolean)
+		.map((value) => ({ value, text: value }));
 }
 
 function readField(field: GroupDropdownField, source: GroupDropdownValue = modelValue.value) {
@@ -209,16 +200,13 @@ function statusValue(source: GroupDropdownValue = modelValue.value) {
 	return typeof current === 'string' ? current : '';
 }
 
-function optionDisabled(
-	field: GroupDropdownField,
-	option: { value: string; disabled?: boolean },
-) {
+function optionDisabled(field: GroupDropdownField, option: { value: string; disabled?: boolean }) {
 	if (option.disabled) {
 		return true;
 	}
-	return field.id === 'tags'
-		&& OFF_MARKET_TAGS.has(option.value)
-		&& OFF_MARKET_STATUS.has(statusValue());
+	return (
+		field.id === 'tags' && OFF_MARKET_TAGS.has(option.value) && OFF_MARKET_STATUS.has(statusValue())
+	);
 }
 
 function withoutOffMarketTags(source: GroupDropdownValue) {
@@ -289,7 +277,9 @@ function buttonText(field: GroupDropdownField) {
 function syncLabel(field: GroupDropdownField, source?: GroupDropdownValue) {
 	const shown = isRange(field) ? rangeLabel(field, source) : choiceLabel(field, source);
 	labels.value[field.id] = shown
-		? (isRange(field) ? `${field.label}: ${shown}` : shown)
+		? isRange(field)
+			? `${field.label}: ${shown}`
+			: shown
 		: field.label;
 }
 
@@ -334,10 +324,7 @@ function onChoice(field: GroupDropdownChoiceField, value: string, event: Event) 
 	} else {
 		const current = readField(field);
 		const list = Array.isArray(current) ? current : [];
-		patch(
-			field.id,
-			checked ? [...list, value] : list.filter((item) => item !== value),
-		);
+		patch(field.id, checked ? [...list, value] : list.filter((item) => item !== value));
 	}
 	emitInput();
 }
@@ -350,7 +337,8 @@ function emptyValue(field: GroupDropdownField) {
 }
 
 function resetSlider(panel: ParentNode | null | undefined) {
-	panel?.querySelector('[data-role="rangeslider"], .range-slider')
+	panel
+		?.querySelector('[data-role="rangeslider"], .range-slider')
 		?.dispatchEvent(new CustomEvent('reset'));
 }
 

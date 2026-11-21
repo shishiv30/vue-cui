@@ -269,7 +269,13 @@
 		background: var(--color-bg);
 		border: 1px solid var(--color-l1);
 		border-radius: var(--radius-2);
-		box-shadow: 0 8px 24px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.25);
+		box-shadow: 0 8px 24px
+			hsla(
+				var(--color-root-major-hue),
+				var(--color-root-saturation),
+				var(--color-root-lightness),
+				0.25
+			);
 
 		.article {
 			box-shadow: none;
@@ -380,11 +386,23 @@
 
 @keyframes mapPinPulse {
 	0% {
-		box-shadow: 0 0 0 0 hsla(var(--color-root-minor-hue), var(--color-root-minor-saturation), var(--color-root-minor-lightness), 0.55);
+		box-shadow: 0 0 0 0
+			hsla(
+				var(--color-root-minor-hue),
+				var(--color-root-minor-saturation),
+				var(--color-root-minor-lightness),
+				0.55
+			);
 	}
 
 	100% {
-		box-shadow: 0 0 0 16px hsla(var(--color-root-minor-hue), var(--color-root-minor-saturation), var(--color-root-minor-lightness), 0);
+		box-shadow: 0 0 0 16px
+			hsla(
+				var(--color-root-minor-hue),
+				var(--color-root-minor-saturation),
+				var(--color-root-minor-lightness),
+				0
+			);
 	}
 }
 

@@ -1,11 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import {
-	geoType,
-	getGeoByPath,
-	getPathByGeo,
-	getGeoDisplayText,
-} from '../helpers/geo.js';
+import { geoType, getGeoByPath, getPathByGeo, getGeoDisplayText } from '../helpers/geo.js';
 
 describe('school geo path', () => {
 	test('parses and rebuilds a school path', () => {

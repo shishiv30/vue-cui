@@ -199,14 +199,8 @@ describe('mapPropertyToArticle', () => {
 		assert.equal(article.metadata.propertyId, soaPureListing.id);
 		assert.equal(article.metadata.prId, soaPureListing.mlsPublicRecordAssociation.id);
 		assert.equal(article.img, meta.photos[0]);
-		assert.equal(
-			article.path,
-			`/property/${meta.geo.state.toLowerCase()}/${meta.geo.zipcode}/`,
-		);
-		assert.equal(
-			article.title,
-			'101 Mel St, Winters, Runnels County, TX 79567',
-		);
+		assert.equal(article.path, `/property/${meta.geo.state.toLowerCase()}/${meta.geo.zipcode}/`);
+		assert.equal(article.title, '101 Mel St, Winters, Runnels County, TX 79567');
 		assert.equal(article.imgTag, 'Hunter Ranch and Realty');
 		assert.deepEqual(article.tags, [{ text: 'Pending', className: 'tip' }]);
 		assert.deepEqual(article.attrs, [

@@ -130,8 +130,8 @@ export function mapPropertyToArticle(property: any, isFull = false) {
 	const status =
 		listingStatus &&
 		typeof listingStatus === 'object' &&
-		/** @type {Record<string, unknown>} */ (listingStatus).name != null
-			? String(/** @type {Record<string, unknown>} */ (listingStatus).name)
+		/** @type {Record<string, unknown>} */ listingStatus.name != null
+			? String(/** @type {Record<string, unknown>} */ listingStatus.name)
 			: '';
 	const daysOnMarket = property.daysOnMarket;
 	const officeListName = property.officeListName;
@@ -174,7 +174,10 @@ export function mapPropertyToArticle(property: any, isFull = false) {
 		if (property.priceChange > 0) {
 			tags.push({ className: 'safe', text: `Increased ${formatPrice(property.priceChange)}` });
 		} else if (property.priceChange < 0) {
-			tags.push({ className: 'danger', text: `Reduced ${formatPrice(Math.abs(property.priceChange))}` });
+			tags.push({
+				className: 'danger',
+				text: `Reduced ${formatPrice(Math.abs(property.priceChange))}`,
+			});
 		}
 	}
 
@@ -182,11 +185,12 @@ export function mapPropertyToArticle(property: any, isFull = false) {
 
 	const geo = property.geo;
 	const displayAddress = getGeoDisplayText(geo);
-	const geoPath = geo?.zipcode && geo?.state
-		? getZipcodePath(geo.zipcode, geo.state)
-		: geo?.city && geo?.state
-			? getCityPath(geo.city, geo.state)
-			: '';
+	const geoPath =
+		geo?.zipcode && geo?.state
+			? getZipcodePath(geo.zipcode, geo.state)
+			: geo?.city && geo?.state
+				? getCityPath(geo.city, geo.state)
+				: '';
 
 	return {
 		metadata: property,
@@ -302,8 +306,8 @@ export function buildDetailSeo(detail: any) {
 	const statusLabel =
 		listingStatus &&
 		typeof listingStatus === 'object' &&
-		/** @type {Record<string, unknown>} */ (listingStatus).displayName != null
-			? String(/** @type {Record<string, unknown>} */ (listingStatus).displayName)
+		/** @type {Record<string, unknown>} */ listingStatus.displayName != null
+			? String(/** @type {Record<string, unknown>} */ listingStatus.displayName)
 			: '';
 	const title = detail.title || '';
 	const description = detail.paragraph?.text || '';

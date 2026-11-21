@@ -1,7 +1,13 @@
 @use './_var.screen.scss' as *;
 
 @mixin text-shadow {
-	text-shadow: 1px 0px 5px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.5);
+	text-shadow: 1px 0px 5px
+		hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.5
+		);
 }
 
 @mixin comp-color($name) {
@@ -15,7 +21,7 @@
 			--#{$name}-color-border-hover: var(--color-border-hover);
 			--#{$name}-color-bg-hover: var(--color-bg-hover);
 		}
-		&.active{
+		&.active {
 			--#{$name}-color: var(--color-bg);
 			--#{$name}-color-bg: var(--color);
 			--#{$name}-color-border: var(--color-border);
@@ -26,10 +32,8 @@
 	}
 }
 
-
 @mixin comp-size($name, $width: fit-content) {
 	.#{$name} {
-
 		&,
 		&.normal {
 			--#{$name}-gap: var(--g1);
@@ -69,9 +73,6 @@
 }
 
 @mixin color() {
-
-
-
 	.default {
 		--color: var(--color-root);
 		--color-border: var(--color-root-border);
@@ -143,7 +144,6 @@
 }
 
 @mixin clearFloat {
-
 	&::after,
 	&::before {
 		content: '';
@@ -202,12 +202,11 @@
 		position: relative;
 		word-break: break-all;
 
-		>* {
+		> * {
 			display: inline-block;
 		}
 	}
 }
-
 
 @mixin only-mobile() {
 	#body {
@@ -247,7 +246,7 @@
 	}
 }
 
-@mixin hover-scale ($base-color, $position: relative) {
+@mixin hover-scale($base-color, $position: relative) {
 	@if $position != '' {
 		position: $position;
 	}
@@ -290,7 +289,7 @@
 	-ms-scroll-snap-type: x mandatory;
 	scroll-snap-type: x mandatory;
 
-	>* {
+	> * {
 		scroll-snap-align: $snap;
 	}
 }
@@ -315,9 +314,7 @@ $card-height: 200px;
 $card-skeleton: linear-gradient($back-color $card-height, transparent 0);
 $avatar-size: 1.5rem;
 $avatar-position: right $card-padding top $card-padding;
-$avatar-skeleton: radial-gradient(circle 0.75rem,
-		$font-color 99%,
-		transparent 0);
+$avatar-skeleton: radial-gradient(circle 0.75rem, $font-color 99%, transparent 0);
 $title-height: 1.5rem;
 $title-width: 45%;
 $title-position: $card-padding 125px;
@@ -325,8 +322,7 @@ $title-sub-width: 30%;
 $title-sub-position: $card-padding $card-padding;
 $title-skeleton: linear-gradient($font-color $title-height, transparent 0);
 $desc-line-height: 12px;
-$desc-line-skeleton: linear-gradient($font-color $desc-line-height,
-		transparent 0);
+$desc-line-skeleton: linear-gradient($font-color $desc-line-height, transparent 0);
 $desc-line-1-width: 65%;
 $desc-line-1-position: $card-padding 157px;
 $desc-line-2-width: 80%;
@@ -339,9 +335,15 @@ $blur-size: $blur-width $card-height;
 
 @keyframes skeleton_house_loading {
 	to {
-		background-position: 140% 0, $avatar-position, $title-sub-position,
-			$title-position, $desc-line-1-position, $desc-line-2-position,
-			$footer-position, 0 0;
+		background-position:
+			140% 0,
+			$avatar-position,
+			$title-sub-position,
+			$title-position,
+			$desc-line-1-position,
+			$desc-line-2-position,
+			$footer-position,
+			0 0;
 	}
 }
 
@@ -351,21 +353,40 @@ $blur-size: $blur-width $card-height;
 		display: block;
 		width: 100%;
 		height: 100%;
-		box-shadow: 0 10px 45px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.1);
-		background-image: linear-gradient(90deg,
+		box-shadow: 0 10px 45px
+			hsla(
+				var(--color-root-major-hue),
+				var(--color-root-saturation),
+				var(--color-root-lightness),
+				0.1
+			);
+		background-image:
+			linear-gradient(
+				90deg,
 				rgba($back-color, 0) 0,
 				rgba($back-color, 0.8) 50%,
-				rgba($back-color, 0) 100%),
-			$avatar-skeleton, $title-skeleton, $title-skeleton,
-			$desc-line-skeleton, $desc-line-skeleton, $footer-skeleton,
-			$card-skeleton;
-		background-size: $blur-size, $avatar-size $avatar-size,
-			$title-sub-width $title-height, $title-width $title-height,
+				rgba($back-color, 0) 100%
+			),
+			$avatar-skeleton, $title-skeleton, $title-skeleton, $desc-line-skeleton, $desc-line-skeleton,
+			$footer-skeleton, $card-skeleton;
+		background-size:
+			$blur-size,
+			$avatar-size $avatar-size,
+			$title-sub-width $title-height,
+			$title-width $title-height,
 			$desc-line-1-width $desc-line-height,
-			$desc-line-2-width $desc-line-height, 100% $footer-height, 100% 100%;
-		background-position: -140% 0, $avatar-position, $title-sub-position,
-			$title-position, $desc-line-1-position, $desc-line-2-position,
-			$footer-position, 0 0;
+			$desc-line-2-width $desc-line-height,
+			100% $footer-height,
+			100% 100%;
+		background-position:
+			-140% 0,
+			$avatar-position,
+			$title-sub-position,
+			$title-position,
+			$desc-line-1-position,
+			$desc-line-2-position,
+			$footer-position,
+			0 0;
 		background-repeat: no-repeat;
 		animation: skeleton_house_loading 1.5s infinite;
 	}
@@ -400,11 +421,23 @@ $blur-size: $blur-width $card-height;
 }
 
 @mixin box-shadow() {
-	box-shadow: 0px 0px 2px 0px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.5);
+	box-shadow: 0px 0px 2px 0px
+		hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.5
+		);
 }
 
 @mixin box-line() {
-	box-shadow: 0px 0px 5px 1px hsla(var(--color-root-major-hue), var(--color-root-saturation), var(--color-root-lightness), 0.35);
+	box-shadow: 0px 0px 5px 1px
+		hsla(
+			var(--color-root-major-hue),
+			var(--color-root-saturation),
+			var(--color-root-lightness),
+			0.35
+		);
 }
 
 @mixin order($max: 20) {
@@ -416,7 +449,6 @@ $blur-size: $blur-width $card-height;
 }
 
 @mixin clearfix {
-
 	&::after,
 	&::before {
 		content: '';
@@ -435,11 +467,11 @@ $blur-size: $blur-width $card-height;
 	margin-right: auto;
 
 	@media screen and (max-width: $screen-xs-max) {
-		width: calc(100% - var(--panel-gap-x)*2);
+		width: calc(100% - var(--panel-gap-x) * 2);
 	}
 
 	@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-		width: calc(100% - var(--panel-gap-x)*2);
+		width: calc(100% - var(--panel-gap-x) * 2);
 	}
 
 	@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
@@ -464,7 +496,6 @@ $blur-size: $blur-width $card-height;
 }
 
 @mixin gap-size() {
-
 	&,
 	&.normal {
 		--section-gap-x: var(--g3);

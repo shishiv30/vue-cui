@@ -14,8 +14,8 @@ const meta = {
 					'| Slot | What you provide |',
 					'| --- | --- |',
 					'| Value | Initial tab index. Default `0`. |',
-					'| Markup | Put `v-tab` on the bar. Each button has `data-target`. '
-						+ 'Each panel has a matching `data-id`. |',
+					'| Markup | Put `v-tab` on the bar. Each button has `data-target`. ' +
+						'Each panel has a matching `data-id`. |',
 				].join('\n'),
 			},
 		},

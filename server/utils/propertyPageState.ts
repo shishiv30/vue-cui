@@ -42,7 +42,9 @@ function linkRows(component: { data?: { href?: string; text?: string }[] } | und
 	}));
 }
 
-export function classifyPropertySitemapPath(path: string): ClassifiedSitemap | { action: 'redirect' } | null {
+export function classifyPropertySitemapPath(
+	path: string,
+): ClassifiedSitemap | { action: 'redirect' } | null {
 	const pagePath = normalizePath(path);
 	if (pagePath === '/property' || pagePath === '/property/sitemap') {
 		return { action: 'sitemap', config: propertySitemap as PageConfig, heading: '' };
@@ -93,7 +95,9 @@ function filterFields(component: { data?: { fields?: Record<string, unknown>[] }
 				stops: field.stops,
 			};
 		}
-		const options = Array.isArray(field.options) ? field.options as Record<string, unknown>[] : [];
+		const options = Array.isArray(field.options)
+			? (field.options as Record<string, unknown>[])
+			: [];
 		return {
 			id: field.id,
 			type: field.type,
@@ -109,10 +113,15 @@ function filterFields(component: { data?: { fields?: Record<string, unknown>[] }
 	});
 }
 
-function toPageState(classified: ClassifiedSitemap | ClassifiedSearch, data: Record<string, unknown> | undefined) {
+function toPageState(
+	classified: ClassifiedSitemap | ClassifiedSearch,
+	data: Record<string, unknown> | undefined,
+) {
 	const groups: { title: string; links: { href: string; text: string }[] }[] = [];
-	const zipcodes = data?.zipcodesComponent as { data?: { href?: string; text?: string }[] } | undefined;
-	const neighborhoods = data?.neighborhoodsComponent as { data?: { href?: string; text?: string }[] } | undefined;
+	const zipcodes = data?.zipcodesComponent as
+		{ data?: { href?: string; text?: string }[] } | undefined;
+	const neighborhoods = data?.neighborhoodsComponent as
+		{ data?: { href?: string; text?: string }[] } | undefined;
 	const links = data?.linksComponent as { data?: { href?: string; text?: string }[] } | undefined;
 	const uiLinks = (data?.data as { links?: { href?: string; text?: string }[] } | undefined)?.links;
 	if (zipcodes) {
@@ -136,15 +145,17 @@ function toPageState(classified: ClassifiedSitemap | ClassifiedSearch, data: Rec
 	const headerComponent = data?.headerComponent as { data?: unknown } | undefined;
 	const footerComponent = data?.footerComponent as { data?: unknown } | undefined;
 	const articleComponent = data?.articleComponent as { data?: unknown[] } | undefined;
-	const filterComponent = data?.filterComponent as { data?: { fields?: Record<string, unknown>[] } } | undefined;
-	const ui = data?.seo && data?.metadata && data?.data
-		? data as {
-			seo: { title?: string; h1?: string; description?: string };
-			httpHead?: unknown[];
-			metadata: Record<string, unknown>;
-			data: Record<string, unknown>;
-		}
-		: null;
+	const filterComponent = data?.filterComponent as
+		{ data?: { fields?: Record<string, unknown>[] } } | undefined;
+	const ui =
+		data?.seo && data?.metadata && data?.data
+			? (data as {
+					seo: { title?: string; h1?: string; description?: string };
+					httpHead?: unknown[];
+					metadata: Record<string, unknown>;
+					data: Record<string, unknown>;
+				})
+			: null;
 
 	const seoTitle = (data?.seo as { title?: string } | undefined)?.title;
 	const title = ui?.seo?.title || (data?.title as string) || seoTitle || 'Property';
@@ -158,39 +169,40 @@ function toPageState(classified: ClassifiedSitemap | ClassifiedSearch, data: Rec
 		footer: pageData?.footer ?? footerComponent?.data ?? null,
 		breadcrumb: pageData?.breadcrumb ?? data?.breadcrumb ?? null,
 		groups: classified.action === 'sitemap' ? groups : [],
-		articles: classified.action === 'search'
-			? ((pageData?.articles as unknown[]) ?? articleComponent?.data ?? [])
-			: [],
-		filters: classified.action === 'search'
-			? filterFields({
-				data: {
-					fields: (pageData?.filters as Record<string, unknown>[])
-						?? filterComponent?.data?.fields,
-				},
-			})
-			: [],
-		detail: classified.action === 'search'
-			? (pageData?.detail ?? data?.detail ?? null)
-			: null,
+		articles:
+			classified.action === 'search'
+				? ((pageData?.articles as unknown[]) ?? articleComponent?.data ?? [])
+				: [],
+		filters:
+			classified.action === 'search'
+				? filterFields({
+						data: {
+							fields:
+								(pageData?.filters as Record<string, unknown>[]) ?? filterComponent?.data?.fields,
+						},
+					})
+				: [],
+		detail: classified.action === 'search' ? (pageData?.detail ?? data?.detail ?? null) : null,
 	};
-	const description = ui?.seo?.description
-		|| (data?.seo as { desc?: string; description?: string } | undefined)?.description
-		|| (data?.seo as { desc?: string } | undefined)?.desc
-		|| '';
+	const description =
+		ui?.seo?.description ||
+		(data?.seo as { desc?: string; description?: string } | undefined)?.description ||
+		(data?.seo as { desc?: string } | undefined)?.desc ||
+		'';
 	const uiData = ui
 		? {
-			...ui,
-			data: {
-				...ui.data,
-				groups: page.groups,
-				articles: page.articles,
-				filters: page.filters,
-				detail: page.detail,
-				header: page.header,
-				footer: page.footer,
-				breadcrumb: page.breadcrumb,
-			},
-		}
+				...ui,
+				data: {
+					...ui.data,
+					groups: page.groups,
+					articles: page.articles,
+					filters: page.filters,
+					detail: page.detail,
+					header: page.header,
+					footer: page.footer,
+					breadcrumb: page.breadcrumb,
+				},
+			}
 		: null;
 	return {
 		...page,
