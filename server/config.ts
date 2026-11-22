@@ -26,7 +26,6 @@ const config = {
 	propertyApiDomain: (process.env.PROPERTY_API_DOMAIN || '').replace(/\/$/, ''),
 	schoolApiDomain: (process.env.SCHOOL_API_DOMAIN || '').replace(/\/$/, ''),
 	userApiDomain: (process.env.USER_API_DOMAIN || '').replace(/\/$/, ''),
-	poiApiDomain: (process.env.POI_API_DOMAIN || '').replace(/\/$/, ''),
 	webpackMode: process.env.WEBPACK_MODE || NODE_ENV,
 	webpackDevtool:
 		process.env.WEBPACK_DEVTOOL || (NODE_ENV === 'development' ? 'source-map' : undefined),

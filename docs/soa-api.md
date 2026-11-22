@@ -528,7 +528,7 @@ Optional: `id`, `zipcode`, `path`. See mapper for field names from the API.
 | App endpoint | Upstream | Notes |
 |-------------|----------|--------|
 | `GET /api/soa/states` | Geoarea `/states` | Needs `GEOAREA_API_DOMAIN` and `SOA_API_KEY` |
-| `GET/POST /api/soa/property/*` | Property `/*` | Needs `PROPERTY_API_DOMAIN`. E.g. `GET /api/soa/property/soldListingsByLocation` |
-| `GET/POST /api/soa/school/*` | School `/*` | Needs `SCHOOL_API_DOMAIN` |
-| `GET/POST /api/soa/user/*` | User `/*` | Needs `USER_API_DOMAIN` |
-| `GET/POST /api/soa/poi/*` | POI `/*` | Needs `POI_API_DOMAIN` |
+| `/api/soa/property/<named>` | Property | Needs `PROPERTY_API_DOMAIN`. Named routes only, e.g. `GET /api/soa/property/getNearbySoldHouseByLocation` |
+| `GET /api/soa/school/property/locations/:latLng/assignedSchools` | School | Needs `SCHOOL_API_DOMAIN` |
+
+There is no catch-all `/api/soa/*` proxy. It would forward any path and method with the server's `SOA_API_KEY`. Add a named route for each upstream call you need.

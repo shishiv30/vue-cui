@@ -22,7 +22,6 @@ const options = {
 		'./server/routes/api.soa.geoarea.ts',
 		'./server/routes/api.soa.property.ts',
 		'./server/routes/api.soa.school.ts',
-		'./server/routes/api.soa.poi.ts',
 	], // Path from root
 };
 

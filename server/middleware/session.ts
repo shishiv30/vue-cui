@@ -1,11 +1,27 @@
 // @ts-nocheck
 import session from 'express-session';
+import createMemoryStore from 'memorystore';
+import crypto from 'crypto';
+import config from '../config.js';
+
 export default function (app) {
+	let secret = config.sessionSecret;
+	if (!secret) {
+		if (config.mode === 'production' || config.mode === 'stage') {
+			throw new Error('SESSION_SECRET is required in production and stage');
+		}
+		// Dev only: random per process, so sessions reset on restart.
+		secret = crypto.randomBytes(32).toString('hex');
+	}
+	// Bounded store: expired sessions are pruned and the count is capped (default store never evicts).
+	const MemoryStore = createMemoryStore(session);
+	const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 	const sess = {
-		cookie: {},
-		secret: 'keyboard cat',
+		cookie: { maxAge: SESSION_MAX_AGE_MS },
+		secret,
 		resave: false,
 		saveUninitialized: true,
+		store: new MemoryStore({ checkPeriod: 60 * 60 * 1000, max: 10000, ttl: SESSION_MAX_AGE_MS }),
 	};
 	if (app.get('env') === 'production') {
 		app.set('trust proxy', 1); // trust first proxy

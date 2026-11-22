@@ -8,8 +8,14 @@ services:
         PORT: ${PORT:-3000}
     ports:
       - "${DOCKER_PORT:-3002}:${PORT:-3000}"
+    # Secrets are read from local env files at runtime only (never copied into the image).
     env_file:
-      - .env
+      - path: .env
+        required: false
+      - path: .env.${NODE_ENV:-production}
+        required: false
+      - path: .env.local
+        required: false
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}

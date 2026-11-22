@@ -46,6 +46,7 @@ app.use((_req, _res, next) => {
 });
 
 let vite: ViteDevServer | null = null;
+let prodTemplate: string | undefined;
 
 if (!isProd) {
 	const { createServer } = await import('vite');
@@ -86,12 +87,21 @@ app.use(async (req, res, next) => {
 	}
 	const pagePath = req.path.replace(/\/+$/, '') || '/';
 	const isDocument = pagePath === '/' || pagePath === '/document';
-	const propertyPage =
-		pagePath === '/property' || pagePath.startsWith('/property/sitemap')
-			? await loadPropertySitemapPageState(req)
-			: pagePath.startsWith('/property')
-				? await loadPropertySearchPageState(req)
-				: null;
+	let propertyPage:
+		| Awaited<ReturnType<typeof loadPropertySearchPageState>>
+		| Awaited<ReturnType<typeof loadPropertySitemapPageState>>
+		| null = null;
+	try {
+		propertyPage =
+			pagePath === '/property' || pagePath.startsWith('/property/sitemap')
+				? await loadPropertySitemapPageState(req)
+				: pagePath.startsWith('/property')
+					? await loadPropertySearchPageState(req)
+					: null;
+	} catch (error) {
+		next(error);
+		return;
+	}
 	if (!isDocument && !propertyPage) {
 		next();
 		return;
@@ -103,7 +113,10 @@ app.use(async (req, res, next) => {
 	try {
 		const url = req.originalUrl || req.url;
 		const templatePath = path.join(root, 'client/src/index.html');
-		let template = fs.readFileSync(templatePath, 'utf8');
+		// Prod: read once, same template for every request. Dev: re-read so edits show.
+		let template = isProd
+			? (prodTemplate ??= fs.readFileSync(templatePath, 'utf8'))
+			: fs.readFileSync(templatePath, 'utf8');
 		let render: (pageUrl: string, pageState?: unknown) => Promise<{ html: string; state: unknown }>;
 		if (!isProd && vite) {
 			template = await vite.transformIndexHtml(url, template);

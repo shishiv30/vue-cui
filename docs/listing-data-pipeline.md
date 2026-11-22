@@ -49,7 +49,7 @@ Example: [`server/controllers/property.ts`](../server/controllers/property.ts).
 |------|---------|-----------|
 | **SSR HTML** | Full property pages | `server/index.ts` Vue SSR → `server/controllers/property.ts` |
 | **JSON API** | SPA detail fetch | `GET /api/property/detail/:prId` in `server/routes/api.ts` → same `property.get()` → `toData()` |
-| **HTTP proxy** | External/tools call SOA verbatim | `/api/soa/property/*` → `server/routes/api.soa.property.ts` → `fetchFromSoa()` in `server/controllers/realestate.ts` |
+| **HTTP API** | External/tools call named SOA routes | `/api/soa/property/<named>` → `server/routes/api.soa.property.ts` → `fetchFromSoa()` in `server/controllers/realestate.ts` |
 
 ### Property controller SOA calls
 

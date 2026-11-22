@@ -53,7 +53,7 @@ export async function getSchoolBaseInfo(schoolId, query = {}) {
 
 export async function getNearbySchoolsByLocation(latLng, query = {}) {
 	const domain = getSchoolApiDomain();
-	const path = `/property/locations/${latLng}/assignedSchools`;
+	const path = `/property/locations/${encodeURIComponent(latLng)}/assignedSchools`;
 	return fetchFromSoa(domain, 'GET', path, { query });
 }
 
@@ -66,52 +66,5 @@ async function getNearbySchoolsByLocationHandler(req, res) {
 }
 
 router.get('/property/locations/:latLng/assignedSchools', getNearbySchoolsByLocationHandler);
-
-/**
- * @swagger
- * /soa/school/{path}:
- *   get:
- *     summary: Proxy to School SOA API (GET)
- *     description: Forwards GET to SCHOOL_API_DOMAIN. See docs/soa-api.md.
- *     tags:
- *       - SOA School
- *   post:
- *     summary: Proxy to School SOA API (POST)
- *     tags:
- *       - SOA School
- *   put:
- *     summary: Proxy to School SOA API (PUT)
- *     tags:
- *       - SOA School
- *   delete:
- *     summary: Proxy to School SOA API (DELETE)
- *     tags:
- *       - SOA School
- */
-export async function proxyToSchool(method, path, options = {}) {
-	const domain = getSchoolApiDomain();
-	if (!path || path === '/') {
-		throw new Error('School API path required');
-	}
-	return fetchFromSoa(domain, method, path, options);
-}
-
-async function proxyToSchoolHandler(req, res) {
-	try {
-		const method = req.method;
-		const options = { query: req.query };
-		if ((method === 'POST' || method === 'PUT' || method === 'PATCH') && req.body) {
-			options.body = req.body;
-		}
-		sendJson(res, await proxyToSchool(method, req.path, options));
-	} catch (error) {
-		handleSoaError(res, error);
-	}
-}
-
-router.get('*', proxyToSchoolHandler);
-router.post('*', proxyToSchoolHandler);
-router.put('*', proxyToSchoolHandler);
-router.delete('*', proxyToSchoolHandler);
 
 export default router;

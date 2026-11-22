@@ -43,10 +43,11 @@ Router composition in `server/routes/index.ts`:
 
 SOA prefixes currently mounted in `server/routes/api.soa.ts`:
 
-- `/api/soa/property/*`
-- `/api/soa/school/*`
-- `/api/soa/poi/*`
-- geoarea and catch-all paths through `/api/soa/*`
+- `/api/soa/property/<named>`
+- `/api/soa/school/<named>`
+- geoarea named routes under `/api/soa/*`
+
+No catch-all proxy (it would expose `SOA_API_KEY` to any caller).
 
 ## Request Lifecycle (Page Rendering)
 
@@ -89,7 +90,7 @@ Listing SOA → metadata → comp models: [`docs/listing-data-pipeline.md`](docs
 
 ### SOA API (`/api/soa`)
 
-- Route adapters are split by domain (`property`, `school`, `poi`, `geoarea`).
+- Route adapters are split by domain (`property`, `school`, `geoarea`).
 - Upstream calls are centralized through fetch helpers in `server/controllers/realestate.ts`.
 - Some geo responses are normalized through mapper utilities before returning.
 
@@ -104,6 +105,10 @@ Environment resolution is controlled in `server/config.ts`:
 - development -> `.env` then `.env.local`
 - stage -> `.env.stage`
 - production -> `.env.production`
+
+Secrets (`SOA_API_KEY`, `SESSION_SECRET`, map keys, NAS credentials) live only in these local env files. They are git-ignored and `.dockerignore`d. Docker gets them at runtime through `env_file` in `docker-compose.yml`, never in the image.
+
+`SESSION_SECRET` is required in production and stage (the server refuses to start without it). In development a random secret is generated per process.
 
 Defaults:
 

@@ -11,7 +11,8 @@ COPY package*.json ./
 # Install dependencies (use ci for reproducible builds; run `npm audit fix` locally to refresh lockfile)
 RUN npm ci
 
-# Copy source code (including .env file)
+# Copy source code. .dockerignore excludes .env* so secrets never enter the image;
+# docker-compose passes them at runtime from local env files.
 COPY . .
 
 # Container port (passed at build via docker-compose build args from env)

@@ -57,7 +57,7 @@ async function getStatesHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getCountiesByStateCode(stateCode, query = {}) {
-	return fetchFromGeoarea('GET', `/state/${stateCode}/counties`, { query });
+	return fetchFromGeoarea('GET', `/state/${encodeURIComponent(stateCode)}/counties`, { query });
 }
 
 async function getCountiesByStateCodeHandler(req, res) {
@@ -80,9 +80,13 @@ async function getCountiesByStateCodeHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getNearbyCountiesByCountyId(stateCode, countyId, query = {}) {
-	return fetchFromGeoarea('GET', `/statecode/${stateCode}/countyid/${countyId}/nearcounties`, {
-		query,
-	});
+	return fetchFromGeoarea(
+		'GET',
+		`/statecode/${encodeURIComponent(stateCode)}/countyid/${encodeURIComponent(countyId)}/nearcounties`,
+		{
+			query,
+		},
+	);
 }
 
 async function getNearbyCountiesByCountyIdHandler(req, res) {
@@ -106,7 +110,7 @@ async function getNearbyCountiesByCountyIdHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getCitiesByState(stateCode, query = {}) {
-	return fetchFromGeoarea('GET', `/state/${stateCode}/cities`, { query });
+	return fetchFromGeoarea('GET', `/state/${encodeURIComponent(stateCode)}/cities`, { query });
 }
 
 async function getCitiesByStateHandler(req, res) {
@@ -126,7 +130,7 @@ async function getCitiesByStateHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getCitiesByCountyId(countyId, query = {}) {
-	return fetchFromGeoarea('GET', `/county/${countyId}/cities`, { query });
+	return fetchFromGeoarea('GET', `/county/${encodeURIComponent(countyId)}/cities`, { query });
 }
 
 async function getCitiesByCountyIdHandler(req, res) {
@@ -146,7 +150,7 @@ async function getCitiesByCountyIdHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getNearbyCitiesByCityId(cityId, query = {}) {
-	return fetchFromGeoarea('GET', `/city/${cityId}/nearbycities`, { query });
+	return fetchFromGeoarea('GET', `/city/${encodeURIComponent(cityId)}/nearbycities`, { query });
 }
 
 async function getNearbyCitiesByCityIdHandler(req, res) {
@@ -169,7 +173,7 @@ async function getNearbyCitiesByCityIdHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getCityByIP(ipAddress, query = {}) {
-	return fetchFromGeoarea('GET', `/ip/${ipAddress}/citylocation`, { query });
+	return fetchFromGeoarea('GET', `/ip/${encodeURIComponent(ipAddress)}/citylocation`, { query });
 }
 
 async function getCityByIPHandler(req, res) {
@@ -191,7 +195,7 @@ async function getCityByIPHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getNeighborhoodsByCityId(cityId, query = {}) {
-	return fetchFromGeoarea('GET', `/city/${cityId}/neighborhoods`, { query });
+	return fetchFromGeoarea('GET', `/city/${encodeURIComponent(cityId)}/neighborhoods`, { query });
 }
 
 async function getNeighborhoodsByCityIdHandler(req, res) {
@@ -214,7 +218,7 @@ async function getNeighborhoodsByCityIdHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getZipcodesByStatecode(stateCode, query = {}) {
-	return fetchFromGeoarea('GET', `/state/${stateCode}/postalcodes`, { query });
+	return fetchFromGeoarea('GET', `/state/${encodeURIComponent(stateCode)}/postalcodes`, { query });
 }
 
 async function getZipcodesByStatecodeHandler(req, res) {
@@ -237,7 +241,7 @@ async function getZipcodesByStatecodeHandler(req, res) {
  *       - SOA Geoarea
  */
 export async function getZipcodesByCityId(cityId, query = {}) {
-	return fetchFromGeoarea('GET', `/city/${cityId}/postalcodes`, { query });
+	return fetchFromGeoarea('GET', `/city/${encodeURIComponent(cityId)}/postalcodes`, { query });
 }
 
 async function getZipcodesByCityIdHandler(req, res) {
@@ -248,7 +252,6 @@ async function getZipcodesByCityIdHandler(req, res) {
 	}
 }
 
-// Explicit routes (order matters: specific before catch-all)
 router.get('/states', getStatesHandler);
 router.get('/state/:stateCode/counties', getCountiesByStateCodeHandler);
 router.get(
@@ -262,45 +265,5 @@ router.get('/ip/:ipAddress/citylocation', getCityByIPHandler);
 router.get('/city/:cityId/neighborhoods', getNeighborhoodsByCityIdHandler);
 router.get('/state/:stateCode/postalcodes', getZipcodesByStatecodeHandler);
 router.get('/city/:cityId/postalcodes', getZipcodesByCityIdHandler);
-
-/**
- * @swagger
- * /soa/{path}:
- *   get:
- *     summary: Proxy to Geoarea SOA API (GET)
- *     tags:
- *       - SOA Geoarea
- *   post:
- *     summary: Proxy to Geoarea SOA API (POST)
- *     tags:
- *       - SOA Geoarea
- *   delete:
- *     summary: Proxy to Geoarea SOA API (DELETE)
- *     tags:
- *       - SOA Geoarea
- */
-export async function proxyToGeoarea(method, path, options = {}) {
-	if (!path || path === '/') {
-		throw new Error('SOA path required');
-	}
-	return fetchFromGeoarea(method, path, options);
-}
-
-async function proxyToGeoareaHandler(req, res) {
-	try {
-		const method = req.method;
-		const options = { query: req.query };
-		if ((method === 'POST' || method === 'PUT' || method === 'PATCH') && req.body) {
-			options.body = req.body;
-		}
-		sendJson(res, await proxyToGeoarea(method, req.path, options));
-	} catch (error) {
-		handleSoaError(res, error);
-	}
-}
-
-router.get('*', proxyToGeoareaHandler);
-router.post('*', proxyToGeoareaHandler);
-router.delete('*', proxyToGeoareaHandler);
 
 export default router;

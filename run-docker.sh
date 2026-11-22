@@ -38,7 +38,6 @@ fi
 # Defaults only when not set by env files. All envs: host 3002 (DOCKER_PORT), Node listener 3000 (PORT).
 PORT=${PORT:-3000}
 DOMAIN=${DOMAIN:-localhost}
-SESSION_SECRET=${SESSION_SECRET:-dev-session-secret-change-in-production}
 DOCKER_PORT=${DOCKER_PORT:-3002}
 DOCKER_BUILD_TARGET=${DOCKER_BUILD_TARGET:-$([ "$NODE_ENV" = "development" ] && echo "development" || echo "production")}
 # build-docker:dev → CDN_HOST = DOMAIN:DOCKER_PORT; build-docker:prod → CDN_HOST from .env.production

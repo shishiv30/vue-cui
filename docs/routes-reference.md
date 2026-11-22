@@ -23,10 +23,11 @@ Owned by `server/routes/api.ts`:
 
 Owned by `server/routes/api.soa.ts` and mounted children:
 
-- `/api/soa/property/*` -> `api.soa.property.ts`
-- `/api/soa/school/*` -> `api.soa.school.js`
-- `/api/soa/poi/*` -> `api.soa.poi.js`
-- `/api/soa/*` fallback and geoarea routes -> `api.soa.geoarea.js`
+- `/api/soa/property/<named>` -> `api.soa.property.ts`
+- `/api/soa/school/<named>` -> `api.soa.school.ts`
+- `/api/soa/<geoarea named>` (states, cities, counties, ...) -> `api.soa.geoarea.ts`
+
+Named routes only. There is no catch-all proxy: it would let any caller reach SOA with the server's `SOA_API_KEY`. Path params are `encodeURIComponent`-ed before they go upstream.
 
 ## Route Ordering Notes
 
@@ -65,7 +66,7 @@ JSON (same `property.get()` model, `toData`):
 | `GET` | `/api/property/search` | IP geo search (`req.ip` or `?ip=`) |
 | `GET` | `/api/property/search/:path` | Geo path search (`tx/austin`); `search` falls back to IP |
 
-SOA transport for property: direct imports from `server/routes/api.soa.property.ts` inside the controller (not an internal hop to `/api/soa`). HTTP proxy for external clients: `/api/soa/property/*`.
+SOA transport for property: direct imports from `server/routes/api.soa.property.ts` inside the controller (not an internal hop to `/api/soa`). HTTP endpoints for external clients: the named `/api/soa/property/*` routes.
 
 Pipeline: [`listing-data-pipeline.md`](listing-data-pipeline.md).
 

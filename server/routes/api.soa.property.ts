@@ -523,7 +523,7 @@ export async function getPropertyHistoryById(prId, queryParams = {}) {
 	}
 	const query = { ...queryParams };
 	delete query.prId;
-	return proxyToPropertyPath('GET', `/properties/${prId}/histories`, { query });
+	return proxyToPropertyPath('GET', `/properties/${encodeURIComponent(prId)}/histories`, { query });
 }
 
 async function getPropertyHistoryByIdHandler(req, res) {
@@ -606,9 +606,13 @@ export async function getPropertyListingInfoById(propertyId, queryParams = {}) {
 	}
 	const query = { ...queryParams };
 	delete query.propertyId;
-	return proxyToPropertyPath('GET', `/properties/${propertyId}/primary-listing`, {
-		query,
-	});
+	return proxyToPropertyPath(
+		'GET',
+		`/properties/${encodeURIComponent(propertyId)}/primary-listing`,
+		{
+			query,
+		},
+	);
 }
 
 async function getPropertyListingInfoByIdHandler(req, res) {
@@ -873,52 +877,5 @@ router.get('/getPropertyListingInfoById/:propertyId', getPropertyListingInfoById
 router.post('/searchHouse', searchHouseHandler);
 router.get('/getNearbyForSaleHouseByLocation', getNearbyForSaleHouseByLocationHandler);
 router.get('/getNearbySoldHouseByLocation', getNearbySoldHouseByLocationHandler);
-
-/**
- * @swagger
- * /soa/property/{path}:
- *   get:
- *     summary: Proxy to Property SOA API (GET)
- *     description: Forwards GET to PROPERTY_API_DOMAIN. See docs/soa-api.md.
- *     tags:
- *       - SOA Property
- *   post:
- *     summary: Proxy to Property SOA API (POST)
- *     tags:
- *       - SOA Property
- *   put:
- *     summary: Proxy to Property SOA API (PUT)
- *     tags:
- *       - SOA Property
- *   delete:
- *     summary: Proxy to Property SOA API (DELETE)
- *     tags:
- *       - SOA Property
- */
-export async function proxyToProperty(method, path, options = {}) {
-	const domain = getPropertyApiDomain();
-	if (!path || path === '/') {
-		throw new Error('Property API path required');
-	}
-	return fetchFromSoa(domain, method, path, options);
-}
-
-async function proxyToPropertyHandler(req, res) {
-	try {
-		const method = req.method;
-		const options = { query: req.query };
-		if ((method === 'POST' || method === 'PUT' || method === 'PATCH') && req.body) {
-			options.body = req.body;
-		}
-		sendJson(res, await proxyToProperty(method, req.path, options));
-	} catch (error) {
-		handleSoaError(res, error);
-	}
-}
-
-router.get('*', proxyToPropertyHandler);
-router.post('*', proxyToPropertyHandler);
-router.put('*', proxyToPropertyHandler);
-router.delete('*', proxyToPropertyHandler);
 
 export default router;

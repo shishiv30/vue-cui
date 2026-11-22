@@ -5,3 +5,8 @@ npm-debug.log
 README.md
 .DS_Store
 *.log
+# Secrets stay on the local machine. Pass them at runtime (docker run --env-file / -e).
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
