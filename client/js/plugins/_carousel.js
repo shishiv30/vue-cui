@@ -1,4 +1,4 @@
-import { emit, off, on } from '../core/event.js';
+import { off, on } from '../core/event.js';
 import guid from '../../core/guid.js';
 
 function loadImg(img) {

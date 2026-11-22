@@ -1,5 +1,5 @@
 //validate for form submit
-import { emit, trigger } from '../core/event.js';
+import { trigger } from '../core/event.js';
 import { Plugin } from '../core/plugin.js';
 export const getElementValue = function ($element) {
 	if ($element.type === 'checkbox' || $element.type === 'radio') {

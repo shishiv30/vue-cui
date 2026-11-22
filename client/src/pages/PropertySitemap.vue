@@ -1,11 +1,7 @@
 <template>
 	<div>
 		<Header :model="header" />
-		<nav
-			v-if="breadcrumbLinks.length"
-			class="breadcrumb"
-			aria-label="breadcrumb"
-		>
+		<nav v-if="breadcrumbLinks.length" class="breadcrumb" aria-label="breadcrumb">
 			<ul>
 				<li v-for="(link, index) in breadcrumbLinks" :key="index">
 					<span v-if="!link.href">{{ link.text }}</span>
@@ -60,9 +56,10 @@
 			</section>
 			<section class="section small inline bg">
 				<div class="f6">
-					This website is for informational purposes only and does not constitute legal, financial, or investment
-					advice. The information provided is not intended to be a substitute for professional advice. Always
-					consult with a qualified professional before making any financial decisions. &copy;
+					This website is for informational purposes only and does not constitute legal, financial,
+					or investment advice. The information provided is not intended to be a substitute for
+					professional advice. Always consult with a qualified professional before making any
+					financial decisions. &copy;
 					{{ footer.year }}
 					{{ footer.appName }}. All rights reserved.
 				</div>
@@ -72,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePropertyStore } from '../store';
 import Header from '../components/Header.vue';
@@ -86,10 +83,7 @@ const header = headerMock;
 const footer = computed(() => store.footer);
 const groups = computed(() => store.groups);
 const breadcrumbLinks = computed(() => store.breadcrumb?.links ?? []);
-watch(() => route.path, async (path, previous) => {
-	if (path === previous) {
-		return;
-	}
+async function loadSitemap(path: string) {
 	const pagePath = path.replace(/\/+$/, '') || '/';
 	const apiPath = pagePath === '/property' ? '/property/sitemap' : pagePath;
 	const ui = await store.loadPage(`/api${apiPath}`);
@@ -97,5 +91,21 @@ watch(() => route.path, async (path, previous) => {
 		return;
 	}
 	document.title = ui.seo?.title ?? document.title;
+}
+
+watch(
+	() => route.path,
+	(path, previous) => {
+		if (path !== previous) {
+			void loadSitemap(path);
+		}
+	},
+);
+
+// Coming from search: the store holds results, not states.
+onMounted(() => {
+	if (!store.groups.length) {
+		void loadSitemap(route.path);
+	}
 });
 </script>

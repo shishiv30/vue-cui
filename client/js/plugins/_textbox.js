@@ -1,4 +1,3 @@
-import { emit } from '../core/event.js';
 import { hasInput } from '../core/query.js';
 
 export default {

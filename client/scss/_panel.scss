@@ -4,6 +4,8 @@
 
 .panel {
 	@include gap-size();
+	color: var(--panel-color);
+	background-color: var(--panel-color-bg);
 	margin-top: var(--panel-gap-y);
 	margin-bottom: var(--panel-gap-y);
 	padding-left: var(--panel-gap-x);
@@ -12,18 +14,11 @@
 	padding-bottom: var(--panel-gap-y);
 
 	&.inline {
-		margin-top: 0;
-		margin-bottom: 0;
-		padding-top: var(--panel-gap-y);
-		padding-bottom: var(--panel-gap-y);
+		@include box-shadow();
 	}
-
-	color: var(--panel-color);
-	background-color: var(--panel-color-bg);
-	border: var(--panel-border-weight) solid transparent;
-	@include box-shadow();
-
+	
 	&.outline {
+		border: var(--panel-border-weight) solid transparent;
 		border-color: var(--panel-color-border);
 	}
 }

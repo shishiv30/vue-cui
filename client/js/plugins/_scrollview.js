@@ -1,4 +1,4 @@
-import { emit, on } from '../core/event.js';
+import { on } from '../core/event.js';
 
 export default {
 	name: 'scrollview',

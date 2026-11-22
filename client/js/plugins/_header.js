@@ -1,6 +1,6 @@
-import { emit, off, on } from '../core/event.js';
+import { off, on } from '../core/event.js';
 import guid from '../core/guid.js';
-import { defBool, defEnum } from '../../js/core/def.js';
+import { defBool } from '../../js/core/def.js';
 const boolStatus = ['header-close'];
 
 export default {

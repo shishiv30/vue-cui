@@ -1,8 +1,5 @@
 // @ts-nocheck
-import {
-	getGeoDisplayText,
-	getGeoByPath,
-} from '../../helpers/geo.js';
+import { getGeoDisplayText, getGeoByPath, getStatesForSitemap } from '../../helpers/geo.js';
 import { getGeoCityByIp } from '../../helpers/ip.js';
 import { buildDetailSeo } from '../../helpers/article.js';
 import { apiDataToUiData, uiPayloadToPayload } from '../page/mapProperty.js';
@@ -37,8 +34,7 @@ export default {
 		let geo;
 		const prId = req.query.id || req.query.prId;
 
-		const geoPathRaw = String(req.query.geoPath || '')
-			.replace(/^\/+|\/+$/g, '');
+		const geoPathRaw = String(req.query.geoPath || '').replace(/^\/+|\/+$/g, '');
 		if (geoPathRaw && geoPathRaw !== 'search') {
 			geo = getGeoByPath(geoPathRaw);
 		} else if ((req.query.ip || req.ip) && !prId) {
@@ -90,9 +86,7 @@ export default {
 				h1: title,
 				description,
 			},
-			httpHead: welcomeImage
-				? [{ rel: 'preload', as: 'image', href: welcomeImage }]
-				: [],
+			httpHead: welcomeImage ? [{ rel: 'preload', as: 'image', href: welcomeImage }] : [],
 			metadata: {
 				...context.metadata,
 				welcomeImage,
@@ -103,6 +97,10 @@ export default {
 				articles,
 				articleTotalCount,
 				filters: filterFields,
+				groups:
+					!geo && !prId
+						? [{ title: 'Browse by state', links: getStatesForSitemap('/property') }]
+						: [],
 				header,
 				footer,
 				breadcrumb: null,

@@ -6,11 +6,11 @@
 
 ## What the repo produces
 
-| Output | Command | Where it goes |
-| --- | --- | --- |
-| The app (Express + Vue SSR) | `npm run build:vite`, then `npm start` | `dist/` + `dist/server/` |
-| The npm library | `npm run build:lib` | `dist-lib/`, published by `.github/workflows/publish-npm.yml` on a GitHub release |
-| Storybook | `npm run build:storybook` | GitHub Pages (`.github/workflows/storybook-pages.yml`) and GitLab S3/CloudFront (`.gitlab-ci.yml`) |
+| Output                      | Command                                | Where it goes                                                                                      |
+| --------------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| The app (Express + Vue SSR) | `npm run build:vite`, then `npm start` | `dist/` + `dist/server/`                                                                           |
+| The npm library             | `npm run build:lib`                    | `dist-lib/`, published by `.github/workflows/publish-npm.yml` on a GitHub release                  |
+| Storybook                   | `npm run build:storybook`              | GitHub Pages (`.github/workflows/storybook-pages.yml`) and GitLab S3/CloudFront (`.gitlab-ci.yml`) |
 
 ## Commands
 
@@ -29,19 +29,19 @@
 
 ## Folder ownership
 
-| Folder | Owns | Must not contain |
-| --- | --- | --- |
-| `client/js/core/` | Runtime primitives (event, plugin, page, router, request, def) | Page-specific business logic |
-| `client/js/plugins/` | One legacy widget per `_name.js` | Shared SOA mapping |
-| `client/src/components/`, `directives/`, `lib/` | Library components, their models and stories | Page or API logic |
-| `client/src/pages/`, `router.ts`, `store.ts` | App pages built from components | New one-off UI widgets |
-| `helpers/` | Pure transforms and shared contracts | Express handlers, seed payloads |
-| `data/` | Seed, mock and default payloads | Mapping logic |
-| `server/routes/` | HTTP registration and thin adapters | Field mapping, seed data |
-| `server/controllers/` | Page configs (`beforeGet`/`get`/`preload`) | Raw SOA field parsing |
-| `server/page/` | Page models for Vue SSR (header, footer, filter, links, sitemap) | SOA parsing |
-| `docs/` | Product docs: how things work | Tracking notes |
-| `notes/` | Team memory: requirements, decisions, open questions, lessons | Product docs |
+| Folder                                          | Owns                                                             | Must not contain                |
+| ----------------------------------------------- | ---------------------------------------------------------------- | ------------------------------- |
+| `client/js/core/`                               | Runtime primitives (event, plugin, page, router, request, def)   | Page-specific business logic    |
+| `client/js/plugins/`                            | One legacy widget per `_name.js`                                 | Shared SOA mapping              |
+| `client/src/components/`, `directives/`, `lib/` | Library components, their models and stories                     | Page or API logic               |
+| `client/src/pages/`, `router.ts`, `store.ts`    | App pages built from components                                  | New one-off UI widgets          |
+| `helpers/`                                      | Pure transforms and shared contracts                             | Express handlers, seed payloads |
+| `data/`                                         | Seed, mock and default payloads                                  | Mapping logic                   |
+| `server/routes/`                                | HTTP registration and thin adapters                              | Field mapping, seed data        |
+| `server/controllers/`                           | Page configs (`beforeGet`/`get`/`preload`)                       | Raw SOA field parsing           |
+| `server/page/`                                  | Page models for Vue SSR (header, footer, filter, links, sitemap) | SOA parsing                     |
+| `docs/`                                         | Product docs: how things work                                    | Tracking notes                  |
+| `notes/`                                        | Team memory: requirements, decisions, open questions, lessons    | Product docs                    |
 
 ## Rules
 
@@ -55,7 +55,7 @@ Everything lives in `.claude/rules/`. The path-scoped ones load when you touch m
 
 - **Build check:** there is no `npm run build`. Run `npm run build:vite`, plus `npm run build:lib` when components or `client/src/lib` change (the `verify` skill).
 - **Reference implementation for new pages:** `client/src/pages/*.vue` plus its controller in `server/controllers/` and its route in `server/routes/`. There is no `configs/routes.js`.
-- **Branches:** use `conjee/{TICKET-ID}` only when a Jira URL is given. Otherwise use `feat/…`, `fix/…`, `chore/…` or `docs/…`.
+- **Branches:** work on `master`. Branch only when a task needs many agents working together; when done, merge into `master` and delete the branch locally and on origin. Never use worktrees. Use `conjee/{TICKET-ID}` only when a Jira URL is given.
 - **Ignore the global consumer-web agents and skills** (`route-page-developer`, `vue-ssr-performance`, `run-local`, `run-tests`, `image-compression`). Use this repo's agents and skills.
 
 ## Change workflow
@@ -66,6 +66,7 @@ Everything lives in `.claude/rules/`. The path-scoped ones load when you touch m
 4. `code-reviewer` checks the logic, data and performance; `ui-ux-designer` checks the visuals; people sign off the human checks.
 5. Commit and release.
 6. `docs-maintainer` reviews what shipped, updates the docs, and closes the requirement.
+7. More than 10 unmarked lessons in `notes/lessons.md`: `docs-maintainer` runs the `retro` skill (notes in, sharper rules, skills and agents out).
 
 ## Docs and notes
 

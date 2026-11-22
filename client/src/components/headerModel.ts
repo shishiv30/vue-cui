@@ -40,7 +40,7 @@ export const headerMock: HeaderUiModel = {
 	},
 	menu: [
 		{ text: 'Document', href: '/' },
-		{ text: 'Sitemap', href: '/property' },
+		{ text: 'Property', href: '/property' },
 		{ text: 'Search', href: '/property/search' },
 	],
 };

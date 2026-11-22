@@ -51,6 +51,7 @@ export type PropertyState = {
 	footer: FooterModel | null;
 	breadcrumb: BreadcrumbModel | null;
 	groups: LinkGroup[];
+	states: PageLink[];
 	articles: ArticleUiModel[];
 	filters: GroupDropdownField[];
 	detail: PropertyDetailModel | null;
@@ -69,6 +70,7 @@ const emptyState = (): PropertyState => ({
 	footer: null,
 	breadcrumb: null,
 	groups: [],
+	states: [],
 	articles: [],
 	filters: [],
 	detail: null,

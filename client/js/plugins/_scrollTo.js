@@ -1,4 +1,4 @@
-import { emit, trigger } from '../core/event.js';
+import { trigger } from '../core/event.js';
 
 /**
  * Resolve the scroll target element from options or link href.

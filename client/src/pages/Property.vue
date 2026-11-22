@@ -1,10 +1,7 @@
 <template>
 	<div ref="pageEl" :class="pageClass">
 		<Header :model="header" />
-		<nav
-			class="listing-nav"
-			aria-label="Listing"
-		>
+		<nav class="listing-nav" aria-label="Listing">
 			<div v-if="breadcrumbLinks.length" class="breadcrumb">
 				<ul>
 					<li v-for="(link, index) in breadcrumbLinks" :key="index">
@@ -28,7 +25,8 @@
 			:placeholder="detailPlaceholder"
 			:reveal="detailReveal"
 		/>
-		<Result :articles="articles" :show-reset="filtersActive" />
+		<Sitemap v-if="showStates" title="Browse by state" :groups="groups" />
+		<Result v-else :articles="articles" :show-reset="filtersActive" />
 		<footer v-if="footer" class="footer">
 			<section class="section small major inline bg active">
 				<div class="fixed fixed-max-xs grid grid-xs-1">
@@ -75,9 +73,10 @@
 			</section>
 			<section class="section small inline bg">
 				<div class="f6">
-					This website is for informational purposes only and does not constitute legal, financial, or investment
-					advice. The information provided is not intended to be a substitute for professional advice. Always
-					consult with a qualified professional before making any financial decisions. &copy;
+					This website is for informational purposes only and does not constitute legal, financial,
+					or investment advice. The information provided is not intended to be a substitute for
+					professional advice. Always consult with a qualified professional before making any
+					financial decisions. &copy;
 					{{ footer.year }}
 					{{ footer.appName }}. All rights reserved.
 				</div>
@@ -94,11 +93,15 @@ import Detail from '../components/Detail.vue';
 import Filter from '../components/Filter.vue';
 import Header from '../components/Header.vue';
 import Result from '../components/Result.vue';
+import Sitemap from '../components/Sitemap.vue';
 import type { ArticleUiModel } from '../components/articleModel';
 import type { PropertyDetailModel } from '../components/detailModel';
 import type { GroupDropdownField, GroupDropdownValue } from '../components/groupdropdownModel';
 import { getQueryStringByFilter } from '../../../helpers/filter.js';
-import { listingIdFromPath, matchPropertySpaRoute } from '../../../helpers/routes/propertySpaRoutes.js';
+import {
+	listingIdFromPath,
+	matchPropertySpaRoute,
+} from '../../../helpers/routes/propertySpaRoutes.js';
 import { headerMock } from '../components/headerModel';
 const store = usePropertyStore();
 const route = useRoute();
@@ -109,6 +112,10 @@ const detailReveal = ref(false);
 const header = headerMock;
 const footer = computed(() => store.footer);
 const articles = computed(() => store.articles);
+const groups = computed(() => store.groups);
+const showStates = computed(
+	() => !articles.value.length && !detail.value && groups.value.length > 0,
+);
 const filters = computed(() => store.filters);
 const breadcrumbLinks = computed(() => store.breadcrumb?.links ?? []);
 
@@ -223,7 +230,10 @@ function playFlip(target: PropertyView) {
 		moves.push(prev.item);
 	});
 	if (!moves.length) {
-		endFlip(token, from.map((entry) => entry.item));
+		endFlip(
+			token,
+			from.map((entry) => entry.item),
+		);
 		return;
 	}
 	requestAnimationFrame(() => {
@@ -244,7 +254,10 @@ function playFlip(target: PropertyView) {
 			moves.forEach((item) => {
 				item.removeEventListener('transitionend', onEnd);
 			});
-			endFlip(token, from.map((entry) => entry.item));
+			endFlip(
+				token,
+				from.map((entry) => entry.item),
+			);
 		};
 		const onEnd = (event: TransitionEvent) => {
 			if (event.propertyName !== 'transform') {
@@ -416,25 +429,28 @@ async function loadDetail(prId: string, animate: boolean) {
 	detailReveal.value = false;
 }
 
-watch(() => route.path, (path) => {
-	const next = viewFromRoute(path);
-	const id = listingIdFromPath(path);
-	if (next !== 'detail') {
-		detailPlaceholder.value = false;
-		detailReveal.value = false;
-		void applyView(next).then(() => {
-			window.setTimeout(() => {
-				if (view.value !== 'detail') {
-					store.detail = null;
-				}
-			}, viewFlipMs);
-		});
-		return;
-	}
-	if (id) {
-		void loadDetail(id, true);
-	}
-});
+watch(
+	() => route.path,
+	(path) => {
+		const next = viewFromRoute(path);
+		const id = listingIdFromPath(path);
+		if (next !== 'detail') {
+			detailPlaceholder.value = false;
+			detailReveal.value = false;
+			void applyView(next).then(() => {
+				window.setTimeout(() => {
+					if (view.value !== 'detail') {
+						store.detail = null;
+					}
+				}, viewFlipMs);
+			});
+			return;
+		}
+		if (id) {
+			void loadDetail(id, true);
+		}
+	},
+);
 
 onMounted(() => {
 	const id = listingIdFromPath(route.path);
@@ -455,7 +471,9 @@ function modelFromFields(fields: GroupDropdownField[]): GroupDropdownValue {
 			value[field.id] = field.options.find((option) => option.checked)?.value ?? '';
 			return;
 		}
-		value[field.id] = field.options.filter((option) => option.checked).map((option) => option.value);
+		value[field.id] = field.options
+			.filter((option) => option.checked)
+			.map((option) => option.value);
 	});
 	return value;
 }
@@ -544,10 +562,7 @@ function onFilterChange() {
 	}, 200);
 }
 
-watch(() => route.fullPath, async (fullPath, previous) => {
-	if (fullPath === previous || previous === undefined) {
-		return;
-	}
+async function loadSearch() {
 	const pagePath = route.path.replace(/\/+$/, '') || '/';
 	const isIpSearch = pagePath === '/property/search';
 	if (!isIpSearch && matchPropertySpaRoute(route.path)?.id !== 'geo') {
@@ -556,7 +571,26 @@ watch(() => route.fullPath, async (fullPath, previous) => {
 	const geo = isIpSearch
 		? ''
 		: route.path.replace(/^\/property\//, '').replace(/\/detail_[^/]+\/?$/, '');
-	const search = route.fullPath.includes('?') ? route.fullPath.slice(route.fullPath.indexOf('?')) : '';
+	const search = route.fullPath.includes('?')
+		? route.fullPath.slice(route.fullPath.indexOf('?'))
+		: '';
 	await store.loadPage(`/api/property/search${geo ? `/${geo}` : ''}${search}`);
+}
+
+watch(
+	() => route.fullPath,
+	(fullPath, previous) => {
+		if (fullPath === previous || previous === undefined) {
+			return;
+		}
+		void loadSearch();
+	},
+);
+
+// Coming from the states list (/property): the store still holds states, not results.
+onMounted(() => {
+	if (store.groups.length && !listingIdFromPath(route.path)) {
+		void loadSearch();
+	}
 });
 </script>

@@ -1,4 +1,3 @@
-import { emit } from '../core/event.js';
 export default {
 	name: 'inputformat',
 	defaultOpt: {

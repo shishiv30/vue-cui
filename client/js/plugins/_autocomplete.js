@@ -1,9 +1,4 @@
-import { emit, off, on } from '../core/event.js';
-import guid from '../core/guid.js';
-import { defBool, defEnum } from '../core/def.js';
-const boolStatus = ['input-focus'];
 import { getPathByGeo, geoType } from '../../../helpers/geo.js';
-import debounce from 'lodash/debounce.js';
 
 export default {
 	name: 'autocomplete',

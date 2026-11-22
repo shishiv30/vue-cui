@@ -1,4 +1,3 @@
-import { trigger, emit, on, off } from '../core/event.js';
 import { stringToObj } from '../convert.js';
 const ImgStatus = {
 	INIT: 0,

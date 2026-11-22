@@ -3,6 +3,7 @@ import express from 'express';
 const router = express.Router();
 import BaseController from '../controllers/index.js';
 import propertyConfig from '../controllers/property.js';
+import { getStatesForSitemap } from '../../helpers/geo.js';
 import { loadPropertySitemapPageState } from '../utils/propertyPageState.js';
 
 /**
@@ -90,6 +91,11 @@ import { loadPropertySitemapPageState } from '../utils/propertyPageState.js';
  *     tags:
  *       - Geo
  */
+/** All states as links, cached by the browser (client/src/utils/clientData.ts). */
+router.get('/geo/states', (_req, res) => {
+	res.json({ states: getStatesForSitemap('/property') });
+});
+
 router.get('/geo', async (req, res) => {
 	//get current router is get or post or put or delete
 	let controller = new BaseController(req, res, 'geo');

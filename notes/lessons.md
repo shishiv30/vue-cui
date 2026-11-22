@@ -1,6 +1,6 @@
 # Lessons
 
-Newest first. One or two lines each, with a link to the source.
+Newest first. One or two lines each, with a link to the source. The `retro` skill marks each lesson `→ applied: <file>` or `→ kept`. More than 10 unmarked lessons: a retro is due.
 
 - 2026-11-20: The Vue app does not load the legacy `client/js` runtime. A Vue component that still relies on a `data-role` plugin silently does nothing (the Header search had no suggestions). Replace the hook with a directive or component. Source: [REQ-20261120-autocomplete-directive](requirements/REQ-20261120-autocomplete-directive.md).
 - 2026-11-20: `html` is the scrolling element in this app, so `overflow: hidden` on `body` does not lock page scroll. Lock on `html` (as `html.autocomplete-open` in `client/scss/_autocomplete.scss` does).
