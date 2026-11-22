@@ -4,38 +4,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import { pageConfig } from './client/pages.config.js';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-function includeHtml() {
-	return {
-		name: 'html-include',
-		transformIndexHtml(html: string) {
-			let next = html.replace(/<!--\s*include:([^>]+?)\s*-->/g, (_match, includePath: string) => {
-				const fullPath = path.resolve(root, 'client/components', includePath.trim());
-				try {
-					return fs.readFileSync(fullPath, 'utf8');
-				} catch (error) {
-					const message = error instanceof Error ? error.message : String(error);
-					console.warn(`Could not include ${includePath}: ${message}`);
-					return _match;
-				}
-			});
-			if (!next.includes('rel="describedby"')) {
-				next = next.replace(/<head[^>]*>/i, '$&\n<link rel="describedby" href="/llms.txt">');
-			}
-			if (!next.includes('type="module"') && !next.includes('<!--app-html-->')) {
-				next = next.replace(
-					/<\/body>/i,
-					'<script type="module" src="./index.js"></script>\n</body>',
-				);
-			}
-			return next;
-		},
-	};
-}
 /** Dev only: sw.js imports workbox (not installed), so serve a stub that clears any stale registration. */
 function devSwStub() {
 	return {
@@ -152,25 +124,18 @@ function copyStatic() {
 }
 /** Browser Maps key from .env.local (app and local Storybook). Absent in the lib build. */
 const googleMapsApiKey = loadEnv('development', root, 'GOOGLE_').GOOGLE_MAPS_API_KEY ?? '';
-const mpaInput = Object.fromEntries(
-	pageConfig.pages.map((page) => [
-		page.name,
-		path.resolve(root, `client/pages/${page.name}/index.html`),
-	]),
-);
 export default defineConfig({
 	define: {
 		__APP_BASE__: JSON.stringify(''),
 		__GOOGLE_MAPS_API_KEY__: JSON.stringify(googleMapsApiKey),
 	},
-	plugins: [vue(), includeHtml(), devSwStub(), devImages(), copyStatic()],
+	plugins: [vue(), devSwStub(), devImages(), copyStatic()],
 	build: {
 		outDir: 'dist',
 		emptyOutDir: true,
 		cssCodeSplit: false,
 		rollupOptions: {
 			input: {
-				...mpaInput,
 				property: path.resolve(root, 'client/src/main.ts'),
 				/** CSS-only entry: emits dist/index.min.css, linked by client/src/index.html. */
 				index: path.resolve(root, 'client/scss/index.scss'),

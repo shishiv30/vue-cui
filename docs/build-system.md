@@ -5,7 +5,6 @@ Vite builds client assets. Express serves them and renders `/property` and `/doc
 ## Config
 
 - `vite.config.ts` builds the Vue client entry (`client/src/main.ts`).
-- `client/pages.config.js` lists static MPA pages (currently none).
 - `server/config.ts` loads `.env` then `.env.local` in development, `.env.stage` for stage, and `.env.production` for production.
 
 ## Commands

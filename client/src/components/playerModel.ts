@@ -1,8 +1,8 @@
 import { assetUrl } from './assetUrl';
 
-/** Markup from `client/pages/document/index.html`, options from `client/js/plugins/_player.js`. */
+/** Markup from `client/src/pages/Document.vue`, options from `client/js/plugins/_player.js`. */
 export interface PlayerUiModel {
-	/** Image URLs. The mock list matches `data-images` in `client/pages/document/index.html`. */
+	/** Image URLs. The mock list matches `data-images` in `client/src/pages/Document.vue`. */
 	images: string[];
 	/** Index of the first visible image (plugin `imgIndex`). */
 	initialIndex?: number;

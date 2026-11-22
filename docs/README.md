@@ -1,6 +1,6 @@
 # Pure UI
 
-Express server in TypeScript, Vite for client assets, Vue 3 with vue-router and Vuex for `/property` and `/document`. Layout still boots the JavaScript plugin runtime.
+Express server in TypeScript, Vite for client assets, Vue 3 with vue-router and Vuex for `/property` and `/document`.
 
 ## Quick start
 
@@ -25,7 +25,7 @@ Local URLs:
 
 ## Pages
 
-Vite builds the Vue app from `client/src/main.ts`; `client/pages.config.js` has no static pages. `/property` and `/document` are server-rendered Vue, not static HTML pages.
+Vite builds the Vue app from `client/src/main.ts`. There are no static HTML pages. `/property` and `/document` are server-rendered Vue, not static HTML pages.
 
 ## Layout
 

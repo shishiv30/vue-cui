@@ -8,7 +8,7 @@ export interface SliderImageMeta {
 
 /** Markup from the old EJS album, options from `client/js/plugins/_slider.js`. */
 export interface SliderUiModel {
-	/** Image URLs. The mock list matches `data-images` in `client/pages/document/index.html`. */
+	/** Image URLs. The mock list matches `data-images` in `client/src/pages/Document.vue`. */
 	images: string[];
 	/** Index of the first visible image. */
 	initialIndex?: number;

@@ -5,13 +5,13 @@ export interface FormEnumOption {
 	text: string;
 }
 
-/** Gender radios from `client/pages/document/index.html`. */
+/** Gender radios from `client/src/pages/Document.vue`. */
 export const radioMock: FormEnumOption[] = [
 	{ value: 'Male', text: 'Male' },
 	{ value: 'Female', text: 'Female' },
 ];
 
-/** Favor checkboxes from `client/pages/document/index.html`. */
+/** Favor checkboxes from `client/src/pages/Document.vue`. */
 export const checkboxMock: FormEnumOption[] = [
 	{ value: 'Dance', text: 'Dance' },
 	{ value: 'Sing', text: 'Sing' },

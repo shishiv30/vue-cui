@@ -117,13 +117,13 @@ Worked examples: `client/src/components/Grid.stories.ts`, `client/src/components
 | Vue | `client/src/components/Slider.vue` |
 | Story | `client/src/components/Slider.stories.ts` |
 
-`sliderMock.images` is `/images/01.jpg` through `/images/07.jpg` from `client/pages/document/index.html`. Drag calls `preventDefault`. Changing `initialIndex` in Controls moves the current frame. `next()` and `prev()` emit `change.slider` with `[element, index]` before the frame updates, then `changed.slider` with the same index after it updates, and both methods return that index. The Docs/Controls `next` and `prev` number fields call those methods.
+`sliderMock.images` is `/images/01.jpg` through `/images/07.jpg` from `client/src/pages/Document.vue`. Drag calls `preventDefault`. Changing `initialIndex` in Controls moves the current frame. `next()` and `prev()` emit `change.slider` with `[element, index]` before the frame updates, then `changed.slider` with the same index after it updates, and both methods return that index. The Docs/Controls `next` and `prev` number fields call those methods.
 
 ## Shifter
 
 | Piece | Path |
 | --- | --- |
-| Markup | `client/pages/document/index.html` (no `comp_shifter.ejs`) |
+| Markup | `client/src/pages/Document.vue` (no `comp_shifter.ejs`) |
 | Plugin | `client/js/plugins/_shifter.js` (`next`, `prev`, `data-step`) |
 | Model | `client/src/components/shifterModel.ts` |
 | Vue | `client/src/components/Shifter.vue` |
@@ -160,25 +160,25 @@ Only Tooltip and Autocomplete create one shared node under `body`. Collapse and 
 
 ## Collapse
 
-Directive. Source: `client/js/plugins/_collapse.js`. Markup: `client/pages/document/index.html`.
+Directive. Source: `client/js/plugins/_collapse.js`. Markup: `client/src/pages/Document.vue`.
 
 `v-collapse:[shown]="selector"`. Example: `<button v-collapse:shown="'#caretPanel1'">`. The value is the panel selector. The argument `shown` starts open. A click toggles class `shown` on the button and the panel. Events: `show` / `shown` and `hide` / `hidden`. The payload is the trigger element. `show`, `hide`, and `toggle` stay inside the directive.
 
 ## Tab
 
-Directive. Source: `client/js/plugins/_tab.js`. Markup: `client/pages/document/index.html`.
+Directive. Source: `client/js/plugins/_tab.js`. Markup: `client/src/pages/Document.vue`.
 
 `v-tab="index"` on the bar that contains `[data-target]` buttons. Panels stay in the page with `data-id`. The value is the initial index (default `0`). A click on the active tab does nothing. Events: none.
 
 ## Validation
 
-Directive. Source: `client/js/plugins/_validate.js`. Markup: `client/pages/document/index.html`.
+Directive. Source: `client/js/plugins/_validate.js`. Markup: `client/src/pages/Document.vue`.
 
 `v-validation="'required|email'"` on the `input`, `textarea`, or `select`. Rules are `required`, `email`, `phone`, `zipcode`, and `price`, separated by `|`. A `change` runs the checks. Failure adds `has-error` and `data-tooltip` on the closest `.input`, `.checkbox`, `.radio`, `.textarea`, or `.selectbox`. A pass adds `has-success` when the field is required or has a value. Events: none.
 
 ## Form
 
-Directive. Source: `client/js/plugins/_form.js`. Markup: `client/pages/document/index.html`.
+Directive. Source: `client/js/plugins/_form.js`. Markup: `client/src/pages/Document.vue`.
 
 `v-form="submit"` on the `<form>`. Submit validates every `v-validation` field first. A failure focuses the first invalid control and does not call `submit`. A pass calls `submit` with the collected fields: named text, textarea, and select values, `.checkbox` groups, and `.radio` groups. Events: none.
 
@@ -232,7 +232,7 @@ Component, same shape as Slider. Source: `client/js/plugins/_player.js`.
 
 | Piece | Path |
 | --- | --- |
-| Markup | `client/pages/document/index.html` |
+| Markup | `client/src/pages/Document.vue` |
 | Plugin | `client/js/plugins/_player.js` (`goTo`, `goNext`, `goPrev`, `play`, `pause`, `toggle`) |
 | Model | `client/src/components/playerModel.ts` |
 | Vue | `client/src/components/Player.vue` |
@@ -270,7 +270,7 @@ options = [{ value: string, text: string }, ...]
 
 `v-model` is the selection. Radio, Select, and DropdownRadio store one `value` string. Checkbox and DropdownCheckbox store a `value` string array. RangeSlider stores `[minValue, maxValue]`, the two option `value`s at the ends of the fill. An empty string is the unchecked or unselected state.
 
-Radio and Checkbox markup matches `client/pages/document/index.html` (gender radios, favor checkboxes): a label, then `.radio` or `.checkbox`, then `label > input + span`. Select matches the `.selectbox` block (label, `select`, `icon-angle-down`).
+Radio and Checkbox markup matches `client/src/pages/Document.vue` (gender radios, favor checkboxes): a label, then `.radio` or `.checkbox`, then `label > input + span`. Select matches the `.selectbox` block (label, `select`, `icon-angle-down`).
 
 DropdownRadio and DropdownCheckbox use that same choice markup inside a closed list that opens from a button. There is no separate plugin file.
 
@@ -280,9 +280,9 @@ Each of the six gets a model file only for the shared option type and a mock, a 
 
 | Piece | Path |
 | --- | --- |
-| Radio markup | `client/pages/document/index.html` (Select Gender) |
-| Checkbox markup | `client/pages/document/index.html` (Select Favor) |
-| Select markup | `client/pages/document/index.html` (`.selectbox`) |
+| Radio markup | `client/src/pages/Document.vue` (Select Gender) |
+| Checkbox markup | `client/src/pages/Document.vue` (Select Favor) |
+| Select markup | `client/src/pages/Document.vue` (`.selectbox`) |
 | RangeSlider plugin | `client/js/plugins/_rangeslider.js` |
 | Shared option type | `client/src/components/formEnumOption.ts` |
 | Vue | `client/src/components/<Name>.vue` |

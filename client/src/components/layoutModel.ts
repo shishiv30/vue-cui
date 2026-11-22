@@ -31,7 +31,7 @@ export interface LayoutArticle {
 	footer?: string;
 }
 
-/** Cards from client/pages/layout/index.html. */
+/** Cards from the legacy layout demo page (removed). */
 export const layoutMock: LayoutArticle[] = [
 	{
 		className: 'default shadow corner',

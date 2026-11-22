@@ -22,7 +22,7 @@ Run this only when the migration is finished. Do it as one change on a `chore/re
    - `client/js/plugins/`
    - the rest of `client/js/core/`, including `renderEjs.js`
    - `client/js/index.js`
-   - the `data-role` boot in `client/pages/*`
+   - ~~the `data-role` boot in `client/pages/*`~~ ✅ removed 2026-11-21
 3. **Remove EJS from the server:** ✅ done 2026-11-19 (`chore/remove-ejs`). The model builders moved to `server/page/`; the HTML shell is `client/src/index.html`.
    - the `server/ejs/comp_*.ejs` and `comp_*.ts` files
    - `helpers/ejs-client-loader.ts` and `helpers/ejsRenderContext.ts`
@@ -35,10 +35,11 @@ Run this only when the migration is finished. Do it as one change on a `chore/re
    - `.claude/skills/convert-ejs-to-vue/` and `.cursor/skills/convert-ejs-to-vue/`
    - `docs/component-conversion.md` (keep its component-design content in the component design doc)
    - every mention of conversion in `CLAUDE.md`, the `component-developer` agent, `code-reviewer` and `storybook-docs`
-6. **Clean up folders:** `client/pages/` and `client/components/*.html` if nothing serves them anymore. Update the folder ownership tables in `CLAUDE.md` and `docs/folder-ownership.md`.
+6. **Clean up folders:** ✅ done 2026-11-21. `client/pages/`, `client/components/*.html`, `client/pages.config.js`, `server/routes/default.ts`, the Vite `includeHtml` plugin and `BaseController.dist` removed; nothing served them. Vue twins: `Document.vue`, `Layout.vue`.
 7. **Final check:** `rg -i "ejs|data-role|pluginCatalog|convert-ejs"` returns nothing outside `docs/archive/` and this list. Run `npm test`, `npm run build:vite` and `npm run build:lib`, and confirm the app still runs. Then mark this row done.
 
 ## Changelog
 
 - 2026-11-19: created; moved here from `docs/change-list.md` (docs-maintainer)
 - 2026-11-19: step 3 done. `server/ejs/`, `toPage`, `staticHtml.ts`, the `seo` hooks, the unused inline theme and the `ejs` dependency removed (application-developer)
+- 2026-11-21: step 6 done; legacy HTML pages removed (application-developer)

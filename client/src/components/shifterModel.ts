@@ -1,4 +1,4 @@
-/** Markup from `client/pages/document/index.html`, options from `client/js/plugins/_shifter.js`. */
+/** Markup from `client/src/pages/Document.vue`, options from `client/js/plugins/_shifter.js`. */
 export interface ShifterUiModel {
 	/** Scroller children. The mock list matches the document demo. An empty list renders nothing. */
 	items: string[];

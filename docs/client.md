@@ -1,6 +1,6 @@
 # Client Architecture
 
-Layout still boots `client/js/index.js` and `data-role` plugins. `/property` and `/document` are the Vue 3 app in `client/src/` (`router.ts`, `store.ts`, `pages/Property.vue`, `pages/PropertySitemap.vue`, `pages/Document.vue`) and are server-rendered from `entry-server.ts`.
+No page boots `client/js/index.js` anymore; the legacy HTML pages (`client/pages/`) were removed. `/property` and `/document` are the Vue 3 app in `client/src/` (`router.ts`, `store.ts`, `pages/Property.vue`, `pages/PropertySitemap.vue`, `pages/Document.vue`) and are server-rendered from `entry-server.ts`.
 
 
 
@@ -11,7 +11,6 @@ This document describes the current client runtime in this repo. It is focused o
 - `client/js/core/*`
 - `client/js/plugins/*`
 - `client/scss/*`
-- `client/pages/*`
 
 For boot order, `main()` → `page.init()` → Router → `dom.load` / SPA inject (including duplicate-init pitfalls), see **[`docs/client-js-lifecycle.md`](docs/client-js-lifecycle.md)**. Router `push` / `replace` / `goto` contract: [§4](docs/client-js-lifecycle.md#4-client-router-contract).
 
@@ -128,12 +127,7 @@ Token names, `:root` vs `body` alias rules, and the token audit live in **[`docs
 
 ## Page Entry Structure
 
-Webpack page entries map to:
-
-- `client/pages/<page>/index.js`
-- `client/pages/<page>/index.html`
-
-Actual page list is in `webpack.config.base.page.js`.
+One Vite entry: `client/src/main.ts`. Pages are Vue routes in `client/src/router.ts`. There are no static HTML pages.
 
 ## Practical Guidelines
 

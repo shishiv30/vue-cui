@@ -9,12 +9,6 @@ import propertySitemapState from './propertySitemapState.js';
 import propertySitemapCounty from './propertySitemapCounty.js';
 import propertySitemapCity from './propertySitemapCity.js';
 import { getSoaLogs } from './realestate.js';
-import fs from 'fs';
-import mime from 'mime';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const queryGroupKey = ['utm', 'hack'];
 
 const routeConfigs = [
@@ -199,23 +193,5 @@ export default class BaseController {
 			error: model.error,
 			cost: new Date() - this.date,
 		});
-	}
-	static async dist(res, fileName) {
-		//get file from dist folder
-		try {
-			const filePath = path.resolve(__dirname, '../../dist', fileName);
-			let extName = path.extname(filePath);
-			let contentType = mime.getType(extName) || 'application/octet-stream';
-			fs.readFile(filePath, 'utf8', (err, data) => {
-				if (err) {
-					res.status(500).send('Error loading file');
-				} else {
-					res.setHeader('Content-Type', contentType);
-					res.send(data);
-				}
-			});
-		} catch (error) {
-			res.status(500).send('Error loading file');
-		}
 	}
 }

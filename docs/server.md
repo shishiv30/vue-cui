@@ -36,7 +36,6 @@ At startup it wires:
 Router composition in `server/routes/index.ts`:
 
 - Page and HTML routes via:
-  - `default.ts` (static `dist` pages from `client/pages.config.js`)
   - `sitemap.ts` (`/sitemap*` 301 to `/property/sitemap*`)
 - API routes:
   - `/api` -> `server/routes/api.ts`
