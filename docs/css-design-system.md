@@ -267,7 +267,7 @@ Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
 
 | `$radius`               | Used by                                                                                                  | tiny         | small        | normal       | large        |
 | ----------------------- | -------------------------------------------------------------------------------------------------------- | ------------ | ------------ | ------------ | ------------ |
-| `'container'` (default) | list, breadcrumb, circle, tab, panels                                                                    | `--radius-0` | `--radius-1` | `--radius-2` | `--radius-3` |
+| `'container'` (default) | list, breadcrumb, circle, tab                                                                            | `--radius-0` | `--radius-1` | `--radius-2` | `--radius-3` |
 | `'form'`                | btn, input, selectbox, checkbox, radio, group-btn, group-dropdown-button, autocomplete / suggestion list | `--radius-0` | `--radius-0` | `--radius-0` | `--radius-1` |
 
 ### 2.4 Color

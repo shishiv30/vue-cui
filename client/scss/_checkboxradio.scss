@@ -4,12 +4,14 @@
 @include comp-size('radio', fit-content, 'form');
 
 .checkbox {
+	width: var(--checkbox-width);
 	font-weight: var(--checkbox-font-weight);
 	font-size: var(--checkbox-font-size);
 	line-height: var(--checkbox-line-height);
 }
 
 .radio {
+	width: var(--radio-width);
 	font-weight: var(--radio-font-weight);
 	font-size: var(--radio-font-size);
 	line-height: var(--radio-line-height);

@@ -44,7 +44,7 @@ Leave off the model:
 
 One global file for the app and Storybook. Do not add CSS per Vue component.
 
-`client/scss/index.scss` forwards `_theme.default.scss` and `base.scss`. The page loads that bundle once: `server/ejs/html_above.ejs` emits one `meta.css` link and sets `<body id="body">`. Storybook imports the same file in `.storybook/preview.ts` and sets `document.body.id` to `body`, because color classes such as `.major` are `#body .major`.
+`client/scss/index.scss` forwards `_theme.default.scss` and `base.scss`. The page loads that bundle once: `client/src/index.html` has one `/index.min.css` link and sets `<body id="body">`. Storybook imports the same file in `.storybook/preview.ts` and sets `document.body.id` to `body`, because color classes such as `.major` are `#body .major`.
 
 ## Storybook
 

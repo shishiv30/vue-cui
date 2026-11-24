@@ -6,7 +6,8 @@
 .group-btn {
 	&.checkbox,
 	&.radio {
-		display: flex;
+		display: inline-flex;
+		width: var(--group-btn-width);
 		white-space: normal;
 
 		> label {
@@ -17,7 +18,8 @@
 	border-radius: var(--radius-0);
 	margin: 0;
 	overflow: hidden;
-	display: flex;
+	display: inline-flex;
+	width: var(--group-btn-width);
 	flex-wrap: nowrap;
 	box-shadow: 0 0 0 1px var(--group-btn-color-border);
 	input {

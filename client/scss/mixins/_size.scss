@@ -1,4 +1,4 @@
-// $radius: 'container' (panel, list, article…) scales radius with size.
+// $radius: 'container' (list, breadcrumb, tab…) scales radius with size.
 // 'form' (input, select, button…) uses --radius-0, and --radius-1 only when large.
 @mixin comp-size($name, $width: fit-content, $radius: 'container') {
 	$r-normal: var(--radius-2);
