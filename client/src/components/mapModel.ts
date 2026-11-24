@@ -64,6 +64,12 @@ export interface MapUiModel {
 	fitPadding?: number;
 	/** Highest zoom a fit may reach, so pins close together are not shown at street level. Default 16. */
 	fitMaxZoom?: number;
+	/** Merge pins that are too close to tap into one group pin. Default true. */
+	autoMerge?: boolean;
+	/** Pins closer than this many screen px merge. `0` turns merging off. Default 48. */
+	mergeRadius?: number;
+	/** Above this zoom pins never merge. Default 16. */
+	mergeMaxZoom?: number;
 	/** Id of the highlighted marker. Its popover opens when it has an article, title or desc. */
 	selectedId?: string;
 	/** Show Google's own controls. */

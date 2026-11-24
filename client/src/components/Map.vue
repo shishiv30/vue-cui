@@ -26,6 +26,24 @@
 				</div>
 			</Transition>
 		</div>
+		<div
+			class="map-sheet"
+			:class="{ active: !!activeIds }"
+			role="dialog"
+			:aria-label="sheetTitle"
+			:aria-hidden="!activeIds"
+			:inert="!activeIds"
+		>
+			<div class="map-sheet-head">
+				<strong>{{ sheetTitle }}</strong>
+				<button type="button" class="map-sheet-close" aria-label="Close" @click="closeSheet">
+					&times;
+				</button>
+			</div>
+			<div class="map-sheet-body">
+				<List :model="sheetList" @click="onRowClick" />
+			</div>
+		</div>
 		<p v-if="error" class="map-error" role="alert">{{ error }}</p>
 	</div>
 </template>
@@ -42,7 +60,10 @@ import {
 	watch,
 } from 'vue';
 import Article from './Article.vue';
+import List from './List.vue';
+import type { ListTheme, ListUiModel } from './listModel';
 import type { MapBounds, MapLatLng, MapMarker, MapUiModel } from './mapModel';
+import { buildMergeTree, groupsAt, type MapGroup, type MapMergeTree } from './mapMerge';
 import { decodePolylines } from './mapPolyline';
 import { defaultMapStyle, isDarkUi, mapStyleOverlay, mapStyleRules } from './mapStyles';
 import { emitPhase } from './emitPhase';
@@ -55,8 +76,10 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-	/** A pin was clicked. */
+	/** A pin was clicked, or a row in the group list. */
 	'marker-click': [marker: MapMarker];
+	/** A group pin was clicked and its list opened. */
+	'group-click': [markers: MapMarker[]];
 	/** The empty map was clicked. */
 	'map-click': [position: MapLatLng];
 	/** Pan or zoom finished. */
@@ -91,6 +114,17 @@ let streetViewGen = 0;
 let themeObserver: MutationObserver | null = null;
 let themeMedia: MediaQueryList | null = null;
 let pinningView = false;
+/** What is on the map now: single pins and group pins, by item id. */
+const shown = new Map<string, { item: MapGroup; el: HTMLElement }>();
+/** Marker id to the item that holds it on the map now. */
+let owners = new Map<string, MapGroup>();
+let tree: MapMergeTree | null = null;
+let lastZoom = -1;
+const visibleIds = shallowRef(new Set<string>());
+/** Members of the group whose list is open; `null` when the list is closed. */
+const activeIds = shallowRef<string[] | null>(null);
+/** Last opened members, kept so the list does not empty while it slides away. */
+const sheetIds = shallowRef<string[]>([]);
 
 function maskFill() {
 	return {
@@ -307,6 +341,8 @@ const POP_GAP = 12;
 const POP_MARGIN = 8;
 const PIN_EDGE = 16;
 const PIN_OUT_MS = 200;
+const PIN_MERGE_MS = 320;
+const GROUP_COUNT_MAX = 99;
 const FIT_DEBOUNCE_MS = 120;
 let glideTimer = 0;
 let fitTimer = 0;
@@ -314,8 +350,29 @@ let fitKey = '';
 
 const popMarker = computed(() => {
 	const m = props.model.markers.find((item) => item.id === props.model.selectedId);
-	return m && (slots.popover || m.article || m.title || m.desc) ? m : undefined;
+	return m && visibleIds.value.has(m.id) && (slots.popover || m.article || m.title || m.desc)
+		? m
+		: undefined;
 });
+
+const sheetMarkers = computed(() => {
+	const ids = new Set(sheetIds.value);
+	return props.model.markers.filter((m) => ids.has(m.id));
+});
+
+const sheetTitle = computed(() => `${sheetMarkers.value.length} items`);
+
+const sheetList = computed<ListUiModel>(() => ({
+	size: 'tiny',
+	items: sheetMarkers.value.map((m) => ({
+		title: m.title ?? m.article?.title ?? '',
+		desc: m.desc ?? '',
+		sup: m.label,
+		image: m.imgSrc ?? m.article?.img,
+		icon: m.icon,
+		theme: (pinThemeClass(m.theme) || undefined) as ListTheme | undefined,
+	})),
+}));
 
 function pinThemeClass(theme?: string) {
 	if (!theme || theme === 'default') {
@@ -345,6 +402,7 @@ function pinElement(data: MapMarker): HTMLElement {
 		const i = document.createElement('i');
 		i.className = data.icon;
 		pin.append(i);
+		pin.classList.add('has-icon');
 	} else if (data.label) {
 		pin.textContent = data.label;
 		pin.classList.add('has-label');
@@ -369,18 +427,189 @@ function sameLook(a: MapMarker, b: MapMarker) {
 	);
 }
 
-/** Plays the exit animation, then takes the pin off the map. */
-function retire(entry: { el: HTMLElement }) {
-	entry.el.classList.add('leaving');
+/** A round pin with the list icon and the member count. */
+function groupElement(group: MapGroup): HTMLElement {
+	const wrap = document.createElement('div');
+	wrap.className = 'map-marker group';
+	const count = group.memberIds.length;
+	wrap.title = `${count} items`;
+	const pin = document.createElement('span');
+	pin.className = 'pin';
+	const i = document.createElement('i');
+	i.className = 'icon-th-list';
+	const badge = document.createElement('span');
+	badge.className = 'map-group-count';
+	badge.textContent = count > GROUP_COUNT_MAX ? `${GROUP_COUNT_MAX}+` : String(count);
+	pin.append(i, badge);
+	wrap.append(pin);
+	wrap.addEventListener('click', (e) => {
+		e.stopPropagation();
+		groupClick(group);
+	});
+	return wrap;
+}
+
+/**
+ * Plays the exit animation (`leaving` or `merging`), then takes the pin off the map.
+ * A pin shown again before that loses the class and stays.
+ */
+function retire(el: HTMLElement, cls: 'leaving' | 'merging' = 'leaving', ms = PIN_OUT_MS) {
+	el.classList.add(cls);
 	window.setTimeout(() => {
-		entry.el.remove();
-	}, PIN_OUT_MS);
+		if (el.classList.contains(cls)) {
+			el.remove();
+		}
+	}, ms);
 }
 
 function pinClick(id: string, data: MapMarker) {
 	const current = pins.get(id)?.data ?? data;
+	closeSheet();
 	emit('marker-click', current);
 	emit('select', current.id);
+}
+
+function groupClick(group: MapGroup) {
+	openSheet(group.memberIds);
+	if (props.model.selectedId) {
+		emit('select', null);
+	}
+	emit('group-click', sheetMarkers.value);
+}
+
+function onRowClick(_item: unknown, index: number) {
+	const m = sheetMarkers.value[index];
+	if (m) {
+		emit('marker-click', m);
+		emit('select', m.id);
+	}
+}
+
+function openSheet(ids: string[]) {
+	activeIds.value = ids;
+	sheetIds.value = ids;
+	syncSelected();
+}
+
+function closeSheet() {
+	if (activeIds.value) {
+		activeIds.value = null;
+		syncSelected();
+	}
+}
+
+/** The item on the map that holds the open list's members. */
+function activeGroup() {
+	const ids = activeIds.value;
+	return ids ? owners.get(ids.find((id) => owners.has(id)) ?? '') : undefined;
+}
+
+/** Keep the open list on its group: follow it into a bigger group, close it when it splits. */
+function syncActive() {
+	const ids = activeIds.value;
+	if (!ids) {
+		return;
+	}
+	const group = activeGroup();
+	const members = new Set(group?.memberIds);
+	const live = ids.filter((id) => pins.has(id));
+	if (!group || members.size < 2 || !live.length || !live.every((id) => members.has(id))) {
+		closeSheet();
+	} else if (group.memberIds.length !== ids.length) {
+		openSheet(group.memberIds);
+	}
+}
+
+function mergeTree() {
+	const m = props.model;
+	const radius = m.autoMerge === false ? 0 : (m.mergeRadius ?? 48);
+	return buildMergeTree(m.markers, radius, m.mergeMaxZoom ?? 16);
+}
+
+function divPoint(position: MapLatLng) {
+	return overlay?.getProjection()?.fromLatLngToDivPixel(new google.maps.LatLng(position)) ?? null;
+}
+
+function placeAt(el: HTMLElement, position: MapLatLng) {
+	const point = divPoint(position);
+	if (point) {
+		el.style.left = `${point.x}px`;
+		el.style.top = `${point.y}px`;
+	}
+}
+
+/** Pixel offset from the pin to `target`, for the fly-in and fly-out keyframes. */
+function setOffset(el: HTMLElement, name: 'from' | 'to', target: MapLatLng, self: MapLatLng) {
+	const a = divPoint(target);
+	const b = divPoint(self);
+	if (a && b) {
+		el.style.setProperty(`--${name}-x`, `${Math.round(a.x - b.x)}px`);
+		el.style.setProperty(`--${name}-y`, `${Math.round(a.y - b.y)}px`);
+	}
+}
+
+/**
+ * Draw the items for the current zoom. On a zoom change, pins fly into their new group
+ * (zoom out) or out of their old group (zoom in); CSS runs the motion.
+ */
+function renderItems(byZoom: boolean) {
+	if (!pinPane || !tree) {
+		return;
+	}
+	const zoom = Math.floor(map.value?.getZoom() ?? 0);
+	const zoomIn = byZoom && lastZoom >= 0 && zoom > lastZoom;
+	const zoomOut = byZoom && lastZoom >= 0 && zoom < lastZoom;
+	lastZoom = zoom;
+	const next = groupsAt(tree, zoom);
+	const nextIds = new Set(next.map((item) => item.id));
+	const nextOwners = new Map<string, MapGroup>();
+	for (const item of next) {
+		for (const id of item.memberIds) {
+			nextOwners.set(id, item);
+		}
+	}
+	for (const [id, entry] of shown) {
+		const single = entry.item.memberIds.length === 1;
+		if (nextIds.has(id) && (!single || pins.get(id)?.el === entry.el)) {
+			continue;
+		}
+		shown.delete(id);
+		const target = zoomOut ? nextOwners.get(entry.item.memberIds[0]) : undefined;
+		if (target && target.id !== id) {
+			placeAt(entry.el, entry.item.position);
+			setOffset(entry.el, 'to', target.position, entry.item.position);
+			retire(entry.el, 'merging', PIN_MERGE_MS);
+		} else {
+			retire(entry.el);
+		}
+	}
+	for (const item of next) {
+		const current = shown.get(item.id);
+		if (current) {
+			current.item = item;
+			continue;
+		}
+		const group = item.memberIds.length > 1;
+		const el = group ? groupElement(item) : pins.get(item.id)?.el;
+		if (!el) {
+			continue;
+		}
+		el.classList.remove('leaving', 'merging', 'splitting', 'merged');
+		const from = zoomIn ? owners.get(item.memberIds[0]) : undefined;
+		if (from && from.id !== item.id) {
+			setOffset(el, 'from', from.position, item.position);
+			el.classList.add('splitting');
+		} else if (zoomOut && group) {
+			el.classList.add('merged');
+		}
+		pinPane.append(el);
+		shown.set(item.id, { item, el });
+	}
+	owners = nextOwners;
+	visibleIds.value = new Set(shown.keys());
+	syncActive();
+	syncSelected();
+	positionPins();
 }
 
 function syncMarkers() {
@@ -388,10 +617,9 @@ function syncMarkers() {
 		return;
 	}
 	const next = new Map(props.model.markers.map((m) => [m.id, m]));
-	for (const [id, entry] of pins) {
+	for (const id of pins.keys()) {
 		if (!next.has(id)) {
 			pins.delete(id);
-			retire(entry);
 		}
 	}
 	// New pins drop in one after another; the delay is capped so a big batch stays quick.
@@ -423,11 +651,10 @@ function syncMarkers() {
 			e.stopPropagation();
 			pinClick(id, data);
 		});
-		pinPane.append(el);
 		pins.set(id, { data, el });
 	}
-	syncSelected();
-	positionPins();
+	tree = mergeTree();
+	renderItems(false);
 	const key = [...pins.keys()].sort().join('|');
 	if (props.model.fitMarkers && key !== fitKey) {
 		scheduleFit(fitKey ? FIT_DEBOUNCE_MS : 0);
@@ -436,26 +663,21 @@ function syncMarkers() {
 }
 
 function positionPins() {
-	const proj = overlay?.getProjection();
-	if (!proj) {
-		return;
-	}
-	for (const { data, el } of pins.values()) {
-		const point = proj.fromLatLngToDivPixel(new google.maps.LatLng(data.position));
-		if (!point) {
-			continue;
-		}
-		el.style.left = `${point.x}px`;
-		el.style.top = `${point.y}px`;
+	for (const { item, el } of shown.values()) {
+		placeAt(el, item.position);
 	}
 }
 
+/** `on`: holds the selected pin. `active`: the group whose list is open. */
 function syncSelected() {
 	const id = props.model.selectedId;
-	for (const [key, entry] of pins) {
-		entry.el.classList.toggle('on', key === id);
-		entry.el.style.zIndex =
-			key === id ? '2147483646' : entry.data.zIndex != null ? String(entry.data.zIndex) : '';
+	const active = activeGroup()?.id;
+	for (const [key, { item, el }] of shown) {
+		const on = !!id && item.memberIds.includes(id);
+		const zIndex = item.memberIds.length === 1 ? pins.get(key)?.data.zIndex : undefined;
+		el.classList.toggle('on', on);
+		el.classList.toggle('active', key === active);
+		el.style.zIndex = on ? '2147483646' : zIndex != null ? String(zIndex) : '';
 	}
 }
 
@@ -503,7 +725,7 @@ function ensureVisible() {
 	const m = map.value;
 	const canvas = canvasEl.value;
 	const id = props.model.selectedId;
-	const entry = id ? pins.get(id) : undefined;
+	const entry = id && shown.has(id) ? pins.get(id) : undefined;
 	const proj = overlay?.getProjection();
 	if (!m || !canvas || !entry || !proj || pinningView) {
 		return;
@@ -557,7 +779,11 @@ function closePopover() {
 }
 
 function onKeydown(e: KeyboardEvent) {
-	if (e.key === 'Escape' && props.model.selectedId) {
+	if (e.key !== 'Escape') {
+		return;
+	}
+	closeSheet();
+	if (props.model.selectedId) {
 		emit('select', null);
 	}
 }
@@ -667,6 +893,9 @@ onMounted(async () => {
 			pinPane = null;
 		};
 		overlay.draw = () => {
+			if (Math.floor(map.value?.getZoom() ?? 0) !== lastZoom) {
+				renderItems(true);
+			}
 			positionPins();
 			placePopover();
 		};
@@ -677,12 +906,18 @@ onMounted(async () => {
 			if (e.latLng) {
 				emit('map-click', e.latLng.toJSON());
 			}
+			closeSheet();
 			if (props.model.selectedId) {
 				emit('select', null);
 			}
 		});
 		map.value.addListener('idle', () => {
-			const b = map.value?.getBounds()?.toJSON();
+			const bounds = map.value?.getBounds();
+			const group = activeGroup();
+			if (group && bounds && !bounds.contains(group.position)) {
+				closeSheet();
+			}
+			const b = bounds?.toJSON();
 			if (b) {
 				emit('bounds-change', b, map.value?.getZoom() ?? 0);
 			}
@@ -732,6 +967,15 @@ watch(popMarker, async (current, previous) => {
 	ensureVisible();
 });
 watch(
+	() => [props.model.autoMerge, props.model.mergeRadius, props.model.mergeMaxZoom],
+	() => {
+		if (pinPane) {
+			tree = mergeTree();
+			renderItems(false);
+		}
+	},
+);
+watch(
 	() => props.model.fitMarkers,
 	(on) => on && scheduleFit(0),
 );
@@ -763,9 +1007,10 @@ watch(
 
 onBeforeUnmount(() => {
 	emitPhase('destroy', 'map', rootEl.value);
-	for (const { el } of pins.values()) {
+	for (const { el } of shown.values()) {
 		el.remove();
 	}
+	shown.clear();
 	pins.clear();
 	window.clearTimeout(fitTimer);
 	window.clearTimeout(glideTimer);

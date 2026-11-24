@@ -18,10 +18,14 @@ type MapStoryArgs = {
 	mapType: MapType;
 	mapStyle: MapStyleName;
 	fitMarkers: boolean;
+	autoMerge: boolean;
+	mergeRadius: number;
+	mergeMaxZoom: number;
 	hidePoi: boolean;
 	inverseBoundary: boolean;
 	className: string;
 	markerClick?: (marker: MapMarker) => void;
+	groupClick?: (markers: MapMarker[]) => void;
 	mapClick?: (position: { lat: number; lng: number }) => void;
 	streetviewError?: () => void;
 };
@@ -37,7 +41,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Map with custom pins (icon, price label, image or your own HTML element). Boundary mask paths are `[outerMapBounds, ...boundaryPath]` unless `inverseBoundary` is set. Clicking a pin emits `marker-click`. The current driver is Google Maps and needs a Maps JavaScript API key from `.env.local` when `apiKey` is not passed.',
+					'Map with custom pins (icon, price label, image or your own HTML element). Boundary mask paths are `[outerMapBounds, ...boundaryPath]` unless `inverseBoundary` is set. Clicking a pin emits `marker-click`. With `autoMerge` (default on), pins closer than `mergeRadius` px merge into a group pin up to `mergeMaxZoom`, with a fly-in and fly-out animation on zoom. Clicking a group pin emits `group-click` and opens a bottom list of its pins; the list follows the group on zoom out and closes when the group splits or leaves the map. The current driver is Google Maps and needs a Maps JavaScript API key from `.env.local` when `apiKey` is not passed.',
 			},
 		},
 	},
@@ -72,6 +76,22 @@ const meta = {
 				'Zoom to show every pin after pins are added or removed. Several changes in a row fit once.',
 			table: { category: 'props' },
 		},
+		autoMerge: {
+			control: 'boolean',
+			description:
+				'Merge pins too close to tap into a group pin. Tap a group to list its pins. Default true.',
+			table: { category: 'props' },
+		},
+		mergeRadius: {
+			control: { type: 'range', min: 0, max: 120, step: 4 },
+			description: 'Pins closer than this many screen px merge. `0` turns merging off. Default 48.',
+			table: { category: 'props' },
+		},
+		mergeMaxZoom: {
+			control: { type: 'range', min: 0, max: 20 },
+			description: 'Above this zoom pins never merge. Default 16.',
+			table: { category: 'props' },
+		},
 		hidePoi: {
 			control: 'boolean',
 			description: 'Hide Google points of interest. Default true.',
@@ -87,6 +107,10 @@ const meta = {
 		markerClick: {
 			description: 'A pin was clicked.',
 			table: { category: 'events', type: { summary: 'marker: MapMarker' } },
+		},
+		groupClick: {
+			description: 'A group pin was clicked and its list opened.',
+			table: { category: 'events', type: { summary: 'markers: MapMarker[]' } },
 		},
 		mapClick: {
 			description: 'The empty map was clicked.',
@@ -104,10 +128,14 @@ const meta = {
 		mapType: 'roadmap',
 		mapStyle: defaultMapStyle,
 		fitMarkers: false,
+		autoMerge: true,
+		mergeRadius: 48,
+		mergeMaxZoom: 16,
 		hidePoi: true,
 		inverseBoundary: false,
 		className: '',
 		markerClick: fn(),
+		groupClick: fn(),
 		mapClick: fn(),
 		streetviewError: fn(),
 	},
@@ -128,6 +156,9 @@ export const Default: Story = {
 				mapType: args.mapType,
 				mapStyle: args.mapStyle,
 				fitMarkers: args.fitMarkers,
+				autoMerge: args.autoMerge,
+				mergeRadius: args.mergeRadius,
+				mergeMaxZoom: args.mergeMaxZoom,
 				hidePoi: args.hidePoi,
 				boundaryEncoded: mapMock.boundaryEncoded,
 				inverseBoundary: args.inverseBoundary,
@@ -141,7 +172,37 @@ export const Default: Story = {
 			return { args, model, onMarker, onSelect };
 		},
 		template: `
-			<Map v-if="args.apiKey" :key="args.apiKey" :model="model" :api-key="args.apiKey" style="--map-height: 80vh" @marker-click="onMarker" @select="onSelect" @map-click="args.mapClick" @streetview-error="args.streetviewError" />
+			<Map v-if="args.apiKey" :key="args.apiKey" :model="model" :api-key="args.apiKey" style="--map-height: 80vh" @marker-click="onMarker" @group-click="args.groupClick" @select="onSelect" @map-click="args.mapClick" @streetview-error="args.streetviewError" />
 			<p v-else>Set GOOGLE_MAPS_API_KEY in <code>.env.local</code> or enter a key in the <code>apiKey</code> control.</p>`,
 	}),
+};
+
+/** Extra pins in a tight cluster downtown, so zooming out merges them into groups. */
+const crowdMarkers: MapMarker[] = Array.from({ length: 14 }, (_, i) => ({
+	id: `crowd-${i}`,
+	position: {
+		lat: 30.2672 + Math.sin(i * 1.7) * 0.004,
+		lng: -97.7431 + Math.cos(i * 1.3) * 0.005,
+	},
+	title: `${100 + i * 7} Congress Ave, Austin, TX 78701`,
+	desc: `${(i % 4) + 1} bd · ${(i % 3) + 1} ba`,
+	label: i % 3 === 0 ? `$${300 + i * 25}k` : undefined,
+	icon: i % 3 === 1 ? 'icon-home' : undefined,
+	theme: (['primary', 'safe', 'danger', 'minor'] as const)[i % 4],
+}));
+
+export const AutoMerge: Story = {
+	...Default,
+	args: {
+		markers: [...mapMock.markers, ...crowdMarkers],
+		zoom: 12,
+	},
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Zoom out to merge close pins into group pins; zoom in to split them. Tap a group pin to open its list. The list follows the group on zoom out and closes when the group splits or leaves the map.',
+			},
+		},
+	},
 };

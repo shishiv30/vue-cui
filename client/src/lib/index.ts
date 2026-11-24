@@ -67,6 +67,8 @@ export type {
 	MapBounds,
 	MapType,
 } from '../components/mapModel';
+export type { MapGroup, MapMergeTree } from '../components/mapMerge';
+export { buildMergeTree, groupsAt } from '../components/mapMerge';
 export type { MapStyleName, MapStyleSetting, MapStyleOverlay } from '../components/mapStyles';
 export { mapStyleList, defaultMapStyle, mapStyleOverlay } from '../components/mapStyles';
 export type {
