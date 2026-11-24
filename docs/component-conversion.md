@@ -63,11 +63,13 @@ One global file for the app and Storybook. Do not add CSS per Vue component.
 Do not add a per-story `source.code` snippet. Example for a component:
 
 ```html
-<Shifter :model='{
+<Shifter
+	:model='{
   "items": ["Item 1"],
   "step": 1,
   "className": ""
-}' />
+}'
+/>
 ```
 
 ### Exposed method controls
@@ -96,38 +98,38 @@ Worked examples: `client/src/components/Grid.stories.ts`, `client/src/components
 
 ## Header
 
-| Piece | Path |
-| --- | --- |
-| EJS | `server/ejs/comp_header.ejs` |
-| Plugin | `client/js/plugins/_header.js` |
-| Data | `server/ejs/comp_header.js` `getHeaderData` |
-| Model | `client/src/components/headerModel.ts` |
-| Vue | `client/src/components/Header.vue` |
-| Story | `client/src/components/Header.stories.ts` |
+| Piece  | Path                                        |
+| ------ | ------------------------------------------- |
+| EJS    | `server/ejs/comp_header.ejs`                |
+| Plugin | `client/js/plugins/_header.js`              |
+| Data   | `server/ejs/comp_header.js` `getHeaderData` |
+| Model  | `client/src/components/headerModel.ts`      |
+| Vue    | `client/src/components/Header.vue`          |
+| Story  | `client/src/components/Header.stories.ts`   |
 
 `HeaderUiModel`: optional `search`, `menu` (`{ text, href, children? }`), `sticky`, `className` (for example `major active`). Overlay and the menu button toggle `body-expand-header` and lock scroll below 640px. One submenu is open at a time. Scroll down adds `header-close`.
 
 ## Slider
 
-| Piece | Path |
-| --- | --- |
-| EJS | `server/ejs/comp_album.ejs` |
+| Piece  | Path                                            |
+| ------ | ----------------------------------------------- |
+| EJS    | `server/ejs/comp_album.ejs`                     |
 | Plugin | `client/js/plugins/_slider.js` (`next`, `prev`) |
-| Model | `client/src/components/sliderModel.ts` |
-| Vue | `client/src/components/Slider.vue` |
-| Story | `client/src/components/Slider.stories.ts` |
+| Model  | `client/src/components/sliderModel.ts`          |
+| Vue    | `client/src/components/Slider.vue`              |
+| Story  | `client/src/components/Slider.stories.ts`       |
 
 `sliderMock.images` is `/images/01.jpg` through `/images/07.jpg` from `client/src/pages/Document.vue`. Drag calls `preventDefault`. Changing `initialIndex` in Controls moves the current frame. `next()` and `prev()` emit `change.slider` with `[element, index]` before the frame updates, then `changed.slider` with the same index after it updates, and both methods return that index. The Docs/Controls `next` and `prev` number fields call those methods.
 
 ## Shifter
 
-| Piece | Path |
-| --- | --- |
-| Markup | `client/src/pages/Document.vue` (no `comp_shifter.ejs`) |
+| Piece  | Path                                                          |
+| ------ | ------------------------------------------------------------- |
+| Markup | `client/src/pages/Document.vue` (no `comp_shifter.ejs`)       |
 | Plugin | `client/js/plugins/_shifter.js` (`next`, `prev`, `data-step`) |
-| Model | `client/src/components/shifterModel.ts` |
-| Vue | `client/src/components/Shifter.vue` |
-| Story | `client/src/components/Shifter.stories.ts` |
+| Model  | `client/src/components/shifterModel.ts`                       |
+| Vue    | `client/src/components/Shifter.vue`                           |
+| Story  | `client/src/components/Shifter.stories.ts`                    |
 
 `shifterMock.items` matches the document property (`Item 1`–`Item 10`). `step` greater than 0 moves that many cards; otherwise the visible scroller width. Empty `items` renders nothing. Root classes `hidden-prev` / `hidden-next` are runtime, not model fields. No behavior `change` / `changed` events (the plugin did not emit them).
 
@@ -148,11 +150,11 @@ A directive is for behavior on markup that already exists. No `*Model.ts`, no `.
 
 `parameters.docs.description.component` is a markdown table under `## Input`. Columns are `Slot` and `What you provide`. Worked example: `client/src/directives/tooltip.stories.ts`.
 
-| Slot | What you provide |
-| --- | --- |
-| Value | What `binding.value` is. |
+| Slot              | What you provide                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------------ |
+| Value             | What `binding.value` is.                                                                               |
 | modifier `<name>` | One row per modifier group. Say what it does, the default, then the markup example (`v-tooltip.once`). |
-| Markup | Where the directive sits, and any required surrounding markup. |
+| Markup            | Where the directive sits, and any required surrounding markup.                                         |
 
 Leave out a slot that is unused. Do not add an Argument row when `binding.arg` is unused. Do not put every modifier in one cell. Group related flags on one row (`modifier trigger`, `modifier placement`) and list each example (`v-tooltip.hover`, `v-tooltip.click`, `v-tooltip.focus`).
 
@@ -200,16 +202,16 @@ Directive with one shared `div.autocomplete-list` and one `div.autocomplete-over
 
 `v-autocomplete="source"` or `v-autocomplete="{ source, label, param, params, minLength, delay, limit, listClass }"` on an `input`.
 
-| Option | What it does | Default |
-| --- | --- | --- |
-| `source` | An array (filtered locally by label), a GET url (`url?text=<query>` plus `params`; reads an array or `{ data: [] }`), or `(query, signal) => items \| Promise<items>`. | `[]` |
-| `label` | Item field name or `(item) => string`. The text shown and written to the input. | `label`, `text` or `name` field, else the item |
-| `param` | Query parameter name for a url source. | `text` |
-| `params` | Extra query parameters for a url source. | none |
-| `minLength` | Characters needed before searching. | `1` |
-| `delay` | Debounce for url and function sources, in ms. | `300` |
-| `limit` | Most items shown. | `10` |
-| `listClass` | Extra class on the shared list while this input owns it. | none |
+| Option      | What it does                                                                                                                                                           | Default                                        |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `source`    | An array (filtered locally by label), a GET url (`url?text=<query>` plus `params`; reads an array or `{ data: [] }`), or `(query, signal) => items \| Promise<items>`. | `[]`                                           |
+| `label`     | Item field name or `(item) => string`. The text shown and written to the input.                                                                                        | `label`, `text` or `name` field, else the item |
+| `param`     | Query parameter name for a url source.                                                                                                                                 | `text`                                         |
+| `params`    | Extra query parameters for a url source.                                                                                                                               | none                                           |
+| `minLength` | Characters needed before searching.                                                                                                                                    | `1`                                            |
+| `delay`     | Debounce for url and function sources, in ms.                                                                                                                          | `300`                                          |
+| `limit`     | Most items shown.                                                                                                                                                      | `10`                                           |
+| `listClass` | Extra class on the shared list while this input owns it.                                                                                                               | none                                           |
 
 - Keys: Up / Down move, Enter picks, Esc closes. Blur closes.
 - A pick writes the label to the input, fires `input` (so `v-model` updates), then the DOM event `autocomplete-select` with the item in `event.detail`.
@@ -230,13 +232,13 @@ Worked example, the Header search (`client/src/components/Header.vue`):
 
 Component, same shape as Slider. Source: `client/js/plugins/_player.js`.
 
-| Piece | Path |
-| --- | --- |
-| Markup | `client/src/pages/Document.vue` |
+| Piece  | Path                                                                                   |
+| ------ | -------------------------------------------------------------------------------------- |
+| Markup | `client/src/pages/Document.vue`                                                        |
 | Plugin | `client/js/plugins/_player.js` (`goTo`, `goNext`, `goPrev`, `play`, `pause`, `toggle`) |
-| Model | `client/src/components/playerModel.ts` |
-| Vue | `client/src/components/Player.vue` |
-| Story | `client/src/components/Player.stories.ts` |
+| Model  | `client/src/components/playerModel.ts`                                                 |
+| Vue    | `client/src/components/Player.vue`                                                     |
+| Story  | `client/src/components/Player.stories.ts`                                              |
 
 One prop, `model`. The root class `player` stays in the template. Model fields follow Slider naming where they match: `images`, `initialIndex` (plugin `imgIndex`), `showProcess`, `className`, plus Player-only `showControl`, `autoPlay`, `animationDuration`, `direction` (initial only). The image mock is `/images/01.jpg` through `/images/07.jpg`. `animationDuration` sets `--player-animation-duration`. `autoPlay` true starts with class `playing` (the plugin lists this flag and never reads it).
 
@@ -278,15 +280,15 @@ RangeSlider stays a component and keeps the drag, fill, price formatting, bubbli
 
 Each of the six gets a model file only for the shared option type and a mock, a `.vue` file, and a story whose Controls are `model` and `data`.
 
-| Piece | Path |
-| --- | --- |
-| Radio markup | `client/src/pages/Document.vue` (Select Gender) |
-| Checkbox markup | `client/src/pages/Document.vue` (Select Favor) |
-| Select markup | `client/src/pages/Document.vue` (`.selectbox`) |
-| RangeSlider plugin | `client/js/plugins/_rangeslider.js` |
-| Shared option type | `client/src/components/formEnumOption.ts` |
-| Vue | `client/src/components/<Name>.vue` |
-| Story | `client/src/components/<Name>.stories.ts` |
+| Piece              | Path                                            |
+| ------------------ | ----------------------------------------------- |
+| Radio markup       | `client/src/pages/Document.vue` (Select Gender) |
+| Checkbox markup    | `client/src/pages/Document.vue` (Select Favor)  |
+| Select markup      | `client/src/pages/Document.vue` (`.selectbox`)  |
+| RangeSlider plugin | `client/js/plugins/_rangeslider.js`             |
+| Shared option type | `client/src/components/formEnumOption.ts`       |
+| Vue                | `client/src/components/<Name>.vue`              |
+| Story              | `client/src/components/<Name>.stories.ts`       |
 
 ## Modal
 
@@ -316,13 +318,13 @@ Directive. Source: `client/js/plugins/_theme.js`. Code: `client/src/directives/t
 
 Component. Source: `client/js/plugins/_sharelink.js`. Styles: `client/scss/_sharelink.scss`.
 
-| Piece | Path |
-| --- | --- |
-| Model | `client/src/components/sharelinkModel.ts` |
-| Vue | `client/src/components/Sharelink.vue` |
+| Piece | Path                                         |
+| ----- | -------------------------------------------- |
+| Model | `client/src/components/sharelinkModel.ts`    |
+| Vue   | `client/src/components/Sharelink.vue`        |
 | Story | `client/src/components/Sharelink.stories.ts` |
 
-Fields: `url` (empty: `location.href` on click), `text`, `subject`, `platforms`, `className`. Expose `open(id)`. The native Share item is added after mount only, so SSR and hydration match.
+Fields: `url` (empty: `location.href` on click), `text`, `subject`, `platforms`, `className`. `platforms` takes any of the 20 ids in `SHARELINK_PLATFORM_IDS`; empty shows `SHARELINK_DEFAULT_PLATFORMS` (top 10: Facebook, WhatsApp, X, LinkedIn, Reddit, Pinterest, Telegram, Threads, Bluesky, Email). `twitter` still works as an alias of `x`. Brand icons missing from the icon font (`icon-x`, `icon-threads`, `icon-bluesky`, `icon-line`, `icon-viber`, `icon-flipboard`) are SVG masks in `client/scss/_icon.scss`. Expose `open(id)`. The native Share item is added after mount only, so SSR and hydration match.
 
 ## ListDict
 

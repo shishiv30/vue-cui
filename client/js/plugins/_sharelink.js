@@ -1,6 +1,6 @@
 /**
  * Sharelink plugin: injects a responsive share bar (icon + text on large, icon only on small)
- * into elements with data-role="sharelink". Uses share URLs for Facebook, Twitter, LinkedIn,
+ * into elements with data-role="sharelink". Uses share URLs for Facebook, X, LinkedIn,
  * WhatsApp, and Email. On mobile, uses native Web Share API when available.
  */
 
@@ -18,7 +18,7 @@ const NATIVE_SHARE_ITEM = {
 
 const PLATFORMS = [
 	{ id: 'facebook', label: 'Facebook', icon: 'icon-facebook', width: 626, height: 436 },
-	{ id: 'twitter', label: 'Twitter', icon: 'icon-twitter', width: 550, height: 420 },
+	{ id: 'twitter', label: 'X', icon: 'icon-x', width: 550, height: 420 },
 	{ id: 'linkedin', label: 'LinkedIn', icon: 'icon-linkedin', width: 600, height: 600 },
 	{ id: 'whatsapp', label: 'WhatsApp', icon: 'icon-whatsapp', width: 600, height: 600 },
 	{ id: 'email', label: 'Email', icon: 'icon-envelope', width: 0, height: 0 },
@@ -31,7 +31,7 @@ function getShareUrl(platformId, url, text, subject) {
 			return 'https://www.facebook.com/sharer/sharer.php?u=' + encodedUrl;
 		case 'twitter':
 			return (
-				'https://twitter.com/intent/tweet?url=' +
+				'https://x.com/intent/post?url=' +
 				encodedUrl +
 				(text ? '&text=' + encodeURIComponent(text) : '')
 			);

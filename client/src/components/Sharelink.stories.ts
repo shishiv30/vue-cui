@@ -2,25 +2,17 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { computed, ref, watch } from 'vue';
 import Sharelink from './Sharelink.vue';
-import { sharelinkMock, type SharelinkPlatformId, type SharelinkUiModel } from './sharelinkModel';
+import { SHARELINK_PLATFORM_IDS, sharelinkMock, type SharelinkUiModel } from './sharelinkModel';
 
 type SharelinkStoryArgs = {
 	url: string;
 	text: string;
 	subject: string;
-	platforms: SharelinkPlatformId[];
+	platforms: NonNullable<SharelinkUiModel['platforms']>;
 	className: string;
 	model?: SharelinkUiModel;
 	open: string;
 };
-
-const PLATFORM_IDS: SharelinkPlatformId[] = [
-	'facebook',
-	'twitter',
-	'linkedin',
-	'whatsapp',
-	'email',
-];
 
 const meta = {
 	title: 'Components/Sharelink',
@@ -30,7 +22,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Share bar: icon plus label on large screens, icon only on small. Adds a native Share item when the browser has the Web Share API. Each Controls row is one field of the model.',
+					'Share bar for 20 platforms, top 10 by default: icon plus label on large screens, icon only on small. Adds a native Share item when the browser has the Web Share API. Each Controls row is one field of the model.',
 			},
 		},
 	},
@@ -43,7 +35,7 @@ const meta = {
 		},
 		text: {
 			control: 'text',
-			description: 'Text for Twitter.',
+			description: 'Share text for X, Threads, Bluesky, Telegram, WhatsApp, SMS and others.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
 		subject: {
@@ -53,8 +45,8 @@ const meta = {
 		},
 		platforms: {
 			control: 'check',
-			options: PLATFORM_IDS,
-			description: 'Platforms to show. Empty: all of them.',
+			options: SHARELINK_PLATFORM_IDS,
+			description: 'Platforms to show, in order. Empty: the top 10.',
 			table: { category: 'props', type: { summary: 'SharelinkPlatformId[]' } },
 		},
 		className: {
@@ -64,7 +56,7 @@ const meta = {
 		},
 		open: {
 			control: 'select',
-			options: ['', 'native', ...PLATFORM_IDS],
+			options: ['', 'native', ...SHARELINK_PLATFORM_IDS],
 			description: 'Pick a platform to call open(id).',
 			table: { category: 'exposed', type: { summary: '(id: string) => void' } },
 		},
@@ -108,6 +100,16 @@ export const Default: Story = {
 	}),
 	play: async ({ canvas }) => {
 		await expect(canvas.getByRole('button', { name: 'Share on Facebook' })).toBeInTheDocument();
+		await expect(canvas.getByRole('button', { name: 'Share on X' })).toBeInTheDocument();
 		await expect(canvas.getByRole('button', { name: 'Share on Email' })).toBeInTheDocument();
+		await expect(canvas.queryByRole('button', { name: 'Share on SMS' })).toBeNull();
+	},
+};
+
+export const AllPlatforms: Story = {
+	args: { ...Default.args, platforms: [...SHARELINK_PLATFORM_IDS] },
+	render: Default.render,
+	play: async ({ canvas }) => {
+		await expect(canvas.getByRole('button', { name: 'Share on Hacker News' })).toBeInTheDocument();
 	},
 };
