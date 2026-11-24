@@ -1,0 +1,23 @@
+@mixin only-mobile() {
+	#body {
+		&.mobile {
+			@content;
+		}
+	}
+}
+
+@mixin only-desktop() {
+	#body {
+		&.desktop {
+			@content;
+		}
+	}
+}
+
+@mixin fullscreen {
+	#body {
+		&.fullscreen {
+			@content;
+		}
+	}
+}

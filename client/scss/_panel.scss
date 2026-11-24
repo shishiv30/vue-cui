@@ -14,9 +14,12 @@
 	padding-bottom: var(--panel-gap-y);
 
 	&.inline {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: var(--panel-gap-y);
+		padding-bottom: var(--panel-gap-y);
 		@include box-shadow();
 	}
-	
 	&.outline {
 		border: var(--panel-border-weight) solid transparent;
 		border-color: var(--panel-color-border);

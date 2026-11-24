@@ -1,0 +1,86 @@
+@mixin comp-color($name) {
+	.#{$name} {
+		--#{$name}-border-weight: 1px;
+		&:not(.active) {
+			--#{$name}-color: var(--color);
+			--#{$name}-color-bg: var(--color-bg);
+			--#{$name}-color-border: var(--color-border);
+			--#{$name}-color-hover: var(--color-hover);
+			--#{$name}-color-border-hover: var(--color-border-hover);
+			--#{$name}-color-bg-hover: var(--color-bg-hover);
+		}
+		&.active {
+			--#{$name}-color: var(--color-bg);
+			--#{$name}-color-bg: var(--color);
+			--#{$name}-color-border: var(--color-border);
+			--#{$name}-color-hover: var(--color-bg-hover);
+			--#{$name}-color-bg-hover: var(--color-hover);
+			--#{$name}-color-border-hover: var(--color-border-hover);
+		}
+	}
+}
+
+@mixin color() {
+	.default {
+		--color: var(--color-root);
+		--color-border: var(--color-root-border);
+		--color-bg: var(--color-root-bg);
+		--color-hover: var(--color-root-hover);
+		--color-border-hover: var(--color-root-border-hover);
+		--color-bg-hover: var(--color-root-bg-hover);
+	}
+
+	.gray {
+		--color: var(--color-root-l1);
+		--color-border: var(--color-root-border-l1);
+		--color-bg: var(--color-root-bg-l1);
+		--color-hover: var(--color-root-l1-hover);
+		--color-border-hover: var(--color-root-border-l1-hover);
+		--color-bg-hover: var(--color-root-bg-l1-hover);
+	}
+
+	.major {
+		--color: var(--color-major);
+		--color-border: var(--color-major);
+		--color-bg: var(--color-major-l1);
+		--color-hover: var(--color-major-hover);
+		--color-border-hover: var(--color-major-hover);
+		--color-bg-hover: var(--color-major-l1-hover);
+	}
+
+	.minor {
+		--color: var(--color-minor);
+		--color-border: var(--color-minor);
+		--color-bg: var(--color-minor-l1);
+		--color-hover: var(--color-minor-hover);
+		--color-border-hover: var(--color-minor-hover);
+		--color-bg-hover: var(--color-minor-l1-hover);
+	}
+
+	.danger {
+		--color: var(--color-danger);
+		--color-border: var(--color-danger);
+		--color-bg: var(--color-danger-l1);
+		--color-hover: var(--color-danger-hover);
+		--color-border-hover: var(--color-danger-hover);
+		--color-bg-hover: var(--color-danger-l1-hover);
+	}
+
+	.safe {
+		--color: var(--color-safe);
+		--color-border: var(--color-safe);
+		--color-bg: var(--color-safe-l1);
+		--color-hover: var(--color-safe-hover);
+		--color-border-hover: var(--color-safe-hover);
+		--color-bg-hover: var(--color-safe-l1-hover);
+	}
+
+	.tip {
+		--color: var(--color-tip);
+		--color-border: var(--color-tip);
+		--color-bg: var(--color-tip-l1);
+		--color-hover: var(--color-tip-hover);
+		--color-border-hover: var(--color-tip-hover);
+		--color-bg-hover: var(--color-tip-l1-hover);
+	}
+}

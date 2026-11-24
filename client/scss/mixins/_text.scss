@@ -1,0 +1,27 @@
+@mixin singleline($width: false) {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	@if $width {
+		width: $width;
+	}
+}
+
+/* mixin for multiline */
+@mixin multiline($lineCount: 2, $breakAll: false) {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: $lineCount;
+	-webkit-box-orient: vertical;
+
+	@if $breakAll ==true {
+		position: relative;
+		word-break: break-all;
+
+		> * {
+			display: inline-block;
+		}
+	}
+}

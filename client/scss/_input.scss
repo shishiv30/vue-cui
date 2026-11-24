@@ -135,3 +135,7 @@
 	--suggestion-list-color-bg-active: var(--input-color-bg-active);
 	--suggestion-list-color-border-active: var(--input-color-border-active);
 }
+
+label + .input {
+	margin-top: var(--gxs);
+}

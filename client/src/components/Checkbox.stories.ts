@@ -8,6 +8,7 @@ type CheckboxStoryArgs = {
 	model: string[];
 	data: FormEnumOption[];
 	label: string;
+	groupClass: string;
 };
 
 const meta = {
@@ -38,6 +39,11 @@ const meta = {
 			description: 'Optional group heading.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
+		groupClass: {
+			control: 'text',
+			description: 'Extra classes on the option group, such as `group-btn default`.',
+			table: { category: 'props', type: { summary: 'string' } },
+		},
 	},
 } satisfies Meta<CheckboxStoryArgs>;
 
@@ -49,6 +55,7 @@ export const Default: Story = {
 		model: ['Dance'],
 		data: checkboxMock,
 		label: 'Select Favor',
+		groupClass: '',
 	},
 	render: (args) => ({
 		components: { Checkbox },
@@ -61,13 +68,25 @@ export const Default: Story = {
 			});
 			const data = computed(() => args.data);
 			const label = computed(() => args.label);
-			return { model, data, label };
+			const groupClass = computed(() => args.groupClass);
+			return { model, data, label, groupClass };
 		},
-		template: '<Checkbox v-model="model" :data="data" :label="label" />',
+		template: '<Checkbox v-model="model" :data="data" :label="label" :group-class="groupClass" />',
 	}),
 	play: async ({ canvas, userEvent }) => {
 		await userEvent.click(canvas.getByText('Sing'));
 		const sing = canvas.getAllByRole('checkbox', { hidden: true })[1];
 		await expect(sing).toBeChecked();
 	},
+};
+
+export const GroupButton: Story = {
+	args: {
+		model: ['Dance'],
+		data: checkboxMock,
+		label: 'Select Favor',
+		groupClass: 'group-btn default',
+	},
+	render: Default.render,
+	play: Default.play,
 };

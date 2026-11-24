@@ -203,7 +203,7 @@
 			</div>
 		</section>
 		<section class="section" id="tipPanel">
-			<div class="fixed fixed-max-xs grid grid-xs-3">
+			<div class="fixed fixed-max-xs panel grid grid-xs-3">
 				<h2 class="f3 wrap">Tips</h2>
 				<div class="text-left">
 					<a
@@ -270,7 +270,7 @@
 			<div class="panel fixed fixed-max-xs grid grid-xs-1">
 				<h2 class="f3">Tab</h2>
 				<div>
-					<div v-tab="0">
+					<div v-tab="0" class="flex tiny">
 						<button type="button" class="tab default active" data-target="tab1">Tab1</button>
 						<button type="button" class="tab default" data-target="tab2">Tab2</button>
 						<button type="button" class="tab default" data-target="tab3">Tab3</button>
@@ -408,7 +408,7 @@
 			</div>
 		</section>
 		<section class="section bg default large" id="formPanel">
-			<form class="fixed fixed-max-xs grid grid-xs-1 grid-sm-2" v-form="onSubmit">
+			<form class="fixed fixed-max-xs panel grid grid-xs-1 grid-sm-2" v-form="onSubmit">
 				<div class="h4 wrap">Forms</div>
 				<div>
 					<label for="txtReq">Name (Required)</label>
@@ -452,37 +452,18 @@
 				</div>
 				<Radio v-model="gender" :data="radioMock" label="Select Gender" />
 				<Checkbox v-model="favor" :data="checkboxMock" label="Select Favor" />
-				<div>
-					<label>Rating</label>
-					<br />
-					<div class="group-btn default">
-						<label v-for="n in 6" :key="'rate' + (n - 1)" :for="'rate' + (n - 1)">
-							<input
-								:id="'rate' + (n - 1)"
-								name="rating"
-								type="radio"
-								:value="n - 1"
-								:checked="n === 1"
-							/>
-							<span>{{ n - 1 }}</span>
-						</label>
-					</div>
-				</div>
-				<div>
-					<label>Skills</label>
-					<div class="group-btn default">
-						<label v-for="skill in skills" :key="skill.value" :for="'skill-' + skill.value">
-							<input
-								:id="'skill-' + skill.value"
-								name="skill"
-								type="checkbox"
-								:value="skill.value"
-								:checked="skill.checked"
-							/>
-							<span>{{ skill.text }}</span>
-						</label>
-					</div>
-				</div>
+				<Radio
+					v-model="rating"
+					:data="ratingOptions"
+					label="Rating"
+					group-class="group-btn default"
+				/>
+				<Checkbox
+					v-model="skills"
+					:data="skillOptions"
+					label="Skills"
+					group-class="group-btn default"
+				/>
 				<div class="checkbox single">
 					<label for="confirm">
 						<input id="confirm" name="confirm" type="checkbox" v-validation="'required'" />
@@ -600,18 +581,20 @@ const shifter = shifterMock;
 
 const gender = ref('Male');
 const favor = ref(['Dance']);
+const rating = ref('0');
+const ratingOptions = ['0', '1', '2', '3', '4', '5'].map((value) => ({ value, text: value }));
+const skills = ref(['C#']);
+const skillOptions = [
+	{ value: 'C#', text: 'C#' },
+	{ value: 'css', text: 'CSS' },
+	{ value: 'javascript', text: 'Javascript' },
+	{ value: 'nodejs', text: 'Node Js' },
+];
 const fequenceNormal = ref('');
 const fequenceLarge = ref('');
 const emailNormal = ref('');
 const emailLarge = ref('');
 const note = ref('');
-
-const skills = [
-	{ value: 'C#', text: 'C#', checked: true },
-	{ value: 'css', text: 'CSS', checked: false },
-	{ value: 'javascript', text: 'Javascript', checked: false },
-	{ value: 'nodejs', text: 'Node Js', checked: false },
-];
 
 const keywords = [
 	{ term: 'x', meaning: 'horizontal setting,' },

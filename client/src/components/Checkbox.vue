@@ -1,7 +1,12 @@
 <template>
 	<div>
-		<div v-if="label" :id="`${name}-label`">{{ label }}</div>
-		<div class="checkbox" role="group" :aria-labelledby="label ? `${name}-label` : undefined">
+		<div v-if="label" class="m-b-xs" :id="`${name}-label`">{{ label }}</div>
+		<div
+			class="checkbox"
+			:class="groupClass"
+			role="group"
+			:aria-labelledby="label ? `${name}-label` : undefined"
+		>
 			<label v-for="(option, index) in data" :key="option.value" :for="optionId(index)">
 				<input
 					:id="optionId(index)"
@@ -26,6 +31,8 @@ defineProps<{
 	data: FormEnumOption[];
 	/** Optional group heading. */
 	label?: string;
+	/** Extra classes on the option group, such as `group-btn default`. */
+	groupClass?: string;
 }>();
 
 const modelValue = defineModel<string[]>({ default: () => [] });

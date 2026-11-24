@@ -4,6 +4,16 @@
 @include comp-size('group-btn');
 
 .group-btn {
+	&.checkbox,
+	&.radio {
+		display: flex;
+		white-space: normal;
+
+		> label {
+			margin-right: 0;
+		}
+	}
+
 	border-radius: var(--radius-0);
 	margin: 0;
 	overflow: hidden;

@@ -482,7 +482,7 @@ body {
 	);
 
 	--section-gap-x: var(--g3);
-	//keep in sync with the `.normal` branch of gap-size() in _mixins.scss
+	//keep in sync with the `.normal` branch of gap-size() in mixins/_size.scss
 	--section-gap-y: var(--g5);
 
 	--panel-gap-x: var(--g2);

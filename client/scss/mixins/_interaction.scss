@@ -1,0 +1,48 @@
+@mixin icon() {
+	text-align: center;
+	font-family: 'fonticon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@mixin hover {
+	@media (hover: hover) {
+		&:hover {
+			@content;
+		}
+	}
+}
+
+@mixin hover-scale($base-color, $position: relative) {
+	@if $position != '' {
+		position: $position;
+	}
+	&::after {
+		transition: transform var(--animation-time) ease-in-out;
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		bottom: 0;
+		opacity: 0.2;
+		transform: scale(0);
+		background-color: $base-color;
+		pointer-events: none;
+	}
+
+	@include hover() {
+		&::after {
+			transform: scale(1);
+		}
+	}
+}

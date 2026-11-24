@@ -28,7 +28,7 @@
 		gap: var(--g2);
 		overflow-x: auto;
 		overflow-y: hidden;
-		padding: var(--g1) 0;
+		padding: var(--g0);
 		scroll-behavior: smooth;
 		@include hidden-scrollbar();
 

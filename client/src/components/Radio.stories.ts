@@ -8,6 +8,7 @@ type RadioStoryArgs = {
 	model: string;
 	data: FormEnumOption[];
 	label: string;
+	groupClass: string;
 };
 
 const meta = {
@@ -38,6 +39,11 @@ const meta = {
 			description: 'Optional group heading.',
 			table: { category: 'props', type: { summary: 'string' } },
 		},
+		groupClass: {
+			control: 'text',
+			description: 'Extra classes on the option group, such as `group-btn default`.',
+			table: { category: 'props', type: { summary: 'string' } },
+		},
 	},
 } satisfies Meta<RadioStoryArgs>;
 
@@ -49,6 +55,7 @@ export const Default: Story = {
 		model: 'Male',
 		data: radioMock,
 		label: 'Select Gender',
+		groupClass: '',
 	},
 	render: (args) => ({
 		components: { Radio },
@@ -61,13 +68,25 @@ export const Default: Story = {
 			});
 			const data = computed(() => args.data);
 			const label = computed(() => args.label);
-			return { model, data, label };
+			const groupClass = computed(() => args.groupClass);
+			return { model, data, label, groupClass };
 		},
-		template: '<Radio v-model="model" :data="data" :label="label" />',
+		template: '<Radio v-model="model" :data="data" :label="label" :group-class="groupClass" />',
 	}),
 	play: async ({ canvas, userEvent }) => {
 		await userEvent.click(canvas.getByText('Female'));
 		const female = canvas.getAllByRole('radio', { hidden: true })[1];
 		await expect(female).toBeChecked();
 	},
+};
+
+export const GroupButton: Story = {
+	args: {
+		model: 'Male',
+		data: radioMock,
+		label: 'Select Gender',
+		groupClass: 'group-btn default',
+	},
+	render: Default.render,
+	play: Default.play,
 };

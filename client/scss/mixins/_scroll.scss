@@ -1,0 +1,25 @@
+@mixin hidden-scrollbar {
+	-ms-overflow-style: none;
+	overflow: -moz-scrollbars-none;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+		display: none;
+	}
+}
+
+@mixin snap($snap: start) {
+	-ms-scroll-snap-type: x mandatory;
+	scroll-snap-type: x mandatory;
+
+	> * {
+		scroll-snap-align: $snap;
+	}
+}
+
+@mixin scroll-smooth {
+	scroll-behavior: smooth;
+	-webkit-overflow-scrolling: touch;
+}
