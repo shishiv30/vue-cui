@@ -74,7 +74,7 @@ Follow the library conventions (the `storybook-docs` skill and `.claude/rules/gl
    - Add a token only when the design introduces a real new value, and put it in the theme layer, not inline.
    - Mobile first, with breakpoints from `_var.screen.scss`.
 4. **Story.** `<Name>.stories.ts`: one control per model field, one story per variant or state from the spec.
-5. **Export.** If the component is public: add it to `client/src/lib/index.ts` and to `dts.include` in `vite.lib.config.ts`.
+5. **Export.** If the component is public: add it to `client/src/lib/index.ts`, and add the `.vue` file, its `<name>Model.ts` and any helper its types import to `dts.include` in `vite.lib.config.ts`.
 6. **Run the `verify` skill**, including `npm run build:lib`.
 
 ## 5. Report

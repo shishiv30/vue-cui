@@ -1,19 +1,35 @@
 <template>
-	<div ref="rootEl" class="sharelink" :class="model.className">
-		<div class="sharelink-bar" role="group" aria-label="Share">
+	<div ref="rootEl" class="sharelink" :class="[model.className, { copied: !!notice, qr: !!qrSvg }]">
+		<div
+			v-for="group in groups"
+			:key="group.name"
+			class="sharelink-bar"
+			:class="`sharelink-${group.name}`"
+			role="group"
+			:aria-label="group.name === 'ai' ? 'Ask AI about this page' : 'Share'"
+		>
 			<a
-				v-for="item in items"
+				v-for="item in group.items"
 				:key="item.id"
 				class="sharelink-item"
+				:class="[`sharelink-${item.id}`, { 'text-only': !item.icon }]"
 				href="#"
 				role="button"
-				:aria-label="item.id === 'native' ? 'Share' : `Share on ${item.label}`"
-				@click.prevent="open(item.id as SharelinkPlatformId | 'native')"
+				:aria-label="ariaLabel(item)"
+				@click.prevent="open(item.id)"
 			>
-				<i :class="item.icon" aria-hidden="true"></i>
+				<i v-if="item.icon" :class="item.icon" aria-hidden="true"></i>
 				<span class="sharelink-label">{{ item.label }}</span>
 			</a>
 		</div>
+		<p class="sharelink-notice" role="status">{{ notice }}</p>
+		<figure class="sharelink-qr">
+			<span v-html="qrSvg"></span>
+			<figcaption>Scan with WeChat to share</figcaption>
+			<button type="button" class="sharelink-qr-close" aria-label="Close" @click="qrSvg = ''">
+				<i class="icon-close" aria-hidden="true"></i>
+			</button>
+		</figure>
 	</div>
 </template>
 
@@ -26,142 +42,188 @@ import {
 } from './sharelinkModel';
 import { emitPhase } from './emitPhase';
 
+/** Encoded url `u`, text `t`, "text url" `ut`, subject `s` and "prompt url" `p`. */
+type Encoded = { u: string; t: string; ut: string; s: string; p: string };
+
 type ShareItem = {
 	label: string;
+	/** Font icon class. Empty: the icon font has none, so the item shows its label only (`text-only`). */
 	icon: string;
-	/** Share link from the encoded url `u`, text `t`, "text url" `ut` and subject `s`. */
-	href: (e: Encoded) => string;
+	/**
+	 * `share`: opens a share page. `copy`: the app has no web share link, so copy the URL.
+	 * `qr`: show a QR code of the URL to scan in the app. `ai`: opens an assistant with a prompt.
+	 */
+	kind: 'share' | 'copy' | 'qr' | 'ai';
+	href?: (e: Encoded) => string;
 	/** App or mail scheme: open in place, not in a popup. */
 	inPlace?: boolean;
 };
 
-type Encoded = { u: string; t: string; ut: string; s: string };
+type Item = ShareItem & { id: SharelinkPlatformId | 'native' };
 
 const PLATFORMS: Record<SharelinkPlatformId, ShareItem> = {
 	facebook: {
 		label: 'Facebook',
 		icon: 'icon-facebook',
+		kind: 'share',
 		href: (e) => `https://www.facebook.com/sharer/sharer.php?u=${e.u}`,
 	},
 	whatsapp: {
 		label: 'WhatsApp',
 		icon: 'icon-whatsapp',
+		kind: 'share',
 		href: (e) => `https://wa.me/?text=${e.ut}`,
 	},
+	instagram: { label: 'Instagram', icon: 'icon-instagram', kind: 'copy' },
+	tiktok: { label: 'TikTok', icon: '', kind: 'copy' },
+	wechat: { label: 'WeChat', icon: 'icon-wechat', kind: 'qr' },
+	messenger: { label: 'Messenger', icon: '', kind: 'copy' },
+	telegram: {
+		label: 'Telegram',
+		icon: 'icon-telegram',
+		kind: 'share',
+		href: (e) => `https://t.me/share/url?url=${e.u}&text=${e.t}`,
+	},
+	snapchat: { label: 'Snapchat', icon: 'icon-snapchat-ghost', kind: 'copy' },
 	x: {
 		label: 'X',
-		icon: 'icon-x',
+		icon: '',
+		kind: 'share',
 		href: (e) => `https://x.com/intent/post?url=${e.u}&text=${e.t}`,
-	},
-	linkedin: {
-		label: 'LinkedIn',
-		icon: 'icon-linkedin',
-		href: (e) => `https://www.linkedin.com/sharing/share-offsite/?url=${e.u}`,
-	},
-	reddit: {
-		label: 'Reddit',
-		icon: 'icon-reddit-alien',
-		href: (e) => `https://www.reddit.com/submit?url=${e.u}&title=${e.t}`,
 	},
 	pinterest: {
 		label: 'Pinterest',
 		icon: 'icon-pinterest-p',
+		kind: 'share',
 		href: (e) => `https://www.pinterest.com/pin/create/button/?url=${e.u}&description=${e.t}`,
 	},
-	telegram: {
-		label: 'Telegram',
-		icon: 'icon-telegram',
-		href: (e) => `https://t.me/share/url?url=${e.u}&text=${e.t}`,
+	reddit: {
+		label: 'Reddit',
+		icon: 'icon-reddit-alien',
+		kind: 'share',
+		href: (e) => `https://www.reddit.com/submit?url=${e.u}&title=${e.t}`,
+	},
+	linkedin: {
+		label: 'LinkedIn',
+		icon: 'icon-linkedin',
+		kind: 'share',
+		href: (e) => `https://www.linkedin.com/sharing/share-offsite/?url=${e.u}`,
 	},
 	threads: {
 		label: 'Threads',
-		icon: 'icon-threads',
+		icon: '',
+		kind: 'share',
 		href: (e) => `https://www.threads.com/intent/post?url=${e.u}&text=${e.t}`,
 	},
-	bluesky: {
-		label: 'Bluesky',
-		icon: 'icon-bluesky',
-		href: (e) => `https://bsky.app/intent/compose?text=${e.ut}`,
+	rednote: { label: 'RedNote', icon: '', kind: 'copy' },
+	weibo: {
+		label: 'Weibo',
+		icon: 'icon-weibo',
+		kind: 'share',
+		href: (e) => `https://service.weibo.com/share/share.php?url=${e.u}&title=${e.t}`,
+	},
+	qq: { label: 'QQ', icon: 'icon-qq', kind: 'copy' },
+	discord: { label: 'Discord', icon: '', kind: 'copy' },
+	line: {
+		label: 'LINE',
+		icon: '',
+		kind: 'share',
+		href: (e) => `https://social-plugins.line.me/lineit/share?url=${e.u}`,
 	},
 	email: {
 		label: 'Email',
 		icon: 'icon-envelope',
+		kind: 'share',
 		href: (e) => `mailto:?subject=${e.s}&body=${e.ut}`,
 		inPlace: true,
 	},
 	sms: {
 		label: 'SMS',
 		icon: 'icon-commenting',
+		kind: 'share',
 		href: (e) => `sms:?&body=${e.ut}`,
 		inPlace: true,
 	},
-	flipboard: {
-		label: 'Flipboard',
-		icon: 'icon-flipboard',
-		href: (e) => `https://share.flipboard.com/bookmarklet/popout?v=2&url=${e.u}&title=${e.t}`,
+	chatgpt: {
+		label: 'ChatGPT',
+		icon: '',
+		kind: 'ai',
+		href: (e) => `https://chatgpt.com/?q=${e.p}`,
 	},
-	line: {
-		label: 'LINE',
-		icon: 'icon-line',
-		href: (e) => `https://social-plugins.line.me/lineit/share?url=${e.u}`,
+	googleai: {
+		label: 'Google AI',
+		icon: 'icon-google',
+		kind: 'ai',
+		href: (e) => `https://www.google.com/search?udm=50&q=${e.p}`,
 	},
-	viber: {
-		label: 'Viber',
-		icon: 'icon-viber',
-		href: (e) => `viber://forward?text=${e.ut}`,
-		inPlace: true,
+	claude: {
+		label: 'Claude',
+		icon: '',
+		kind: 'ai',
+		href: (e) => `https://claude.ai/new?q=${e.p}`,
 	},
-	tumblr: {
-		label: 'Tumblr',
-		icon: 'icon-tumblr',
-		href: (e) => `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${e.u}&caption=${e.t}`,
+	perplexity: {
+		label: 'Perplexity',
+		icon: '',
+		kind: 'ai',
+		href: (e) => `https://www.perplexity.ai/search?q=${e.p}`,
 	},
-	vk: {
-		label: 'VK',
-		icon: 'icon-vk',
-		href: (e) => `https://vk.com/share.php?url=${e.u}&title=${e.t}`,
-	},
-	weibo: {
-		label: 'Weibo',
-		icon: 'icon-weibo',
-		href: (e) => `https://service.weibo.com/share/share.php?url=${e.u}&title=${e.t}`,
-	},
-	ok: {
-		label: 'OK',
-		icon: 'icon-odnoklassniki',
-		href: (e) => `https://connect.ok.ru/offer?url=${e.u}&title=${e.t}`,
-	},
-	xing: {
-		label: 'XING',
-		icon: 'icon-xing',
-		href: (e) => `https://www.xing.com/spi/shares/new?url=${e.u}`,
-	},
-	hackernews: {
-		label: 'Hacker News',
-		icon: 'icon-hacker-news',
-		href: (e) => `https://news.ycombinator.com/submitlink?u=${e.u}&t=${e.t}`,
+	copilot: {
+		label: 'Copilot',
+		icon: 'icon-windows',
+		kind: 'ai',
+		href: (e) => `https://copilot.microsoft.com/?q=${e.p}`,
 	},
 };
 
+const NATIVE: Item = { id: 'native', label: 'Share', icon: 'icon-share-alt', kind: 'share' };
+
 const props = defineProps<{
-	/** Share options. Empty `platforms` shows the top 10. */
+	/** Share options. Empty `platforms` shows the top 5 social platforms and the top 4 AI assistants. */
 	model: SharelinkUiModel;
 }>();
 
 const rootEl = ref<HTMLElement | null>(null);
 /** Set after mount only, so SSR and the first client render match. */
 const hasNative = ref(false);
+/** Status line after a copy. Its root class `copied` shows it. */
+const notice = ref('');
+let noticeTimer: ReturnType<typeof setTimeout> | undefined;
+/** WeChat QR code as an SVG string. Its root class `qr` shows it. */
+const qrSvg = ref('');
 
-const items = computed(() => {
+const groups = computed(() => {
 	const ids = props.model.platforms?.length ? props.model.platforms : SHARELINK_DEFAULT_PLATFORMS;
-	const list = ids
+	const list: Item[] = ids
 		.map((id) => (id === 'twitter' ? 'x' : id))
 		.filter((id) => id in PLATFORMS)
 		.map((id) => ({ id, ...PLATFORMS[id] }));
-	return hasNative.value
-		? [{ id: 'native', label: 'Share', icon: 'icon-share-alt' }, ...list]
-		: list;
+	const share = list.filter((i) => i.kind !== 'ai');
+	const ai = list.filter((i) => i.kind === 'ai');
+	return [
+		{ name: 'share', items: hasNative.value ? [NATIVE, ...share] : share },
+		{ name: 'ai', items: ai },
+	].filter((g) => g.items.length);
 });
+
+function ariaLabel(item: Item) {
+	if (item.id === 'native') {
+		return 'Share';
+	}
+	if (item.kind === 'ai') {
+		return `Ask ${item.label} about this page`;
+	}
+	if (item.kind === 'qr') {
+		return `Show QR code for ${item.label}`;
+	}
+	return item.kind === 'copy' ? `Copy link for ${item.label}` : `Share on ${item.label}`;
+}
+
+function showNotice(text: string) {
+	notice.value = text;
+	clearTimeout(noticeTimer);
+	noticeTimer = setTimeout(() => (notice.value = ''), 4000);
+}
 
 function open(id: SharelinkPlatformId | 'twitter' | 'native') {
 	const url = props.model.url || location.href;
@@ -177,21 +239,47 @@ function open(id: SharelinkPlatformId | 'twitter' | 'native') {
 	if (!item) {
 		return;
 	}
-	const href = item.href({
+	if (item.kind === 'qr') {
+		if (qrSvg.value) {
+			qrSvg.value = '';
+			return;
+		}
+		// Loaded on click only, so the page bundle stays small.
+		import('qrcode-generator').then(({ default: qrcode }) => {
+			const qr = qrcode(0, 'M');
+			qr.addData(url);
+			qr.make();
+			qrSvg.value = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+		});
+		return;
+	}
+	if (item.kind === 'copy') {
+		navigator.clipboard
+			.writeText(url)
+			.then(() => showNotice(`Link copied. Paste it in ${item.label}.`))
+			.catch(() => showNotice(`Copy this link for ${item.label}: ${url}`));
+		return;
+	}
+	const href = item.href!({
 		u: encodeURIComponent(url),
 		t: encodeURIComponent(text),
 		ut: encodeURIComponent(text ? `${text} ${url}` : url),
 		s: encodeURIComponent(subject),
+		p: encodeURIComponent(`${props.model.prompt || 'Summarize this page:'} ${url}`),
 	});
 	if (item.inPlace) {
 		location.href = href;
+		return;
+	}
+	if (item.kind === 'ai') {
+		window.open(href, '_blank', 'noopener');
 		return;
 	}
 	window.open(href, `share-${id}`, 'toolbar=0,status=0,width=600,height=600');
 }
 
 defineExpose({
-	/** Open the share window for one platform id, or `native` for the Web Share sheet. */
+	/** Run one platform id: open its share page or AI assistant, copy the link, or `native` for the Web Share sheet. */
 	open,
 });
 
@@ -206,6 +294,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+	clearTimeout(noticeTimer);
 	emitPhase('destroy', 'sharelink', rootEl.value);
 	emitPhase('destroyed', 'sharelink', rootEl.value);
 });

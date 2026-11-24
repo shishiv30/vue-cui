@@ -18,7 +18,7 @@ Run what applies to the change. Report each command's real result: if something 
 ## After building, check the output
 
 - **`build:vite`**: `dist/` has the page bundles and `dist/server/entry-server.js`. Grep the built output for the changed code or class names, so you know the change really shipped.
-- **`build:lib`**: `dist-lib/index.js`, `dist-lib/style.css` and `dist-lib/lib/index.d.ts` exist. Every component exported from `client/src/lib/index.ts` has a `.d.ts` file. A missing one means the `dts.include` list in `vite.lib.config.ts` is out of date.
+- **`build:lib`**: `dist-lib/index.js`, `dist-lib/style.css` and `dist-lib/lib/index.d.ts` exist. Every relative import in `dist-lib/**/*.d.ts` (components, directives, `*Model.ts` and helpers) has a matching `.d.ts` file. A missing one means the `dts.include` list in `vite.lib.config.ts` is out of date.
 - **UI changes**: load the page or story (`local-dev` skill) and look at it. A build passing is not proof the UI works.
 
 ## Report

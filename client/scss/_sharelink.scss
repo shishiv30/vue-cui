@@ -2,7 +2,9 @@
 @use './_mixins.scss' as *;
 
 .sharelink {
-	display: block;
+	display: flex;
+	flex-direction: column;
+	gap: var(--g1);
 }
 
 .sharelink-bar {
@@ -13,6 +15,10 @@
 }
 
 .sharelink-item {
+	// Hover color: the brand color from `--color-brand-*`; Email, SMS and Share use the link color.
+	--sharelink-brand: var(--color-link);
+	--sharelink-brand-fg: var(--color-root-paper);
+
 	display: inline-flex;
 	align-items: center;
 	gap: var(--g1);
@@ -22,16 +28,75 @@
 	text-decoration: none;
 	cursor: pointer;
 	transition:
-		background-color 0.15s ease,
-		color 0.15s ease;
+		background-color var(--animation-time) ease,
+		color var(--animation-time) ease,
+		transform calc(var(--animation-time) * 2) ease;
 
 	@include hover() {
-		background-color: var(--color-bg-hover);
+		background-color: var(--sharelink-brand);
+		color: var(--sharelink-brand-fg);
+		transform: translateY(-0.125rem) scale(1.05);
+	}
+
+	&:focus-visible {
+		background-color: var(--sharelink-brand);
+		color: var(--sharelink-brand-fg);
+	}
+
+	&:active {
+		transform: scale(0.98);
 	}
 
 	i {
 		flex-shrink: 0;
 		font-size: 1.125em;
+	}
+}
+
+@each $name
+	in (
+		facebook,
+		whatsapp,
+		instagram,
+		tiktok,
+		wechat,
+		messenger,
+		telegram,
+		snapchat,
+		x,
+		pinterest,
+		reddit,
+		linkedin,
+		threads,
+		rednote,
+		weibo,
+		qq,
+		discord,
+		line,
+		chatgpt,
+		googleai,
+		claude,
+		perplexity,
+		copilot
+	)
+{
+	.sharelink-#{$name} {
+		--sharelink-brand: var(--color-brand-#{$name});
+	}
+}
+
+// Light brand color: dark text.
+.sharelink-snapchat {
+	--sharelink-brand-fg: var(--color-root-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sharelink-item {
+		transition: none;
+
+		@include hover() {
+			transform: none;
+		}
 	}
 }
 
@@ -50,7 +115,16 @@
 	}
 }
 
-// From sm and up: icon + text visible
+// From sm and up, and on items with no icon: text visible
+.sharelink-item.text-only .sharelink-label {
+	position: static;
+	width: auto;
+	height: auto;
+	margin: 0;
+	overflow: visible;
+	clip: auto;
+}
+
 @media (min-width: $screen-sm-min) {
 	.sharelink-label {
 		position: static;
@@ -62,5 +136,64 @@
 		clip: auto;
 		white-space: nowrap;
 		border: none;
+	}
+}
+
+// Status line after a copy, and the WeChat QR code: hidden until the root state class is on.
+.sharelink-notice,
+.sharelink-qr {
+	display: none;
+	margin: 0;
+}
+
+.sharelink.copied .sharelink-notice {
+	display: block;
+	animation: sharelink-in var(--animation-time) ease;
+}
+
+.sharelink.qr .sharelink-qr {
+	position: relative;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	align-self: flex-start;
+	gap: var(--g1);
+	padding: var(--g2);
+	border-radius: var(--radius-0);
+	// QR codes need dark on light to scan, in both themes.
+	background-color: var(--color-root-paper);
+	color: var(--color-root-ink);
+	animation: sharelink-in var(--animation-time) ease;
+
+	span,
+	svg {
+		display: block;
+		width: 10rem;
+		height: 10rem;
+	}
+}
+
+.sharelink-qr-close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: var(--g1);
+	border: 0;
+	background: none;
+	color: inherit;
+	cursor: pointer;
+}
+
+@keyframes sharelink-in {
+	from {
+		opacity: 0;
+		transform: translateY(-0.25rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sharelink.copied .sharelink-notice,
+	.sharelink.qr .sharelink-qr {
+		animation: none;
 	}
 }

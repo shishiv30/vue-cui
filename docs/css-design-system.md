@@ -311,6 +311,8 @@ Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
 
 **Neutral scale** `--color-0..9` (lightness 100% → 10%, step 10%) + **rainbow scale** `--color-r0..r9` (10 fixed hues). Neither has a consumer today.
 
+**Brand colors** `--color-brand-<id>` (Facebook, WhatsApp, X, ChatGPT…): official brand hex values on `:root`, fixed in every theme. They are the one exception to the HSL rule, because a brand color can't change. Only Sharelink's hover uses them.
+
 **Selection**
 
 ```scss
@@ -397,7 +399,7 @@ index.scss
 ├── _theme.default.scss        ← all token definitions
 └── base.scss
     ├── _font.roboto.scss      fonts
-    ├── _icon.scss             icons
+    ├── _icon.scss             icons: fonticon (FA 4.7)
     ├── _reset.scss            reset + z-index tokens
     ├── _responsive.scss       .hidden-xs/sm/md/lg
     ├── _text.scss / _typograph.scss / _color.scss / _gap.scss / _utilities.scss
@@ -477,17 +479,18 @@ The first three can land **without touching any component SCSS**, because compon
 
 ## Appendix: File index
 
-| File                              | Lines | Role                                                         |
-| --------------------------------- | ----- | ------------------------------------------------------------ |
-| `client/scss/_theme.default.scss` | 263   | Authoritative token definitions + dark overrides             |
-| `client/scss/_mixins.scss`        | 500+  | `comp-color()` `comp-size()` `color()` `gap-size()` `f1..f7` |
-| `client/scss/_var.screen.scss`    | 32    | Breakpoint SCSS variables                                    |
-| `client/scss/_reset.scss`         | 120+  | Reset + z-index tokens + `color-scheme`                      |
-| `client/scss/_grid.scss`          | 227   | Grid tokens + `.grid-{xs..xl}-{1..6}` matrix                 |
-| `client/scss/_gap.scss`           | 330   | Spacing utility classes                                      |
-| `client/scss/_color.scss`         | 117   | Color utility classes                                        |
-| `client/scss/_typograph.scss`     | 60+   | Typography utility classes                                   |
-| `client/scss/_responsive.scss`    | 30    | Show/hide utility classes                                    |
+| File                              | Lines | Role                                                                         |
+| --------------------------------- | ----- | ---------------------------------------------------------------------------- |
+| `client/scss/_theme.default.scss` | 263   | Authoritative token definitions + dark overrides                             |
+| `client/scss/_mixins.scss`        | 500+  | `comp-color()` `comp-size()` `color()` `gap-size()` `f1..f7`                 |
+| `client/scss/_var.screen.scss`    | 32    | Breakpoint SCSS variables                                                    |
+| `client/scss/_reset.scss`         | 120+  | Reset + z-index tokens + `color-scheme`                                      |
+| `client/scss/_grid.scss`          | 227   | Grid tokens + `.grid-{xs..xl}-{1..6}` matrix                                 |
+| `client/scss/_gap.scss`           | 330   | Spacing utility classes                                                      |
+| `client/scss/_color.scss`         | 117   | Color utility classes                                                        |
+| `client/scss/_typograph.scss`     | 60+   | Typography utility classes                                                   |
+| `client/scss/_responsive.scss`    | 30    | Show/hide utility classes                                                    |
+| `client/scss/_icon.scss`          | 4800+ | Icon font (FA 4.7) classes. Newer brands (X, TikTok, AI tools…) have no icon |
 
 ---
 
@@ -551,7 +554,7 @@ The `.normal` branch of `comp-size()` now adds `--#{$name}-font-weight: var(--fo
 | `var(--g1, 0.25rem)` / `var(--g2, 0.5rem)` (fallbacks do not match the real token) | `var(--g1)` / `var(--g2)`           | 4     |
 | `var(--input-size, 2.5rem)`                                                        | `var(--input-size)`                 | 1     |
 
-The 7 icon references were the widest hidden bug: `$icon-*` is a SCSS compile-time variable, so writing `var(--icon-*)` made `content` invalid. Pagination arrows, dropdown arrows, tooltip info/warning/error icons and loading spinner icons **all failed to show**. Write `content: $icon-x` (keeps the quotes, outputs `"\f104"`), not `content: #{$icon-x}` (interpolation strips the quotes and outputs an invalid identifier).
+The 7 icon references were the widest hidden bug: `$icon-*` is a SCSS compile-time variable, so writing `var(--icon-*)` made `content` invalid. Pagination arrows, dropdown arrows, tooltip info/warning/error icons and loading spinner icons **all failed to show**. Write `content: $icon-angle-left` (keeps the quotes, outputs `"\f104"`), not `content: #{$icon-angle-left}` (interpolation strips the quotes and outputs an invalid identifier).
 
 ### 4. Fonts
 

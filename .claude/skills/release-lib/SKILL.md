@@ -11,8 +11,9 @@ How publishing works: on a GitHub **release** (or a manual run), `.github/workfl
 
 1. **Check the public API.**
    - `client/src/lib/index.ts` exports every component and directive meant to be public, and `install()` registers them.
-   - Each exported `.vue` file is listed in `dts.include` in `vite.lib.config.ts`.
-2. **Build:** `npm run build:lib`. Then check `dist-lib/index.js`, `dist-lib/style.css`, and a `.d.ts` file for every export.
+   - Each exported `.vue` file, directive and `*Model.ts` (plus any helper their types import) is listed in `dts.include` in `vite.lib.config.ts`. Type-only imports are not in the Vite module graph, so an unlisted model ships no `.d.ts`.
+   - TypeScript consumers need `@types/google.maps` (optional peer dependency) for the Map types.
+2. **Build:** `npm run build:lib`. Then check `dist-lib/index.js`, `dist-lib/style.css`, and that every relative import in `dist-lib/**/*.d.ts` has a matching `.d.ts` file.
 3. **Smoke test the package:** `npm pack --dry-run`. The package must contain only `dist-lib/`.
 4. **Bump the version** with `npm version patch|minor|major --no-git-tag-version`. Use semver:
    - A removed or renamed export, model field, prop, event or CSS class is **major**.

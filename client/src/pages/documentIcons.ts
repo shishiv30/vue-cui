@@ -786,10 +786,4 @@ export const documentIcons = [
 	'icon-superpowers',
 	'icon-wpexplorer',
 	'icon-meetup',
-	'icon-x',
-	'icon-threads',
-	'icon-bluesky',
-	'icon-line',
-	'icon-viber',
-	'icon-flipboard',
 ] as const;

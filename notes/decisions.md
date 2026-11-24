@@ -13,6 +13,14 @@ Entry format:
 - Approvals: docs-maintainer ☐  component-developer ☐  application-developer ☐  user ☐ (optional)
 ```
 
+## 2026-11-24: Skills list model files in `dts.include`; Map types peer dependency
+
+- Status: approved (requested by the user)
+- What: the export steps in `convert-ejs-to-vue`, `design-to-component`, `release-lib` and `verify` say to list the component's `*Model.ts` and any helper its types import in `dts.include`, not only the `.vue` file. `package.json` declares `@types/google.maps` as an optional peer dependency (`mapStyles.d.ts` uses the global `google` namespace).
+- Why: type-only imports are not in the Vite module graph, so a model missing from `dts.include` ships no `.d.ts` and `lib/index.d.ts` imports a missing file (all models were missing until 2026-11-24).
+- Files: `.claude/skills/convert-ejs-to-vue/SKILL.md`, `.claude/skills/design-to-component/SKILL.md`, `.claude/skills/release-lib/SKILL.md`, `.claude/skills/verify/SKILL.md`, `package.json`, `notes/decisions.md`
+- Approvals: user ☑
+
 ## 2026-11-21: Auto scan and fix at the end of every Claude turn
 
 - Status: approved (requested by the user)

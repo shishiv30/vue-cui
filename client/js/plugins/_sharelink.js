@@ -18,7 +18,7 @@ const NATIVE_SHARE_ITEM = {
 
 const PLATFORMS = [
 	{ id: 'facebook', label: 'Facebook', icon: 'icon-facebook', width: 626, height: 436 },
-	{ id: 'twitter', label: 'X', icon: 'icon-x', width: 550, height: 420 },
+	{ id: 'twitter', label: 'X', icon: '', width: 550, height: 420 },
 	{ id: 'linkedin', label: 'LinkedIn', icon: 'icon-linkedin', width: 600, height: 600 },
 	{ id: 'whatsapp', label: 'WhatsApp', icon: 'icon-whatsapp', width: 600, height: 600 },
 	{ id: 'email', label: 'Email', icon: 'icon-envelope', width: 0, height: 0 },

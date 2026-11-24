@@ -7,6 +7,31 @@
 	--color-root-ink: #000;
 	--color-root-paper: #fff;
 
+	//brand colors: fixed in every theme (Sharelink hover)
+	--color-brand-facebook: #0866ff;
+	--color-brand-whatsapp: #25d366;
+	--color-brand-instagram: #e4405f;
+	--color-brand-tiktok: #000;
+	--color-brand-wechat: #07c160;
+	--color-brand-messenger: #0084ff;
+	--color-brand-telegram: #26a5e4;
+	--color-brand-snapchat: #fffc00;
+	--color-brand-x: #000;
+	--color-brand-pinterest: #e60023;
+	--color-brand-reddit: #ff4500;
+	--color-brand-linkedin: #0a66c2;
+	--color-brand-threads: #000;
+	--color-brand-rednote: #ff2442;
+	--color-brand-weibo: #e6162d;
+	--color-brand-qq: #1ebafc;
+	--color-brand-discord: #5865f2;
+	--color-brand-line: #06c755;
+	--color-brand-chatgpt: #10a37f;
+	--color-brand-googleai: #4285f4;
+	--color-brand-claude: #d97757;
+	--color-brand-perplexity: #1fb8cd;
+	--color-brand-copilot: #0078d4;
+
 	//breakpoint mirror: $screen-* are compile-time only, these expose the same
 	//values to var() and to getComputedStyle() in JS. keep both in sync.
 	--screen-xs-min: #{$screen-xs-min};

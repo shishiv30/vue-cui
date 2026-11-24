@@ -88,7 +88,11 @@ export type {
 } from '../directives/autocomplete';
 export type { ScrollToOptions, ScrollToValue } from '../directives/scrollto';
 export type { SharelinkUiModel, SharelinkPlatformId } from '../components/sharelinkModel';
-export { SHARELINK_PLATFORM_IDS, SHARELINK_DEFAULT_PLATFORMS } from '../components/sharelinkModel';
+export {
+	SHARELINK_PLATFORM_IDS,
+	SHARELINK_AI_IDS,
+	SHARELINK_DEFAULT_PLATFORMS,
+} from '../components/sharelinkModel';
 export type { HeaderUiModel, HeaderMenuItem, HeaderSearch } from '../components/headerModel';
 
 const components = {

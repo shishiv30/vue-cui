@@ -29,7 +29,7 @@ Worked examples: Header (`comp_header.ejs`, `_header.js`, `getHeaderData`) and S
 
 Follow `docs/component-conversion.md` (steps 1-8, Events, "What goes on the model", CSS). It is the single source; this skill adds only:
 
-- **Step 9, the library export** (when the component is public): export it from `client/src/lib/index.ts`, add the `.vue` file to `dts.include` in `vite.lib.config.ts`, then run `npm run build:lib`.
+- **Step 9, the library export** (when the component is public): export it from `client/src/lib/index.ts`, add the `.vue` file, its `<name>Model.ts` and any helper its types import to `dts.include` in `vite.lib.config.ts`, then run `npm run build:lib`.
 
 ## Check
 
