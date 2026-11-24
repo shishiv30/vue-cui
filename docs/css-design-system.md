@@ -39,9 +39,9 @@ The project **stores no colors, only hue / saturation / lightness channels**. `h
 
 ```scss
 --color-major: hsl(
-  var(--color-root-major-hue),
-  var(--color-root-major-saturation),
-  var(--color-major-lightness)
+	var(--color-root-major-hue),
+	var(--color-root-major-saturation),
+	var(--color-major-lightness)
 );
 ```
 
@@ -57,25 +57,25 @@ A component never reads a global token directly. It reads its own `--<comp>-*`, 
 
 ```scss
 @mixin comp-color($name) {
-  .#{$name} {
-    --#{$name}-border-weight: 1px;
-    &:not(.active) {
-      --#{$name}-color: var(--color);
-      --#{$name}-color-bg: var(--color-bg);
-      --#{$name}-color-border: var(--color-border);
-      --#{$name}-color-hover: var(--color-hover);
-      --#{$name}-color-border-hover: var(--color-border-hover);
-      --#{$name}-color-bg-hover: var(--color-bg-hover);
-    }
-    &.active {
-      --#{$name}-color: var(--color-active);
-      --#{$name}-color-bg: var(--color-active-bg);
-      --#{$name}-color-border: var(--color-active-border);
-      --#{$name}-color-hover: var(--color-active-hover);
-      --#{$name}-color-bg-hover: var(--color-active-bg-hover);
-      --#{$name}-color-border-hover: var(--color-active-border-hover);
-    }
-  }
+	.#{$name} {
+		--#{$name}-border-weight: 1px;
+		&:not(.active) {
+			--#{$name}-color: var(--color);
+			--#{$name}-color-bg: var(--color-bg);
+			--#{$name}-color-border: var(--color-border);
+			--#{$name}-color-hover: var(--color-hover);
+			--#{$name}-color-border-hover: var(--color-border-hover);
+			--#{$name}-color-bg-hover: var(--color-bg-hover);
+		}
+		&.active {
+			--#{$name}-color: var(--color-active);
+			--#{$name}-color-bg: var(--color-active-bg);
+			--#{$name}-color-border: var(--color-active-border);
+			--#{$name}-color-hover: var(--color-active-hover);
+			--#{$name}-color-bg-hover: var(--color-active-bg-hover);
+			--#{$name}-color-border-hover: var(--color-active-border-hover);
+		}
+	}
 }
 ```
 
@@ -97,18 +97,32 @@ The companion `color()` mixin (`_mixins.scss:62-141`) defines 7 semantic classes
 
 ### Principle 3: sizes use T-shirt steps, not per-property tweaks
 
-`comp-size($name, $width)` (`_mixins.scss:26-60`) gives every component four steps, `tiny / small / normal / large`, and rewrites gap, font-size, size and line-height at once:
+`comp-size($name, $width, $radius)` (`mixins/_size.scss`) gives every component four steps, `tiny / small / normal / large`, and rewrites gap, font-size, size, line-height and radius at once. `$radius` picks the radius rule, `'container'` (default) or `'form'` (see §2.3):
 
 ```scss
-&, &.normal {
-  --#{$name}-gap: var(--g1);
-  --#{$name}-font-size: var(--font-size-5);
-  --#{$name}-size: var(--comp-size-3);
-  --#{$name}-line-height: var(--line-height-3);
+&,
+&.normal {
+	--#{$name}-gap: var(--g1);
+	--#{$name}-font-size: var(--font-size-5);
+	--#{$name}-size: var(--comp-size-3);
+	--#{$name}-line-height: var(--line-height-3);
 }
-&.tiny   { --gap: 0;          --font-size: var(--font-size-6); --size: var(--comp-size-1); }
-&.small  { --gap: var(--gxs); --font-size: var(--font-size-5); --size: var(--comp-size-2); }
-&.large  { --gap: var(--g1);  --font-size: var(--font-size-4); --size: var(--comp-size-4); --border-weight: 2px; }
+&.tiny {
+	--gap: 0;
+	--font-size: var(--font-size-6);
+	--size: var(--comp-size-1);
+}
+&.small {
+	--gap: var(--gxs);
+	--font-size: var(--font-size-5);
+	--size: var(--comp-size-2);
+}
+&.large {
+	--gap: var(--g1);
+	--font-size: var(--font-size-4);
+	--size: var(--comp-size-4);
+	--border-weight: 2px;
+}
 ```
 
 The component itself only consumes tokens, with no hard-coded sizes (`_button.scss:48-59`):
@@ -128,15 +142,27 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 ```scss
 // client/scss/property.scss:9-43
 .page-property {
-  --item-width: 260px;
-  --detail-max-width: 60%;
+	--item-width: 260px;
+	--detail-max-width: 60%;
 
-  @media (max-width: $screen-xs-max)                        { --item-width: 260px; }
-  @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) { --item-width: 280px; }
-  @media (min-width: $screen-md-min) and (max-width: $screen-md-max) { --item-width: 340px; }
-  @media (min-width: $screen-lg-min)                        { --item-width: 360px; }
-  @media (orientation: portrait)                            { --detail-max-width: 56%; }
-  @media (orientation: landscape)                           { --detail-max-width: 40%; }
+	@media (max-width: $screen-xs-max) {
+		--item-width: 260px;
+	}
+	@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+		--item-width: 280px;
+	}
+	@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+		--item-width: 340px;
+	}
+	@media (min-width: $screen-lg-min) {
+		--item-width: 360px;
+	}
+	@media (orientation: portrait) {
+		--detail-max-width: 56%;
+	}
+	@media (orientation: landscape) {
+		--detail-max-width: 40%;
+	}
 }
 ```
 
@@ -162,23 +188,23 @@ box-shadow: inset 0 0 0 var(--btn-border-weight) var(--btn-color-border);
 Each `--g*` step states its relation to font size in a comment. Spacing is not picked at random. It is half a font size, or the sum of the previous two steps (Fibonacci-style accumulation):
 
 ```scss
---gxs: 0.125rem;  // half of gs
---g0:  0.25rem;   // half of f7
---g1:  0.5rem;    // half of f5
---g2:  0.75rem;   // half of f3 or g0 + g1
---g3:  1rem;      // g1 + g2
---g4:  1.75rem;   // g2 + g3
---g5:  2.75rem;   // g3 + g4
---g6:  4.5rem;    // g4 + g5
+--gxs: 0.125rem; // half of gs
+--g0: 0.25rem; // half of f7
+--g1: 0.5rem; // half of f5
+--g2: 0.75rem; // half of f3 or g0 + g1
+--g3: 1rem; // g1 + g2
+--g4: 1.75rem; // g2 + g3
+--g5: 2.75rem; // g3 + g4
+--g6: 4.5rem; // g4 + g5
 ```
 
 `--comp-size-*` also documents its derivation (golden ratio 1.618):
 
 ```scss
---comp-size-1: 1.75rem;  // f3 (f5 × 1.618)
---comp-size-2: 2rem;     // gxs + f3 + gxs
---comp-size-3: 2.75rem;  // 1.75 + .5 × 2
---comp-size-4: 3.2rem;   // 1.25 × 1.25 + 0.5 × 2
+--comp-size-1: 1.75rem; // f3 (f5 × 1.618)
+--comp-size-2: 2rem; // gxs + f3 + gxs
+--comp-size-3: 2.75rem; // 1.75 + .5 × 2
+--comp-size-4: 3.2rem; // 1.25 × 1.25 + 0.5 × 2
 ```
 
 ---
@@ -187,22 +213,22 @@ Each `--g*` step states its relation to font size in a comment. Spacing is not p
 
 ### 2.1 Typography
 
-| Token | Value | Note |
-|---|---|---|
-| `--cui-font` | `'Roboto'` | The only token with a vendor prefix |
-| `--font-size-1` | `2rem` | Note: **a smaller number is a larger size** (reverse order) |
-| `--font-size-2` | `1.75rem` | |
-| `--font-size-3` | `1.5rem` | |
-| `--font-size-4` | `1.25rem` | |
-| `--font-size-5` | `1rem` | Base body size |
-| `--font-size-6` | `0.875rem` | |
-| `--font-size-7` | `0.75rem` | |
-| `--line-height-1` | `1` | |
-| `--line-height-2` | `1.25` | Global default in `_reset.scss` |
-| `--line-height-3` | `1.75` | Component default |
-| `--font-weight-regular` | `400` | |
-| `--font-weight-medium` | `400` | ⚠ Same value as regular |
-| `--font-weight-bold` | `700` | |
+| Token                   | Value      | Note                                                        |
+| ----------------------- | ---------- | ----------------------------------------------------------- |
+| `--cui-font`            | `'Roboto'` | The only token with a vendor prefix                         |
+| `--font-size-1`         | `2rem`     | Note: **a smaller number is a larger size** (reverse order) |
+| `--font-size-2`         | `1.75rem`  |                                                             |
+| `--font-size-3`         | `1.5rem`   |                                                             |
+| `--font-size-4`         | `1.25rem`  |                                                             |
+| `--font-size-5`         | `1rem`     | Base body size                                              |
+| `--font-size-6`         | `0.875rem` |                                                             |
+| `--font-size-7`         | `0.75rem`  |                                                             |
+| `--line-height-1`       | `1`        |                                                             |
+| `--line-height-2`       | `1.25`     | Global default in `_reset.scss`                             |
+| `--line-height-3`       | `1.75`     | Component default                                           |
+| `--font-weight-regular` | `400`      |                                                             |
+| `--font-weight-medium`  | `400`      | ⚠ Same value as regular                                     |
+| `--font-weight-bold`    | `700`      |                                                             |
 
 The root font size is **hard-coded to `16px`** in `_reset.scss:49` and is not a token. This is the biggest blocker for fluid typography.
 
@@ -229,13 +255,20 @@ Utility classes (`_gap.scss`, 330 lines): `.m-{x,y,t,b,l,r}-{0,xs,1,2,3,4}`, wit
 
 ```scss
 --radius-0: 0.25rem;
---radius-1: 0.5rem;   // default of --comp-border-radius
+--radius-1: 0.5rem; // default of --comp-border-radius
 --radius-2: 1rem;
 --radius-3: 1.5rem;
 --radius-4: 2rem;
 ```
 
 Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
+
+`comp-size($name, $width, $radius)` (`mixins/_size.scss`) sets `--<name>-radius` per size:
+
+| `$radius`               | Used by                                                                                                  | tiny         | small        | normal       | large        |
+| ----------------------- | -------------------------------------------------------------------------------------------------------- | ------------ | ------------ | ------------ | ------------ |
+| `'container'` (default) | list, breadcrumb, circle, tab, panels                                                                    | `--radius-0` | `--radius-1` | `--radius-2` | `--radius-3` |
+| `'form'`                | btn, input, selectbox, checkbox, radio, group-btn, group-dropdown-button, autocomplete / suggestion list | `--radius-0` | `--radius-0` | `--radius-0` | `--radius-1` |
 
 ### 2.4 Color
 
@@ -252,29 +285,28 @@ Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
 
 **Semantic roles (5)**: each role has 5 channel tokens + 4 assembled tokens
 
-| Role | hue | saturation | lightness | l1 |
-|---|---|---|---|---|
-| major | 165 | 58% | 23% | 99% |
-| minor | 169 | 100% | 31% | 99% |
-| safe | 179 | `--color-root-bg-saturation` | 25% | 99% |
-| danger | 10 | same as above | 48% | 99% |
-| tip | 321 | same as above | 24% | 99% |
-
+| Role   | hue | saturation                   | lightness | l1  |
+| ------ | --- | ---------------------------- | --------- | --- |
+| major  | 165 | 58%                          | 23%       | 99% |
+| minor  | 169 | 100%                         | 31%       | 99% |
+| safe   | 179 | `--color-root-bg-saturation` | 25%       | 99% |
+| danger | 10  | same as above                | 48%       | 99% |
+| tip    | 321 | same as above                | 24%       | 99% |
 
 **Context aliases (the layer components actually read)**
 
 ```scss
---color:               var(--color-root);
---color-bg:            var(--color-root-bg);
---color-border:        var(--color-root-border);
---color-hover:         var(--color-root-l1);
---color-bg-hover:      var(--color-root-bg-l1);
---color-l1:            var(--color-root-l1);
---color-bg-l1:         var(--color-root-bg-l1);
---color-active:        var(--color-root-bg);
---color-active-bg:     var(--color-root);
+--color: var(--color-root);
+--color-bg: var(--color-root-bg);
+--color-border: var(--color-root-border);
+--color-hover: var(--color-root-l1);
+--color-bg-hover: var(--color-root-bg-l1);
+--color-l1: var(--color-root-l1);
+--color-bg-l1: var(--color-root-bg-l1);
+--color-active: var(--color-root-bg);
+--color-active-bg: var(--color-root);
 --color-active-border: var(--color-root);
---color-disabled:      var(--color-root-l1);
+--color-disabled: var(--color-root-l1);
 ```
 
 **Neutral scale** `--color-0..9` (lightness 100% → 10%, step 10%) + **rainbow scale** `--color-r0..r9` (10 fixed hues). Neither has a consumer today.
@@ -294,11 +326,11 @@ Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
 --comp-size-3: 2.75rem;
 --comp-size-4: 3.2rem;
 
---comp-height:        var(--comp-size-3);
---comp-font-size:     var(--font-size-5);
+--comp-height: var(--comp-size-3);
+--comp-font-size: var(--font-size-5);
 --comp-border-radius: var(--radius-1);
---comp-max-width:     auto;
---comp-line-height:   var(--line-height-3);
+--comp-max-width: auto;
+--comp-line-height: var(--line-height-3);
 ```
 
 ### 2.6 Z-index
@@ -306,20 +338,20 @@ Utility classes `.corner-0..3` (`_utilities.scss:51-65`, no `.corner-4`).
 **The only dimension fully tokenized** (`_reset.scss:52-66`; note the scope is `html`, not `:root`):
 
 ```scss
---ui-tooltip-index:       1000;
---ui-popover-index:       1050;
---ui-buttongroup-index:   1100;
---ui-pin-index:           1930;
---ui-pin-hover-index:     1940;
---ui-stick-index:         1960;
---ui-header-overlay:      1990;
---ui-header-index:        2000;
---ui-header-list-index:   2010;
---ui-datepicker-index:    2100;
+--ui-tooltip-index: 1000;
+--ui-popover-index: 1050;
+--ui-buttongroup-index: 1100;
+--ui-pin-index: 1930;
+--ui-pin-hover-index: 1940;
+--ui-stick-index: 1960;
+--ui-header-overlay: 1990;
+--ui-header-index: 2000;
+--ui-header-list-index: 2010;
+--ui-datepicker-index: 2100;
 --ui-gautocomplete-index: 3000;
---ui-dropdown-index:      3100;
---ui-modal-overlay:      10000;
---ui-modal-index:        10010;
+--ui-dropdown-index: 3100;
+--ui-modal-overlay: 10000;
+--ui-modal-index: 10010;
 ```
 
 ### 2.7 Motion
@@ -332,20 +364,18 @@ Only one token: `--animation-time: 0.1s`, and **only `_button.scss:14` uses it**
 
 `:root` now mirrors them as CSS variables (`--screen-xs-min` … `--screen-lg-max`), for `var()` and JS. `@media` conditions must still use the compile-time `$` variables below, so **the two places must be kept in sync by hand**.
 
-
-
 ```scss
 // client/scss/_var.screen.scss
-$screen-xs-min: 340px;   // phone
-$screen-sm-min: 459px;   // tablet
-$screen-md-min: 1279px;   // desktop
-$screen-lg-min: 1919px;  // wide desktop
-$screen-xl-min: 2559px;  // HD+
+$screen-xs-min: 340px; // phone
+$screen-sm-min: 459px; // tablet
+$screen-md-min: 1279px; // desktop
+$screen-lg-min: 1919px; // wide desktop
+$screen-xl-min: 2559px; // HD+
 
-$screen-xs-max: $screen-sm-min - 1;   // 640px
-$screen-sm-max: $screen-md-min - 1;   // 1280px
-$screen-md-max: $screen-lg-min - 1;   // 1920px
-$screen-lg-max: $screen-xl-min - 1;   // 2560px
+$screen-xs-max: $screen-sm-min - 1; // 640px
+$screen-sm-max: $screen-md-min - 1; // 1280px
+$screen-md-max: $screen-lg-min - 1; // 1920px
+$screen-lg-max: $screen-xl-min - 1; // 2560px
 ```
 
 The strategy is **range-based (min + max in pairs)**, not a mobile-first cascade. The canonical form (`_grid.scss:23-41`):
@@ -390,35 +420,35 @@ No `@layer`. The cascade is forced by a `#body` id-selector prefix (`_typograph.
 
 ### 3.2 Missing token categories
 
-| Category | Status |
-|---|---|
-| Shadow | No `--shadow-*`. 3 mixins + 10 hard-coded `box-shadow` |
-| Motion | Only `--animation-time` (used once). No duration scale, no easing |
-| Letter spacing | No token. Only one `0.08em` in `_autoscroller.scss:69` |
-| Border | No width/style token, only component-level `--<comp>-border-weight` |
-| Opacity / blur | None |
-| Focus ring | None. `_reset.scss:118` sets `outline: none` on all form controls with no replacement: an accessibility defect |
+| Category       | Status                                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------------------------- |
+| Shadow         | No `--shadow-*`. 3 mixins + 10 hard-coded `box-shadow`                                                         |
+| Motion         | Only `--animation-time` (used once). No duration scale, no easing                                              |
+| Letter spacing | No token. Only one `0.08em` in `_autoscroller.scss:69`                                                         |
+| Border         | No width/style token, only component-level `--<comp>-border-weight`                                            |
+| Opacity / blur | None                                                                                                           |
+| Focus ring     | None. `_reset.scss:118` sets `outline: none` on all form controls with no replacement: an accessibility defect |
 
 ### 3.3 Confirmed bugs: all fixed
 
 See "Appendix 2: Fix log" at the end.
 
-| Location | Problem | Status |
-|---|---|---|
-| `_theme.default.scss` | `--color-root-lightness: 750%` should be `75%` | ✅ |
-| `_theme.default.scss` | Dark mode rewrites `--color-root-major-lightness`, but the `--color-major-lightness` alias was already resolved on `:root`, so **the 5 semantic colors major/minor/safe/danger/tip did not darken in dark mode** | ✅ |
-| `_button.scss` `_input.scss` and 5 more | Consume `var(--<comp>-font-weight)`, but `comp-size()` never produces that token | ✅ |
-| `_typograph.scss` `_mixins.scss` | Consume `--font-weight-light`, never defined → `.text-light` was a no-op | ✅ |
-| `_font.roboto.scss` | `font-weight: 700` pointed at `Roboto-Regular.woff2`; the browser saw a real bold and **skipped synthesis** → bold looked identical to regular | ✅ |
-| `_layout.scss` ×4 | Consume the undefined `var(--color-f)` | ✅ |
-| `_layout.scss` ×3 | Consume the undefined `var(--color-link-default)` | ✅ |
-| `_header.scss` | `var(--head--color-active-border)`: double-dash typo | ✅ |
-| `_popover.scss` `_layout.scss` `_dialog.scss` `_modal.scss` | `var(--screen-xs-min/max)` silently failed | ✅ |
-| `_layout.scss` `_dropdownmenu.scss` `_tooltip.scss` `_animation.scss`, 7 places | `content: var(--icon-*)`: icons are SCSS `$icon-*`, not custom properties, so icons never showed | ✅ |
-| `_slider.scss` `_shifter.scss` | Consume the undefined `--line-height-normal` | ✅ |
-| `_autoscroller.scss` ×4 | Consume invented tokens `--g0-5` `--g1-5` `--color-bg-l2` `--color-fg-2` `--color-text-2` | ✅ |
-| `_sharelink.scss` | `var(--radius, …)` has no such token; and the fallback in `var(--g1, 0.25rem)` does not match `--g1` (0.5rem) | ✅ |
-| `_theme.default.scss` vs `_mixins.scss` | `--section-gap-y` default differs (`--g4` / `--g5`) | ✅ |
+| Location                                                                        | Problem                                                                                                                                                                                                          | Status |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| `_theme.default.scss`                                                           | `--color-root-lightness: 750%` should be `75%`                                                                                                                                                                   | ✅     |
+| `_theme.default.scss`                                                           | Dark mode rewrites `--color-root-major-lightness`, but the `--color-major-lightness` alias was already resolved on `:root`, so **the 5 semantic colors major/minor/safe/danger/tip did not darken in dark mode** | ✅     |
+| `_button.scss` `_input.scss` and 5 more                                         | Consume `var(--<comp>-font-weight)`, but `comp-size()` never produces that token                                                                                                                                 | ✅     |
+| `_typograph.scss` `_mixins.scss`                                                | Consume `--font-weight-light`, never defined → `.text-light` was a no-op                                                                                                                                         | ✅     |
+| `_font.roboto.scss`                                                             | `font-weight: 700` pointed at `Roboto-Regular.woff2`; the browser saw a real bold and **skipped synthesis** → bold looked identical to regular                                                                   | ✅     |
+| `_layout.scss` ×4                                                               | Consume the undefined `var(--color-f)`                                                                                                                                                                           | ✅     |
+| `_layout.scss` ×3                                                               | Consume the undefined `var(--color-link-default)`                                                                                                                                                                | ✅     |
+| `_header.scss`                                                                  | `var(--head--color-active-border)`: double-dash typo                                                                                                                                                             | ✅     |
+| `_popover.scss` `_layout.scss` `_dialog.scss` `_modal.scss`                     | `var(--screen-xs-min/max)` silently failed                                                                                                                                                                       | ✅     |
+| `_layout.scss` `_dropdownmenu.scss` `_tooltip.scss` `_animation.scss`, 7 places | `content: var(--icon-*)`: icons are SCSS `$icon-*`, not custom properties, so icons never showed                                                                                                                 | ✅     |
+| `_slider.scss` `_shifter.scss`                                                  | Consume the undefined `--line-height-normal`                                                                                                                                                                     | ✅     |
+| `_autoscroller.scss` ×4                                                         | Consume invented tokens `--g0-5` `--g1-5` `--color-bg-l2` `--color-fg-2` `--color-text-2`                                                                                                                        | ✅     |
+| `_sharelink.scss`                                                               | `var(--radius, …)` has no such token; and the fallback in `var(--g1, 0.25rem)` does not match `--g1` (0.5rem)                                                                                                    | ✅     |
+| `_theme.default.scss` vs `_mixins.scss`                                         | `--section-gap-y` default differs (`--g4` / `--g5`)                                                                                                                                                              | ✅     |
 
 ### 3.4 Consistency issues
 
@@ -447,17 +477,17 @@ The first three can land **without touching any component SCSS**, because compon
 
 ## Appendix: File index
 
-| File | Lines | Role |
-|---|---|---|
-| `client/scss/_theme.default.scss` | 263 | Authoritative token definitions + dark overrides |
-| `client/scss/_mixins.scss` | 500+ | `comp-color()` `comp-size()` `color()` `gap-size()` `f1..f7` |
-| `client/scss/_var.screen.scss` | 32 | Breakpoint SCSS variables |
-| `client/scss/_reset.scss` | 120+ | Reset + z-index tokens + `color-scheme` |
-| `client/scss/_grid.scss` | 227 | Grid tokens + `.grid-{xs..xl}-{1..6}` matrix |
-| `client/scss/_gap.scss` | 330 | Spacing utility classes |
-| `client/scss/_color.scss` | 117 | Color utility classes |
-| `client/scss/_typograph.scss` | 60+ | Typography utility classes |
-| `client/scss/_responsive.scss` | 30 | Show/hide utility classes |
+| File                              | Lines | Role                                                         |
+| --------------------------------- | ----- | ------------------------------------------------------------ |
+| `client/scss/_theme.default.scss` | 263   | Authoritative token definitions + dark overrides             |
+| `client/scss/_mixins.scss`        | 500+  | `comp-color()` `comp-size()` `color()` `gap-size()` `f1..f7` |
+| `client/scss/_var.screen.scss`    | 32    | Breakpoint SCSS variables                                    |
+| `client/scss/_reset.scss`         | 120+  | Reset + z-index tokens + `color-scheme`                      |
+| `client/scss/_grid.scss`          | 227   | Grid tokens + `.grid-{xs..xl}-{1..6}` matrix                 |
+| `client/scss/_gap.scss`           | 330   | Spacing utility classes                                      |
+| `client/scss/_color.scss`         | 117   | Color utility classes                                        |
+| `client/scss/_typograph.scss`     | 60+   | Typography utility classes                                   |
+| `client/scss/_responsive.scss`    | 30    | Show/hide utility classes                                    |
 
 ---
 
@@ -470,8 +500,12 @@ The first three can land **without touching any component SCSS**, because compon
 Root cause is a CSS custom-property rule: `var()` substitution inside a custom property happens **on the element that declares it**, after the cascade ends. The old code put the alias on `:root`:
 
 ```scss
-:root { --color-major-lightness: var(--color-root-major-lightness); }  /* frozen to light 23% on html */
-body.theme-dark { --color-root-major-lightness: 50%; }                 /* changes body, too late */
+:root {
+	--color-major-lightness: var(--color-root-major-lightness);
+} /* frozen to light 23% on html */
+body.theme-dark {
+	--color-root-major-lightness: 50%;
+} /* changes body, too late */
 ```
 
 `body` inherits the `23%` already computed on html, so the dark override had **no effect on any of major/minor/safe/danger/tip**.
@@ -480,14 +514,14 @@ Fix: move the 10 `--color-<role>-lightness` / `-lightness-l1` aliases from `:roo
 
 Resolution check (`body.theme-dark`):
 
-| token | before | after |
-|---|---|---|
-| `--color-major` | `hsl(165, 58%, 23%)` | `hsl(165, 58%, 50%)` |
-| `--color-minor` | `hsl(169, 100%, 31%)` | `hsl(169, 100%, 50%)` |
-| `--color-safe` | `hsl(179, 100%, 25%)` | `hsl(179, 100%, 50%)` |
-| `--color-danger` | `hsl(10, 100%, 48%)` | `hsl(10, 100%, 50%)` |
-| `--color-tip` | `hsl(321, 100%, 24%)` | `hsl(321, 100%, 50%)` |
-| `--color-major-l1` | `hsl(165, 58%, 99%)` | `hsl(165, 58%, 10%)` |
+| token              | before                | after                 |
+| ------------------ | --------------------- | --------------------- |
+| `--color-major`    | `hsl(165, 58%, 23%)`  | `hsl(165, 58%, 50%)`  |
+| `--color-minor`    | `hsl(169, 100%, 31%)` | `hsl(169, 100%, 50%)` |
+| `--color-safe`     | `hsl(179, 100%, 25%)` | `hsl(179, 100%, 50%)` |
+| `--color-danger`   | `hsl(10, 100%, 48%)`  | `hsl(10, 100%, 50%)`  |
+| `--color-tip`      | `hsl(321, 100%, 24%)` | `hsl(321, 100%, 50%)` |
+| `--color-major-l1` | `hsl(165, 58%, 99%)`  | `hsl(165, 58%, 10%)`  |
 
 Light-mode values were compared one by one: no change.
 
@@ -503,19 +537,19 @@ The `.normal` branch of `comp-size()` now adds `--#{$name}-font-weight: var(--fo
 
 ### 3. Reference fixes
 
-| Old reference | Changed to | Count |
-|---|---|---|
-| `var(--color-f)` | `var(--color-root-bg)` | 4 |
-| `var(--color-link-default)` | `var(--color-link)` | 3 |
-| `var(--head--color-active-border)` | `var(--header-color-active-border)` | 1 |
-| `content: var(--icon-*)` | `content: $icon-*` | 7 |
-| `var(--line-height-normal)` | `var(--line-height-2)` | 2 |
-| `var(--g1-5, var(--g2))` / `var(--g0-5, var(--g1))` | `var(--g2)` / `var(--g1)` | 2 |
-| `var(--color-text-2, var(--color-fg-2))` | `var(--color-l1)` | 1 |
-| `var(--color-border, var(--color-bg-l2))` | `var(--color-border)` | 1 |
-| `var(--radius, 0.25rem)` | `var(--radius-0)` | 1 |
-| `var(--g1, 0.25rem)` / `var(--g2, 0.5rem)` (fallbacks do not match the real token) | `var(--g1)` / `var(--g2)` | 4 |
-| `var(--input-size, 2.5rem)` | `var(--input-size)` | 1 |
+| Old reference                                                                      | Changed to                          | Count |
+| ---------------------------------------------------------------------------------- | ----------------------------------- | ----- |
+| `var(--color-f)`                                                                   | `var(--color-root-bg)`              | 4     |
+| `var(--color-link-default)`                                                        | `var(--color-link)`                 | 3     |
+| `var(--head--color-active-border)`                                                 | `var(--header-color-active-border)` | 1     |
+| `content: var(--icon-*)`                                                           | `content: $icon-*`                  | 7     |
+| `var(--line-height-normal)`                                                        | `var(--line-height-2)`              | 2     |
+| `var(--g1-5, var(--g2))` / `var(--g0-5, var(--g1))`                                | `var(--g2)` / `var(--g1)`           | 2     |
+| `var(--color-text-2, var(--color-fg-2))`                                           | `var(--color-l1)`                   | 1     |
+| `var(--color-border, var(--color-bg-l2))`                                          | `var(--color-border)`               | 1     |
+| `var(--radius, 0.25rem)`                                                           | `var(--radius-0)`                   | 1     |
+| `var(--g1, 0.25rem)` / `var(--g2, 0.5rem)` (fallbacks do not match the real token) | `var(--g1)` / `var(--g2)`           | 4     |
+| `var(--input-size, 2.5rem)`                                                        | `var(--input-size)`                 | 1     |
 
 The 7 icon references were the widest hidden bug: `$icon-*` is a SCSS compile-time variable, so writing `var(--icon-*)` made `content` invalid. Pagination arrows, dropdown arrows, tooltip info/warning/error icons and loading spinner icons **all failed to show**. Write `content: $icon-x` (keeps the quotes, outputs `"\f104"`), not `content: #{$icon-x}` (interpolation strips the quotes and outputs an invalid identifier).
 

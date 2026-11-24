@@ -1,6 +1,6 @@
 @use './_mixins.scss' as *;
 
-@include comp-size('btn');
+@include comp-size('btn', fit-content, 'form');
 @include comp-color('btn');
 
 .btn {

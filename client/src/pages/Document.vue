@@ -146,9 +146,9 @@
 		<section class="section large">
 			<div class="panel fixed fixed-max-xs grid grid-xs-1">
 				<h2 class="f3">List dict</h2>
-				<p class="f6">Key/value facts in a responsive grid (<code>data-role="list-dict"</code>).</p>
+				<p class="f6">Key/value facts in a responsive grid (<code>.list-dict</code>).</p>
 				<h3 class="f5">Property facts</h3>
-				<ul class="list-dict" data-role="list-dict">
+				<ul class="list-dict">
 					<li>
 						<abbr class="key" title="List price">Price</abbr>
 						<span class="value">$425,000</span>
@@ -304,21 +304,16 @@
 		<section class="section large">
 			<div class="panel fixed fixed-max-xs grid grid-xs-1">
 				<h2 class="f3">Share link</h2>
-				<div data-role="sharelink"></div>
+				<Sharelink :model="sharelink" />
 			</div>
 		</section>
 		<section class="section large">
 			<div class="panel fixed fixed-max-xs grid grid-xs-1">
 				<div class="wrap">
 					<h2 class="h3">Modal</h2>
-					<p class="small text-muted">Template-based overlay (<code>data-role="modal"</code>).</p>
+					<p class="small text-muted">Template-based overlay (<code>v-modal</code>).</p>
 				</div>
-				<a
-					class="btn default small"
-					href="javascript:;"
-					data-role="modal"
-					data-target="#popupPanel1"
-				>
+				<a class="btn default small" href="javascript:;" v-modal="'#popupPanel1'">
 					<span class="hidden-xs">Modal </span>Default
 				</a>
 				<div id="popupPanel1" hidden>
@@ -330,13 +325,7 @@
 						</div>
 					</div>
 				</div>
-				<a
-					class="btn default small"
-					href="javascript:;"
-					data-role="modal"
-					data-target="#popupPanel0"
-					data-theme="fullscreen"
-				>
+				<a class="btn default small" href="javascript:;" v-modal:fullscreen="'#popupPanel0'">
 					<span class="hidden-xs">Modal </span>Fullscreen
 				</a>
 				<div id="popupPanel0" hidden>
@@ -348,13 +337,7 @@
 						</div>
 					</div>
 				</div>
-				<a
-					class="btn default small"
-					href="javascript:;"
-					data-role="modal"
-					data-target="#popupPanel"
-					data-theme="dropdown"
-				>
+				<a class="btn default small" href="javascript:;" v-modal:dropdown="'#popupPanel'">
 					<span class="hidden-xs">Modal </span>Dropdown
 				</a>
 				<div id="popupPanel" hidden>
@@ -373,15 +356,10 @@
 					<h2 class="h3">Dialog</h2>
 					<p class="small text-muted">
 						HTML <code>&lt;dialog&gt;</code> with <code>showModal()</code>
-						(<code>data-role="dialog"</code>).
+						(<code>v-dialog</code>).
 					</p>
 				</div>
-				<button
-					type="button"
-					class="btn default small"
-					data-role="dialog"
-					data-target="#htmlDialogDemo"
-				>
+				<button type="button" class="btn default small" v-dialog="'#htmlDialogDemo'">
 					Open dialog
 				</button>
 				<dialog id="htmlDialogDemo" class="dialog" aria-labelledby="htmlDialogTitle">
@@ -402,7 +380,7 @@
 			<div class="panel fixed fixed-max-xs grid grid-xs-1">
 				<h2 class="f3">ScrollTo</h2>
 				<p>Scroll down the page, then click the button to scroll back to the first section.</p>
-				<button type="button" class="btn default small" data-role="scrollto" data-target="#welcome">
+				<button type="button" class="btn default small" v-scrollto="'#welcome'">
 					Scroll to first section
 				</button>
 			</div>
@@ -562,6 +540,7 @@ import { ref } from 'vue';
 import Header from '../components/Header.vue';
 import Player from '../components/Player.vue';
 import Slider from '../components/Slider.vue';
+import Sharelink from '../components/Sharelink.vue';
 import Shifter from '../components/Shifter.vue';
 import Radio from '../components/Radio.vue';
 import Checkbox from '../components/Checkbox.vue';
@@ -570,6 +549,7 @@ import Textbox from '../components/Textbox.vue';
 import { headerMock } from '../components/headerModel';
 import { playerMock } from '../components/playerModel';
 import { sliderMock } from '../components/sliderModel';
+import { sharelinkMock } from '../components/sharelinkModel';
 import { shifterMock } from '../components/shifterModel';
 import { radioMock, checkboxMock, selectMock } from '../components/formEnumOption';
 import { documentIcons } from './documentIcons';
@@ -578,6 +558,7 @@ const header = headerMock;
 const player = playerMock;
 const slider = sliderMock;
 const shifter = shifterMock;
+const sharelink = sharelinkMock;
 
 const gender = ref('Male');
 const favor = ref(['Dance']);

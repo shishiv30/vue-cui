@@ -3,11 +3,10 @@
 		ref="rootEl"
 		class="header"
 		:class="[{ sticky: model.sticky === 'true', 'header-close': closed }, model.className]"
-		data-role="header"
 	>
 		<div class="header-overlay" @click="hideMenu"></div>
 		<div class="header-bar">
-			<a href="javascript:;" class="menu-img" data-role="theme" aria-label="CUI Logo"></a>
+			<a href="javascript:;" class="menu-img" v-theme aria-label="CUI Logo"></a>
 			<div v-if="model.search" class="input right">
 				<input
 					:id="model.search.inputId"
@@ -67,6 +66,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { HeaderUiModel } from './headerModel';
 import { emitPhase } from './emitPhase';
 import vAutocomplete from '../directives/autocomplete';
+import vTheme from '../directives/theme';
 import type { AutocompleteOptions } from '../directives/autocomplete';
 import { getPathByGeo } from '../../../helpers/geo';
 

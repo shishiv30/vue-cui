@@ -1,7 +1,7 @@
 @use './_var.icon.scss' as *;
 @use './_mixins.scss' as *;
-@include comp-size('checkbox');
-@include comp-size('radio');
+@include comp-size('checkbox', fit-content, 'form');
+@include comp-size('radio', fit-content, 'form');
 
 .checkbox {
 	font-weight: var(--checkbox-font-weight);

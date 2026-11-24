@@ -1,4 +1,15 @@
-@mixin comp-size($name, $width: fit-content) {
+// $radius: 'container' (panel, list, article…) scales radius with size.
+// 'form' (input, select, button…) uses --radius-0, and --radius-1 only when large.
+@mixin comp-size($name, $width: fit-content, $radius: 'container') {
+	$r-normal: var(--radius-2);
+	$r-small: var(--radius-1);
+	$r-large: var(--radius-3);
+	@if $radius == 'form' {
+		$r-normal: var(--radius-0);
+		$r-small: var(--radius-0);
+		$r-large: var(--radius-1);
+	}
+
 	.#{$name} {
 		&,
 		&.normal {
@@ -8,7 +19,7 @@
 			--#{$name}-size: var(--comp-size-3);
 			--#{$name}-line-height: var(--line-height-3);
 			--#{$name}-width: #{$width};
-			--#{$name}-radius: var(--radius-2);
+			--#{$name}-radius: #{$r-normal};
 		}
 
 		&.tiny {
@@ -24,7 +35,7 @@
 			--#{$name}-font-size: var(--font-size-5);
 			--#{$name}-line-height: var(--line-height-3);
 			--#{$name}-size: var(--comp-size-2);
-			--#{$name}-radius: var(--radius-1);
+			--#{$name}-radius: #{$r-small};
 		}
 
 		&.large {
@@ -33,7 +44,7 @@
 			--#{$name}-size: var(--comp-size-4);
 			--#{$name}-line-height: var(--line-height-3);
 			--#{$name}-border-weight: 2px;
-			--#{$name}-radius: var(--radius-3);
+			--#{$name}-radius: #{$r-large};
 		}
 	}
 }

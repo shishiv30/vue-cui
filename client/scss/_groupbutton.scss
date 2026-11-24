@@ -1,7 +1,7 @@
 @use './_mixins.scss' as *;
 
 @include comp-color('group-btn');
-@include comp-size('group-btn');
+@include comp-size('group-btn', fit-content, 'form');
 
 .group-btn {
 	&.checkbox,

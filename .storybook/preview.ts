@@ -4,16 +4,24 @@ import type { Preview } from '@storybook/vue3-vite';
 import React, { useEffect, useState } from 'react';
 import { themes } from 'storybook/theming';
 import collapse from '../client/src/directives/collapse';
+import dialog from '../client/src/directives/dialog';
 import lazyload from '../client/src/directives/lazyload';
+import modal from '../client/src/directives/modal';
+import scrollto from '../client/src/directives/scrollto';
 import tab from '../client/src/directives/tab';
+import theme from '../client/src/directives/theme';
 import tooltip from '../client/src/directives/tooltip';
 import './app-layer.scss';
 import './code-panel.css';
 
 setup((app) => {
 	app.directive('collapse', collapse);
+	app.directive('dialog', dialog);
 	app.directive('lazyload', lazyload);
+	app.directive('modal', modal);
+	app.directive('scrollto', scrollto);
 	app.directive('tab', tab);
+	app.directive('theme', theme);
 	app.directive('tooltip', tooltip);
 });
 

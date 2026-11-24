@@ -4,7 +4,6 @@
 		class="welcome"
 		:class="[{ 'welcome-loaded': loaded }, model.className]"
 		:style="{ '--welcome-ratio': ratioValue }"
-		data-role="welcome"
 	>
 		<picture class="welcome-picture">
 			<source v-if="src.lg" media="(min-width: 1600px)" :srcset="src.lg" />

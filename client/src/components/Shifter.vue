@@ -4,7 +4,6 @@
 		ref="rootEl"
 		class="shifter"
 		:class="[{ 'hidden-prev': !hasPrev, 'hidden-next': !hasNext }, model.className]"
-		data-role="shifter"
 	>
 		<button type="button" class="arrow prev circle small" aria-label="Previous" @click="prev">
 			<i class="icon-angle-left" role="img" aria-label="Previous items"></i>
@@ -12,7 +11,6 @@
 		<div
 			ref="scrollerEl"
 			class="shifter-scroller"
-			data-role="scroller"
 			tabindex="0"
 			@scroll="onScroll"
 		>

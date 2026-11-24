@@ -3,7 +3,7 @@
 @use './_var.icon.scss' as *;
 
 @include comp-color('group-dropdown-button');
-@include comp-size('group-dropdown-button');
+@include comp-size('group-dropdown-button', fit-content, 'form');
 
 .group-dropdown-button {
 	--group-dropdown-button-color-open: var(--color-bg);

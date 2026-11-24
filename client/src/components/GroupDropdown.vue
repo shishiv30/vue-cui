@@ -338,7 +338,7 @@ function emptyValue(field: GroupDropdownField) {
 
 function resetSlider(panel: ParentNode | null | undefined) {
 	panel
-		?.querySelector('[data-role="rangeslider"], .range-slider')
+		?.querySelector('.range-slider')
 		?.dispatchEvent(new CustomEvent('reset'));
 }
 

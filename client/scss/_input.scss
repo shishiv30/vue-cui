@@ -1,7 +1,7 @@
 @use './_mixins.scss' as *;
 
 @include comp-color('input');
-@include comp-size('input');
+@include comp-size('input', fit-content, 'form');
 
 .input {
 	--input-placeholder-color: color-mix(in hsl, var(--input-color) 80%, var(--input-color-bg));

@@ -156,7 +156,7 @@ A directive is for behavior on markup that already exists. No `*Model.ts`, no `.
 
 Leave out a slot that is unused. Do not add an Argument row when `binding.arg` is unused. Do not put every modifier in one cell. Group related flags on one row (`modifier trigger`, `modifier placement`) and list each example (`v-tooltip.hover`, `v-tooltip.click`, `v-tooltip.focus`).
 
-Only Tooltip and Autocomplete create one shared node under `body`. Collapse and Tab do not. Pages keep the old plugins until a later swap. Layout and LayoutToggle stay plugins.
+Only Tooltip, Autocomplete and Modal create a node under `body`. Collapse and Tab do not. Pages keep the old plugins until a later swap. Layout and LayoutToggle stay plugins.
 
 ## Collapse
 
@@ -287,6 +287,46 @@ Each of the six gets a model file only for the shared option type and a mock, a 
 | Shared option type | `client/src/components/formEnumOption.ts` |
 | Vue | `client/src/components/<Name>.vue` |
 | Story | `client/src/components/<Name>.stories.ts` |
+
+## Modal
+
+Directive. Source: `client/js/plugins/_modal.js`. Code: `client/src/directives/modal.ts`. Styles: `client/scss/_modal.scss`.
+
+`v-modal:[theme]="'#templateId'"`. Themes `default`, `fullscreen`, `dropdown`. A click copies the `hidden` template's HTML into a new `div.modal.modal-<theme>` under `body`, then adds `modal-active` (fade in via `@starting-style`). `[data-modal="close"]`, the overlay and Esc close it; the node is removed after the fade. One modal is open at a time. `html.modal-model` locks page scroll. Events: none.
+
+## Dialog
+
+Directive. Source: `client/js/plugins/_dialog.js`. Code: `client/src/directives/dialog.ts`.
+
+`v-dialog="'#dialogId'"` on a trigger. A click calls `showModal()` on that `<dialog>`. `[data-dialog="close"]` and a backdrop click close it; Esc is native. Events: none.
+
+## ScrollTo
+
+Directive. Source: `client/js/plugins/_scrollTo.js`. Code: `client/src/directives/scrollto.ts`.
+
+`v-scrollto="'#id'"` or `v-scrollto="{ target, offsetTop, container }"`. Empty value: the trigger `href`. Smooth scroll unless `prefers-reduced-motion: reduce`. Events: none.
+
+## Theme
+
+Directive. Source: `client/js/plugins/_theme.js`. Code: `client/src/directives/theme.ts`.
+
+`v-theme` on a trigger (the Header logo). A click switches `theme-light` / `theme-dark` on `html` and `body` and stores `localStorage.theme`. The inline script in `client/src/index.html` restores it before hydration. Events: none.
+
+## Sharelink
+
+Component. Source: `client/js/plugins/_sharelink.js`. Styles: `client/scss/_sharelink.scss`.
+
+| Piece | Path |
+| --- | --- |
+| Model | `client/src/components/sharelinkModel.ts` |
+| Vue | `client/src/components/Sharelink.vue` |
+| Story | `client/src/components/Sharelink.stories.ts` |
+
+Fields: `url` (empty: `location.href` on click), `text`, `subject`, `platforms`, `className`. Expose `open(id)`. The native Share item is added after mount only, so SSR and hydration match.
+
+## ListDict
+
+Pure CSS (`.list-dict` in `client/scss/_listdict.scss`). The plugin only set an unused CSS variable, so there is no directive.
 
 ## Check
 

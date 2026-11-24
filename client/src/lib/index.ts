@@ -11,6 +11,7 @@ import Player from '../components/Player.vue';
 import Radio from '../components/Radio.vue';
 import RangeSlider from '../components/RangeSlider.vue';
 import Select from '../components/Select.vue';
+import Sharelink from '../components/Sharelink.vue';
 import Shifter from '../components/Shifter.vue';
 import Slider from '../components/Slider.vue';
 import Textbox from '../components/Textbox.vue';
@@ -18,8 +19,12 @@ import ValueSlider from '../components/ValueSlider.vue';
 import Welcome from '../components/Welcome.vue';
 import autocomplete from '../directives/autocomplete';
 import collapse from '../directives/collapse';
+import dialog from '../directives/dialog';
 import lazyload from '../directives/lazyload';
+import modal from '../directives/modal';
+import scrollto from '../directives/scrollto';
 import tab from '../directives/tab';
+import theme from '../directives/theme';
 import tooltip from '../directives/tooltip';
 
 export {
@@ -35,6 +40,7 @@ export {
 	Radio,
 	RangeSlider,
 	Select,
+	Sharelink,
 	Shifter,
 	Slider,
 	Textbox,
@@ -42,8 +48,12 @@ export {
 	Welcome,
 	autocomplete,
 	collapse,
+	dialog,
 	lazyload,
+	modal,
+	scrollto,
 	tab,
+	theme,
 	tooltip,
 };
 
@@ -74,6 +84,8 @@ export type {
 	AutocompleteOptions,
 	AutocompleteValue,
 } from '../directives/autocomplete';
+export type { ScrollToOptions, ScrollToValue } from '../directives/scrollto';
+export type { SharelinkUiModel, SharelinkPlatformId } from '../components/sharelinkModel';
 export type { HeaderUiModel, HeaderMenuItem, HeaderSearch } from '../components/headerModel';
 
 const components = {
@@ -89,6 +101,7 @@ const components = {
 	Radio,
 	RangeSlider,
 	Select,
+	Sharelink,
 	Shifter,
 	Slider,
 	Textbox,
@@ -99,8 +112,12 @@ const components = {
 const directives: Record<string, Directive> = {
 	autocomplete,
 	collapse,
+	dialog,
 	lazyload,
+	modal,
+	scrollto,
 	tab,
+	theme,
 	tooltip,
 } as Record<string, Directive>;
 
